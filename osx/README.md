@@ -21,11 +21,9 @@ Compile olsrd_qaul plugin
     make
 
 Compile static qaullib
-* uncomment in libqaul/Makefile the line '#CFLAGS=-arch i386' to 'CFLAGS=-arch i386' 
 
+    # uncomment in libqaul/Makefile the line '#CFLAGS=-arch i386' to 'CFLAGS=-arch i386'
     cd libqaul
     make osx
 
 Open the OSX project in Xcode
-
-    

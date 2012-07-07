@@ -11,13 +11,14 @@ Installation and Compile Instructions
 qaul.net is written in Visual C++ (managed code)
 
 * Install Microsoft Visual Studio Express (the free version of visual studio)
-* Copy www folder into target folders
+
+Copy www folder into target folders:
     
     xcopy www win\Debug\www\ /e
     xcopy www win\Release\www\ /e
 
 
-Optional:
+### Optional
 
 To develop and compile olsrd, olsrd_qaul plugin and the dynamic libqaul.dll you need to install MinGW
 

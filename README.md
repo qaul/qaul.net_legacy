@@ -9,11 +9,12 @@ System Specific Instructions
 -----------------------------
 
 qaul.net works on following operating systems (new ports are very welcome)
-[[ Windows | win/README ]]
-[[ OSX     | osx/README ]]
-
+* [ Windows ] (win/README)
+* [ OSX ]     (osx/README)
+* [ Linux ]   (linux/README)
+* [ Android ] (android/README)
 
 Documentation
 --------------
 
-[[ Software Architecture | doc/SoftwareArchitecture ]]
+* [Software Architecture] (doc/SoftwareArchitecture)
