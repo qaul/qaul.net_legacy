@@ -1,0 +1,4 @@
+This directory contains some Android specific code. (Mostly dealing
+with providing missing filesfrom Android NDK.)
+
+ * regex support was not added until NDK platform android-8 (v2.2)

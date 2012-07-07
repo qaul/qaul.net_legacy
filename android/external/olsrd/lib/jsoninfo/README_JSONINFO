@@ -1,0 +1,31 @@
+
+   PLUGIN USAGE
+==================
+
+installation:
+make
+make install
+
+
+   PLUGIN CONFIGURATION
+==========================
+
+The plugin accepts two parameters: "port" and "accept". There are no
+futher parameters.  Here's an example configuration for UNIX systems
+(for Windows, change the plugin to end in .dll):
+
+LoadPlugin "olsrd_jsoninfo.so.0.1"
+{
+    # the default port is 9090 but you can change it like this:
+    #PlParam     "port"   "8080"
+
+    # You can set a "accept" single address to allow to connect to
+    # jsoninfo. If no address is specified, then localhost (127.0.0.1)
+    # is allowed by default.  jsoninfo will only use the first "accept"
+    # parameter specified and will ignore the rest.
+
+    # to allow a specific host:
+    #PlParam      "accept" "172.29.44.23"
+    # if you set it to 0.0.0.0, it will accept all connections
+    #PlParam      "accept" "0.0.0.0"
+}

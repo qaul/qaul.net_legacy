@@ -1,0 +1,28 @@
+Valgrind is a powerful tool for performance and correctness analysis of code.
+This mini-howto discusses how to set your development environment up,
+such that you can profile a running olsr daemon and later analyze its
+recordings using a graphical frontend called Kcachegrind.
+
+First patch your makefile such that the debug symbols are not removed after
+compilation
+
+    diff -r 26494c58ff86 Makefile.inc
+    --- a/Makefile.inc Wed Jan 09 22:01:18 2008 +0100
+    +++ b/Makefile.inc Thu Jan 10 14:46:27 2008 +0100
+    @@ -5,10 +5,10 @@
+    #
+    # activate debugging with 1 or deactivate with 0
+    -DEBUG ?= 0
+    +DEBUG ?= 1
+    # compile OLSR_PRINTF out
+    -NO_DEBUG_MESSAGES ?= 0
+    +NO_DEBUG_MESSAGES ?= 1
+
+Next run valgrind with the following command line options.
+
+valgrind --tool=callgrind -v --dump-instr=yes --trace-jump=yes ./olsrd -d 0 -nofork
+
+Finally load kcachgrind to display the profiling data. (watch out the callgrind
+data are written with a umask of 600 as user root - so you may want to chown or
+chmod the file, otherwise kcachegrind cannot open your data and will display an
+empty screen)

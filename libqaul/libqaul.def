@@ -1,0 +1,465 @@
+EXPORTS
+    Qaul_dhcp_LL_root @1 DATA
+    Qaul_user_LL_table @2 DATA
+    Qaullib_CaptiveStart @3
+    Qaullib_Captive_CreateIP @4
+    Qaullib_Captive_Dhcp_LL_Init @5
+    Qaullib_Captive_IpExists @6
+    Qaullib_ConfigStart @7
+    Qaullib_ConfigurationFinished @8
+    Qaullib_CreateIP @9
+    Qaullib_DHCP_Options @10
+    Qaullib_DHCP_Server @11
+    Qaullib_DNS_Server @12
+    Qaullib_DbGetConfigValue @13
+    Qaullib_DbGetConfigValueInt @14
+    Qaullib_DbInit @15
+    Qaullib_DbPopulateConfig @16
+    Qaullib_DbSetConfigValue @17
+    Qaullib_Dhcp_LL_Add @18
+    Qaullib_Dhcp_LL_Clean @19
+    Qaullib_Dhcp_LL_Delete_Item @20
+    Qaullib_Dhcp_LL_Search_Ip @21
+    Qaullib_Dhcp_LL_Search_IpMAC @22
+    Qaullib_ExistsLocale @23
+    Qaullib_ExistsUsername @24
+    Qaullib_Exit @25
+    Qaullib_FileAdd @26
+    Qaullib_FileAvailable @27
+    Qaullib_FileCheckScheduled @28
+    Qaullib_FileCheckSockets @29
+    Qaullib_FileConnect @30
+    Qaullib_FileCreatePath @31
+    Qaullib_FileDeleteById @32
+    Qaullib_FileExists @33
+    Qaullib_FilePicked @34
+    Qaullib_FilePopulate @35
+    Qaullib_GetAppEventOpenPath @36
+    Qaullib_GetIP @37
+    Qaullib_GetLocale @38
+    Qaullib_GetNetBssId @39
+    Qaullib_GetNetBssIdSet @40
+    Qaullib_GetNetGateway @41
+    Qaullib_GetNetIbss @42
+    Qaullib_GetNetMask @43
+    Qaullib_GetNetProtocol @44
+    Qaullib_GetUsername @45
+    Qaullib_Init @46
+    Qaullib_IpcClose @47
+    Qaullib_IpcConnect @48
+    Qaullib_IpcEvaluateChat @49
+    Qaullib_IpcEvaluateCom @50
+    Qaullib_IpcEvaluateMessage @51
+    Qaullib_IpcEvaluateTopo @52
+    Qaullib_IpcReceive @53
+    Qaullib_IpcSend @54
+    Qaullib_IpcSendCom @55
+    Qaullib_MAC_Compare @56
+    Qaullib_ProtectString @57
+    Qaullib_SetConfQuit @58
+    Qaullib_SetConfVoIP @59
+    Qaullib_SetIP @60
+    Qaullib_SetLocale @61
+    Qaullib_SetUsername @62
+    Qaullib_TimedCheckAppEvent @63
+    Qaullib_TimedDownload @64
+    Qaullib_TimedSocketReceive @65
+    Qaullib_UnprotectString @66
+    Qaullib_UrlDecode @67
+    Qaullib_UrlEncode @68
+    Qaullib_UrlFromHex @69
+    Qaullib_UrlToHex @70
+    Qaullib_UserCheckNonames @71
+    Qaullib_UserCheckSockets @72
+    Qaullib_UserCheckUser @73
+    Qaullib_UserGetInfo @74
+    Qaullib_UserInit @75
+    Qaullib_UserTouchIp @76
+    Qaullib_User_LL_Add @77
+    Qaullib_User_LL_Clean @78
+    Qaullib_User_LL_Delete_Item @79
+    Qaullib_User_LL_Init @80
+    Qaullib_User_LL_InitNode @81
+    Qaullib_User_LL_IpExists @82
+    Qaullib_User_LL_IpSearch @83
+    Qaullib_User_LL_NextNode @84
+    Qaullib_WebserverStart @85
+    Qaullib_WgetClose @86
+    Qaullib_WgetConnect @87
+    Qaullib_WgetReceive @88
+    Qaullib_WgetSendHeader @89
+    Qaullib_WwwEvent_handler @90
+    StrError @91
+    WinSockPError @92
+    _get_output_format @93
+    app_event @94 DATA
+    balloc @95
+    ballocmin @96
+    bassign @97
+    bassignblk @98
+    bassigncstr @99
+    bassignformat @100
+    bassigngets @101
+    bassignmidstr @102
+    bcatblk @103
+    bcatcstr @104
+    bconcat @105
+    bconchar @106
+    bcstrfree @107
+    bdelete @108
+    bdestroy @109
+    bfindreplace @110
+    bfindreplacecaseless @111
+    bformat @112
+    bformata @113
+    bfromcstr @114
+    bfromcstralloc @115
+    bgets @116
+    bgetsa @117
+    binchr @118
+    binchrr @119
+    binsert @120
+    binsertch @121
+    binstr @122
+    binstrcaseless @123
+    binstrr @124
+    binstrrcaseless @125
+    biseq @126
+    biseqcaseless @127
+    biseqcstr @128
+    biseqcstrcaseless @129
+    bisstemeqblk @130
+    bisstemeqcaselessblk @131
+    bjoin @132
+    blk2bstr @133
+    bltrimws @134
+    bmidstr @135
+    bninchr @136
+    bninchrr @137
+    bpattern @138
+    bread @139
+    breada @140
+    breplace @141
+    brtrimws @142
+    bsbufflength @143
+    bsclose @144
+    bseof @145
+    bsetstr @146
+    bsopen @147
+    bspeek @148
+    bsplit @149
+    bsplitcb @150
+    bsplits @151
+    bsplitscb @152
+    bsplitstr @153
+    bsplitstrcb @154
+    bsread @155
+    bsreada @156
+    bsreadln @157
+    bsreadlna @158
+    bsreadlns @159
+    bsreadlnsa @160
+    bssplitscb @161
+    bssplitstrcb @162
+    bstr2cstr @163
+    bstrListAlloc @164
+    bstrListAllocMin @165
+    bstrListCreate @166
+    bstrListDestroy @167
+    bstrchrp @168
+    bstrcmp @169
+    bstrcpy @170
+    bstricmp @171
+    bstrncmp @172
+    bstrnicmp @173
+    bstrrchrp @174
+    bsunread @175
+    btolower @176
+    btoupper @177
+    btrimws @178
+    btrunc @179
+    bvcformata @180
+    ctx @181 DATA
+    db @182 DATA
+    dbPath @183 DATA
+    fileconnections @184 DATA
+    inet_aton @185
+    inet_ntop @186
+    inet_pton @187
+    ipc_conn @188 DATA
+    ipc_connected @189 DATA
+    ipc_socket @190 DATA
+    me_to_reltime @191
+    mg_connect @192
+    mg_get_cookie @193
+    mg_get_header @194
+    mg_get_option @195
+    mg_get_valid_option_names @196
+    mg_get_var @197
+    mg_md5 @198
+    mg_modify_passwords_file @199
+    mg_printf @200
+    mg_read @201
+    mg_start @202
+    mg_stop @203
+    mg_version @204
+    mg_write @205
+    olsr_ip_hashing @206
+    pickFileCheck @207 DATA
+    pickFilePath @208 DATA
+    pin @209 DATA
+    pthread_cond_broadcast @210
+    pthread_cond_destroy @211
+    pthread_cond_init @212
+    pthread_cond_signal @213
+    pthread_cond_wait @214
+    pthread_mutex_destroy @215
+    pthread_mutex_init @216
+    pthread_mutex_lock @217
+    pthread_mutex_unlock @218
+    pthread_self @219
+    qaul_captive_running @220 DATA
+    qaul_chunksize @221 DATA
+    qaul_conf_quit @222 DATA
+    qaul_conf_voip @223 DATA
+    qaul_configured @224 DATA
+    qaul_dhcp_LL_count @225 DATA
+    qaul_dhcp_thread @226 DATA
+    qaul_dns_thread @227 DATA
+    qaul_gui_pagename_set @228 DATA
+    qaul_in_msg @229 DATA
+    qaul_ip_addr @230 DATA
+    qaul_ip_captive @231 DATA
+    qaul_ip_set @232 DATA
+    qaul_ip_size @233 DATA
+    qaul_ip_str @234 DATA
+    qaul_ip_version @235 DATA
+    qaul_loading_wait @236 DATA
+    qaul_locale @237 DATA
+    qaul_locale_set @238 DATA
+    qaul_net_bssid @239 DATA
+    qaul_net_gateway @240 DATA
+    qaul_net_ibss @241 DATA
+    qaul_new_msg @242 DATA
+    qaul_user_LL_count @243 DATA
+    qaul_user_LL_id @244 DATA
+    qaul_username @245 DATA
+    qaul_username_set @246 DATA
+    qaullib_AppEventOpenPath @247 DATA
+    qaullib_GuiPageName @248 DATA
+    qaullib_mutex_userLL @249 DATA
+    qaullib_pthread_start @250
+    readdir @251
+    reltime_to_me @252
+    sha1 @253
+    sha1_file @254
+    sha1_finish @255
+    sha1_hmac @256
+    sha1_hmac_finish @257
+    sha1_hmac_reset @258
+    sha1_hmac_starts @259
+    sha1_hmac_update @260
+    sha1_self_test @261
+    sha1_starts @262
+    sha1_update @263
+    sleep @264
+    sqlite3_aggregate_context @265
+    sqlite3_aggregate_count @266
+    sqlite3_auto_extension @267
+    sqlite3_backup_finish @268
+    sqlite3_backup_init @269
+    sqlite3_backup_pagecount @270
+    sqlite3_backup_remaining @271
+    sqlite3_backup_step @272
+    sqlite3_bind_blob @273
+    sqlite3_bind_double @274
+    sqlite3_bind_int @275
+    sqlite3_bind_int64 @276
+    sqlite3_bind_null @277
+    sqlite3_bind_parameter_count @278
+    sqlite3_bind_parameter_index @279
+    sqlite3_bind_parameter_name @280
+    sqlite3_bind_text @281
+    sqlite3_bind_text16 @282
+    sqlite3_bind_value @283
+    sqlite3_bind_zeroblob @284
+    sqlite3_blob_bytes @285
+    sqlite3_blob_close @286
+    sqlite3_blob_open @287
+    sqlite3_blob_read @288
+    sqlite3_blob_reopen @289
+    sqlite3_blob_write @290
+    sqlite3_busy_handler @291
+    sqlite3_busy_timeout @292
+    sqlite3_changes @293
+    sqlite3_clear_bindings @294
+    sqlite3_close @295
+    sqlite3_collation_needed @296
+    sqlite3_collation_needed16 @297
+    sqlite3_column_blob @298
+    sqlite3_column_bytes @299
+    sqlite3_column_bytes16 @300
+    sqlite3_column_count @301
+    sqlite3_column_decltype @302
+    sqlite3_column_decltype16 @303
+    sqlite3_column_double @304
+    sqlite3_column_int @305
+    sqlite3_column_int64 @306
+    sqlite3_column_name @307
+    sqlite3_column_name16 @308
+    sqlite3_column_text @309
+    sqlite3_column_text16 @310
+    sqlite3_column_type @311
+    sqlite3_column_value @312
+    sqlite3_commit_hook @313
+    sqlite3_compileoption_get @314
+    sqlite3_compileoption_used @315
+    sqlite3_complete @316
+    sqlite3_complete16 @317
+    sqlite3_config @318
+    sqlite3_context_db_handle @319
+    sqlite3_create_collation @320
+    sqlite3_create_collation16 @321
+    sqlite3_create_collation_v2 @322
+    sqlite3_create_function @323
+    sqlite3_create_function16 @324
+    sqlite3_create_function_v2 @325
+    sqlite3_create_module @326
+    sqlite3_create_module_v2 @327
+    sqlite3_data_count @328
+    sqlite3_db_config @329
+    sqlite3_db_filename @330
+    sqlite3_db_handle @331
+    sqlite3_db_mutex @332
+    sqlite3_db_readonly @333
+    sqlite3_db_release_memory @334
+    sqlite3_db_status @335
+    sqlite3_declare_vtab @336
+    sqlite3_enable_load_extension @337
+    sqlite3_enable_shared_cache @338
+    sqlite3_errcode @339
+    sqlite3_errmsg @340
+    sqlite3_errmsg16 @341
+    sqlite3_exec @342
+    sqlite3_expired @343
+    sqlite3_extended_errcode @344
+    sqlite3_extended_result_codes @345
+    sqlite3_file_control @346
+    sqlite3_finalize @347
+    sqlite3_free @348
+    sqlite3_free_table @349
+    sqlite3_get_autocommit @350
+    sqlite3_get_auxdata @351
+    sqlite3_get_table @352
+    sqlite3_global_recover @353
+    sqlite3_initialize @354
+    sqlite3_interrupt @355
+    sqlite3_last_insert_rowid @356
+    sqlite3_libversion @357
+    sqlite3_libversion_number @358
+    sqlite3_limit @359
+    sqlite3_load_extension @360
+    sqlite3_log @361
+    sqlite3_malloc @362
+    sqlite3_memory_alarm @363
+    sqlite3_memory_highwater @364
+    sqlite3_memory_used @365
+    sqlite3_mprintf @366
+    sqlite3_mutex_alloc @367
+    sqlite3_mutex_enter @368
+    sqlite3_mutex_free @369
+    sqlite3_mutex_leave @370
+    sqlite3_mutex_try @371
+    sqlite3_next_stmt @372
+    sqlite3_open @373
+    sqlite3_open16 @374
+    sqlite3_open_v2 @375
+    sqlite3_os_end @376
+    sqlite3_os_init @377
+    sqlite3_overload_function @378
+    sqlite3_prepare @379
+    sqlite3_prepare16 @380
+    sqlite3_prepare16_v2 @381
+    sqlite3_prepare_v2 @382
+    sqlite3_profile @383
+    sqlite3_progress_handler @384
+    sqlite3_randomness @385
+    sqlite3_realloc @386
+    sqlite3_release_memory @387
+    sqlite3_reset @388
+    sqlite3_reset_auto_extension @389
+    sqlite3_result_blob @390
+    sqlite3_result_double @391
+    sqlite3_result_error @392
+    sqlite3_result_error16 @393
+    sqlite3_result_error_code @394
+    sqlite3_result_error_nomem @395
+    sqlite3_result_error_toobig @396
+    sqlite3_result_int @397
+    sqlite3_result_int64 @398
+    sqlite3_result_null @399
+    sqlite3_result_text @400
+    sqlite3_result_text16 @401
+    sqlite3_result_text16be @402
+    sqlite3_result_text16le @403
+    sqlite3_result_value @404
+    sqlite3_result_zeroblob @405
+    sqlite3_rollback_hook @406
+    sqlite3_set_authorizer @407
+    sqlite3_set_auxdata @408
+    sqlite3_shutdown @409
+    sqlite3_sleep @410
+    sqlite3_snprintf @411
+    sqlite3_soft_heap_limit @412
+    sqlite3_soft_heap_limit64 @413
+    sqlite3_sourceid @414
+    sqlite3_sql @415
+    sqlite3_status @416
+    sqlite3_step @417
+    sqlite3_stmt_busy @418
+    sqlite3_stmt_readonly @419
+    sqlite3_stmt_status @420
+    sqlite3_stricmp @421
+    sqlite3_strnicmp @422
+    sqlite3_temp_directory @423 DATA
+    sqlite3_test_control @424
+    sqlite3_thread_cleanup @425
+    sqlite3_threadsafe @426
+    sqlite3_total_changes @427
+    sqlite3_trace @428
+    sqlite3_transfer_bindings @429
+    sqlite3_update_hook @430
+    sqlite3_uri_boolean @431
+    sqlite3_uri_int64 @432
+    sqlite3_uri_parameter @433
+    sqlite3_user_data @434
+    sqlite3_value_blob @435
+    sqlite3_value_bytes @436
+    sqlite3_value_bytes16 @437
+    sqlite3_value_double @438
+    sqlite3_value_int @439
+    sqlite3_value_int64 @440
+    sqlite3_value_numeric_type @441
+    sqlite3_value_text @442
+    sqlite3_value_text16 @443
+    sqlite3_value_text16be @444
+    sqlite3_value_text16le @445
+    sqlite3_value_type @446
+    sqlite3_version @447 DATA
+    sqlite3_vfs_find @448
+    sqlite3_vfs_register @449
+    sqlite3_vfs_unregister @450
+    sqlite3_vmprintf @451
+    sqlite3_vsnprintf @452
+    sqlite3_vtab_config @453
+    sqlite3_vtab_on_conflict @454
+    sqlite3_wal_autocheckpoint @455
+    sqlite3_wal_checkpoint @456
+    sqlite3_wal_checkpoint_v2 @457
+    sqlite3_wal_hook @458
+    sqlite3_win32_mbcs_to_utf8 @459
+    sqlite3_win32_utf8_to_mbcs @460
+    strscpy @461
+    userconnections @462 DATA
+    webPath @463 DATA
+    winSysInfo @464 DATA

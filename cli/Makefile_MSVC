@@ -1,0 +1,44 @@
+#
+# File:  Makefile for MSVC Compiler
+#
+#CC=gcc
+#CFLAGS=-arch i386
+
+#SRC=./main.c ../libqaul/qaullib.c ../libqaul/mongoose/mongoose.c ../libqaul/sqlite/sqlite3.c ../libqaul/olsrd/mantissa.c
+#SRC_WIN=../libqaul/win32/functions.c
+#OBJS=$(SRC:.c=.o)
+#OBJS_WIN=$(SRC:.c=.o) $(SRC_WIN:.c=.o)
+
+#set variables first
+#"\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
+
+
+all: qaullib.obj mongoose.obj sqlite.obj mantissa.obj functions.obj
+	cl /o qaul.exe qaullib.obj mongoose.obj sqlite.obj mantissa.obj functions.obj /link 
+
+
+qaullib.obj:
+	cl /c ..\libqaul\qaullib.c
+
+mongoose.obj:
+	cl /c ..\libqaul\mongoose\mongoose.c
+
+sqlite.obj:
+	cl /c ..\libqaul\sqlite\sqlite3.c
+
+mantissa.obj:
+	cl /c ..\libqaul\olsrd\mantissa.c
+
+functions.obj:
+	cl /c ..\libqaul\win32\functions.c
+
+
+
+#win: $(OBJS_WIN)
+#	@echo application Makefile - linking qaul.exe
+#	@echo $(CC) $^ $(LIBDIR) $(LIBS) -o qaul.exe
+#	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul.exe -lwsock32 -lWs2_32
+
+
+clean:
+	del *.exe *.obj

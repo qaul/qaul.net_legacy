@@ -1,0 +1,94 @@
+# file system
+.DS_Store
+[Tt]humbs.db
+*~
+
+# Eclipse
+.project
+.cproject
+.settings
+
+# Visual Studio
+*.sdf
+*.opensdf
+*.suo
+*.vcxproj.user
+win/Debug
+win/Release
+win/qaul/Debug
+win/qaul/Release
+
+# Xcode
+osx/build/
+osx/qaul.xcodeproj
+osx/qaul_OSX10.5.xcodeproj
+
+# QT
+linux/qaul-build-desktop
+linux/qaul/qaul.pro.user
+*.lintian
+
+# Android
+android/bin
+android/libs
+android/obj
+
+# build files & executables
+*.[oad]
+*.exe
+*.lib
+*.dll
+*.exp
+*.de
+*.so
+*.o
+*.0
+*.1
+*.Po
+.deps
+builddata.c
+# bison
+oparse.h
+oparse.c
+# flex
+oscan.c
+
+# tools & testing
+*.log
+gmon.out
+
+# project specific
+cli/qaul
+cli/Debug
+cli/Release
+cli/olsrd
+src/builddata.c
+qaullib.db
+olsrd-ipv4.lock
+
+# portfwd
+portfwd/Makefile
+portfwd/getopt/Makefile
+portfwd/src/Makefile
+portfwd/src/portfwd
+portfwd/autom4te.cache
+portfwd/config
+portfwd/config.h
+portfwd/config.status
+portfwd/stamp-h1
+portfwd/tools/Makefile
+portfwd/tools/t_vector
+portfwd/tools/udp_rcv
+portfwd/tools/udp_snd
+
+# exclude other versioning systems
+CVS
+
+# www folder
+www/files/*.dmg
+www/files/*.apk
+www/files/*.deb
+www/files/*.exe
+
+# binary creation
+binary_release/qaul.net/

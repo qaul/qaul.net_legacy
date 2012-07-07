@@ -1,0 +1,295 @@
+body  { 
+	font-family:LucidaGrande,helvetica,sans-serif; 
+}
+
+a { 
+	text-decoration:none; 
+	color:#6399cc; 
+}
+hr {
+	border: 0px;
+	border-bottom:1px dotted #999999;
+}
+
+/* --- forms --- */
+label.error {
+	color: red;
+	/*
+	line-height: 2;
+	position: relative;
+	top:3px;
+	*/
+}
+
+input {
+	margin-bottom:10px;
+}
+
+
+/* --- special elements --- */
+#page_loading {
+	background-image:url('images/loading.gif');
+	background-repeat:no-repeat;
+	background-position:center;
+}
+
+#chat, #page_user_msgs { 
+	/*height:250px;
+	overflow:auto;*/
+}
+
+#page_tag_msgs {
+	/*height:450px;
+	overflow:auto;*/
+}
+
+#users, #page_user_files { 
+	min-height:70px;
+	overflow:auto;
+}
+
+.private {
+	background-color:#fffb8c;
+}
+.personal {
+	background-color:#d0e7ce;
+}
+
+#users a {
+	margin-right:5px;
+}
+
+abbr.timeago {
+	color:#999999;
+	font-size:smaller;
+	border-bottom-width:0;
+}
+
+#page_user_tab_files {
+	display:none;
+}
+
+/* --- icons & buttons --- */
+.i_chat {
+	background-image: url('images/i_chat_64.png');
+	background-position: 50% 50%;
+	background-repeat: no-repeat; 
+	background-size: 64px 64px;	
+}
+
+.i_users {
+	background-image: url('images/i_users_64.png'); 
+	background-position: 50% 50%;
+	background-repeat: no-repeat; 
+	background-size: 64px 64px;	
+}
+
+.i_filesharing {
+	background-image: url('images/i_files_64.png'); 
+	background-position: 50% 50%;
+	background-repeat: no-repeat; 
+	background-size: 64px 64px;	
+}
+
+.i_prefs {
+	background-image: url('images/i_prefs_64.png'); 
+	background-position: 50% 50%;
+	background-repeat: no-repeat; 
+	background-size: 64px 64px;
+}
+
+/* --- chat --- */
+.msg {
+	padding:1px;
+	border-top:1px dotted #999999;
+}
+.msg_1, .msg_11 {
+	background-color:#eeeeee;
+}
+.msg_2, msg_12 {
+	background-color:#f9f9f9;
+}
+.msg .sender {
+	margin:10px 10px 5px 10px;
+	font-weight:bold;
+	color:#000;
+}
+.msg .sender a {
+	/*color:#000;*/
+}
+.msg:hover .sender a {
+	color:#6399cc; 
+}
+
+.msg .msg_time {
+	margin:10px 10px 5px 10px;
+	float:right;
+}
+.msg .message {
+	margin:5px 10px 10px 10px;
+	color:#666666;
+}
+a.tag {
+}
+a.user {
+	color:#000;
+}
+a.file {
+	/*color:#ffffff;
+	background-color:#999999;
+	padding:1px 4px 2px 4px;*/
+}
+a.mail, a.link {
+	/*color:#666666;*/
+}
+.emo {
+	position: relative;
+	top:1px;
+}
+
+/* --- users --- */
+a.unavailable {
+	color:#bbbbbb !important;
+}
+
+/* --- files --- */
+#file_add_form input {
+	margin-bottom:10px;
+}
+#file_add_filename {
+	margin: 5px 0 20px 0;
+	color:#999999;
+	font-size:smaller;
+}
+#page_file_list {
+	/*height:450px;
+	overflow:auto;*/
+}
+.file {
+	border-top:1px dotted #999999;
+	clear:both;
+	padding: 1px 0;
+	min-height: 64px;
+}
+.file.scheduled, .file.downloading {
+	background-color:#eee;
+}
+.file.failed {
+	background-color:#ddd;
+}
+.file .fileprogress {
+	float:right;
+	clear:right;
+	font-size:smaller;
+	color:#999999;
+	width:160px;
+}
+.file img.fileicon64 {
+	float:left;
+	margin:0 5px 0 0;
+}
+.file .filename {
+	margin-top:15px;
+}
+.file .filemeta {
+	margin:5px 0;
+	color:#999999;
+	font-size:smaller;
+}
+.filebutton {
+	float:right;
+	margin: 5px 5px 0 0;
+}
+.msg_filebutton {
+	float:left;
+}
+.f_img {
+	background-image:url('images/f_img_64.png');
+	display:block;
+	width:64px;
+	height:64px;
+}
+.f_mov {
+	background-image:url('images/f_mov_64.png');
+	display:block;
+	width:64px;
+	height:64px;
+}
+.f_sound {
+	background-image:url('images/f_sound_64.png');
+	display:block;
+	width:64px;
+	height:64px;
+}
+.f_txt {
+	background-image:url('images/f_txt_64.png');
+	display:block;
+	width:64px;
+	height:64px;
+}
+.f_pdf {
+	background-image:url('images/f_pdf_64.png');
+	display:block;
+	width:64px;
+	height:64px;
+}
+.f_file {
+	background-image:url('images/f_file_64.png');
+	display:block;
+	width:64px;
+	height:64px;
+}
+span.suffix {
+    font-weight:bold;
+    text-transform:uppercase;
+}
+
+/* buttons */
+.button_call {
+	background-image: url('images/i_call_32.png') !important;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+}
+
+/* --- configurable elements --- */
+.c_quit {
+	display:none;
+}
+.c_voip {
+	display:none;
+}
+.c_debug {
+	display:none;
+}
+
+/* --- bugfixing elements --- */
+div#bugfix_footer {
+	z-index:599;
+	position:fixed;
+	margin:0;
+	padding:0;
+}
+iframe#bugfix_footer_iframe {
+	margin:0;
+	padding:0;
+	border:none;
+}
+div#bugfix_header {
+	z-index:598;
+	position:fixed;
+	margin:0;
+	padding:0;
+}
+iframe#bugfix_header_iframe {
+	margin:0;
+	padding:0;
+	border:none;
+}
+
+/* --- media selection --- */
+@media only screen and (max-device-width: 335px) {
+    #page_loading {
+        background-size: 90% auto !important;
+    }
+}
+
