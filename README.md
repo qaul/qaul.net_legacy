@@ -9,12 +9,12 @@ System Specific Instructions
 -----------------------------
 
 qaul.net works on following operating systems (new ports are very welcome)
-* [ Windows ] (win/README)
-* [ OSX ]     (osx/README)
-* [ Linux ]   (linux/README)
-* [ Android ] (android/README)
+* [ Windows ] (/WachterJud/qaul.net/blob/master/win/README.md)
+* [ OSX ]     (/WachterJud/qaul.net/blob/master/osx/README.md)
+* [ Linux ]   (/WachterJud/qaul.net/blob/master/linux/README.md)
+* [ Android ] (/WachterJud/qaul.net/blob/master/android/README.md)
 
 Documentation
 --------------
 
-* [Software Architecture] (doc/SoftwareArchitecture)
+* [Software Architecture] (/WachterJud/qaul.net/blob/master/doc/SoftwareArchitecture.md)
