@@ -1,5 +1,6 @@
 Software Architecture
 =====================
 
-(software-architecture.png)
-(software-architecture.pdf)
+![software architecture scheme](software-architecture.png)
+
+[(software-architecture.pdf)]
