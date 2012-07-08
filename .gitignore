@@ -53,6 +53,9 @@ oparse.c
 # flex
 oscan.c
 
+# olsrd
+olsrd-0.6.0/olsrd
+
 # tools & testing
 *.log
 gmon.out
