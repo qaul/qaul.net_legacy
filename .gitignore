@@ -20,8 +20,8 @@ win/qaul/Release
 
 # Xcode
 osx/build/
-osx/qaul.xcodeproj
-osx/qaul_OSX10.5.xcodeproj
+*.mode1v3
+*.pbxuser
 
 # QT
 linux/qaul-build-desktop

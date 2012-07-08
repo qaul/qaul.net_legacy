@@ -17,4 +17,4 @@ qaul.net works on following operating systems (new ports are very welcome)
 Documentation
 --------------
 
-* [Software Architecture] (/WachterJud/qaul.net/blob/master/doc/SoftwareArchitecture.md)
+* [Software Architecture] (/WachterJud/qaul.net/wiki/SoftwareArchitecture)

@@ -9,10 +9,7 @@
 /* Begin PBXBuildFile section */
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		5F0BA3ED14C4CFC500A45FF2 /* CoreWLAN.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F0BA3EC14C4CFC500A45FF2 /* CoreWLAN.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		5F35ADA213392A16005CF683 /* qaul-application.gif in Resources */ = {isa = PBXBuildFile; fileRef = 5F35ADA113392A16005CF683 /* qaul-application.gif */; };
-		5F35ADA913393C37005CF683 /* i-button_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F35ADA813393C37005CF683 /* i-button_25.png */; };
 		5F7A10ED13038D3400E86BB3 /* WindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F7A10EC13038D3400E86BB3 /* WindowController.mm */; };
-		5F7A114513053DB000E86BB3 /* drehen.gif in Resources */ = {isa = PBXBuildFile; fileRef = 5F7A114413053DB000E86BB3 /* drehen.gif */; };
 		5F7A118B1305724D00E86BB3 /* libqaul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7A117E1305724D00E86BB3 /* libqaul.a */; };
 		5F8FA1D51322E629005FD408 /* QaulConfigWifi.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FED4E901322CFC800C2E6E0 /* QaulConfigWifi.mm */; };
 		5F8FA36E13239A32005FD408 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 5F8FA35613239A32005FD408 /* www */; };
@@ -22,7 +19,6 @@
 		5F8FA38E1323ADA2005FD408 /* olsrd_start.sh in Resources */ = {isa = PBXBuildFile; fileRef = 5F8FA38D1323ADA2005FD408 /* olsrd_start.sh */; };
 		5FAE9B8E132D6D1A00E54A7D /* olsrd_stop.sh in Resources */ = {isa = PBXBuildFile; fileRef = 5FAE9B8D132D6D1A00E54A7D /* olsrd_stop.sh */; };
 		5FC30C73131A6F9A0016E3FC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FC30C72131A6F9A0016E3FC /* WebKit.framework */; };
-		5FC30D2A131A76420016E3FC /* sign.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FC30D29131A76420016E3FC /* sign.png */; };
 		5FD3AA3C131D5118004A5AEA /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD3AA3B131D5118004A5AEA /* Security.framework */; };
 		5FE1B4AD158BB1C300C1470C /* socat in Resources */ = {isa = PBXBuildFile; fileRef = 5FE1B4AC158BB1C300C1470C /* socat */; };
 		5FE1B4B6158BE18C00C1470C /* socat_start.sh in Resources */ = {isa = PBXBuildFile; fileRef = 5FE1B4B5158BE18C00C1470C /* socat_start.sh */; };
@@ -62,11 +58,8 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* qaul_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qaul_Prefix.pch; sourceTree = "<group>"; };
 		5F0BA3EC14C4CFC500A45FF2 /* CoreWLAN.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = CoreWLAN.framework; path = System/Library/Frameworks/CoreWLAN.framework; sourceTree = SDKROOT; };
-		5F35ADA113392A16005CF683 /* qaul-application.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "qaul-application.gif"; sourceTree = "<group>"; };
-		5F35ADA813393C37005CF683 /* i-button_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "i-button_25.png"; sourceTree = "<group>"; };
 		5F7A10EB13038D3400E86BB3 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		5F7A10EC13038D3400E86BB3 /* WindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WindowController.mm; sourceTree = "<group>"; };
-		5F7A114413053DB000E86BB3 /* drehen.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = drehen.gif; path = ../images/drehen.gif; sourceTree = SOURCE_ROOT; };
 		5F7A117E1305724D00E86BB3 /* libqaul.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libqaul.a; sourceTree = "<group>"; };
 		5F7A11841305724D00E86BB3 /* qaullib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib.h; path = ../libqaul/qaullib.h; sourceTree = SOURCE_ROOT; };
 		5F8FA35613239A32005FD408 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../www; sourceTree = SOURCE_ROOT; };
@@ -76,7 +69,6 @@
 		5F8FA38D1323ADA2005FD408 /* olsrd_start.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = olsrd_start.sh; sourceTree = "<group>"; };
 		5FAE9B8D132D6D1A00E54A7D /* olsrd_stop.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = olsrd_stop.sh; sourceTree = "<group>"; };
 		5FC30C72131A6F9A0016E3FC /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
-		5FC30D29131A76420016E3FC /* sign.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sign.png; sourceTree = "<group>"; };
 		5FD3AA3B131D5118004A5AEA /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		5FE1B4AC158BB1C300C1470C /* socat */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = socat; sourceTree = "<group>"; };
 		5FE1B4B5158BE18C00C1470C /* socat_start.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = socat_start.sh; sourceTree = "<group>"; };
@@ -190,7 +182,6 @@
 				5F8FA37513239B41005FD408 /* olsrd_qaul.so.0.1 */,
 				5F8FA37313239B18005FD408 /* olsrd */,
 				5F8FA35613239A32005FD408 /* www */,
-				5F7A114313053DB000E86BB3 /* images */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
@@ -209,18 +200,6 @@
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
-		};
-		5F7A114313053DB000E86BB3 /* images */ = {
-			isa = PBXGroup;
-			children = (
-				5F35ADA813393C37005CF683 /* i-button_25.png */,
-				5F35ADA113392A16005CF683 /* qaul-application.gif */,
-				5FC30D29131A76420016E3FC /* sign.png */,
-				5F7A114413053DB000E86BB3 /* drehen.gif */,
-			);
-			name = images;
-			path = ../images;
-			sourceTree = SOURCE_ROOT;
 		};
 		5F7A117D1305724D00E86BB3 /* libqaul */ = {
 			isa = PBXGroup;
@@ -288,8 +267,6 @@
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
-				5F7A114513053DB000E86BB3 /* drehen.gif in Resources */,
-				5FC30D2A131A76420016E3FC /* sign.png in Resources */,
 				5F8FA36E13239A32005FD408 /* www in Resources */,
 				5F8FA37413239B18005FD408 /* olsrd in Resources */,
 				5F8FA37613239B41005FD408 /* olsrd_qaul.so.0.1 in Resources */,
@@ -297,8 +274,6 @@
 				5F8FA38E1323ADA2005FD408 /* olsrd_start.sh in Resources */,
 				5FAE9B8E132D6D1A00E54A7D /* olsrd_stop.sh in Resources */,
 				5FE583D7133518B5005B46FA /* qaul.icns in Resources */,
-				5F35ADA213392A16005CF683 /* qaul-application.gif in Resources */,
-				5F35ADA913393C37005CF683 /* i-button_25.png in Resources */,
 				5FE1B4AD158BB1C300C1470C /* socat in Resources */,
 				5FE1B4B6158BE18C00C1470C /* socat_start.sh in Resources */,
 			);
