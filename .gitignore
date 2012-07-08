@@ -42,7 +42,7 @@ android/obj
 *.de
 *.so
 *.o
-*.0
+#*.0
 *.1
 *.Po
 .deps

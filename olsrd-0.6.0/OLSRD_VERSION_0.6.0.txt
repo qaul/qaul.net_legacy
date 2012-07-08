@@ -1,0 +1,4 @@
+OLSRD Version
+olsrd-0.6.0
+stable 
+downloadable .tar.gz

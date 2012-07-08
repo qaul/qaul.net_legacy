@@ -1,0 +1,1238 @@
+
+ *** olsr.org - 0.6.0 ***
+ Build date: 2011-02-14 14:25:10 on foton.local
+ http://www.olsr.org
+
+Plugin: olsrd_qaul.so.0.1
+Plugin param key:"port" val: "8111"
+Plugin param key:"Host" val: "127.0.0.1"
+
+Interface Defaultssetting ifs_in_curr_cfg = 0
+	IPC host: 127.0.0.1
+	IPv4 broadcast/multicast : AUTO (d)
+	Mode           : mesh (d)
+	IPv6 multicast           : ff02::6d
+	HELLO emission/validity  : 2.00 (d)/20.00 (d)
+	TC emission/validity     : 5.00 (d)/300.00 (d)
+	MID emission/validity    : 5.00 (d)/300.00 (d)
+	HNA emission/validity    : 5.00 (d)/300.00 (d)
+	Autodetect changes       : yes
+	IPv4 broadcast/multicast : AUTO
+	Mode           : mesh
+	IPv6 multicast           : ::
+	HELLO emission/validity  : 0.00/0.00
+	TC emission/validity     : 0.00/0.00
+	MID emission/validity    : 0.00/0.00
+	HNA emission/validity    : 0.00/0.00
+	Autodetect changes       : no
+ *** olsrd configuration ***
+Debug Level      : 2
+IpVersion        : 4
+No interfaces    : ALLOWED
+TOS              : 0x10
+OlsrPort          : 0x2ba
+RtTable          : 0
+RtTableDefault   : 0
+RtTableTunnel    : 0
+Willingness      : 3
+IPC connections  : 5
+	Host 127.0.0.1
+Pollrate         : 0.05
+NIC ChangPollrate: 2.50
+TC redundancy    : 2
+MPR coverage     : 7
+LQ level         : 2
+LQ fish eye      : 1
+LQ aging factor  : 0.050000
+LQ algorithm name: default
+NAT threshold    : 1.000000
+Clear screen     : yes
+Use niit         : yes
+Smart Gateway    : no
+SmGw. Allow NAT  : yes
+Smart Gw. Uplink : both
+SmGw. Uplink NAT : yes
+Smart Gw. speed  : 128 kbit/s up, 1024 kbit/s down
+# Smart Gw. prefix : ::/0
+ InterfaceDefaults: 
+	IPv4 broadcast/multicast : AUTO
+	Mode           : mesh
+	IPv6 multicast           : ff02::6d
+	HELLO emission/validity  : 2.00/20.00
+	TC emission/validity     : 5.00/300.00
+	MID emission/validity    : 5.00/300.00
+	HNA emission/validity    : 5.00/300.00
+	Autodetect changes       : yes
+ dev: "en1"
+	IPv4 broadcast/multicast : AUTO (d)
+	Mode           : mesh (d)
+	IPv6 multicast           : ff02::6d (d)
+	HELLO emission/validity  : 2.00 (d)/20.00 (d)
+	TC emission/validity     : 5.00 (d)/300.00 (d)
+	MID emission/validity    : 5.00 (d)/300.00 (d)
+	HNA emission/validity    : 5.00 (d)/300.00 (d)
+	Autodetect changes       : yes (d)
+Plugins:
+	Name: "olsrd_qaul.so.0.1"
+Not using hysteresis
+Added 0.0.0.0 to IP deny set
+Added 127.0.0.1 to IP deny set
+
+ ---- Interface configuration ---- 
+
+Checking en1:
+	Not a wireless interface
+	Metric: 32
+	MTU - IPhdr: 1472
+	Index 6
+	Address:10.10.10.3
+	Netmask:255.0.0.0
+	Broadcast address:10.255.255.255
+New main address: 10.10.10.3
+Using 'etx_ff' algorithm for lq calculation.
+TC: add entry 10.10.10.3
+RIB: add prefix 10.10.10.3/32 from 10.10.10.3
+---------- LOADING LIBRARY olsrd_qaul.so.0.1 ----------
+*** QAUL: constructor
+Checking plugin interface version:  5 - OK
+Trying to fetch plugin init function: OK
+Trying to fetch parameter table and it's size... 
+Sending parameters...
+"Host"/"127.0.0.1"... Ignored parameter "Host"
+"port"/"8111"... Ignored parameter "port"
+Running plugin_init function...
+[QAUL]init http ...
+---------- LIBRARY olsrd_qaul.so.0.1 LOADED ----------
+
+-- ALL PLUGINS LOADED! --
+
+Main address: 10.10.10.3
+
+Scheduler started - polling every 0.050000 ms
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+
+--- 23:19:44.767949 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:19:44.768370 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+
+--- 23:19:44.768388 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+
+--- 23:19:44.768397 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+Adding 10.10.10.3=>10.10.10.4 to link set
+Set linkloss multiplier for 10.10.10.4 on en1 to 65536
+Willingness for 10.10.10.4 changed from 0 to 3 - UPDATING
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+
+--- 23:19:45.869457 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:19:45.869468 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.000/0.000    INFINITE
+
+--- 23:19:45.869501 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.2       10.10.10.4       INFINITE
+
+--- 23:19:45.869530 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+
+--- 23:19:47.422642 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:19:47.422655 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.000/0.000    INFINITE
+
+--- 23:19:47.422692 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.2       10.10.10.4       INFINITE
+
+--- 23:19:47.422723 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+
+--- 23:19:47.771795 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.059/0.000    INFINITE
+
+--- 23:19:47.771895 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.2       10.10.10.4       INFINITE
+
+--- 23:19:47.771914 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+Received TC from NON SYM neighbor 10.10.10.2
+Adding 10.10.10.3=>10.10.10.2 to link set
+Set linkloss multiplier for 10.10.10.2 on en1 to 65536
+Willingness for 10.10.10.2 changed from 0 to 3 - UPDATING
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+
+--- 23:19:48.523784 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:19:48.523796 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.059/0.000    INFINITE
+10.10.10.2       0.000  0.000/0.000    INFINITE
+
+--- 23:19:48.523848 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       INFINITE
+
+--- 23:19:48.523880 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+TC: add entry 10.10.10.4
+RIB: add prefix 10.10.10.4/32 from 10.10.10.4
+Processing TC from 10.10.10.4, seq 0xe7a9
+TC: add edge entry 10.10.10.4 > 10.10.10.2, cost (0.000/0.000) INFINITE
+
+--- 23:19:49.123037 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.059/0.000    INFINITE
+10.10.10.2       0.000  0.000/0.000    INFINITE
+
+--- 23:19:49.123098 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       INFINITE
+10.10.10.2       10.10.10.4       INFINITE
+
+--- 23:19:49.123151 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.4      10.10.10.2      0.819/1.000    INFINITE
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+
+--- 23:19:49.780396 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:19:49.780403 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.113/0.059    INFINITE
+10.10.10.2       0.000  0.000/0.000    INFINITE
+
+--- 23:19:49.780432 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       INFINITE
+10.10.10.2       10.10.10.4       INFINITE
+
+--- 23:19:49.780499 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.4      10.10.10.2      0.819/1.000    INFINITE
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+
+--- 23:19:50.779873 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:19:50.779881 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.113/0.059    INFINITE
+10.10.10.2       0.000  0.059/0.059    INFINITE
+
+--- 23:19:50.779910 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       INFINITE
+10.10.10.2       10.10.10.4       INFINITE
+
+--- 23:19:50.779938 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.4      10.10.10.2      0.819/1.000    INFINITE
+SPF: insert candidate 10.10.10.3, cost 0.000
+TC:   found neighbor tc_entry 10.10.10.4
+TC: add edge entry 10.10.10.3 > 10.10.10.4, cost (0.000/0.000) INFINITE
+TC: add edge entry 10.10.10.3 > 10.10.10.2, cost (0.000/0.000) INFINITE
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   ignoring edge 10.10.10.2
+SPF:     no inverse edge
+SPF:   ignoring edge 10.10.10.4
+SPF:     no inverse edge
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+
+--- 23:19:52.780932 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:19:52.780939 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.156/0.113    56.056
+10.10.10.2       0.000  0.113/0.113    77.318
+
+--- 23:19:52.780968 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       INFINITE
+10.10.10.2       10.10.10.4       INFINITE
+
+--- 23:19:52.780995 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.3      10.10.10.2      0.000/0.000    INFINITE
+10.10.10.3      10.10.10.4      0.000/0.000    INFINITE
+10.10.10.4      10.10.10.2      0.819/1.000    INFINITE
+[Qaul] Front end connected
+[Qaul] Connection from 127.0.0.1
+TC: add entry 10.10.10.2
+RIB: add prefix 10.10.10.2/32 from 10.10.10.2
+Processing TC from 10.10.10.2, seq 0x406b
+TC:   found neighbor tc_entry 10.10.10.4
+TC:   found inverse edge for 10.10.10.2
+TC: add edge entry 10.10.10.2 > 10.10.10.4, cost (0.000/0.000) INFINITE
+
+--- 23:19:53.482616 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.156/0.113    56.056
+10.10.10.2       0.000  0.113/0.113    77.318
+
+--- 23:19:53.482680 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       78.521
+10.10.10.2       10.10.10.4       INFINITE
+
+--- 23:19:53.482732 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.4      1.000/0.831    INFINITE
+10.10.10.3      10.10.10.2      0.000/0.000    INFINITE
+10.10.10.3      10.10.10.4      0.000/0.000    INFINITE
+10.10.10.4      10.10.10.2      0.819/1.000    INFINITE
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   ignoring edge 10.10.10.2
+SPF:     no inverse edge
+SPF:   ignoring edge 10.10.10.4
+SPF:     no inverse edge
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+
+--- 23:19:53.783182 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:19:53.783194 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.156/0.113    56.056
+10.10.10.2       0.000  0.164/0.164    36.861
+
+--- 23:19:53.783334 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       78.521
+10.10.10.2       10.10.10.4       INFINITE
+
+--- 23:19:53.783384 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.4      1.000/0.831    INFINITE
+10.10.10.3      10.10.10.2      0.164/0.164    36.861
+10.10.10.3      10.10.10.4      0.156/0.113    56.056
+10.10.10.4      10.10.10.2      0.819/1.000    INFINITE
+Processing TC from 10.10.10.4, seq 0xe7ad
+TC:   chg edge entry 10.10.10.4 > 10.10.10.2, cost (0.831/1.000) 1.202
+TC:   found neighbor tc_entry 10.10.10.3
+TC:   found inverse edge for 10.10.10.4
+TC: add edge entry 10.10.10.4 > 10.10.10.3, cost (0.000/0.000) INFINITE
+---------------------------------------------------
+[QAUL] Receiving Message! 
+[QAUL] Message ipV4: 
+name: hansi
+name: hansi
+message: hallo
+ipv4: 67766794
+hops: 0
+ttl: 255
+sqnr: 59310
+olsrtime: 59392
+---------------------------------------------------
+[QAUL] size: 784
+[QAUL] hansi, 255, 255
+
+--- 23:19:54.134876 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.156/0.113    56.056
+10.10.10.2       0.000  0.164/0.164    36.861
+
+--- 23:19:54.134945 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       78.521
+10.10.10.2       10.10.10.4       57.258
+
+--- 23:19:54.134998 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.4      1.000/0.831    INFINITE
+10.10.10.3      10.10.10.2      0.164/0.164    36.861
+10.10.10.3      10.10.10.4      0.156/0.113    56.056
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   ignoring edge 10.10.10.2
+SPF:     no inverse edge
+SPF:   exploring edge 10.10.10.4, cost 30.964
+SPF: insert candidate 10.10.10.4, cost 30.964
+SPF:   better path to 10.10.10.4, cost 30.964, via <none>, hops 1
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+SPF: exploring node 10.10.10.4, cost 30.964
+SPF:   exploring edge 10.10.10.2, cost 32.166
+SPF: insert candidate 10.10.10.2, cost 32.166
+SPF:   better path to 10.10.10.2, cost 32.166, via 10.10.10.4, hops 2
+SPF:   exploring edge 10.10.10.3, cost 4126.964
+SPF: delete candidate 10.10.10.4, cost 30.964
+SPF: append path 10.10.10.4, cost 30.964, via 10.10.10.4
+SPF: exploring node 10.10.10.2, cost 32.166
+SPF:   exploring edge 10.10.10.4, cost 4128.166
+SPF: delete candidate 10.10.10.2, cost 32.166
+SPF: append path 10.10.10.2, cost 32.166, via 10.10.10.4
+
+--- 23:19:54.786399 ------------------------------------------------- DIJKSTRA
+
+KERN: Adding 10.10.10.4/32 from 10.10.10.4 via 10.10.10.4, cost 30.964, metric 1, v 9
+KERN: Adding 10.10.10.2/32 from 10.10.10.2 via 10.10.10.4, cost 32.166, metric 2, v 9
+
+--- 23:19:54.786586 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.195/0.164    30.964
+10.10.10.2       0.000  0.164/0.164    36.861
+
+--- 23:19:54.786628 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       78.521
+10.10.10.2       10.10.10.4       57.258
+
+--- 23:19:54.786795 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.4      1.000/0.831    INFINITE
+10.10.10.3      10.10.10.2      0.164/0.164    36.861
+10.10.10.3      10.10.10.4      0.195/0.164    30.964
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+---------------------------------------------------
+[QAUL] Receiving Message! 
+[QAUL] Message ipV4: 
+name: hansi
+name: hansi
+message: ok
+ipv4: 67766794
+hops: 0
+ttl: 255
+sqnr: 59312
+olsrtime: 59392
+---------------------------------------------------
+[QAUL] size: 784
+[QAUL] hansi, 255, 255
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   ignoring edge 10.10.10.2
+SPF:     no inverse edge
+SPF:   exploring edge 10.10.10.4, cost 30.964
+SPF: insert candidate 10.10.10.4, cost 30.964
+SPF:   better path to 10.10.10.4, cost 30.964, via <none>, hops 1
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+SPF: exploring node 10.10.10.4, cost 30.964
+SPF:   exploring edge 10.10.10.2, cost 32.166
+SPF: insert candidate 10.10.10.2, cost 32.166
+SPF:   better path to 10.10.10.2, cost 32.166, via 10.10.10.4, hops 2
+SPF:   exploring edge 10.10.10.3, cost 4126.964
+SPF: delete candidate 10.10.10.4, cost 30.964
+SPF: append path 10.10.10.4, cost 30.964, via 10.10.10.4
+SPF: exploring node 10.10.10.2, cost 32.166
+SPF:   exploring edge 10.10.10.4, cost 4128.166
+SPF: delete candidate 10.10.10.2, cost 32.166
+SPF: append path 10.10.10.2, cost 32.166, via 10.10.10.4
+
+--- 23:19:55.938028 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:19:55.938039 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.195/0.164    30.964
+10.10.10.2       0.000  0.164/0.164    36.861
+
+--- 23:19:55.938080 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       78.521
+10.10.10.2       10.10.10.4       32.166
+
+--- 23:19:55.938201 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.4      1.000/0.831    INFINITE
+10.10.10.3      10.10.10.2      0.164/0.164    36.861
+10.10.10.3      10.10.10.4      0.195/0.164    30.964
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+
+--- 23:19:56.790075 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.234/0.207    20.447
+10.10.10.2       0.000  0.164/0.164    36.861
+
+--- 23:19:56.790160 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       78.521
+10.10.10.2       10.10.10.4       32.166
+
+--- 23:19:56.790212 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.4      1.000/0.831    INFINITE
+10.10.10.3      10.10.10.2      0.164/0.164    36.861
+10.10.10.3      10.10.10.4      0.195/0.164    30.964
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+
+--- 23:19:56.939805 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.234/0.207    20.447
+10.10.10.2       0.000  0.164/0.164    36.861
+
+--- 23:19:56.939941 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       38.063
+10.10.10.2       10.10.10.4       32.166
+
+--- 23:19:56.939990 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.4      1.000/0.831    INFINITE
+10.10.10.3      10.10.10.2      0.164/0.164    36.861
+10.10.10.3      10.10.10.4      0.195/0.164    30.964
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   ignoring edge 10.10.10.2
+SPF:     no inverse edge
+SPF:   exploring edge 10.10.10.4, cost 20.447
+SPF: insert candidate 10.10.10.4, cost 20.447
+SPF:   better path to 10.10.10.4, cost 20.447, via <none>, hops 1
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+SPF: exploring node 10.10.10.4, cost 20.447
+SPF:   exploring edge 10.10.10.2, cost 21.649
+SPF: insert candidate 10.10.10.2, cost 21.649
+SPF:   better path to 10.10.10.2, cost 21.649, via 10.10.10.4, hops 2
+SPF:   exploring edge 10.10.10.3, cost 4116.447
+SPF: delete candidate 10.10.10.4, cost 20.447
+SPF: append path 10.10.10.4, cost 20.447, via 10.10.10.4
+SPF: exploring node 10.10.10.2, cost 21.649
+SPF:   exploring edge 10.10.10.4, cost 4117.649
+SPF: delete candidate 10.10.10.2, cost 21.649
+SPF: append path 10.10.10.2, cost 21.649, via 10.10.10.4
+
+--- 23:19:57.792270 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:19:57.792285 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.234/0.207    20.447
+10.10.10.2       0.000  0.195/0.246    20.643
+
+--- 23:19:57.792339 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       38.063
+10.10.10.2       10.10.10.4       32.166
+
+--- 23:19:57.792393 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.4      1.000/0.831    INFINITE
+10.10.10.3      10.10.10.2      0.195/0.246    20.643
+10.10.10.3      10.10.10.4      0.234/0.207    20.447
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+Processing TC from 10.10.10.2, seq 0x406f
+TC:   found neighbor tc_entry 10.10.10.3
+TC:   found inverse edge for 10.10.10.2
+TC: add edge entry 10.10.10.2 > 10.10.10.3, cost (0.000/0.000) INFINITE
+TC:   chg edge entry 10.10.10.2 > 10.10.10.4, cost (1.000/0.831) 1.202
+
+--- 23:19:58.645105 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.234/0.207    20.447
+10.10.10.2       0.000  0.195/0.246    20.643
+
+--- 23:19:58.645176 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       21.834
+10.10.10.2       10.10.10.4       32.166
+
+--- 23:19:58.645239 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.246/0.164    INFINITE
+10.10.10.2      10.10.10.4      1.000/0.831    1.202
+10.10.10.3      10.10.10.2      0.195/0.246    20.643
+10.10.10.3      10.10.10.4      0.234/0.207    20.447
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   exploring edge 10.10.10.2, cost 15.052
+SPF: insert candidate 10.10.10.2, cost 15.052
+SPF:   better path to 10.10.10.2, cost 15.052, via <none>, hops 1
+SPF:   exploring edge 10.10.10.4, cost 20.447
+SPF: insert candidate 10.10.10.4, cost 20.447
+SPF:   better path to 10.10.10.4, cost 20.447, via <none>, hops 1
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+SPF: exploring node 10.10.10.2, cost 15.052
+SPF:   exploring edge 10.10.10.3, cost 4111.052
+SPF:   exploring edge 10.10.10.4, cost 16.254
+SPF: delete candidate 10.10.10.4, cost 20.447
+SPF: insert candidate 10.10.10.4, cost 16.254
+SPF:   better path to 10.10.10.4, cost 16.254, via 10.10.10.2, hops 2
+SPF: delete candidate 10.10.10.2, cost 15.052
+SPF: append path 10.10.10.2, cost 15.052, via 10.10.10.2
+SPF: exploring node 10.10.10.4, cost 16.254
+SPF:   exploring edge 10.10.10.2, cost 17.456
+SPF:   exploring edge 10.10.10.3, cost 4112.254
+SPF: delete candidate 10.10.10.4, cost 16.254
+SPF: append path 10.10.10.4, cost 16.254, via 10.10.10.2
+
+--- 23:19:58.795134 ------------------------------------------------- DIJKSTRA
+
+KERN: Deleting 10.10.10.2/32 via 10.10.10.4
+KERN: Adding 10.10.10.2/32 from 10.10.10.2 via 10.10.10.2, cost 15.052, metric 1, v 12
+KERN: Deleting 10.10.10.4/32 via 10.10.10.4
+KERN: Adding 10.10.10.4/32 from 10.10.10.4 via 10.10.10.2, cost 16.254, metric 2, v 12
+
+--- 23:19:58.795654 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.234/0.207    20.447
+10.10.10.2       0.000  0.234/0.282    15.052
+
+--- 23:19:58.795750 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       21.834
+10.10.10.2       10.10.10.4       32.166
+
+--- 23:19:58.795798 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.246/0.164    INFINITE
+10.10.10.2      10.10.10.4      1.000/0.831    1.202
+10.10.10.3      10.10.10.2      0.234/0.282    15.052
+10.10.10.3      10.10.10.4      0.234/0.207    20.447
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+
+--- 23:19:59.345354 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.234/0.207    20.447
+10.10.10.2       0.000  0.234/0.282    15.052
+
+--- 23:19:59.345461 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       21.834
+10.10.10.2       10.10.10.4       21.575
+
+--- 23:19:59.345509 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.246/0.164    INFINITE
+10.10.10.2      10.10.10.4      1.000/0.831    1.202
+10.10.10.3      10.10.10.2      0.234/0.282    15.052
+10.10.10.3      10.10.10.4      0.234/0.207    20.447
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   exploring edge 10.10.10.2, cost 15.052
+SPF: insert candidate 10.10.10.2, cost 15.052
+SPF:   better path to 10.10.10.2, cost 15.052, via <none>, hops 1
+SPF:   exploring edge 10.10.10.4, cost 13.684
+SPF: insert candidate 10.10.10.4, cost 13.684
+SPF:   better path to 10.10.10.4, cost 13.684, via <none>, hops 1
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+SPF: exploring node 10.10.10.4, cost 13.684
+SPF:   exploring edge 10.10.10.2, cost 14.886
+SPF: delete candidate 10.10.10.2, cost 15.052
+SPF: insert candidate 10.10.10.2, cost 14.886
+SPF:   better path to 10.10.10.2, cost 14.886, via 10.10.10.4, hops 2
+SPF:   exploring edge 10.10.10.3, cost 4109.684
+SPF: delete candidate 10.10.10.4, cost 13.684
+SPF: append path 10.10.10.4, cost 13.684, via 10.10.10.4
+SPF: exploring node 10.10.10.2, cost 14.886
+SPF:   exploring edge 10.10.10.3, cost 4110.886
+SPF:   exploring edge 10.10.10.4, cost 16.088
+SPF: delete candidate 10.10.10.2, cost 14.886
+SPF: append path 10.10.10.2, cost 14.886, via 10.10.10.4
+
+--- 23:19:59.796645 ------------------------------------------------- DIJKSTRA
+
+KERN: Deleting 10.10.10.4/32 via 10.10.10.2
+KERN: Adding 10.10.10.4/32 from 10.10.10.4 via 10.10.10.4, cost 13.684, metric 1, v 13
+KERN: Deleting 10.10.10.2/32 via 10.10.10.2
+KERN: Adding 10.10.10.2/32 from 10.10.10.2 via 10.10.10.4, cost 14.886, metric 2, v 13
+
+--- 23:19:59.796985 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.259/0.282    13.684
+10.10.10.2       0.000  0.234/0.282    15.052
+
+--- 23:19:59.797043 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       21.834
+10.10.10.2       10.10.10.4       21.575
+
+--- 23:19:59.797091 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.246/0.164    INFINITE
+10.10.10.2      10.10.10.4      1.000/0.831    1.202
+10.10.10.3      10.10.10.2      0.234/0.282    15.052
+10.10.10.3      10.10.10.4      0.259/0.282    13.684
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+
+--- 23:20:00.297655 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.259/0.282    13.684
+10.10.10.2       0.000  0.234/0.282    15.052
+
+--- 23:20:00.297799 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       16.180
+10.10.10.2       10.10.10.4       21.575
+
+--- 23:20:00.297888 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.246/0.164    INFINITE
+10.10.10.2      10.10.10.4      1.000/0.831    1.202
+10.10.10.3      10.10.10.2      0.234/0.282    15.052
+10.10.10.3      10.10.10.4      0.259/0.282    13.684
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   exploring edge 10.10.10.2, cost 11.779
+SPF: insert candidate 10.10.10.2, cost 11.779
+SPF:   better path to 10.10.10.2, cost 11.779, via <none>, hops 1
+SPF:   exploring edge 10.10.10.4, cost 13.684
+SPF: insert candidate 10.10.10.4, cost 13.684
+SPF:   better path to 10.10.10.4, cost 13.684, via <none>, hops 1
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+SPF: exploring node 10.10.10.2, cost 11.779
+SPF:   exploring edge 10.10.10.3, cost 4107.779
+SPF:   exploring edge 10.10.10.4, cost 12.981
+SPF: delete candidate 10.10.10.4, cost 13.684
+SPF: insert candidate 10.10.10.4, cost 12.981
+SPF:   better path to 10.10.10.4, cost 12.981, via 10.10.10.2, hops 2
+SPF: delete candidate 10.10.10.2, cost 11.779
+SPF: append path 10.10.10.2, cost 11.779, via 10.10.10.2
+SPF: exploring node 10.10.10.4, cost 12.981
+SPF:   exploring edge 10.10.10.2, cost 14.184
+SPF:   exploring edge 10.10.10.3, cost 4108.981
+SPF: delete candidate 10.10.10.4, cost 12.981
+SPF: append path 10.10.10.4, cost 12.981, via 10.10.10.2
+
+--- 23:20:00.798978 ------------------------------------------------- DIJKSTRA
+
+KERN: Deleting 10.10.10.2/32 via 10.10.10.4
+KERN: Adding 10.10.10.2/32 from 10.10.10.2 via 10.10.10.2, cost 11.779, metric 1, v 14
+KERN: Deleting 10.10.10.4/32 via 10.10.10.4
+KERN: Adding 10.10.10.4/32 from 10.10.10.4 via 10.10.10.2, cost 12.981, metric 2, v 14
+
+--- 23:20:00.799307 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.259/0.282    13.684
+10.10.10.2       0.000  0.271/0.313    11.779
+
+--- 23:20:00.799417 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       16.180
+10.10.10.2       10.10.10.4       21.575
+
+--- 23:20:00.799466 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.246/0.164    INFINITE
+10.10.10.2      10.10.10.4      1.000/0.831    1.202
+10.10.10.3      10.10.10.2      0.271/0.313    11.779
+10.10.10.3      10.10.10.4      0.259/0.282    13.684
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+
+--- 23:20:01.199851 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.259/0.282    13.684
+10.10.10.2       0.000  0.271/0.313    11.779
+
+--- 23:20:01.200052 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       16.180
+10.10.10.2       10.10.10.4       14.812
+
+--- 23:20:01.200118 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.246/0.164    INFINITE
+10.10.10.2      10.10.10.4      1.000/0.831    1.202
+10.10.10.3      10.10.10.2      0.271/0.313    11.779
+10.10.10.3      10.10.10.4      0.259/0.282    13.684
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   exploring edge 10.10.10.2, cost 11.779
+SPF: insert candidate 10.10.10.2, cost 11.779
+SPF:   better path to 10.10.10.2, cost 11.779, via <none>, hops 1
+SPF:   exploring edge 10.10.10.4, cost 10.983
+SPF: insert candidate 10.10.10.4, cost 10.983
+SPF:   better path to 10.10.10.4, cost 10.983, via <none>, hops 1
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+SPF: exploring node 10.10.10.4, cost 10.983
+SPF:   exploring edge 10.10.10.2, cost 12.186
+SPF:   exploring edge 10.10.10.3, cost 4106.983
+SPF: delete candidate 10.10.10.4, cost 10.983
+SPF: append path 10.10.10.4, cost 10.983, via 10.10.10.4
+SPF: exploring node 10.10.10.2, cost 11.779
+SPF:   exploring edge 10.10.10.3, cost 4107.779
+SPF:   exploring edge 10.10.10.4, cost 12.981
+SPF: delete candidate 10.10.10.2, cost 11.779
+SPF: append path 10.10.10.2, cost 11.779, via 10.10.10.2
+
+--- 23:20:01.801790 ------------------------------------------------- DIJKSTRA
+
+KERN: Deleting 10.10.10.4/32 via 10.10.10.2
+KERN: Adding 10.10.10.4/32 from 10.10.10.4 via 10.10.10.4, cost 10.983, metric 1, v 15
+
+--- 23:20:01.802080 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.290/0.313    10.983
+10.10.10.2       0.000  0.271/0.313    11.779
+
+--- 23:20:01.802131 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       16.180
+10.10.10.2       10.10.10.4       14.812
+
+--- 23:20:01.802179 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.246/0.164    INFINITE
+10.10.10.2      10.10.10.4      1.000/0.831    1.202
+10.10.10.3      10.10.10.2      0.271/0.313    11.779
+10.10.10.3      10.10.10.4      0.290/0.313    10.983
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+Processing TC from 10.10.10.2, seq 0x4072
+TC:   chg edge entry 10.10.10.2 > 10.10.10.3, cost (0.313/0.234) 13.547
+TC:   chg edge entry 10.10.10.2 > 10.10.10.4, cost (1.000/0.886) 1.128
+
+--- 23:20:02.302554 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.290/0.313    10.983
+10.10.10.2       0.000  0.271/0.313    11.779
+
+--- 23:20:02.302604 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       12.907
+10.10.10.2       10.10.10.4       14.812
+
+--- 23:20:02.302650 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.313/0.234    13.547
+10.10.10.2      10.10.10.4      1.000/0.886    1.128
+10.10.10.3      10.10.10.2      0.271/0.313    11.779
+10.10.10.3      10.10.10.4      0.290/0.313    10.983
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   exploring edge 10.10.10.2, cost 9.596
+SPF: insert candidate 10.10.10.2, cost 9.596
+SPF:   better path to 10.10.10.2, cost 9.596, via <none>, hops 1
+SPF:   exploring edge 10.10.10.4, cost 10.983
+SPF: insert candidate 10.10.10.4, cost 10.983
+SPF:   better path to 10.10.10.4, cost 10.983, via <none>, hops 1
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+SPF: exploring node 10.10.10.2, cost 9.596
+SPF:   exploring edge 10.10.10.3, cost 23.143
+SPF:   exploring edge 10.10.10.4, cost 10.724
+SPF: delete candidate 10.10.10.4, cost 10.983
+SPF: insert candidate 10.10.10.4, cost 10.724
+SPF:   better path to 10.10.10.4, cost 10.724, via 10.10.10.2, hops 2
+SPF: delete candidate 10.10.10.2, cost 9.596
+SPF: append path 10.10.10.2, cost 9.596, via 10.10.10.2
+SPF: exploring node 10.10.10.4, cost 10.724
+SPF:   exploring edge 10.10.10.2, cost 11.926
+SPF:   exploring edge 10.10.10.3, cost 4106.724
+SPF: delete candidate 10.10.10.4, cost 10.724
+SPF: append path 10.10.10.4, cost 10.724, via 10.10.10.2
+
+--- 23:20:02.803536 ------------------------------------------------- DIJKSTRA
+
+KERN: Deleting 10.10.10.4/32 via 10.10.10.4
+KERN: Adding 10.10.10.4/32 from 10.10.10.4 via 10.10.10.2, cost 10.724, metric 2, v 16
+
+--- 23:20:02.803670 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.290/0.313    10.983
+10.10.10.2       0.000  0.302/0.345    9.596
+
+--- 23:20:02.803719 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       12.907
+10.10.10.2       10.10.10.4       14.812
+
+--- 23:20:02.803766 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.313/0.234    13.547
+10.10.10.2      10.10.10.4      1.000/0.886    1.128
+10.10.10.3      10.10.10.2      0.302/0.345    9.596
+10.10.10.3      10.10.10.4      0.290/0.313    10.983
+10.10.10.4      10.10.10.2      0.831/1.000    1.202
+10.10.10.4      10.10.10.3      0.164/0.113    INFINITE
+Processing TC from 10.10.10.4, seq 0xe7b7
+TC:   chg edge entry 10.10.10.4 > 10.10.10.2, cost (0.886/1.000) 1.128
+TC:   chg edge entry 10.10.10.4 > 10.10.10.3, cost (0.313/0.234) 13.547
+
+--- 23:20:03.005850 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.290/0.313    10.983
+10.10.10.2       0.000  0.302/0.345    9.596
+
+--- 23:20:03.006332 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       12.907
+10.10.10.2       10.10.10.4       12.111
+
+--- 23:20:03.006361 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.313/0.234    13.547
+10.10.10.2      10.10.10.4      1.000/0.886    1.128
+10.10.10.3      10.10.10.2      0.302/0.345    9.596
+10.10.10.3      10.10.10.4      0.290/0.313    10.983
+10.10.10.4      10.10.10.2      0.886/1.000    1.128
+10.10.10.4      10.10.10.3      0.313/0.234    13.547
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   exploring edge 10.10.10.2, cost 9.596
+SPF: insert candidate 10.10.10.2, cost 9.596
+SPF:   better path to 10.10.10.2, cost 9.596, via <none>, hops 1
+SPF:   exploring edge 10.10.10.4, cost 10.983
+SPF: insert candidate 10.10.10.4, cost 10.983
+SPF:   better path to 10.10.10.4, cost 10.983, via <none>, hops 1
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+SPF: exploring node 10.10.10.2, cost 9.596
+SPF:   exploring edge 10.10.10.3, cost 23.143
+SPF:   exploring edge 10.10.10.4, cost 10.724
+SPF: delete candidate 10.10.10.4, cost 10.983
+SPF: insert candidate 10.10.10.4, cost 10.724
+SPF:   better path to 10.10.10.4, cost 10.724, via 10.10.10.2, hops 2
+SPF: delete candidate 10.10.10.2, cost 9.596
+SPF: append path 10.10.10.2, cost 9.596, via 10.10.10.2
+SPF: exploring node 10.10.10.4, cost 10.724
+SPF:   exploring edge 10.10.10.2, cost 11.852
+SPF:   exploring edge 10.10.10.3, cost 24.271
+SPF: delete candidate 10.10.10.4, cost 10.724
+SPF: append path 10.10.10.4, cost 10.724, via 10.10.10.2
+
+--- 23:20:04.013243 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:20:04.013259 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.290/0.313    10.983
+10.10.10.2       0.000  0.302/0.345    9.596
+
+--- 23:20:04.013315 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       10.724
+10.10.10.2       10.10.10.4       12.111
+
+--- 23:20:04.013368 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.313/0.234    13.547
+10.10.10.2      10.10.10.4      1.000/0.886    1.128
+10.10.10.3      10.10.10.2      0.302/0.345    9.596
+10.10.10.3      10.10.10.4      0.290/0.313    10.983
+10.10.10.4      10.10.10.2      0.886/1.000    1.128
+10.10.10.4      10.10.10.3      0.313/0.234    13.547
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   exploring edge 10.10.10.2, cost 9.596
+SPF: insert candidate 10.10.10.2, cost 9.596
+SPF:   better path to 10.10.10.2, cost 9.596, via <none>, hops 1
+SPF:   exploring edge 10.10.10.4, cost 10.983
+SPF: insert candidate 10.10.10.4, cost 10.983
+SPF:   better path to 10.10.10.4, cost 10.983, via <none>, hops 1
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+SPF: exploring node 10.10.10.2, cost 9.596
+SPF:   exploring edge 10.10.10.3, cost 23.143
+SPF:   exploring edge 10.10.10.4, cost 10.724
+SPF: delete candidate 10.10.10.4, cost 10.983
+SPF: insert candidate 10.10.10.4, cost 10.724
+SPF:   better path to 10.10.10.4, cost 10.724, via 10.10.10.2, hops 2
+SPF: delete candidate 10.10.10.2, cost 9.596
+SPF: append path 10.10.10.2, cost 9.596, via 10.10.10.2
+SPF: exploring node 10.10.10.4, cost 10.724
+SPF:   exploring edge 10.10.10.2, cost 11.852
+SPF:   exploring edge 10.10.10.3, cost 24.271
+SPF: delete candidate 10.10.10.4, cost 10.724
+SPF: append path 10.10.10.4, cost 10.724, via 10.10.10.2
+
+--- 23:20:05.769195 ------------------------------------------------- DIJKSTRA
+
+
+--- 23:20:05.769210 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.290/0.313    10.983
+10.10.10.2       0.000  0.302/0.345    9.596
+
+--- 23:20:05.769258 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       10.724
+10.10.10.2       10.10.10.4       12.111
+
+--- 23:20:05.769307 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.313/0.234    13.547
+10.10.10.2      10.10.10.4      1.000/0.886    1.128
+10.10.10.3      10.10.10.2      0.302/0.345    9.596
+10.10.10.3      10.10.10.4      0.290/0.313    10.983
+10.10.10.4      10.10.10.2      0.886/1.000    1.128
+10.10.10.4      10.10.10.3      0.313/0.234    13.547
+
+--- 23:20:05.818672 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.317/0.313    10.034
+10.10.10.2       0.000  0.356/0.372    7.521
+
+--- 23:20:05.818751 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       10.724
+10.10.10.2       10.10.10.4       12.111
+
+--- 23:20:05.818994 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.313/0.234    13.547
+10.10.10.2      10.10.10.4      1.000/0.886    1.128
+10.10.10.3      10.10.10.2      0.302/0.345    9.596
+10.10.10.3      10.10.10.4      0.290/0.313    10.983
+10.10.10.4      10.10.10.2      0.886/1.000    1.128
+10.10.10.4      10.10.10.3      0.313/0.234    13.547
+Processing TC from 10.10.10.4, seq 0xe7ba
+TC:   chg edge entry 10.10.10.4 > 10.10.10.2, cost (0.886/1.000) 1.128
+TC:   chg edge entry 10.10.10.4 > 10.10.10.3, cost (0.372/0.290) 9.249
+
+--- 23:20:06.570912 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.317/0.313    10.034
+10.10.10.2       0.000  0.356/0.372    7.521
+
+--- 23:20:06.570999 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       10.724
+10.10.10.2       10.10.10.4       11.162
+
+--- 23:20:06.571047 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.313/0.234    13.547
+10.10.10.2      10.10.10.4      1.000/0.886    1.128
+10.10.10.3      10.10.10.2      0.302/0.345    9.596
+10.10.10.3      10.10.10.4      0.290/0.313    10.983
+10.10.10.4      10.10.10.2      0.886/1.000    1.128
+10.10.10.4      10.10.10.3      0.372/0.290    9.249
+SPF: insert candidate 10.10.10.3, cost 0.000
+SPF: exploring node 10.10.10.3, cost 0.000
+SPF:   exploring edge 10.10.10.2, cost 7.521
+SPF: insert candidate 10.10.10.2, cost 7.521
+SPF:   better path to 10.10.10.2, cost 7.521, via <none>, hops 1
+SPF:   exploring edge 10.10.10.4, cost 8.148
+SPF: insert candidate 10.10.10.4, cost 8.148
+SPF:   better path to 10.10.10.4, cost 8.148, via <none>, hops 1
+SPF: delete candidate 10.10.10.3, cost 0.000
+SPF: append path 10.10.10.3, cost 0.000, via -
+SPF: exploring node 10.10.10.2, cost 7.521
+SPF:   exploring edge 10.10.10.3, cost 21.068
+SPF:   exploring edge 10.10.10.4, cost 8.649
+SPF: delete candidate 10.10.10.2, cost 7.521
+SPF: append path 10.10.10.2, cost 7.521, via 10.10.10.2
+SPF: exploring node 10.10.10.4, cost 8.148
+SPF:   exploring edge 10.10.10.2, cost 9.276
+SPF:   exploring edge 10.10.10.3, cost 17.397
+SPF: delete candidate 10.10.10.4, cost 8.148
+SPF: append path 10.10.10.4, cost 8.148, via 10.10.10.4
+
+--- 23:20:06.822291 ------------------------------------------------- DIJKSTRA
+
+KERN: Deleting 10.10.10.4/32 via 10.10.10.2
+KERN: Adding 10.10.10.4/32 from 10.10.10.4 via 10.10.10.4, cost 8.148, metric 1, v 19
+
+--- 23:20:06.822608 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.329/0.372    8.148
+10.10.10.2       0.000  0.356/0.372    7.521
+
+--- 23:20:06.822664 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       10.724
+10.10.10.2       10.10.10.4       11.162
+
+--- 23:20:06.822706 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.313/0.234    13.547
+10.10.10.2      10.10.10.4      1.000/0.886    1.128
+10.10.10.3      10.10.10.2      0.356/0.372    7.521
+10.10.10.3      10.10.10.4      0.329/0.372    8.148
+10.10.10.4      10.10.10.2      0.886/1.000    1.128
+10.10.10.4      10.10.10.3      0.372/0.290    9.249
+Processing TC from 10.10.10.2, seq 0x4076
+TC:   chg edge entry 10.10.10.2 > 10.10.10.3, cost (0.372/0.302) 8.889
+TC:   chg edge entry 10.10.10.2 > 10.10.10.4, cost (1.000/0.886) 1.128
+
+--- 23:20:07.474240 ---------------------------------------------------- LINKS
+
+IP address       hyst         LQ       ETX
+10.10.10.4       0.000  0.329/0.372    8.148
+10.10.10.2       0.000  0.356/0.372    7.521
+
+--- 23:20:07.474311 ----------------------- TWO-HOP NEIGHBORS
+
+IP addr (2-hop)  IP addr (1-hop)  Total cost
+10.10.10.4       10.10.10.2       8.649
+10.10.10.2       10.10.10.4       11.162
+
+--- 23:20:07.474365 ------------------------------------------------- TOPOLOGY
+
+Source IP addr  Dest IP addr          LQ        ETX
+10.10.10.2      10.10.10.3      0.372/0.302    8.889
+10.10.10.2      10.10.10.4      1.000/0.886    1.128
+10.10.10.3      10.10.10.2      0.356/0.372    7.521
+10.10.10.3      10.10.10.4      0.329/0.372    8.148
+10.10.10.4      10.10.10.2      0.886/1.000    1.128
+10.10.10.4      10.10.10.3      0.372/0.290    9.249
+Received signal 2 - shutting down
+Deleting all routes...
+KERN: Deleting 10.10.10.2/32 via 10.10.10.2
+KERN: Deleting 10.10.10.4/32 via 10.10.10.4
+RIB: del prefix 10.10.10.2/32 from 10.10.10.2
+TC: del edge entry 10.10.10.2 > 10.10.10.3, cost (0.372/0.302) 8.889
+TC: del edge entry 10.10.10.2 > 10.10.10.4, cost (1.000/0.886) 1.128
+RIB: del prefix 10.10.10.3/32 from 10.10.10.3
+TC: del edge entry 10.10.10.3 > 10.10.10.2, cost (0.356/0.372) 7.521
+TC: del edge entry 10.10.10.3 > 10.10.10.4, cost (0.329/0.372) 8.148
+RIB: del prefix 10.10.10.4/32 from 10.10.10.4
+TC: del edge entry 10.10.10.4 > 10.10.10.2, cost (0.886/1.000) 1.128
+TC: del edge entry 10.10.10.4 > 10.10.10.3, cost (0.372/0.290) 9.249
+Closing sockets...
+Shutting down IPC...
+Closing plugins...
+*** QAUL: destructor
+Free all memory...
+
+ <<<< olsr.org - 0.6.0 - terminating >>>>
+           http://www.olsr.org
