@@ -10,20 +10,28 @@ qaul.net works on:
 Installation and Compile Instructions
 --------------------------------------
 
-Compile olsrd
-
-    cd olsrd-0.6.0
-    make
-
-Compile olsrd_qaul plugin
-
-    cd olsrd-0.6.0/lib/olsrd_qaul
-    make
-
 Compile static qaullib
 
     # uncomment in libqaul/Makefile the line '#CFLAGS=-arch i386' to 'CFLAGS=-arch i386'
     cd libqaul
     make osx
+    cd ../
 
-Open the OSX project in Xcode
+Open the OSX project in Xcode to run qaul.net
+
+
+optional:
+
+Compile olsrd
+
+    cd olsrd-0.6.0
+    make
+    cp olsrd ../osx/
+    cd ../
+
+Compile olsrd_qaul plugin
+
+    cd olsrd-0.6.0/lib/olsrd_qaul
+    make
+    cp olsrd_qaul.so.0.1 ../../../osx/
+    cd ../../../
