@@ -20,6 +20,7 @@ win/qaul/Release
 
 # Xcode
 osx/build/
+ios/build/
 *.mode1v3
 *.pbxuser
 
