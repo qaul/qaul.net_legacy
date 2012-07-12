@@ -217,7 +217,7 @@ void Qaullib_IpcEvaluateChat(union olsr_message *msg)
 			1,
 			chat_user,
 			chat_msg,
-			inet_ntop(AF_INET, &msg->v4.originator, &ipbuf, sizeof(ipbuf)),
+			inet_ntop(AF_INET, &msg->v4.originator, (char *)&ipbuf, sizeof(ipbuf)),
 			4,
 			(int)msg->v4.hopcnt,
 			(int)msg->v4.ttl,

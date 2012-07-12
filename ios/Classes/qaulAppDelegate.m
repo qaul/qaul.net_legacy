@@ -5,6 +5,7 @@
 
 #import "qaulAppDelegate.h"
 #import "qaulViewController.h"
+#import "../../libqaul/qaullib.h"
 
 @implementation qaulAppDelegate
 
@@ -18,14 +19,26 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
     // Override point for customization after application launch.
-
+	// copy files at first startup
+	[self CopyFilesAtFirstStartup];
+	
+	// initialize app
+	NSLog(@"initialize app");		
+	Qaullib_Init([qaulResourcePath UTF8String]);
+	
+	// start web server
+	NSLog(@"start web server");
+	if(Qaullib_WebserverStart())
+		NSLog(@"successful web server start");
+	else		
+		NSLog(@"web server start up error");
+	
 	// Set the view controller as the window's root view controller and display.
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
 
     return YES;
 }
-
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     /*
@@ -62,8 +75,44 @@
      Called when the application is about to terminate.
      See also applicationDidEnterBackground:.
      */
+	
+	Qaullib_Exit();
 }
 
+
+#pragma mark -
+#pragma mark Qaul Configuration
+
+- (void) CopyFilesAtFirstStartup 
+{
+	NSFileManager *filemgr;
+	NSArray *documentsPaths;
+	NSError *dError;
+	
+	filemgr =[NSFileManager defaultManager];
+	documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	qaulResourcePath = [documentsPaths objectAtIndex:0];
+	
+	// check if data base exists
+	if(![filemgr fileExistsAtPath:[NSString stringWithFormat:@"%@/qaullib.db", qaulResourcePath]])
+	{
+		NSLog(@"First startup: copy files to document directory");
+		
+		if(![filemgr copyItemAtPath:[NSString stringWithFormat:@"%@/../qaul.app/www", qaulResourcePath] toPath:[NSString stringWithFormat:@"%@/www", qaulResourcePath] error:&dError])
+			NSLog(@"Error: %@", dError);
+		else
+			NSLog(@"Sucessfully copied");
+	}
+	else 
+		NSLog(@"Not first startup");
+	
+	[filemgr release];
+}
+
+- (void) QaulConfigure 
+{
+	
+}
 
 #pragma mark -
 #pragma mark Memory management

@@ -214,7 +214,7 @@ int Qaullib_WebserverStart(void)
 	//assert(ctx != NULL);
 	if( ctx == NULL )
 	{
-		fprintf(stderr, "Can't open webserver\n");
+		fprintf(stderr, "Can't open web server\n");
 		//exit(1);
 		return 0;
 	}

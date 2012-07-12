@@ -34,9 +34,8 @@ int Qaullib_CaptiveStart(void)
 		qaullib_pthread_start((qaullib_thread_func_t) Qaullib_DNS_Server, &qaul_ip_captive);
 		
 		qaul_captive_running = 1;
-
-		return 1;
 	}
+	return 1;
 }
 
 // ---------------------------------------------------------------------

@@ -541,7 +541,7 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 					"{\"id\":%i,\"name\":\"%s\",\"ip\":\"%s\",\"lq\":%f}",
 					mynode.item->id,
 					mynode.item->name,
-					inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, &ipbuf, sizeof(ipbuf)),
+					inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
 					mynode.item->lq);
 		}
 	}

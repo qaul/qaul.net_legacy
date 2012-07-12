@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 
 char Qaullib_UrlFromHex(char chr)

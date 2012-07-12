@@ -44,6 +44,7 @@ void Qaullib_Dhcp_LL_Delete_Item (struct qaul_dhcp_LL_item *item);
 void Qaullib_Dhcp_LL_Clean (void);
 int Qaullib_Dhcp_LL_Search_Ip (uint32_t ip, struct qaul_dhcp_LL_item **item);
 int Qaullib_Dhcp_LL_Search_Mac (char *mac, struct qaul_dhcp_LL_item **item);
+int Qaullib_Dhcp_LL_Search_IpMAC (uint32_t ip, char *mac, struct qaul_dhcp_LL_item **item);
 int Qaullib_MAC_Compare (char *mac, struct qaul_dhcp_LL_item *item);
 int Qaullib_DHCP_Options(char *options, char *ip, char *request_ip);
 
@@ -215,7 +216,7 @@ void *Qaullib_DHCP_Server(void *server_ip)
 
 					// check if address is in dhcp list
 					struct qaul_dhcp_LL_item *ll_item;
-					if(Qaullib_Dhcp_LL_Search_IpMAC (client_ip, &DHCP_Buffer.dp_chaddr, &ll_item))
+					if(Qaullib_Dhcp_LL_Search_IpMAC (client_ip, (char *)&DHCP_Buffer.dp_chaddr, &ll_item))
 					{
 						ll_item->time = time(NULL);
 					}

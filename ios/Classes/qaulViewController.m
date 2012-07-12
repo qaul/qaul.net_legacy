@@ -31,8 +31,9 @@
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-    [super viewDidLoad];
-	[webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://qaul.net/test/jqm_qaul.html"]]];
+    NSLog(@"view did load");
+	[super viewDidLoad];
+	[webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://127.0.0.1:8081/jqm_qaul.html"]]];
 }
 
 

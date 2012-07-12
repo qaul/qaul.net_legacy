@@ -54,7 +54,7 @@ int Qaullib_WgetConnect(struct qaul_wget_connection *myConn)
     return 0;
   } else {
 	  char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
-	  inet_ntop(myConn->ip.sin_family, &myConn->ip.sin_addr, &ipbuf, MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN));
+	  inet_ntop(myConn->ip.sin_family, &myConn->ip.sin_addr, (char *)&ipbuf, MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN));
 	  printf("Connected!! socket: %i ip: %s\n", myConn->socket, ipbuf);
 
     // Setting socket non-blocking

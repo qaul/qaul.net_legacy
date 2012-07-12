@@ -1,0 +1,467 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5F7E545315AEC890002D011D /* bstrlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E540615AEC890002D011D /* bstrlib.c */; };
+		5F7E545415AEC890002D011D /* bstrlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E540715AEC890002D011D /* bstrlib.h */; };
+		5F7E545B15AEC890002D011D /* qaullib_captive.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E541415AEC890002D011D /* qaullib_captive.c */; };
+		5F7E545C15AEC890002D011D /* qaullib_captive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E541515AEC890002D011D /* qaullib_captive.h */; };
+		5F7E545E15AEC890002D011D /* qaullib_captive_dhcp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E541715AEC890002D011D /* qaullib_captive_dhcp.c */; };
+		5F7E546015AEC890002D011D /* qaullib_captive_dns.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E541915AEC890002D011D /* qaullib_captive_dns.c */; };
+		5F7E546215AEC890002D011D /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E541D15AEC890002D011D /* mongoose.c */; };
+		5F7E546315AEC890002D011D /* mongoose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E541E15AEC890002D011D /* mongoose.h */; };
+		5F7E546515AEC890002D011D /* mongoose_extra.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E542015AEC890002D011D /* mongoose_extra.h */; };
+		5F7E546615AEC890002D011D /* hashing.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E542215AEC890002D011D /* hashing.c */; };
+		5F7E546715AEC890002D011D /* hashing.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E542315AEC890002D011D /* hashing.h */; };
+		5F7E546915AEC890002D011D /* mantissa.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E542515AEC890002D011D /* mantissa.c */; };
+		5F7E546A15AEC890002D011D /* mantissa.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E542615AEC890002D011D /* mantissa.h */; };
+		5F7E546C15AEC890002D011D /* olsr_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E542815AEC890002D011D /* olsr_types.h */; };
+		5F7E546D15AEC890002D011D /* olsrd_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E542915AEC890002D011D /* olsrd_types.h */; };
+		5F7E547215AEC890002D011D /* qaullib_defines.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E543115AEC890002D011D /* qaullib_defines.h */; };
+		5F7E547315AEC890002D011D /* qaullib_filesharing.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E543215AEC890002D011D /* qaullib_filesharing.c */; };
+		5F7E547415AEC890002D011D /* qaullib_filesharing.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E543315AEC890002D011D /* qaullib_filesharing.h */; };
+		5F7E547515AEC890002D011D /* qaullib_ipc.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E543415AEC890002D011D /* qaullib_ipc.c */; };
+		5F7E547615AEC890002D011D /* qaullib_ipc.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E543515AEC890002D011D /* qaullib_ipc.h */; };
+		5F7E547715AEC890002D011D /* qaullib_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E543615AEC890002D011D /* qaullib_private.h */; };
+		5F7E547815AEC890002D011D /* qaullib_sql.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E543715AEC890002D011D /* qaullib_sql.h */; };
+		5F7E547915AEC890002D011D /* qaullib_threads.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E543815AEC890002D011D /* qaullib_threads.c */; };
+		5F7E547A15AEC890002D011D /* qaullib_threads.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E543915AEC890002D011D /* qaullib_threads.h */; };
+		5F7E547B15AEC890002D011D /* qaullib_user_LL.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E543A15AEC890002D011D /* qaullib_user_LL.c */; };
+		5F7E547C15AEC890002D011D /* qaullib_user_LL.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E543B15AEC890002D011D /* qaullib_user_LL.h */; };
+		5F7E547D15AEC890002D011D /* qaullib_user.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E543C15AEC890002D011D /* qaullib_user.c */; };
+		5F7E547E15AEC890002D011D /* qaullib_user.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E543D15AEC890002D011D /* qaullib_user.h */; };
+		5F7E547F15AEC890002D011D /* qaullib_webclient.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E543E15AEC890002D011D /* qaullib_webclient.c */; };
+		5F7E548015AEC890002D011D /* qaullib_webclient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E543F15AEC890002D011D /* qaullib_webclient.h */; };
+		5F7E548115AEC890002D011D /* qaullib_webserver.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E544015AEC890002D011D /* qaullib_webserver.c */; };
+		5F7E548215AEC890002D011D /* qaullib_webserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E544115AEC890002D011D /* qaullib_webserver.h */; };
+		5F7E548315AEC890002D011D /* qaullib.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E544215AEC890002D011D /* qaullib.c */; };
+		5F7E548415AEC890002D011D /* qaullib.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E544315AEC890002D011D /* qaullib.h */; };
+		5F7E548515AEC890002D011D /* shell.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E544515AEC890002D011D /* shell.c */; };
+		5F7E548615AEC890002D011D /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E544615AEC890002D011D /* sqlite3.c */; };
+		5F7E548715AEC890002D011D /* sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E544715AEC890002D011D /* sqlite3.h */; };
+		5F7E548915AEC890002D011D /* sqlite3ext.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E544915AEC890002D011D /* sqlite3ext.h */; };
+		5F7E548A15AEC890002D011D /* urlcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E544B15AEC890002D011D /* urlcode.c */; };
+		5F7E548B15AEC890002D011D /* urlcode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E544C15AEC890002D011D /* urlcode.h */; };
+		5F7E551815AECD7B002D011D /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E551415AECD7B002D011D /* config.h */; };
+		5F7E551915AECD7B002D011D /* sha1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E551515AECD7B002D011D /* sha1.h */; };
+		5F7E551A15AECD7B002D011D /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E551615AECD7B002D011D /* sha1.c */; };
+		AA747D9F0F9514B9006C5449 /* qaullib_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* qaullib_Prefix.pch */; };
+		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5F7E540615AEC890002D011D /* bstrlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bstrlib.c; sourceTree = "<group>"; };
+		5F7E540715AEC890002D011D /* bstrlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bstrlib.h; sourceTree = "<group>"; };
+		5F7E541415AEC890002D011D /* qaullib_captive.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qaullib_captive.c; sourceTree = "<group>"; };
+		5F7E541515AEC890002D011D /* qaullib_captive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qaullib_captive.h; sourceTree = "<group>"; };
+		5F7E541715AEC890002D011D /* qaullib_captive_dhcp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qaullib_captive_dhcp.c; sourceTree = "<group>"; };
+		5F7E541915AEC890002D011D /* qaullib_captive_dns.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qaullib_captive_dns.c; sourceTree = "<group>"; };
+		5F7E541D15AEC890002D011D /* mongoose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongoose.c; sourceTree = "<group>"; };
+		5F7E541E15AEC890002D011D /* mongoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongoose.h; sourceTree = "<group>"; };
+		5F7E542015AEC890002D011D /* mongoose_extra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mongoose_extra.h; path = ../libqaul/mongoose_extra.h; sourceTree = SOURCE_ROOT; };
+		5F7E542215AEC890002D011D /* hashing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hashing.c; sourceTree = "<group>"; };
+		5F7E542315AEC890002D011D /* hashing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hashing.h; sourceTree = "<group>"; };
+		5F7E542515AEC890002D011D /* mantissa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mantissa.c; sourceTree = "<group>"; };
+		5F7E542615AEC890002D011D /* mantissa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mantissa.h; sourceTree = "<group>"; };
+		5F7E542815AEC890002D011D /* olsr_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = olsr_types.h; sourceTree = "<group>"; };
+		5F7E542915AEC890002D011D /* olsrd_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = olsrd_types.h; path = ../libqaul/olsrd_types.h; sourceTree = SOURCE_ROOT; };
+		5F7E543115AEC890002D011D /* qaullib_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_defines.h; path = ../libqaul/qaullib_defines.h; sourceTree = SOURCE_ROOT; };
+		5F7E543215AEC890002D011D /* qaullib_filesharing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib_filesharing.c; path = ../libqaul/qaullib_filesharing.c; sourceTree = SOURCE_ROOT; };
+		5F7E543315AEC890002D011D /* qaullib_filesharing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_filesharing.h; path = ../libqaul/qaullib_filesharing.h; sourceTree = SOURCE_ROOT; };
+		5F7E543415AEC890002D011D /* qaullib_ipc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib_ipc.c; path = ../libqaul/qaullib_ipc.c; sourceTree = SOURCE_ROOT; };
+		5F7E543515AEC890002D011D /* qaullib_ipc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_ipc.h; path = ../libqaul/qaullib_ipc.h; sourceTree = SOURCE_ROOT; };
+		5F7E543615AEC890002D011D /* qaullib_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_private.h; path = ../libqaul/qaullib_private.h; sourceTree = SOURCE_ROOT; };
+		5F7E543715AEC890002D011D /* qaullib_sql.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_sql.h; path = ../libqaul/qaullib_sql.h; sourceTree = SOURCE_ROOT; };
+		5F7E543815AEC890002D011D /* qaullib_threads.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib_threads.c; path = ../libqaul/qaullib_threads.c; sourceTree = SOURCE_ROOT; };
+		5F7E543915AEC890002D011D /* qaullib_threads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_threads.h; path = ../libqaul/qaullib_threads.h; sourceTree = SOURCE_ROOT; };
+		5F7E543A15AEC890002D011D /* qaullib_user_LL.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib_user_LL.c; path = ../libqaul/qaullib_user_LL.c; sourceTree = SOURCE_ROOT; };
+		5F7E543B15AEC890002D011D /* qaullib_user_LL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_user_LL.h; path = ../libqaul/qaullib_user_LL.h; sourceTree = SOURCE_ROOT; };
+		5F7E543C15AEC890002D011D /* qaullib_user.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib_user.c; path = ../libqaul/qaullib_user.c; sourceTree = SOURCE_ROOT; };
+		5F7E543D15AEC890002D011D /* qaullib_user.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_user.h; path = ../libqaul/qaullib_user.h; sourceTree = SOURCE_ROOT; };
+		5F7E543E15AEC890002D011D /* qaullib_webclient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib_webclient.c; path = ../libqaul/qaullib_webclient.c; sourceTree = SOURCE_ROOT; };
+		5F7E543F15AEC890002D011D /* qaullib_webclient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_webclient.h; path = ../libqaul/qaullib_webclient.h; sourceTree = SOURCE_ROOT; };
+		5F7E544015AEC890002D011D /* qaullib_webserver.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib_webserver.c; path = ../libqaul/qaullib_webserver.c; sourceTree = SOURCE_ROOT; };
+		5F7E544115AEC890002D011D /* qaullib_webserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_webserver.h; path = ../libqaul/qaullib_webserver.h; sourceTree = SOURCE_ROOT; };
+		5F7E544215AEC890002D011D /* qaullib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib.c; path = ../libqaul/qaullib.c; sourceTree = SOURCE_ROOT; };
+		5F7E544315AEC890002D011D /* qaullib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib.h; path = ../libqaul/qaullib.h; sourceTree = SOURCE_ROOT; };
+		5F7E544515AEC890002D011D /* shell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = shell.c; sourceTree = "<group>"; };
+		5F7E544615AEC890002D011D /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
+		5F7E544715AEC890002D011D /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		5F7E544915AEC890002D011D /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3ext.h; sourceTree = "<group>"; };
+		5F7E544B15AEC890002D011D /* urlcode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = urlcode.c; sourceTree = "<group>"; };
+		5F7E544C15AEC890002D011D /* urlcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = urlcode.h; sourceTree = "<group>"; };
+		5F7E551415AECD7B002D011D /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		5F7E551515AECD7B002D011D /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
+		5F7E551615AECD7B002D011D /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
+		AA747D9E0F9514B9006C5449 /* qaullib_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qaullib_Prefix.pch; sourceTree = SOURCE_ROOT; };
+		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D2AAC07E0554694100DB518D /* libqaullib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libqaullib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC07E0554694100DB518D /* libqaullib.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* qaullib */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AEFE84172EC02AAC07 /* Classes */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
+				0867D69AFE84028FC02AAC07 /* Frameworks */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = qaullib;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		32C88DFF0371C24200C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				5F7E551115AECD7B002D011D /* polarssl */,
+				5F7E540015AEC890002D011D /* bstrlib */,
+				5F7E541315AEC890002D011D /* captive */,
+				5F7E541B15AEC890002D011D /* mongoose */,
+				5F7E542015AEC890002D011D /* mongoose_extra.h */,
+				5F7E542115AEC890002D011D /* olsrd */,
+				5F7E542915AEC890002D011D /* olsrd_types.h */,
+				5F7E543115AEC890002D011D /* qaullib_defines.h */,
+				5F7E543215AEC890002D011D /* qaullib_filesharing.c */,
+				5F7E543315AEC890002D011D /* qaullib_filesharing.h */,
+				5F7E543415AEC890002D011D /* qaullib_ipc.c */,
+				5F7E543515AEC890002D011D /* qaullib_ipc.h */,
+				5F7E543615AEC890002D011D /* qaullib_private.h */,
+				5F7E543715AEC890002D011D /* qaullib_sql.h */,
+				5F7E543815AEC890002D011D /* qaullib_threads.c */,
+				5F7E543915AEC890002D011D /* qaullib_threads.h */,
+				5F7E543A15AEC890002D011D /* qaullib_user_LL.c */,
+				5F7E543B15AEC890002D011D /* qaullib_user_LL.h */,
+				5F7E543C15AEC890002D011D /* qaullib_user.c */,
+				5F7E543D15AEC890002D011D /* qaullib_user.h */,
+				5F7E543E15AEC890002D011D /* qaullib_webclient.c */,
+				5F7E543F15AEC890002D011D /* qaullib_webclient.h */,
+				5F7E544015AEC890002D011D /* qaullib_webserver.c */,
+				5F7E544115AEC890002D011D /* qaullib_webserver.h */,
+				5F7E544215AEC890002D011D /* qaullib.c */,
+				5F7E544315AEC890002D011D /* qaullib.h */,
+				5F7E544415AEC890002D011D /* sqlite */,
+				5F7E544A15AEC890002D011D /* urlcode */,
+				AA747D9E0F9514B9006C5449 /* qaullib_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		5F7E540015AEC890002D011D /* bstrlib */ = {
+			isa = PBXGroup;
+			children = (
+				5F7E540615AEC890002D011D /* bstrlib.c */,
+				5F7E540715AEC890002D011D /* bstrlib.h */,
+			);
+			name = bstrlib;
+			path = ../libqaul/bstrlib;
+			sourceTree = SOURCE_ROOT;
+		};
+		5F7E541315AEC890002D011D /* captive */ = {
+			isa = PBXGroup;
+			children = (
+				5F7E541415AEC890002D011D /* qaullib_captive.c */,
+				5F7E541515AEC890002D011D /* qaullib_captive.h */,
+				5F7E541715AEC890002D011D /* qaullib_captive_dhcp.c */,
+				5F7E541915AEC890002D011D /* qaullib_captive_dns.c */,
+			);
+			name = captive;
+			path = ../libqaul/captive;
+			sourceTree = SOURCE_ROOT;
+		};
+		5F7E541B15AEC890002D011D /* mongoose */ = {
+			isa = PBXGroup;
+			children = (
+				5F7E541D15AEC890002D011D /* mongoose.c */,
+				5F7E541E15AEC890002D011D /* mongoose.h */,
+			);
+			name = mongoose;
+			path = ../libqaul/mongoose;
+			sourceTree = SOURCE_ROOT;
+		};
+		5F7E542115AEC890002D011D /* olsrd */ = {
+			isa = PBXGroup;
+			children = (
+				5F7E542215AEC890002D011D /* hashing.c */,
+				5F7E542315AEC890002D011D /* hashing.h */,
+				5F7E542515AEC890002D011D /* mantissa.c */,
+				5F7E542615AEC890002D011D /* mantissa.h */,
+				5F7E542815AEC890002D011D /* olsr_types.h */,
+			);
+			name = olsrd;
+			path = ../libqaul/olsrd;
+			sourceTree = SOURCE_ROOT;
+		};
+		5F7E544415AEC890002D011D /* sqlite */ = {
+			isa = PBXGroup;
+			children = (
+				5F7E544515AEC890002D011D /* shell.c */,
+				5F7E544615AEC890002D011D /* sqlite3.c */,
+				5F7E544715AEC890002D011D /* sqlite3.h */,
+				5F7E544915AEC890002D011D /* sqlite3ext.h */,
+			);
+			name = sqlite;
+			path = ../libqaul/sqlite;
+			sourceTree = SOURCE_ROOT;
+		};
+		5F7E544A15AEC890002D011D /* urlcode */ = {
+			isa = PBXGroup;
+			children = (
+				5F7E544B15AEC890002D011D /* urlcode.c */,
+				5F7E544C15AEC890002D011D /* urlcode.h */,
+			);
+			name = urlcode;
+			path = ../libqaul/urlcode;
+			sourceTree = SOURCE_ROOT;
+		};
+		5F7E551115AECD7B002D011D /* polarssl */ = {
+			isa = PBXGroup;
+			children = (
+				5F7E551315AECD7B002D011D /* polarssl */,
+				5F7E551615AECD7B002D011D /* sha1.c */,
+			);
+			name = polarssl;
+			path = ../libqaul/polarssl;
+			sourceTree = SOURCE_ROOT;
+		};
+		5F7E551315AECD7B002D011D /* polarssl */ = {
+			isa = PBXGroup;
+			children = (
+				5F7E551415AECD7B002D011D /* config.h */,
+				5F7E551515AECD7B002D011D /* sha1.h */,
+			);
+			path = polarssl;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA747D9F0F9514B9006C5449 /* qaullib_Prefix.pch in Headers */,
+				5F7E545415AEC890002D011D /* bstrlib.h in Headers */,
+				5F7E545C15AEC890002D011D /* qaullib_captive.h in Headers */,
+				5F7E546315AEC890002D011D /* mongoose.h in Headers */,
+				5F7E546515AEC890002D011D /* mongoose_extra.h in Headers */,
+				5F7E546715AEC890002D011D /* hashing.h in Headers */,
+				5F7E546A15AEC890002D011D /* mantissa.h in Headers */,
+				5F7E546C15AEC890002D011D /* olsr_types.h in Headers */,
+				5F7E546D15AEC890002D011D /* olsrd_types.h in Headers */,
+				5F7E547215AEC890002D011D /* qaullib_defines.h in Headers */,
+				5F7E547415AEC890002D011D /* qaullib_filesharing.h in Headers */,
+				5F7E547615AEC890002D011D /* qaullib_ipc.h in Headers */,
+				5F7E547715AEC890002D011D /* qaullib_private.h in Headers */,
+				5F7E547815AEC890002D011D /* qaullib_sql.h in Headers */,
+				5F7E547A15AEC890002D011D /* qaullib_threads.h in Headers */,
+				5F7E547C15AEC890002D011D /* qaullib_user_LL.h in Headers */,
+				5F7E547E15AEC890002D011D /* qaullib_user.h in Headers */,
+				5F7E548015AEC890002D011D /* qaullib_webclient.h in Headers */,
+				5F7E548215AEC890002D011D /* qaullib_webserver.h in Headers */,
+				5F7E548415AEC890002D011D /* qaullib.h in Headers */,
+				5F7E548715AEC890002D011D /* sqlite3.h in Headers */,
+				5F7E548915AEC890002D011D /* sqlite3ext.h in Headers */,
+				5F7E548B15AEC890002D011D /* urlcode.h in Headers */,
+				5F7E551815AECD7B002D011D /* config.h in Headers */,
+				5F7E551915AECD7B002D011D /* sha1.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC07D0554694100DB518D /* qaullib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "qaullib" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = qaullib;
+			productName = qaullib;
+			productReference = D2AAC07E0554694100DB518D /* libqaullib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "qaullib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 0867D691FE84028FC02AAC07 /* qaullib */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* qaullib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F7E545315AEC890002D011D /* bstrlib.c in Sources */,
+				5F7E545B15AEC890002D011D /* qaullib_captive.c in Sources */,
+				5F7E545E15AEC890002D011D /* qaullib_captive_dhcp.c in Sources */,
+				5F7E546015AEC890002D011D /* qaullib_captive_dns.c in Sources */,
+				5F7E546215AEC890002D011D /* mongoose.c in Sources */,
+				5F7E546615AEC890002D011D /* hashing.c in Sources */,
+				5F7E546915AEC890002D011D /* mantissa.c in Sources */,
+				5F7E547315AEC890002D011D /* qaullib_filesharing.c in Sources */,
+				5F7E547515AEC890002D011D /* qaullib_ipc.c in Sources */,
+				5F7E547915AEC890002D011D /* qaullib_threads.c in Sources */,
+				5F7E547B15AEC890002D011D /* qaullib_user_LL.c in Sources */,
+				5F7E547D15AEC890002D011D /* qaullib_user.c in Sources */,
+				5F7E547F15AEC890002D011D /* qaullib_webclient.c in Sources */,
+				5F7E548115AEC890002D011D /* qaullib_webserver.c in Sources */,
+				5F7E548315AEC890002D011D /* qaullib.c in Sources */,
+				5F7E548515AEC890002D011D /* shell.c in Sources */,
+				5F7E548615AEC890002D011D /* sqlite3.c in Sources */,
+				5F7E548A15AEC890002D011D /* urlcode.c in Sources */,
+				5F7E551A15AECD7B002D011D /* sha1.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/qaullib.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = qaullib_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = qaullib;
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DSTROOT = /tmp/qaullib.dst;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = qaullib_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = qaullib;
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "qaullib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "qaullib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

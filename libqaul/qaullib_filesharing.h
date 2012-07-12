@@ -111,6 +111,13 @@ void Qaullib_FileCheckSockets(void);
  */
 int Qaullib_FileExists(char *path);
 
+/**
+ * delete a file by it's database @a id
+ *
+ * @retval 1 success
+ * @retval 0 error
+ */
+int Qaullib_FileDeleteById(int id);
 
 #ifdef __cplusplus
 }

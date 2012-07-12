@@ -187,21 +187,21 @@ void Qaullib_FileCheckScheduled(void)
 				else if(strcmp(sqlite3_column_name(ppStmt, jj),"adv_ip") == 0)
 				{
 					// check if ip is set
-					if(strlen(sqlite3_column_text(ppStmt, jj)) > 4)
+					if(strlen((char *)sqlite3_column_text(ppStmt, jj)) > 4)
 					{
 						printf("adv_ip: %s \n", sqlite3_column_text(ppStmt, jj));
 
 						// TODO: ipv6
 						if(ipv == 6)
 						{
-							if ( inet_pton(AF_INET6, sqlite3_column_text(ppStmt, jj), &saddr.sin_addr) == 0 )
+							if ( inet_pton(AF_INET6, (char *)sqlite3_column_text(ppStmt, jj), &saddr.sin_addr) == 0 )
 								printf("inet_pton() ipv6 failed");
 							else validaddr = 1;
 							saddr.sin_family = AF_INET6;
 						}
 						else
 						{
-							if ( inet_pton(AF_INET, sqlite3_column_text(ppStmt, jj), &saddr.sin_addr) == 0 )
+							if ( inet_pton(AF_INET, (char *)sqlite3_column_text(ppStmt, jj), &saddr.sin_addr) == 0 )
 								printf("inet_pton() ipv4 failed");
 							else validaddr = 1;
 							saddr.sin_family = AF_INET;
@@ -408,15 +408,18 @@ int Qaullib_FileAvailable(char *hash, char *suffix, int startbyte, struct qaul_f
 			}
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "hash") == 0)
 			{
-		    	strcpy(file->hash, sqlite3_column_text(ppStmt, jj));
+		    	//strcpy(file->hash, sqlite3_column_text(ppStmt, jj));
+		    	sprintf(file->hash,"%s",sqlite3_column_text(ppStmt, jj));
 			}
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "suffix") == 0)
 			{
-				strcpy(file->suffix, sqlite3_column_text(ppStmt, jj));
+				//strcpy(file->suffix, sqlite3_column_text(ppStmt, jj));
+				sprintf(file->suffix,"%s",sqlite3_column_text(ppStmt, jj));
 			}
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "description") == 0)
 			{
-				strcpy(file->description, sqlite3_column_text(ppStmt, jj));
+				//strcpy(file->description, sqlite3_column_text(ppStmt, jj));
+				sprintf(file->description,"%s",sqlite3_column_text(ppStmt, jj));
 			}
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "size") == 0)
 			{
@@ -439,7 +442,7 @@ int Qaullib_FileAvailable(char *hash, char *suffix, int startbyte, struct qaul_f
 				if(file->status == 4 || file->status < 0)
 					inet_pton(AF_INET, "127.0.0.1", &file->adv_ip.sin_addr); // numeric IP only
 				else
-					inet_pton(AF_INET, sqlite3_column_text(ppStmt, jj), &file->adv_ip.sin_addr); // numeric IP only
+					inet_pton(AF_INET, (char *)sqlite3_column_text(ppStmt, jj), &file->adv_ip.sin_addr); // numeric IP only
 			}
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "downloaded") == 0)
 			{
