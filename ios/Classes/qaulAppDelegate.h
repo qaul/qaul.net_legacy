@@ -13,6 +13,8 @@
 	
 	NSString *qaulResourcePath;
 	int qaulStarted;
+	OSStatus status;
+//	AuthorizationRef authorizationRef;
 	
 /*
 	// wifi config
@@ -25,9 +27,7 @@
 	BOOL qaulServiceFound;
 	BOOL qaulServiceConfigured;
 	CFStringRef qaulServiceName;
-	OSStatus status;
-	AuthorizationRef authorizationRef;
-	
+ 
 	// Timer
 	NSTimer *qaullibTimer;
 	NSTimer *qaullibTimer2;
@@ -42,6 +42,11 @@
  * copy files to the documents directory the first time the application is started
  */
 - (void) CopyFilesAtFirstStartup;
+
+/**
+ * set global variables
+ */
+- (void) QaulSetGlobals;
 
 /**
  * startup and configure app
