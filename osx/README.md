@@ -10,6 +10,14 @@ qaul.net works on:
 Installation and Compile Instructions
 --------------------------------------
 
+Compile pjp library for VoIP
+
+    cd pjproject-2.0.1
+    ./aconfigure CFLAGS='-Wno-unused-label -m32' LDFLAGS='-m32'
+    make dep
+    make
+    cd ../
+
 Compile static qaullib
 
     # uncomment in libqaul/Makefile the line '#CFLAGS=-arch i386' to 'CFLAGS=-arch i386'
@@ -20,7 +28,7 @@ Compile static qaullib
 Open the OSX project in Xcode to run qaul.net
 
 
-optional:
+### Optional
 
 Compile olsrd
 
