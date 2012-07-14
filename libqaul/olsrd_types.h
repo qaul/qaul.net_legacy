@@ -84,6 +84,7 @@ union olsr_ip_addr {
 #define IPC_ADDR "127.0.0.1"
 #define CHAT_PORT "8081"
 #define WEB_PORT 8081
+#define VOIP_PORT 8060
 #define MAX_USER_CONNECTIONS 3
 #define MAX_FILE_CONNECTIONS 5
 

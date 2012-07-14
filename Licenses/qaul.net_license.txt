@@ -23,6 +23,8 @@ That software may have different licenses.
   source & more information: http://code.google.com/p/mongoose/
 * SQLight disclaims copyright and is in the public domain
   source & more information: http://www.sqlite.org
+* pjsip by Benny Prijono & Teluu Inc. (GPLv2)
+  source & more information: http://pjsip.org
 * PolarSSL (GPLv2)
   source & information: http://polarssl.org
 * bstrlib by Paul Hsieh (GPLv2)

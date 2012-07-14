@@ -711,7 +711,7 @@ static int Qaullib_FileCreateHashStr(char *filename, char *hashstr)
 static int Qaullib_HashCreate(char *filename, unsigned char *hash)
 {
 	printf("Qaullib_HashCreate\n");
-	int ret = sha1_file( filename, hash );
+	int ret = polarssl_sha1_file( filename, hash );
 	if(ret == 1) fprintf( stderr, "[qaullib] failed to open: %s\n", filename );;
 	if(ret == 2) fprintf( stderr, "[qaullib] failed to open: %s\n", filename );;
 	if(ret != 0) return 0;

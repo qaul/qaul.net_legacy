@@ -131,7 +131,8 @@ void Qaullib_SetConfQuit(void)
 
 void Qaullib_SetConfVoIP(void)
 {
-	qaul_conf_voip = 1;
+	if(Qaullib_VoipStart())
+		qaul_conf_voip = 1;
 }
 
 int Qaullib_ExistsLocale(void)

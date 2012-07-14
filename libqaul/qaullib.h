@@ -48,6 +48,7 @@ extern "C" {
  *   connect ipc
  *
  * startup configuration (50):
+ *   start voip
  *   start captive portal
  *   start port forwarding
  *   start timers to continuously invoke
@@ -71,7 +72,7 @@ void Qaullib_SetConfQuit(void);
 
 /**
  * configure qaullib
- * enable VoIP calls in GUI
+ * enable VoIP
  */
 void Qaullib_SetConfVoIP(void);
 

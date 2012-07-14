@@ -64,7 +64,7 @@
 /*
  * SHA-1 context setup
  */
-void sha1_starts( sha1_context *ctx )
+void polarssl_sha1_starts( sha1_context *ctx )
 {
     ctx->total[0] = 0;
     ctx->total[1] = 0;
@@ -235,7 +235,7 @@ static void sha1_process( sha1_context *ctx, const unsigned char data[64] )
 /*
  * SHA-1 process buffer
  */
-void sha1_update( sha1_context *ctx, const unsigned char *input, size_t ilen )
+void polarssl_sha1_update( sha1_context *ctx, const unsigned char *input, size_t ilen )
 {
     size_t fill;
     unsigned long left;
@@ -287,7 +287,7 @@ static const unsigned char sha1_padding[64] =
 /*
  * SHA-1 final digest
  */
-void sha1_finish( sha1_context *ctx, unsigned char output[20] )
+void polarssl_sha1_finish( sha1_context *ctx, unsigned char output[20] )
 {
     unsigned long last, padn;
     unsigned long high, low;
@@ -303,8 +303,8 @@ void sha1_finish( sha1_context *ctx, unsigned char output[20] )
     last = ctx->total[0] & 0x3F;
     padn = ( last < 56 ) ? ( 56 - last ) : ( 120 - last );
 
-    sha1_update( ctx, (unsigned char *) sha1_padding, padn );
-    sha1_update( ctx, msglen, 8 );
+    polarssl_sha1_update( ctx, (unsigned char *) sha1_padding, padn );
+    polarssl_sha1_update( ctx, msglen, 8 );
 
     PUT_ULONG_BE( ctx->state[0], output,  0 );
     PUT_ULONG_BE( ctx->state[1], output,  4 );
@@ -316,13 +316,13 @@ void sha1_finish( sha1_context *ctx, unsigned char output[20] )
 /*
  * output = SHA-1( input buffer )
  */
-void sha1( const unsigned char *input, size_t ilen, unsigned char output[20] )
+void polarssl_sha1( const unsigned char *input, size_t ilen, unsigned char output[20] )
 {
     sha1_context ctx;
 
-    sha1_starts( &ctx );
-    sha1_update( &ctx, input, ilen );
-    sha1_finish( &ctx, output );
+    polarssl_sha1_starts( &ctx );
+    polarssl_sha1_update( &ctx, input, ilen );
+    polarssl_sha1_finish( &ctx, output );
 
     memset( &ctx, 0, sizeof( sha1_context ) );
 }
@@ -331,7 +331,7 @@ void sha1( const unsigned char *input, size_t ilen, unsigned char output[20] )
 /*
  * output = SHA-1( file contents )
  */
-int sha1_file( const char *path, unsigned char output[20] )
+int polarssl_sha1_file( const char *path, unsigned char output[20] )
 {
     FILE *f;
     size_t n;
@@ -339,21 +339,21 @@ int sha1_file( const char *path, unsigned char output[20] )
     unsigned char buf[1024];
 
     if( ( f = fopen( path, "rb" ) ) == NULL )
-        return( POLARSSL_ERR_SHA1_FILE_IO_ERROR );
+        return( POLARSSL_ERR_polarssl_sha1_file_IO_ERROR );
 
-    sha1_starts( &ctx );
+    polarssl_sha1_starts( &ctx );
 
     while( ( n = fread( buf, 1, sizeof( buf ), f ) ) > 0 )
-        sha1_update( &ctx, buf, n );
+        polarssl_sha1_update( &ctx, buf, n );
 
-    sha1_finish( &ctx, output );
+    polarssl_sha1_finish( &ctx, output );
 
     memset( &ctx, 0, sizeof( sha1_context ) );
 
     if( ferror( f ) != 0 )
     {
         fclose( f );
-        return( POLARSSL_ERR_SHA1_FILE_IO_ERROR );
+        return( POLARSSL_ERR_polarssl_sha1_file_IO_ERROR );
     }
 
     fclose( f );
@@ -364,14 +364,14 @@ int sha1_file( const char *path, unsigned char output[20] )
 /*
  * SHA-1 HMAC context setup
  */
-void sha1_hmac_starts( sha1_context *ctx, const unsigned char *key, size_t keylen )
+void polarssl_sha1_hmac_starts( sha1_context *ctx, const unsigned char *key, size_t keylen )
 {
     size_t i;
     unsigned char sum[20];
 
     if( keylen > 64 )
     {
-        sha1( key, keylen, sum );
+        polarssl_sha1( key, keylen, sum );
         keylen = 20;
         key = sum;
     }
@@ -385,8 +385,8 @@ void sha1_hmac_starts( sha1_context *ctx, const unsigned char *key, size_t keyle
         ctx->opad[i] = (unsigned char)( ctx->opad[i] ^ key[i] );
     }
 
-    sha1_starts( ctx );
-    sha1_update( ctx, ctx->ipad, 64 );
+    polarssl_sha1_starts( ctx );
+    polarssl_sha1_update( ctx, ctx->ipad, 64 );
 
     memset( sum, 0, sizeof( sum ) );
 }
@@ -394,23 +394,23 @@ void sha1_hmac_starts( sha1_context *ctx, const unsigned char *key, size_t keyle
 /*
  * SHA-1 HMAC process buffer
  */
-void sha1_hmac_update( sha1_context *ctx, const unsigned char *input, size_t ilen )
+void polarssl_sha1_hmac_update( sha1_context *ctx, const unsigned char *input, size_t ilen )
 {
-    sha1_update( ctx, input, ilen );
+    polarssl_sha1_update( ctx, input, ilen );
 }
 
 /*
  * SHA-1 HMAC final digest
  */
-void sha1_hmac_finish( sha1_context *ctx, unsigned char output[20] )
+void polarssl_sha1_hmac_finish( sha1_context *ctx, unsigned char output[20] )
 {
     unsigned char tmpbuf[20];
 
-    sha1_finish( ctx, tmpbuf );
-    sha1_starts( ctx );
-    sha1_update( ctx, ctx->opad, 64 );
-    sha1_update( ctx, tmpbuf, 20 );
-    sha1_finish( ctx, output );
+    polarssl_sha1_finish( ctx, tmpbuf );
+    polarssl_sha1_starts( ctx );
+    polarssl_sha1_update( ctx, ctx->opad, 64 );
+    polarssl_sha1_update( ctx, tmpbuf, 20 );
+    polarssl_sha1_finish( ctx, output );
 
     memset( tmpbuf, 0, sizeof( tmpbuf ) );
 }
@@ -418,24 +418,24 @@ void sha1_hmac_finish( sha1_context *ctx, unsigned char output[20] )
 /*
  * SHA1 HMAC context reset
  */
-void sha1_hmac_reset( sha1_context *ctx )
+void polarssl_sha1_hmac_reset( sha1_context *ctx )
 {
-    sha1_starts( ctx );
-    sha1_update( ctx, ctx->ipad, 64 );
+    polarssl_sha1_starts( ctx );
+    polarssl_sha1_update( ctx, ctx->ipad, 64 );
 }
 
 /*
  * output = HMAC-SHA-1( hmac key, input buffer )
  */
-void sha1_hmac( const unsigned char *key, size_t keylen,
+void polarssl_sha1_hmac( const unsigned char *key, size_t keylen,
                 const unsigned char *input, size_t ilen,
                 unsigned char output[20] )
 {
     sha1_context ctx;
 
-    sha1_hmac_starts( &ctx, key, keylen );
-    sha1_hmac_update( &ctx, input, ilen );
-    sha1_hmac_finish( &ctx, output );
+    polarssl_sha1_hmac_starts( &ctx, key, keylen );
+    polarssl_sha1_hmac_update( &ctx, input, ilen );
+    polarssl_sha1_hmac_finish( &ctx, output );
 
     memset( &ctx, 0, sizeof( sha1_context ) );
 }
@@ -535,7 +535,7 @@ static const unsigned char sha1_hmac_test_sum[7][20] =
 /*
  * Checkup routine
  */
-int sha1_self_test( int verbose )
+int polarssl_sha1_self_test( int verbose )
 {
     int i, j, buflen;
     unsigned char buf[1024];
@@ -550,20 +550,20 @@ int sha1_self_test( int verbose )
         if( verbose != 0 )
             printf( "  SHA-1 test #%d: ", i + 1 );
 
-        sha1_starts( &ctx );
+        polarssl_sha1_starts( &ctx );
 
         if( i == 2 )
         {
             memset( buf, 'a', buflen = 1000 );
 
             for( j = 0; j < 1000; j++ )
-                sha1_update( &ctx, buf, buflen );
+                polarssl_sha1_update( &ctx, buf, buflen );
         }
         else
-            sha1_update( &ctx, sha1_test_buf[i],
+            polarssl_sha1_update( &ctx, sha1_test_buf[i],
                                sha1_test_buflen[i] );
 
-        sha1_finish( &ctx, sha1sum );
+        polarssl_sha1_finish( &ctx, sha1sum );
 
         if( memcmp( sha1sum, sha1_test_sum[i], 20 ) != 0 )
         {
@@ -588,16 +588,16 @@ int sha1_self_test( int verbose )
         if( i == 5 || i == 6 )
         {
             memset( buf, '\xAA', buflen = 80 );
-            sha1_hmac_starts( &ctx, buf, buflen );
+            polarssl_sha1_hmac_starts( &ctx, buf, buflen );
         }
         else
-            sha1_hmac_starts( &ctx, sha1_hmac_test_key[i],
+            polarssl_sha1_hmac_starts( &ctx, sha1_hmac_test_key[i],
                                     sha1_hmac_test_keylen[i] );
 
-        sha1_hmac_update( &ctx, sha1_hmac_test_buf[i],
+        polarssl_sha1_hmac_update( &ctx, sha1_hmac_test_buf[i],
                                 sha1_hmac_test_buflen[i] );
 
-        sha1_hmac_finish( &ctx, sha1sum );
+        polarssl_sha1_hmac_finish( &ctx, sha1sum );
 
         buflen = ( i == 4 ) ? 12 : 20;
 
