@@ -342,6 +342,8 @@
 	// connect captive
 	if(qaulStarted == 46)
 	{
+		// start VoIP
+		Qaullib_SetConfVoIP();
 		// start captive portal
 		Qaullib_CaptiveStart();
 		
