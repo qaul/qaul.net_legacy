@@ -27,7 +27,7 @@ You may need to install libssl and libcrypto (from mac ports /opt/loca/lib/libss
 
 Compile static qaullib
 
-    # uncomment in libqaul/Makefile the line '#CFLAGS=-arch i386' to 'CFLAGS=-arch i386'
+    # uncomment in libqaul/Makefile the line '#OSX_CFLAGS=-arch i386' to 'OSX_CFLAGS=-arch i386'
     cd libqaul
     make osx
     cd ../

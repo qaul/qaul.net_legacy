@@ -48,6 +48,7 @@ extern "C" {
 #include "bstrlib/bstrlib.h"
 #include "qaullib_filesharing.h"
 #include "qaullib_ipc.h"
+#include "qaullib_voip.h"
 
 #include <unistd.h>             // close()
 

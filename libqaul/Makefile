@@ -6,7 +6,8 @@ PJBASE=../pjproject-2.0.1
 
 CC=gcc
 LIBDEST=./
-CFLAGS= \
+#OSX_CFLAGS=-arch i386
+CFLAGS= $(OSX_CFLAGS) \
 		-I$(PJBASE)/pjlib/include \
 		-I$(PJBASE)/pjlib-util/include \
 		-I$(PJBASE)/pjmedia/include \
@@ -18,7 +19,6 @@ CFLAGS= \
 		-I$(PJBASE)/third_party/srtp/crypto/include \
 		-I$(PJBASE)/third_party/srtp/include	
 
-#CFLAGS=-arch i386 $(CFLAGS)
 
 SRC= qaullib.c qaullib_ipc.c qaullib_webserver.c qaullib_voip.c \
      qaullib_webclient.c qaullib_filesharing.c qaullib_threads.c \

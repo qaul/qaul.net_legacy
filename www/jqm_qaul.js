@@ -29,6 +29,7 @@ var qaulmessageevent = 0;
 var qaulinitialized = false;
 var chat_initialized = false;
 var is_chrome = false;
+var call_page_origin = "page_chat";
 
 // ======================================================
 // initialize
@@ -37,7 +38,7 @@ var is_chrome = false;
 function init_start()
 {
 	$.mobile.changePage('#page_loading');
-	setTimeout(function(){loadingtimer();},1000);
+	setTimeout(function(){loadingtimer();}, 1000);
 	
 	// bugfix check if browser is chrome
 	is_chrome = /chrome/.test(navigator.userAgent.toLowerCase());
@@ -242,6 +243,7 @@ function init_chat()
 {
 	chat_initialized = true;
 	
+	// todo: put all those timers into one timer
 	// set timer
 	updatetimer();
 	
@@ -252,7 +254,10 @@ function init_chat()
 	});
 
 	// load files
-	file_update();	
+	file_update();
+	
+	// check for global events
+	eventstimer();
 }
 
 // ======================================================
@@ -353,7 +358,176 @@ function quit_qaul()
 			  $.mobile.changePage('#page_goodbye');
 		  }
 		});
-	//return false;
+}
+
+// ======================================================
+// VoIP
+// ------------------------------------------------------
+var call_button_accept = '<a href="javascript:call_accept();" data-role="button" class="call_button_accept">Accept Call</a>';
+var call_button_reject = '<a href="javascript:call_end();" data-role="button" class="call_button_deny">Reject Call</a>';
+var call_button_end = '<a href="javascript:call_end();" data-role="button" class="call_button_deny">End Call</a>';
+
+function call_start()
+{
+	var name = $("#user_chat_name").val();
+	var ip = $("#user_chat_ip").val();
+	var path = 'call_start?ip=' +ip +'&e=1';
+	$.ajax({
+		  url: path,
+		  cache: false, // needed for IE
+		  dataType: "json",
+		  success: function(data){
+			  $("#call_info").text("searching");
+			  call_show_page(name);
+			  call_setButtonEnd();
+		  }
+	});
+}
+
+function call_end()
+{
+	$.ajax({
+		  url: "call_end",
+		  cache: false, // needed for IE
+		  dataType: "json",
+		  success: function(data){
+			  $("#call_buttons").empty();
+			  call_goback();
+		  }
+	});
+}
+
+function call_accept()
+{
+	$.ajax({
+		  url: "call_accept",
+		  cache: false, // needed for IE
+		  dataType: "json",
+		  success: function(data){
+			  // nothing to be done here
+		  }
+	});
+}
+
+function call_show_page(name)
+{
+	 if($.mobile.activePage.attr('id') != "page_call") 
+	 {
+	 	call_page_origin = $.mobile.activePage.attr('id');
+	 	$.mobile.changePage($("#page_call"));
+	 }
+	 // set name
+	 $("#call_user").text(name);
+	 callchecktimer();
+}
+
+function call_schedule_end(reason)
+{
+	// remove buttons
+	$("#call_buttons").empty();
+	// set text
+	$("#call_info").text(reason);
+	// set time before going back
+	setTimeout(function(){call_goback();},2000);
+}
+
+function call_setButtonEnd()
+{
+	var mybutton = $("#call_buttons").empty().append(call_button_end);
+	mybutton.trigger('create');
+}
+
+function call_setButtonsIncoming()
+{
+	var mybutton = $("#call_buttons").empty().append(call_button_accept +call_button_reject);
+	mybutton.trigger('create');
+}
+
+function call_goback()
+{
+	$.mobile.changePage($("#" +call_page_origin));
+}
+
+function call_setRinging()
+{
+	$("#call_info").text("ringing");
+	call_setButtonEnd();
+}
+
+function call_setCalling()
+{
+	$("#call_info").text("calling");
+	call_setButtonsIncoming();
+}
+
+function call_setConnecting()
+{
+	$("#call_info").text("connecting");
+	call_setButtonEnd();
+}
+
+function call_setConnected()
+{
+	$("#call_info").text("connected");
+	call_setButtonEnd();
+}
+
+function call_setEnded(code)
+{
+	// set text
+	var reason;
+	if(code == 486)
+		reason = "busy";
+	else if(code == 487)
+		reason = "call ended";
+	else
+		reason = "not reachable";
+		
+	call_schedule_end(reason);
+}
+
+var callchecktimer = function()
+{
+	// check call status
+	$.ajax({
+		url:   "call_event",
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			if($.mobile.activePage.attr('id')=="page_call")
+			{
+				if(data.event == 0); // nothing new happend
+				else if(data.event == 1)
+				{
+					call_setRinging();
+				}
+				else if(data.event == 2)
+				{
+					call_setCalling();
+				}
+				else if(data.event == 3)
+				{
+					call_setConnecting();
+				}
+				else if(data.event == 4)
+				{
+					call_setConnected();
+				}
+				else if(data.event == 5)
+				{
+					call_setEnded(data.code);
+				}
+				else return;
+				// rescheduled
+				setTimeout(function(){callchecktimer();},500);
+			}
+		} 
+	}).error(function(){
+			if($.mobile.activePage.attr('id')=="page_file_add")
+			{
+				setTimeout(function(){callchecktimer();},500);
+			}
+	});		
 }
 
 // ======================================================
@@ -1034,6 +1208,33 @@ function send_name()
 				// set timer to check which page to load
 				setTimeout(function(){loadingtimer();},1000);
 		});
+};
+
+var eventstimer=function()
+{
+	// check if file was selected
+	var path = "getevents.json";
+	$.ajax({
+		url:   path,
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			// check for new incoming calls
+			if(data.call > 0)
+			{
+				// show call page
+				$("#call_info").text("calling");
+				call_show_page(data.callee);
+				// put buttons
+				call_setButtonsIncoming();
+			}
+			// TODO: check for unchecked messages
+			// set timer
+			setTimeout(function(){eventstimer();},1000);
+		} 
+	}).error(function(){
+			setTimeout(function(){eventstimer();},1000);
+	});	
 };
 
 // ======================================================
