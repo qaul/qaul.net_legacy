@@ -135,6 +135,7 @@ void Qaul::QaulConfigure(void)
     // start captive portal
     if(qaulConfigureCounter == 46)
     {
+        Qaullib_SetConfVoIP();
         Qaullib_CaptiveStart();
         QaulConfigureFirewall();
         qaulConfigureCounter = 50;
