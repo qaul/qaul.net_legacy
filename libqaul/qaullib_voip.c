@@ -13,6 +13,12 @@
 #define SIP_PASSWD	"secret"
 
 
+// currently active call id
+static pjsua_call_id qaul_voip_callid;
+static pjsua_acc_id qaul_voip_acc_id;
+static pjsua_transport_id qaul_voip_trans_id;
+
+
 /**
  *  Callback called by the library upon receiving incoming call
  */
@@ -29,8 +35,18 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 			 (int)ci.remote_info.slen,
 			 ci.remote_info.ptr));
 
-    /* Automatically answer incoming calls with 200/OK */
-    pjsua_call_answer(call_id, 200, NULL, NULL);
+    // check if any calls are in progress
+    if(pjsua_call_get_count() == 0)
+    {
+    	qaul_voip_callid = call_id;
+    	// send ringing notice
+    	pjsua_call_answer(call_id, 180, NULL, NULL);
+    	// set qaul_voip_event
+    	qaul_voip_event = 2;
+    }
+    else
+    	// send user busy notice
+    	pjsua_call_answer(call_id, 486, NULL, NULL);
 }
 
 /**
@@ -65,22 +81,46 @@ static void on_call_media_state(pjsua_call_id call_id)
     }
 }
 
-/**
- * Display error and exit application
- */
-static void error_exit(const char *title, pj_status_t status)
+void Qaullib_VoipCallStart(char* ip)
 {
-    pjsua_perror(THIS_FILE, title, status);
-    //pjsua_destroy();
-    //exit(1);
+	pj_status_t status;
+	char buffer[256];
+	char* stmt = buffer;
+
+	// check if another call is in progress
+	if(pjsua_call_get_count() == 0)
+	{
+		// create uri
+		sprintf(stmt, "sip:%s@%s", SIP_USER, ip);
+		pj_str_t uri = pj_str(stmt);
+
+		status = pjsua_call_make_call(qaul_voip_acc_id, &uri, 0, NULL, NULL, &qaul_voip_callid);
+		if (status != PJ_SUCCESS)
+		{
+			pjsua_perror(THIS_FILE, "Error making call", status);
+			qaul_voip_event = 5;
+		}
+	}
 }
 
-int Qaullib_VoipStart()
+void Qaullib_VoipCallAccept(void)
 {
-    pjsua_acc_id acc_id;
+	pjsua_call_answer(qaul_voip_callid, 200, NULL, NULL);
+}
+
+void Qaullib_VoipCallEnd(void)
+{
+	pjsua_call_hangup_all();
+}
+
+int Qaullib_VoipStart(void)
+{
     pj_status_t status;
 	char buffer[256];
 	char* stmt = buffer;
+
+	qaul_voip_event = 0;
+	qaul_voip_callid = 0;
 
     // Create pjsua first!
     status = pjsua_create();
@@ -89,9 +129,6 @@ int Qaullib_VoipStart()
     	pjsua_perror(THIS_FILE, "Error in pjsua_create()", status);
     	return 0;
     }
-
-    // check url
-    //status = pjsua_verify_url(argv[1]);
 
     // Init pjsua
     {
@@ -120,7 +157,7 @@ int Qaullib_VoipStart()
 
 		pjsua_transport_config_default(&cfg);
 		cfg.port = VOIP_PORT;
-		status = pjsua_transport_create(PJSIP_TRANSPORT_UDP, &cfg, NULL);
+		status = pjsua_transport_create(PJSIP_TRANSPORT_UDP, &cfg, &qaul_voip_trans_id);
 		if (status != PJ_SUCCESS)
 		{
 			pjsua_perror(THIS_FILE, "Error creating transport", status);
@@ -136,62 +173,11 @@ int Qaullib_VoipStart()
     	return 0;
     }
 
-    // Register to SIP server by creating SIP account.
-    // Todo: find out how to start it successfully without registering
-    {
-		pjsua_acc_config cfg;
+	// create local account
+	status = pjsua_acc_add_local (qaul_voip_trans_id, PJ_TRUE, &qaul_voip_acc_id);
+	if (status != PJ_SUCCESS)
+		pjsua_perror(THIS_FILE, "account creation error", status);
 
-		pjsua_acc_config_default(&cfg);
-		sprintf(stmt,"sit:%s@%s",SIP_USER,qaul_ip_str);
-		//cfg.id = pj_str("sip:" SIP_USER "@" +qaul_ip_str);
-		cfg.id = pj_str(stmt);
-		sprintf(stmt, "sip:%s", qaul_ip_str);
-		//cfg.reg_uri = pj_str("sip:" qaul_ip_str);
-		cfg.reg_uri = pj_str(stmt);
-		cfg.cred_count = 1;
-		cfg.cred_info[0].realm = pj_str(qaul_ip_str);
-		cfg.cred_info[0].scheme = pj_str("digest");
-		cfg.cred_info[0].username = pj_str(SIP_USER);
-		cfg.cred_info[0].data_type = PJSIP_CRED_DATA_PLAIN_PASSWD;
-		cfg.cred_info[0].data = pj_str(SIP_PASSWD);
-
-		status = pjsua_acc_add(&cfg, PJ_TRUE, &acc_id);
-		if (status != PJ_SUCCESS)
-		{
-            printf("server register error: %i", status);
-		}
-	}
-
-/*
-	// If URL is specified, make call to the URL.
-	if (argc > 1)
-	{
-		pj_str_t uri = pj_str(argv[1]);
-		status = pjsua_call_make_call(acc_id, &uri, 0, NULL, NULL, NULL);
-		if (status != PJ_SUCCESS)
-			error_exit("Error making call", status);
-    }
-
-
-    // Wait until user press "q" to quit.
-    for (;;)
-    {
-		char option[10];
-
-		puts("Press 'h' to hangup all calls, 'q' to quit");
-		if (fgets(option, sizeof(option), stdin) == NULL)
-		{
-			puts("EOF while reading stdin, will quit now..");
-			break;
-		}
-
-		if (option[0] == 'q')
-			break;
-
-		if (option[0] == 'h')
-			pjsua_call_hangup_all();
-    }
-*/
     return 1;
 }
 

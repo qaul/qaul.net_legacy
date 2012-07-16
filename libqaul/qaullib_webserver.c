@@ -21,6 +21,13 @@ static void Qaullib_WwwGetName(struct mg_connection *conn, const struct mg_reque
  * Quit program
  */
 static void Qaullib_WwwQuit(struct mg_connection *conn, const struct mg_request_info *request_info);
+
+/**
+ * process call handling
+ */
+static void Qaullib_WwwCallStart(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwCallEnd(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwCallAccept(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwSetPageName(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwGetConfig(struct mg_connection *conn, const struct mg_request_info *request_info);
 
@@ -34,6 +41,7 @@ static void Qaullib_WwwGetConfig(struct mg_connection *conn, const struct mg_req
 static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwGetEvents(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwFileList(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwFilePick(struct mg_connection *conn, const struct mg_request_info *request_info);
@@ -66,6 +74,10 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 	{
 	  Qaullib_WwwGetMsgs(conn, request_info);
 	}
+	else if (strcmp(request_info->uri, "/getevents.json") == 0)
+	{
+	  Qaullib_WwwGetEvents(conn, request_info);
+	}
 	else if (strcmp(request_info->uri, "/getusers.json") == 0)
 	{
 	  Qaullib_WwwGetUsers(conn, request_info);
@@ -77,6 +89,19 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 	else if (strcmp(request_info->uri, "/getname") == 0)
     {
       Qaullib_WwwGetName(conn, request_info);
+    }
+    // call handling
+	else if (strcmp(request_info->uri, "/call_start") == 0)
+    {
+      Qaullib_WwwCallStart(conn, request_info);
+    }
+	else if (strcmp(request_info->uri, "/call_end") == 0)
+    {
+      Qaullib_WwwCallEnd(conn, request_info);
+    }
+	else if (strcmp(request_info->uri, "/call_accept") == 0)
+    {
+      Qaullib_WwwCallAccept(conn, request_info);
     }
     // file handling
 	else if (strcmp(request_info->uri, "/file_list.json") == 0)
@@ -217,7 +242,6 @@ static void Qaullib_WwwSetLocale(struct mg_connection *conn, const struct mg_req
 	free(post);
 }
 
-
 // ------------------------------------------------------------
 static void Qaullib_WwwSetPageName(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
@@ -232,6 +256,35 @@ static void Qaullib_WwwSetPageName(struct mg_connection *conn, const struct mg_r
 static void Qaullib_WwwQuit(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
 	app_event = 99;
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
+}
+
+// ------------------------------------------------------------
+static void Qaullib_WwwCallStart(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	char call_ip[MAX_IP_LEN +1];
+	// extract variables
+	get_qsvar(request_info, "ip", call_ip, sizeof(call_ip));
+	// call user
+	Qaullib_VoipCallStart(call_ip);
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
+}
+
+static void Qaullib_WwwCallEnd(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	Qaullib_VoipCallEnd();
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
+}
+
+static void Qaullib_WwwCallAccept(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	Qaullib_VoipCallAccept();
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
@@ -262,6 +315,32 @@ static void Qaullib_WwwGetConfig(struct mg_connection *conn, const struct mg_req
 	else
 		mg_printf(conn, "\"c_voip\":false,");
 	mg_printf(conn, "\"c_debug\":false");
+
+	mg_printf(conn, "}");
+}
+
+
+// ------------------------------------------------------------
+static void Qaullib_WwwGetEvents(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	// send header
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+
+	mg_printf(conn, "{");
+
+	// get number of waiting income messages
+	mg_printf(conn, "\"m_pub\":%i,",1);
+	mg_printf(conn, "\"m_priv\":%i,",1);
+
+	// get newly downloaded files
+	mg_printf(conn, "\"files\":%i,",1);
+
+	// check call events
+	mg_printf(conn, "\"call\":%i",1);
+	if(1)
+	{
+		mg_printf(conn, ",\"call_e\":[\"event\":\"1\",\"name\":\"\",\"ip\":\"\"]",1);
+	}
 
 	mg_printf(conn, "}");
 }

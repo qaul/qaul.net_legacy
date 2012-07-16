@@ -19,6 +19,18 @@ extern "C" {
 
 
 /**
+ * displays whether a new call event occurred
+ *
+ * 0 = no new event
+ * 1 = ringing
+ * 2 = calling - another user is calling us
+ * 3 = connecting
+ * 4 = connected
+ * 5 = call ended - check for message
+ */
+int qaul_voip_event;
+
+/**
  * start VoIP
  *
  * @retval 1 sucessfully started
@@ -30,6 +42,21 @@ int Qaullib_VoipStart(void);
  * stop VoIP and free memory
  */
 int Qaullib_VoipStop(void);
+
+/**
+ * invoke a call to @a ip
+ */
+void Qaullib_VoipCallStart(char* ip);
+
+/**
+ * accept call
+ */
+void Qaullib_VoipCallAccept(void);
+
+/**
+ * end / reject current call
+ */
+void Qaullib_VoipCallEnd(void);
 
 
 #ifdef __cplusplus
