@@ -98,6 +98,13 @@ abbr.timeago {
 	background-size: 64px 64px;
 }
 
+.ui-footer .ui-li-count {
+	position:relative;
+	top:-5px;
+	right:-20px;
+}
+
+
 /* --- chat --- */
 .msg {
 	padding:1px;
@@ -242,6 +249,20 @@ a.unavailable {
 span.suffix {
     font-weight:bold;
     text-transform:uppercase;
+}
+
+/* -- call -- */
+#page_call_title {
+	margin:0;
+}
+#page_call_content {
+	text-align:center;
+}
+.call_button_accept .ui-btn-inner {
+	/*background-color:#00ff00;*/
+}
+.call_button_deny .ui-btn-inner {
+	/*background-color:#ff0000;*/
 }
 
 /* buttons */

@@ -43,6 +43,18 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
     	pjsua_call_answer(call_id, 180, NULL, NULL);
     	// set qaul_voip_event
     	qaul_voip_event = 2;
+    	qaul_voip_new_call = 1;
+    	// get caller name
+    	if(ci.local_contact.slen <= MAX_USER_LEN)
+    	{
+    		strncpy(qaul_voip_caller_name, ci.local_contact.ptr, (int)ci.local_contact.slen);
+    		qaul_voip_caller_name[(int)ci.local_contact.slen] = '\0';
+    	}
+    	else
+    	{
+    		strncpy(qaul_voip_caller_name, ci.local_contact.ptr, MAX_USER_LEN);
+    		qaul_voip_caller_name[MAX_USER_LEN] = '\0';
+    	}
     }
     else
     	// send user busy notice
@@ -120,7 +132,9 @@ int Qaullib_VoipStart(void)
 	char* stmt = buffer;
 
 	qaul_voip_event = 0;
+	qaul_voip_event_code = 400;
 	qaul_voip_callid = 0;
+	qaul_voip_new_call = 0;
 
     // Create pjsua first!
     status = pjsua_create();

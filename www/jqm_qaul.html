@@ -72,9 +72,9 @@
 	<div data-role="footer" data-position="fixed" class="ui-body-d">
 		<div data-role="navbar" data-theme="c">
 			<ul>
-				<li><a href="#page_chat" data-theme="b" data-transition="none" class="i_chat">&nbsp;</a></li>
-				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;</a></li>
-				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;</a></li>
+				<li><a href="#page_chat" data-theme="b" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;</a></li>
 			</ul>
 		</div>
@@ -155,22 +155,6 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_info" data-theme="d">
-	<div data-role="content" >
-		<img src="images/qaul-application.gif"/>
-	</div>
-	<div data-role="footer" data-position="fixed" class="ui-body-d">
-		<div data-role="navbar">
-			<ul>
-				<li><a href="#page_chat" data-transition="none" class="i_chat">&nbsp;</a></li>
-				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;</a></li>
-				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;</a></li>
-				<li><a href="#page_info" data-theme="b" data-transition="none" class="i_prefs">&nbsp;</a></li>
-			</ul>
-		</div>
-	</div>
-</div>
-
 <div data-role="page" id="page_file" data-theme="d">
 	<div data-role="content" >
 		<p><a href="javascript:show_addfile_page()" id="file_addbutton" class="i18n_addfile" data-role="button" data-icon="plus">add file</a></p>
@@ -191,7 +175,7 @@
 <div data-role="page" id="page_file_add" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
 		<h1 class="i18n_addfile">add file</h1>
-		<a href="#page_file" data-icon="arrow-l" data-iconpos="notext" data-direction="reverse">back</a>
+		<a href="#page_file" data-icon="arrow-l" data-direction="reverse">back</a>
 	</div>
 	<div data-role="content" >
 		<p>
@@ -211,10 +195,10 @@
 <div data-role="page" id="page_user" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
 		<h1 id="page_user_name" user_id="">username</h1>
-		<a href="#page_users" data-icon="arrow-l" data-iconpos="notext" data-direction="reverse">users</a>
+		<a href="javascript:history.go(-1)" data-icon="arrow-l" data-direction="reverse">back</a>
 	</div>
 	<div data-role="content" id="page_user_content">
-		<p class="c_voip"><a data-role="button" class="button_call" data-inline ="true">&nbsp;</a></p>
+		<p class="c_voip"><a href="javascript:call_start()" data-role="button" class="button_call" data-inline ="true">&nbsp;</a></p>
 		<!--
 		<div id="page_user_image"></div>
 		<fieldset class="ui-grid-a">
@@ -245,12 +229,22 @@
 			<div id="page_user_files"></div>
 		</div>
 	</div>
+	<div data-role="footer" data-position="fixed" class="ui-body-d">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#page_chat" data-theme="b" data-transition="none" class="i_chat">&nbsp;</a></li>
+				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;</a></li>
+				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;</a></li>
+				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;</a></li>
+			</ul>
+		</div>
+	</div>
 </div>
 
 <div data-role="page" id="page_tag" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
 		<h1 id="page_tag_name">#tag</h1>
-		<a href="#page_chat" data-icon="arrow-l" data-iconpos="notext" data-direction="reverse">chat</a>
+		<a href="javascript:history.go(-1)" data-icon="arrow-l" data-direction="reverse">back</a>
 	</div>
 	<div data-role="content" id="page_tag_content">
 		<p>
@@ -261,6 +255,28 @@
 			</form>
 		</p>
 		<div id="page_tag_msgs"></div>
+	</div>
+	<div data-role="footer" data-position="fixed" class="ui-body-d">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#page_chat" data-theme="b" data-transition="none" class="i_chat">&nbsp;</a></li>
+				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;</a></li>
+				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;</a></li>
+				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div data-role="page" id="page_call">
+	<div id="page_call_header" data-role="header" data-position="fixed" data-theme="d">
+		<h1 id="page_call_title"><img src="images/i_call_32.png"/></h1>
+	</div>
+	<div data-role="content" id="page_call_content">
+		<h2 id="call_user">User</h2>
+		<p id="call_info">Calling</p>
+		<p id="call_buttons">
+		</p>
 	</div>
 </div>
 

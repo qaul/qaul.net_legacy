@@ -17,6 +17,16 @@
 extern "C" {
 #endif // __cplusplus
 
+/**
+ * 0 = no new call
+ * 1 = new call
+ */
+int qaul_voip_new_call;
+
+/**
+ * name of the sip caller
+ */
+char qaul_voip_caller_name[MAX_USER_LEN +1];
 
 /**
  * displays whether a new call event occurred
@@ -29,6 +39,15 @@ extern "C" {
  * 5 = call ended - check for message
  */
 int qaul_voip_event;
+
+/**
+ * sip code of call endings
+ *
+ * 486 = callee is busy
+ * 487 = call was terminated
+ * 4XX = user not reachable
+ */
+int qaul_voip_event_code;
 
 /**
  * start VoIP

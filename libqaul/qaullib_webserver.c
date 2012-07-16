@@ -28,6 +28,7 @@ static void Qaullib_WwwQuit(struct mg_connection *conn, const struct mg_request_
 static void Qaullib_WwwCallStart(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwCallEnd(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwCallAccept(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwCallEvent(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwSetPageName(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwGetConfig(struct mg_connection *conn, const struct mg_request_info *request_info);
 
@@ -91,6 +92,10 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
       Qaullib_WwwGetName(conn, request_info);
     }
     // call handling
+	else if (strcmp(request_info->uri, "/call_event") == 0)
+    {
+      Qaullib_WwwCallEvent(conn, request_info);
+    }
 	else if (strcmp(request_info->uri, "/call_start") == 0)
     {
       Qaullib_WwwCallStart(conn, request_info);
@@ -262,6 +267,16 @@ static void Qaullib_WwwQuit(struct mg_connection *conn, const struct mg_request_
 }
 
 // ------------------------------------------------------------
+static void Qaullib_WwwCallEvent(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{\"event\":%i", qaul_voip_event);
+	if(qaul_voip_event == 5)
+		mg_printf(conn, ",\"code\":%i", qaul_voip_event_code);
+	mg_printf(conn, "}");
+	qaul_voip_event = 0;
+}
+
 static void Qaullib_WwwCallStart(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
 	char call_ip[MAX_IP_LEN +1];
@@ -328,19 +343,22 @@ static void Qaullib_WwwGetEvents(struct mg_connection *conn, const struct mg_req
 
 	mg_printf(conn, "{");
 
-	// get number of waiting income messages
-	mg_printf(conn, "\"m_pub\":%i,",1);
-	mg_printf(conn, "\"m_priv\":%i,",1);
+	// get number of waiting incoming messages
+	mg_printf(conn, "\"m_pub\":%i,",0);
+	mg_printf(conn, "\"m_priv\":%i,",0);
 
 	// get newly downloaded files
-	mg_printf(conn, "\"files\":%i,",1);
+	mg_printf(conn, "\"files\":%i,",0);
 
 	// check call events
-	mg_printf(conn, "\"call\":%i",1);
-	if(1)
+	if(qaul_voip_new_call)
 	{
-		mg_printf(conn, ",\"call_e\":[\"event\":\"1\",\"name\":\"\",\"ip\":\"\"]",1);
+		mg_printf(conn, "\"call\":%i",1);
+		mg_printf(conn, ",\"callee\":\"%s\"",qaul_voip_caller_name);
+		qaul_voip_new_call = 0;
 	}
+	else
+		mg_printf(conn, "\"call\":%i",0);
 
 	mg_printf(conn, "}");
 }
