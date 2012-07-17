@@ -79,6 +79,8 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
     }
     else if(pjsua_call_get_count() == 0)
     {
+    	printf("on_incoming_call if(pjsua_call_get_count() == 0) answer with 180\n");
+
     	qaul_voip_callid = call_id;
     	// send ringing notice
     	pjsua_call_answer(call_id, 180, NULL, NULL);
@@ -98,8 +100,12 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
     	}
     }
     else
+    {
+    	printf("on_incoming_call - else - pjsua_call_get_count() %i\n", (int)pjsua_call_get_count());
+
     	// send user busy notice
     	pjsua_call_answer(call_id, 486, NULL, NULL);
+    }
 }
 
 /**

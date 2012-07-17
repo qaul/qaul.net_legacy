@@ -8,7 +8,9 @@ qaul.net works on:
 Installation and Compile Instructions
 --------------------------------------
 
-Compile pjproject with MinGW
+Compile pjproject with MinGW (doesn't compile for me)
+
+Compile pjproject with Visual Studio Express 2008
 
     cd pjproject-2.0.1
     ./configure --enable-shared --disable-static --enable-memalign-hack
