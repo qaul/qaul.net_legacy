@@ -69,43 +69,25 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 			 ci.remote_info.ptr));
 
     // check if any calls are in progress
-    if(pjsua_call_get_count() == 0 && qaul_voip_callid == call_id)
-    {
-    	PJ_LOG(3,(THIS_FILE, "Call %d state=%.*s", call_id, "back invite message received"));
+	printf("on_incoming_call if(pjsua_call_get_count() == 0) answer with 180\n");
 
-    	// this is the invite answer for our call
-    	// we will answer with an accept message
-    	pjsua_call_answer(call_id, 200, NULL, NULL);
-    }
-    else if(pjsua_call_get_count() == 0)
-    {
-    	printf("on_incoming_call if(pjsua_call_get_count() == 0) answer with 180\n");
-
-    	qaul_voip_callid = call_id;
-    	// send ringing notice
-    	pjsua_call_answer(call_id, 180, NULL, NULL);
-    	// set qaul_voip_event
-    	qaul_voip_event = 2;
-    	qaul_voip_new_call = 1;
-    	// get caller name
-    	if(ci.local_contact.slen <= MAX_USER_LEN)
-    	{
-    		strncpy(qaul_voip_caller_name, ci.local_contact.ptr, (int)ci.local_contact.slen);
-    		qaul_voip_caller_name[(int)ci.local_contact.slen] = '\0';
-    	}
-    	else
-    	{
-    		strncpy(qaul_voip_caller_name, ci.local_contact.ptr, MAX_USER_LEN);
-    		qaul_voip_caller_name[MAX_USER_LEN] = '\0';
-    	}
-    }
-    else
-    {
-    	printf("on_incoming_call - else - pjsua_call_get_count() %i\n", (int)pjsua_call_get_count());
-
-    	// send user busy notice
-    	pjsua_call_answer(call_id, 486, NULL, NULL);
-    }
+	qaul_voip_callid = call_id;
+	// send ringing notice
+	pjsua_call_answer(call_id, 180, NULL, NULL);
+	// set qaul_voip_event
+	qaul_voip_event = 2;
+	qaul_voip_new_call = 1;
+	// get caller name
+	if(ci.local_contact.slen <= MAX_USER_LEN)
+	{
+		strncpy(qaul_voip_caller_name, ci.local_contact.ptr, (int)ci.local_contact.slen);
+		qaul_voip_caller_name[(int)ci.local_contact.slen] = '\0';
+	}
+	else
+	{
+		strncpy(qaul_voip_caller_name, ci.local_contact.ptr, MAX_USER_LEN);
+		qaul_voip_caller_name[MAX_USER_LEN] = '\0';
+	}
 }
 
 /**
@@ -114,6 +96,8 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
 {
 	printf("on_call_state\n");
+
+	// write state to qaul_voip_event & qaul_voip_event_code
 
 	pjsua_call_info ci;
 
@@ -216,6 +200,8 @@ int Qaullib_VoipStart(void)
 		cfg.cb.on_incoming_call = &on_incoming_call;
 		cfg.cb.on_call_media_state = &on_call_media_state;
 		cfg.cb.on_call_state = &on_call_state;
+
+		cfg.max_calls = 1;
 
 		pjsua_logging_config_default(&log_cfg);
 		log_cfg.console_level = 4;
