@@ -97,13 +97,28 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
 {
 	printf("on_call_state\n");
 
-	// write state to qaul_voip_event & qaul_voip_event_code
-
 	pjsua_call_info ci;
-
     PJ_UNUSED_ARG(e);
-
     pjsua_call_get_info(call_id, &ci);
+
+	// write state to qaul_voip_event & qaul_voip_event_code
+    // unused:
+    // PJSIP_INV_STATE_INCOMING
+    // PJSIP_INV_STATE_EARLY
+    if(ci.state == PJSIP_INV_STATE_CONNECTING)
+    {
+    	qaul_voip_event = 3;
+    }
+    else if(ci.state == PJSIP_INV_STATE_CONFIRMED)
+    {
+    	qaul_voip_event = 4;
+    }
+    else if(ci.state == PJSIP_INV_STATE_DISCONNECTED)
+    {
+    	qaul_voip_event = 5;
+    	qaul_voip_event_code = 487;
+    }
+
     PJ_LOG(3,(THIS_FILE, "Call %d state=%.*s", call_id,
 			 (int)ci.state_text.slen,
 			 ci.state_text.ptr));
