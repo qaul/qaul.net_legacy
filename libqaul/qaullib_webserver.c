@@ -325,10 +325,6 @@ static void Qaullib_WwwGetConfig(struct mg_connection *conn, const struct mg_req
 		mg_printf(conn, "\"c_quit\":true,");
 	else
 		mg_printf(conn, "\"c_quit\":false,");
-	if(qaul_conf_voip)
-		mg_printf(conn, "\"c_voip\":true,");
-	else
-		mg_printf(conn, "\"c_voip\":false,");
 	mg_printf(conn, "\"c_debug\":false");
 
 	mg_printf(conn, "}");

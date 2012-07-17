@@ -190,7 +190,6 @@ function qaul_configure(data)
 	
 	// set up everything
 	if(qaul_config.c_quit) $(".c_quit").show();
-	if(qaul_config.c_voip) $(".c_voip").show();
 	if(qaul_config.c_debug) $(".c_debug").show();
 	if(qaul_config.locale)
 	{
