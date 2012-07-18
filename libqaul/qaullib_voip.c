@@ -87,20 +87,30 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 		qaul_voip_caller_name[MAX_USER_LEN] = '\0';
 	}
 */
+/*
 	// get name from header
 	pj_str_t hname = pj_str("qaul_name");
 	pj_str_t *caller_name = pjsip_msg_find_hdr_by_name(rdata->msg_info.msg, &hname, NULL);
 
-	if(caller_name->slen <= MAX_USER_LEN)
+	if(caller_name)
 	{
-		strncpy(qaul_voip_caller_name, caller_name->ptr, (int)caller_name->slen);
-		qaul_voip_caller_name[(int)caller_name->slen] = '\0';
+		if(caller_name->slen <= MAX_USER_LEN)
+		{
+			strncpy(qaul_voip_caller_name, caller_name->ptr, (int)caller_name->slen);
+			qaul_voip_caller_name[(int)caller_name->slen] = '\0';
+		}
+		else
+		{
+			strncpy(qaul_voip_caller_name, caller_name->ptr, MAX_USER_LEN);
+			qaul_voip_caller_name[MAX_USER_LEN] = '\0';
+		}
+		printf("qaul_voip_caller_name: %s\n", qaul_voip_caller_name);
 	}
 	else
-	{
-		strncpy(qaul_voip_caller_name, caller_name->ptr, MAX_USER_LEN);
-		qaul_voip_caller_name[MAX_USER_LEN] = '\0';
-	}
+		printf("no qaul_voip_caller_name found\n");
+*/
+	//char *testname = "Unknown";
+	strcpy(qaul_voip_caller_name, "Unknown");
 }
 
 /**
@@ -187,12 +197,14 @@ void Qaullib_VoipCallStart(char* ip)
 		pjsua_msg_data my_data;
 		pjsip_generic_string_hdr my_hdr;
 		pj_str_t hname = pj_str("qaul_name");
-		pj_str_t hvalue = pj_str("%D9%82%D9%88%D9%84");
+		//pj_str_t hvalue = pj_str("%D9%82%D9%88%D9%84");
+		pj_str_t hvalue = pj_str("qaul");
 		pjsua_msg_data_init(&my_data);
 		pjsip_generic_string_hdr_init2(&my_hdr, &hname, &hvalue);
 		pj_list_push_back(&my_data.hdr_list, &my_hdr);
 
-		status = pjsua_call_make_call(qaul_voip_acc_id, &uri, 0, qaul_username, &my_data, &qaul_voip_callid);
+		//status = pjsua_call_make_call(qaul_voip_acc_id, &uri, 0, qaul_username, &my_data, &qaul_voip_callid);
+		status = pjsua_call_make_call(qaul_voip_acc_id, &uri, 0, NULL, &my_data, &qaul_voip_callid);
 		if (status != PJ_SUCCESS)
 		{
 			pjsua_perror(THIS_FILE, "Error making call", status);
@@ -269,6 +281,7 @@ int Qaullib_VoipStart(void)
 
 		pjsua_transport_config_default(&cfg);
 		cfg.port = VOIP_PORT;
+		cfg.public_addr = pj_str(qaul_ip_str); // set public address
 		status = pjsua_transport_create(PJSIP_TRANSPORT_UDP, &cfg, &qaul_voip_trans_id);
 		if (status != PJ_SUCCESS)
 		{
@@ -286,9 +299,15 @@ int Qaullib_VoipStart(void)
     }
 
 	// create local account
-	status = pjsua_acc_add_local (qaul_voip_trans_id, PJ_TRUE, &qaul_voip_acc_id);
+	status = pjsua_acc_add_local(qaul_voip_trans_id, PJ_TRUE, &qaul_voip_acc_id);
 	if (status != PJ_SUCCESS)
 		pjsua_perror(THIS_FILE, "account creation error", status);
+
+	// modify account information
+	pjsua_acc_config myconfig;
+	pjsua_acc_get_config(qaul_voip_acc_id, &myconfig);
+	myconfig.contact_params = pj_str(";qaulname=XYZ"); // set additional custom headers of struct pjsua_acc_config
+	status = pjsua_acc_modify(qaul_voip_acc_id, &myconfig);
 
     return 1;
 }
