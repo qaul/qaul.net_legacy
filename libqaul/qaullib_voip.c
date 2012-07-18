@@ -73,44 +73,25 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 	// set qaul_voip_event
 	qaul_voip_event = 2;
 	qaul_voip_new_call = 1;
-	is_caller = 0;
-/*
-	// get caller name
-	if(ci.local_contact.slen <= MAX_USER_LEN)
-	{
-		strncpy(qaul_voip_caller_name, ci.local_contact.ptr, (int)ci.local_contact.slen);
-		qaul_voip_caller_name[(int)ci.local_contact.slen] = '\0';
-	}
-	else
-	{
-		strncpy(qaul_voip_caller_name, ci.local_contact.ptr, MAX_USER_LEN);
-		qaul_voip_caller_name[MAX_USER_LEN] = '\0';
-	}
-*/
-/*
-	// get name from header
-	pj_str_t hname = pj_str("qaul_name");
-	pj_str_t *caller_name = pjsip_msg_find_hdr_by_name(rdata->msg_info.msg, &hname, NULL);
+	qaul_voip_call.outgoing = 0;
+	qaul_voip_call.connected = 0;
 
-	if(caller_name)
+	// get caller name
+	struct qaul_user_LL_item *myuseritem;
+	union olsr_ip_addr my_olsrip;
+	inet_pton(AF_INET, rdata->pkt_info.src_name, &my_olsrip.v4);
+	strcpy(qaul_voip_call.name, rdata->pkt_info.src_name);
+
+	printf("rdata->pkt_info.src_name: %s\n", rdata->pkt_info.src_name);
+
+	if(Qaullib_User_LL_IpSearch(&my_olsrip, &myuseritem))
 	{
-		if(caller_name->slen <= MAX_USER_LEN)
-		{
-			strncpy(qaul_voip_caller_name, caller_name->ptr, (int)caller_name->slen);
-			qaul_voip_caller_name[(int)caller_name->slen] = '\0';
-		}
-		else
-		{
-			strncpy(qaul_voip_caller_name, caller_name->ptr, MAX_USER_LEN);
-			qaul_voip_caller_name[MAX_USER_LEN] = '\0';
-		}
-		printf("qaul_voip_caller_name: %s\n", qaul_voip_caller_name);
+		strcpy(qaul_voip_call.name, myuseritem->name);
 	}
 	else
-		printf("no qaul_voip_caller_name found\n");
-*/
-	//char *testname = "Unknown";
-	strcpy(qaul_voip_caller_name, "Unknown");
+	{
+		strcpy(qaul_voip_call.name, "Unknown");
+	}
 }
 
 /**

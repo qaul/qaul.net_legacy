@@ -350,7 +350,7 @@ static void Qaullib_WwwGetEvents(struct mg_connection *conn, const struct mg_req
 	if(qaul_voip_new_call)
 	{
 		mg_printf(conn, "\"call\":%i",1);
-		mg_printf(conn, ",\"callee\":\"%s\"",qaul_voip_caller_name);
+		mg_printf(conn, ",\"callee\":\"%s\"",qaul_voip_call.name);
 		qaul_voip_new_call = 0;
 	}
 	else

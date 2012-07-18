@@ -24,9 +24,16 @@ extern "C" {
 int qaul_voip_new_call;
 
 /**
- * name of the sip caller
+ * call information
  */
-char qaul_voip_caller_name[MAX_USER_LEN +1];
+struct qaul_voip_stats_struct {
+	int  outgoing;   // 0 = incoming, 1 = outgoing
+	char name[MAX_USER_LEN +1];
+	char ip[MAX_IP_LEN +1];
+	int  connected;  // 0 = no connection established, 1 = connection was established
+	int  call_duration;
+};
+struct qaul_voip_stats_struct qaul_voip_call;
 
 /**
  * displays whether a new call event occurred
