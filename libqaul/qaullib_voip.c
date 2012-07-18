@@ -14,6 +14,7 @@
 static pjsua_call_id qaul_voip_callid;
 static pjsua_acc_id qaul_voip_acc_id;
 static pjsua_transport_id qaul_voip_trans_id;
+static int is_callee;
 
 // thread registration list
 static pj_status_t rc;
@@ -62,14 +63,9 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 
     pjsua_call_get_info(call_id, &ci);
 
-    printf("on_incoming_call: acc_id %i, call_id %i, qaul_voip_callid %i\n", (int)acc_id, (int)call_id, (int)qaul_voip_callid);
-
     PJ_LOG(3,(THIS_FILE, "Incoming call from %.*s!!",
 			 (int)ci.remote_info.slen,
 			 ci.remote_info.ptr));
-
-    // check if any calls are in progress
-	printf("on_incoming_call if(pjsua_call_get_count() == 0) answer with 180\n");
 
 	qaul_voip_callid = call_id;
 	// send ringing notice
@@ -77,6 +73,8 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 	// set qaul_voip_event
 	qaul_voip_event = 2;
 	qaul_voip_new_call = 1;
+	is_callee = 0;
+
 	// get caller name
 	if(ci.local_contact.slen <= MAX_USER_LEN)
 	{
@@ -103,8 +101,18 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
 
 	// write state to qaul_voip_event & qaul_voip_event_code
     // unused:
+    // PJSIP_INV_STATE_NULL
+    // PJSIP_INV_STATE_CALLING
     // PJSIP_INV_STATE_INCOMING
     // PJSIP_INV_STATE_EARLY
+    if(ci.state == PJSIP_INV_STATE_EARLY)
+    {
+    	// show ringing only when callee
+    	if(is_callee)
+    	{
+    		qaul_voip_event = 1;
+    	}
+    }
     if(ci.state == PJSIP_INV_STATE_CONNECTING)
     {
     	qaul_voip_event = 3;
@@ -155,6 +163,8 @@ void Qaullib_VoipCallStart(char* ip)
 	// check if another call is in progress
 	if(pjsua_call_get_count() == 0)
 	{
+		is_callee = 1;
+
 		// create uri
 		sprintf(stmt, "sip:%s@%s:%i", SIP_USER, ip, VOIP_PORT);
 		pj_str_t uri = pj_str(stmt);
@@ -192,6 +202,7 @@ int Qaullib_VoipStart(void)
 	qaul_voip_event_code = 400;
 	qaul_voip_callid = 0;
 	qaul_voip_new_call = 0;
+	is_callee = 0;
 
 	// init thread list
 	qaul_voip_LL_count = 0;
