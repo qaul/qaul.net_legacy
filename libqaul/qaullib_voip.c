@@ -14,7 +14,7 @@
 static pjsua_call_id qaul_voip_callid;
 static pjsua_acc_id qaul_voip_acc_id;
 static pjsua_transport_id qaul_voip_trans_id;
-static int is_callee;
+static int is_caller;
 
 // thread registration list
 static pj_status_t rc;
@@ -73,8 +73,8 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 	// set qaul_voip_event
 	qaul_voip_event = 2;
 	qaul_voip_new_call = 1;
-	is_callee = 0;
-
+	is_caller = 0;
+/*
 	// get caller name
 	if(ci.local_contact.slen <= MAX_USER_LEN)
 	{
@@ -84,6 +84,21 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 	else
 	{
 		strncpy(qaul_voip_caller_name, ci.local_contact.ptr, MAX_USER_LEN);
+		qaul_voip_caller_name[MAX_USER_LEN] = '\0';
+	}
+*/
+	// get name from header
+	pj_str_t hname = pj_str("qaul_name");
+	pj_str_t *caller_name = pjsip_msg_find_hdr_by_name(rdata->msg_info.msg, &hname, NULL);
+
+	if(caller_name->slen <= MAX_USER_LEN)
+	{
+		strncpy(qaul_voip_caller_name, caller_name->ptr, (int)caller_name->slen);
+		qaul_voip_caller_name[(int)caller_name->slen] = '\0';
+	}
+	else
+	{
+		strncpy(qaul_voip_caller_name, caller_name->ptr, MAX_USER_LEN);
 		qaul_voip_caller_name[MAX_USER_LEN] = '\0';
 	}
 }
@@ -104,11 +119,10 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
     // PJSIP_INV_STATE_NULL
     // PJSIP_INV_STATE_CALLING
     // PJSIP_INV_STATE_INCOMING
-    // PJSIP_INV_STATE_EARLY
     if(ci.state == PJSIP_INV_STATE_EARLY)
     {
-    	// show ringing only when callee
-    	if(is_callee)
+    	// set ringing event only when this user is the caller
+    	if(is_caller)
     	{
     		qaul_voip_event = 1;
     	}
@@ -163,13 +177,22 @@ void Qaullib_VoipCallStart(char* ip)
 	// check if another call is in progress
 	if(pjsua_call_get_count() == 0)
 	{
-		is_callee = 1;
+		is_caller = 1;
 
 		// create uri
 		sprintf(stmt, "sip:%s@%s:%i", SIP_USER, ip, VOIP_PORT);
 		pj_str_t uri = pj_str(stmt);
 
-		status = pjsua_call_make_call(qaul_voip_acc_id, &uri, 0, NULL, NULL, &qaul_voip_callid);
+		// set user name in msg_data
+		pjsua_msg_data my_data;
+		pjsip_generic_string_hdr my_hdr;
+		pj_str_t hname = pj_str("qaul_name");
+		pj_str_t hvalue = pj_str("%D9%82%D9%88%D9%84");
+		pjsua_msg_data_init(&my_data);
+		pjsip_generic_string_hdr_init2(&my_hdr, &hname, &hvalue);
+		pj_list_push_back(&my_data.hdr_list, &my_hdr);
+
+		status = pjsua_call_make_call(qaul_voip_acc_id, &uri, 0, qaul_username, &my_data, &qaul_voip_callid);
 		if (status != PJ_SUCCESS)
 		{
 			pjsua_perror(THIS_FILE, "Error making call", status);
@@ -202,7 +225,7 @@ int Qaullib_VoipStart(void)
 	qaul_voip_event_code = 400;
 	qaul_voip_callid = 0;
 	qaul_voip_new_call = 0;
-	is_callee = 0;
+	is_caller = 0;
 
 	// init thread list
 	qaul_voip_LL_count = 0;
