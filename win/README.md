@@ -8,14 +8,13 @@ qaul.net works on:
 Installation and Compile Instructions
 --------------------------------------
 
-Compile pjproject with MinGW (doesn't compile for me)
-
 Compile pjproject with Visual Studio Express 2008
+* download and install Visual Studio Express 2008
+  http://www.microsoft.com/visualstudio/en-us/products/2008-editions/express
+* download and install DirectX Software Development Kit 
+  http://www.microsoft.com/en-us/download/confirmation.aspx?id=6812
+* open the project in Visual Studio Express 2008 and hit F7 to compile
 
-    cd pjproject-2.0.1
-    ./configure --enable-shared --disable-static --enable-memalign-hack
-    make 
-    cd ..
 
 Compile libqaul.dll with Windows Power shell
 
@@ -38,6 +37,8 @@ Open Visual Studio and run qaul.net
 ### Optional
 
 To develop and compile olsrd, olsrd_qaul plugin you will need to install MinGW
+* download and install mingw
+  http://sourceforge.net/projects/mingw/files/
 
 Compile olsrd
 

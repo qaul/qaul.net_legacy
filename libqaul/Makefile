@@ -1,8 +1,10 @@
 #
 # File:  Makefile (for library)
 #
-
-PJBASE=../pjproject-2.0.1
+TOP:=$(dir $(lastword $(MAKEFILE_LIST)))
+PJBASE=$(TOP)/../pjproject-2.0.1
+#PJBASE=/Users/sojus/src/meshnet/qaul.net/pjproject-2.0.1
+PJ_WIN32=1
 
 CC=gcc
 LIBDEST=./
@@ -30,6 +32,8 @@ SRC= qaullib.c qaullib_ipc.c qaullib_webserver.c qaullib_voip.c \
      
 SRC_WIN= win32/functions.c win32/pthread.c
 
+LIBDEST_WIN=-L$(PJBASE)/lib -llibpjproject-i386-Win32-vc8-Release
+
 # Windows
 LIB=libqaul.lib
 
@@ -49,7 +53,7 @@ linux: $(OBJS)
 	
 win: $(OBJS_WIN)
 	@echo lib Makefile - archiving libqaul.lib
-	@$(CC) -shared -o libqaul.dll $(SRC) $(SRC_WIN) -lwsock32 -lWs2_32 -Wl,--output-def,libqaul.def,--out-implib,libqaul.a
+	@$(CC) -shared -o libqaul.dll $(CFLAGS) $(SRC) $(SRC_WIN) $(LIBDEST_WIN) -lwsock32 -lWs2_32 -lole32 -ldsound -Wl,--output-def,libqaul.def,--out-implib,libqaul.a
 	@lib /machine:i386 /def:libqaul.def
 	@copy .\libqaul.dll "..\win\Debug\"
 	@copy .\libqaul.dll "..\win\Release\"
