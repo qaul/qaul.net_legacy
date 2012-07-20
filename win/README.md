@@ -21,7 +21,7 @@ the web and extract it again - this is a known error http://trac.pjsip.org/repos
 Compile libqaul.dll with MinGw
 
     cd libqaul
-    make win
+    make OS=win
     cd ../
 
 qaul.net is written in Visual C++ (managed code)

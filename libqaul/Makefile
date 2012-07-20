@@ -3,11 +3,24 @@
 #
 TOP:=$(dir $(lastword $(MAKEFILE_LIST)))
 PJBASE=$(TOP)/../pjproject-2.0.1
-PJ_WIN32=1
 
 CC=gcc
 LIBDEST=.
-#OSX_CFLAGS=-arch i386
+
+# osx
+ifeq ($(OS),osx)
+OSX_CFLAGS=-arch i386
+endif
+# linux
+ifeq ($(OS),linux)
+endif
+# Windows
+ifeq ($(OS),win)
+PJ_WIN32=1
+LIB=libqaul.lib
+SRC_WIN= win32/functions.c win32/pthread.c
+endif
+
 CFLAGS= $(OSX_CFLAGS) \
 		-I$(PJBASE)/pjlib/include \
 		-I$(PJBASE)/pjlib-util/include \
@@ -27,9 +40,9 @@ SRC= qaullib.c qaullib_ipc.c qaullib_webserver.c qaullib_voip.c \
      captive/qaullib_captive.c captive/qaullib_captive_dhcp.c captive/qaullib_captive_dns.c \
      mongoose/mongoose.c sqlite/sqlite3.c \
      urlcode/urlcode.c bstrlib/bstrlib.c polarssl/sha1.c \
-     olsrd/mantissa.c olsrd/hashing.c 
-     
-SRC_WIN= win32/functions.c win32/pthread.c
+     olsrd/mantissa.c olsrd/hashing.c \
+     $(SRC_WIN)
+
 
 LIBDEST_WIN= \
 			-L$(PJBASE)/pjlib/lib \
@@ -64,29 +77,32 @@ LIBDEST_WIN= \
 			-lwinmm \
 			-m32
 			
-# Windows
-LIB=libqaul.lib
 
 OBJS=$(SRC:.c=.o)
-OBJS_WIN=$(SRC:.c=.o) $(SRC_WIN:.c=.o)
 
+
+ifndef OS
 all:
-	@echo "make ( osx | linux | win )"
-
-osx: $(OBJS)
+	@echo "make ( OS=osx | OS=linux | OS=win )"
+	@echo "make clean ( OS=win )"
+else
+all: $(OBJS)
+ifeq ($(OS),osx)
 	@echo lib Makefile - archiving libqaul.a
 	@$(AR) r libqaul.a $(OBJS)
-
-linux: $(OBJS)
+endif
+ifeq ($(OS),linux)
 	@echo lib Makefile - archiving libqaul.a
 	@$(AR) r libqaul.a $(OBJS)
-	
-win: $(OBJS_WIN)
+endif
+ifeq ($(OS),win)
 	@echo lib Makefile - archiving libqaul.lib
-	@$(CC) -shared -o libqaul.dll $(CFLAGS) $(SRC) $(SRC_WIN) $(LIBDEST_WIN) -lwsock32 -lWs2_32 -lole32 -ldsound -Wl,--output-def,libqaul.def,--out-implib,libqaul.a
+	@$(CC) -shared -o libqaul.dll $(CFLAGS) $(SRC) $(LIBDEST_WIN) -lwsock32 -lWs2_32 -lole32 -ldsound -Wl,--output-def,libqaul.def,--out-implib,libqaul.a
 	@lib /machine:i386 /def:libqaul.def
-	@copy .\libqaul.dll "..\win\Debug\"
-	@copy .\libqaul.dll "..\win\Release\"
+	@cp ./libqaul.dll "../win/Debug"
+	@cp ./libqaul.dll "../win/Release"
+endif
+endif
 	
 $(LIB): $(OBJS)
 	@echo lib Makefile - archiving $(LIB)
@@ -97,13 +113,16 @@ $(LIB): $(OBJS)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
+ifeq ($(OS),win)
+	@echo "make clean OS=win"
+	@echo rm $(OBJS)
+	@rm $(OBJS)
+	@rm libqaul.a libqaul.dll libqaul.def
+	@rm libqaul.lib libqaul.exp	
+else
 	@echo "make clean"
 	@echo rm $(OBJS)
 	@rm $(OBJS)
 	@rm libqaul.a
+endif
 
-clean_win:
-	@echo "make clean_win"
-	@rm $(OBJS_WIN)
-	@rm libqaul.a libqaul.dll libqaul.def
-	@rm libqaul.lib libqaul.exp
