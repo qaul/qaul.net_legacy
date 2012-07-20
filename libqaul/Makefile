@@ -3,11 +3,10 @@
 #
 TOP:=$(dir $(lastword $(MAKEFILE_LIST)))
 PJBASE=$(TOP)/../pjproject-2.0.1
-#PJBASE=/Users/sojus/src/meshnet/qaul.net/pjproject-2.0.1
 PJ_WIN32=1
 
 CC=gcc
-LIBDEST=./
+LIBDEST=.
 #OSX_CFLAGS=-arch i386
 CFLAGS= $(OSX_CFLAGS) \
 		-I$(PJBASE)/pjlib/include \
@@ -32,8 +31,39 @@ SRC= qaullib.c qaullib_ipc.c qaullib_webserver.c qaullib_voip.c \
      
 SRC_WIN= win32/functions.c win32/pthread.c
 
-LIBDEST_WIN=-L$(PJBASE)/lib -llibpjproject-i386-Win32-vc8-Release
-
+LIBDEST_WIN= \
+			-L$(PJBASE)/pjlib/lib \
+			-L$(PJBASE)/pjlib-util/lib \
+			-L$(PJBASE)/pjmedia/lib \
+			-L$(PJBASE)/pjnath/lib \
+			-L$(PJBASE)/pjsip/lib \
+			-L$(PJBASE)/third_party/lib \
+			\
+			-lpjsua-i686-pc-mingw32 \
+			-lpjsip-ua-i686-pc-mingw32 \
+			-lpjsip-simple-i686-pc-mingw32 \
+			-lpjsip-i686-pc-mingw32 \
+			-lpjmedia-audiodev-i686-pc-mingw32 \
+			-lpjmedia-codec-i686-pc-mingw32 \
+			-lpjmedia-i686-pc-mingw32 \
+			-lpjmedia-videodev-i686-pc-mingw32 \
+			-lpjnath-i686-pc-mingw32 \
+			-lpjlib-util-i686-pc-mingw32 \
+			-lresample-i686-pc-mingw32 \
+			-lmilenage-i686-pc-mingw32 \
+			-lsrtp-i686-pc-mingw32 \
+			-lgsmcodec-i686-pc-mingw32 \
+			-lspeex-i686-pc-mingw32 \
+			-lilbccodec-i686-pc-mingw32 \
+			-lg7221codec-i686-pc-mingw32 \
+			-lportaudio-i686-pc-mingw32 \
+			-lpj-i686-pc-mingw32 \
+			\
+			-L/lib \
+			-lm \
+			-lwinmm \
+			-m32
+			
 # Windows
 LIB=libqaul.lib
 

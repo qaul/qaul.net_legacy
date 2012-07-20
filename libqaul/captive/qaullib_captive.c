@@ -21,11 +21,12 @@ void *Qaullib_DNS_Server(void *server_ip);
 // ---------------------------------------------------------------------
 int Qaullib_CaptiveStart(void)
 {
+	struct sockaddr_in sa;	
+	
 	if(!qaul_captive_running)
 	{
 		printf("start captive portal\n");
 
-		struct sockaddr_in sa;
 		//inet_pton(AF_INET, qaul_ip_str, &(sa.sin_addr));
 		//memcpy( &qaul_ip_captive, &(sa.sin_addr.s_addr), 4);
 		memcpy( &qaul_ip_captive, &(qaul_ip_addr.v4.s_addr), 4);
@@ -51,6 +52,7 @@ void Qaullib_Captive_CreateIP(char *ip)
 // ---------------------------------------------------------------------
 int Qaullib_Captive_IpExists(char *ip)
 {
+	int exists;
 	// create ip
 	union olsr_ip_addr myip;
 	memcpy(&myip.v4.s_addr, ip, sizeof(struct in_addr));
@@ -59,7 +61,7 @@ int Qaullib_Captive_IpExists(char *ip)
 	// lock DB
 	pthread_mutex_lock( &qaullib_mutex_userLL );
 	// check for ip
-	int exists = Qaullib_User_LL_IpExists(&myip);
+	exists = Qaullib_User_LL_IpExists(&myip);
 	// unlock DB
 	pthread_mutex_unlock( &qaullib_mutex_userLL );
 

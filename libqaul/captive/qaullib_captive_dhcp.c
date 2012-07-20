@@ -77,7 +77,7 @@ void *Qaullib_DHCP_Server(void *server_ip)
 	struct sockaddr_in myAddr;
 	struct sockaddr_in sourceAddr;
 	struct sockaddr_in destinationAddr;
-	int status, sendstatus, option, addr_valid;
+	int status, sendstatus, option, addr_valid, DHCPSocket;
 	socklen_t sourcelen;
 	struct sock_struct *sockptr;
 	char * option_ptr;
@@ -85,7 +85,7 @@ void *Qaullib_DHCP_Server(void *server_ip)
 	time_t last_checked = time(NULL);
 	sourcelen = sizeof(struct sockaddr_in);
 
-	static int DHCPSocket = -1;
+	DHCPSocket = -1;
 	char NewIP[4] = {10,13,13,13};
 	char New_subnet[] = {1,4,255,0,0,0};
 	char New_offer[] = {53,1,DHCPOFFER};

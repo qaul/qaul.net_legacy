@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="8.00"
 	Name="python_pjsua"
 	ProjectGUID="{0C91838B-3372-40B4-A764-DE075A4BC94B}"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -83,8 +82,6 @@
 				ModuleDefinitionFile="..\src\python\_pjsua.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/_pjsua_d.pdb"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				ImportLibrary="$(OutDir)/_pjsua_d.lib"
 				TargetMachine="1"
 			/>
@@ -107,6 +104,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -183,8 +183,6 @@
 				ProgramDatabaseFile="$(OutDir)/_pjsua.pdb"
 				GenerateMapFile="true"
 				MapFileName="$(OutDir)/_pjsua.map"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				ImportLibrary="$(OutDir)/_pjsua.lib"
 				TargetMachine="1"
 			/>
@@ -207,6 +205,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

@@ -8,7 +8,7 @@
 // ------------------------------------------------------------
 void Qaullib_Init(const char* resourcePath)
 {
-	int rc, i;
+	int rc, i, dbExists;
 
 	// -------------------------------------------------
 	// define global variables
@@ -64,7 +64,7 @@ void Qaullib_Init(const char* resourcePath)
 #endif
 
 	// check if db exists
-	int dbExists = Qaullib_FileExists(dbPath);
+	dbExists = Qaullib_FileExists(dbPath);
 
 	// configure sqlite
 	// make sure sqlite is in fullmutex mode for multithreading

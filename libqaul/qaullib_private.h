@@ -50,7 +50,9 @@ extern "C" {
 #include "qaullib_ipc.h"
 #include "qaullib_voip.h"
 
+#ifndef WIN32
 #include <unistd.h>             // close()
+#endif
 
 /**
  * global variables and structures

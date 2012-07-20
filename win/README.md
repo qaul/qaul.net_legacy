@@ -8,19 +8,21 @@ qaul.net works on:
 Installation and Compile Instructions
 --------------------------------------
 
-Compile pjproject with Visual Studio Express 2008
-* download and install Visual Studio Express 2008
-  http://www.microsoft.com/visualstudio/en-us/products/2008-editions/express
-* download and install DirectX Software Development Kit 
-  http://www.microsoft.com/en-us/download/confirmation.aspx?id=6812
-* open the project in Visual Studio Express 2008 and hit F7 to compile
+Compile pjproject with mingw
+    
+	cd pjproject-2.0.1
+	./aconfigure --disable-ssl CFLAGS='-m32' LDFLAGS='-m32'
+	make dep
+    make
 
+if make dep gives you - #error "PJ_HAS_HIGH_RES_TIMER is not defined!" - errors, download the pjproject as a zip from
+the web and extract it again - this is a known error http://trac.pjsip.org/repos/wiki/FAQ#mingw-configure
 
-Compile libqaul.dll with Windows Power shell
+Compile libqaul.dll with MinGw
 
     cd libqaul
     make win
-    cd ..
+    cd ../
 
 qaul.net is written in Visual C++ (managed code)
 
