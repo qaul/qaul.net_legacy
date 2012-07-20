@@ -193,6 +193,9 @@ void formStart::QaulStarting(void)
 	if(qaulStartCounter == 50)
 	{
 		Debug::WriteLine(L"start: 50");
+		// start VoIP
+		Qaullib_SetConfVoIP();
+		// start captive portal
 		if(!Qaullib_CaptiveStart()) 
 			Debug::WriteLine(L"error starting captive portal");
 		// start port forward
