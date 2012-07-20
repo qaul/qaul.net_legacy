@@ -32,6 +32,7 @@ struct qaul_voip_stats_struct {
 	char ip[MAX_IP_LEN +1];
 	int  connected;  // 0 = no connection established, 1 = connection was established
 	int  call_duration;
+	int  call_logged;
 };
 struct qaul_voip_stats_struct qaul_voip_call;
 

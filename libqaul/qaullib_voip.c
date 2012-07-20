@@ -14,7 +14,6 @@
 static pjsua_call_id qaul_voip_callid;
 static pjsua_acc_id qaul_voip_acc_id;
 static pjsua_transport_id qaul_voip_trans_id;
-static int is_caller;
 
 // thread registration list
 static pj_status_t rc;
@@ -35,6 +34,66 @@ struct qaul_voip_thread_LL_item* Qaullib_Voip_LL_Add();
 void Qaullib_Voip_LL_Delete_Item(struct qaul_voip_thread_LL_item *item);
 void Qaullib_Voip_LL_Clean (void);
 
+/**
+ * get caller / callee name
+ */
+static void Qaullib_VoipSetNameByIp(char *ip)
+{
+	// get caller name
+	struct qaul_user_LL_item *myuseritem;
+	union olsr_ip_addr my_olsrip;
+	inet_pton(AF_INET, ip, &my_olsrip.v4);
+
+	if(strlen(ip) <= MAX_IP_LEN)
+		strcpy(qaul_voip_call.ip, ip);
+
+	printf("ip: %s\n", ip);
+
+	if(Qaullib_User_LL_IpSearch(&my_olsrip, &myuseritem))
+		strcpy(qaul_voip_call.name, myuseritem->name);
+	else
+		strcpy(qaul_voip_call.name, "Unknown");
+}
+
+/**
+ * write message log into DB
+ */
+static void Qaullib_VoipLogCall(void)
+{
+	printf("Qaullib_VoipLogCall()\n");
+
+	char buffer[1024];
+	char* stmt = buffer;
+	int mytype;
+	char *error_exec=NULL;
+
+	if(qaul_voip_call.call_logged == 0)
+	{
+		qaul_voip_call.call_logged = 1;
+
+		if(qaul_voip_call.outgoing)
+			mytype = 13;
+		else
+			mytype = 3;
+
+		sprintf(stmt, sql_msg_set_voip,
+			mytype,
+			qaul_voip_call.name,
+			"{}",
+			qaul_voip_call.ip,
+			4
+		);
+		if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+		{
+			// execution failed
+			printf("SQLite error: %s\n",error_exec);
+			sqlite3_free(error_exec);
+			error_exec=NULL;
+		}
+		else
+			qaul_new_msg = 1;
+	}
+}
 
 /**
  * register this thread in pjsip
@@ -75,7 +134,10 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 	qaul_voip_new_call = 1;
 	qaul_voip_call.outgoing = 0;
 	qaul_voip_call.connected = 0;
+	qaul_voip_call.call_logged = 0;
 
+	Qaullib_VoipSetNameByIp(rdata->pkt_info.src_name);
+/*
 	// get caller name
 	struct qaul_user_LL_item *myuseritem;
 	union olsr_ip_addr my_olsrip;
@@ -92,6 +154,7 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 	{
 		strcpy(qaul_voip_call.name, "Unknown");
 	}
+*/
 }
 
 /**
@@ -113,7 +176,7 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
     if(ci.state == PJSIP_INV_STATE_EARLY)
     {
     	// set ringing event only when this user is the caller
-    	if(is_caller)
+    	if(qaul_voip_call.outgoing)
     	{
     		qaul_voip_event = 1;
     	}
@@ -130,6 +193,10 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
     {
     	qaul_voip_event = 5;
     	qaul_voip_event_code = 487;
+
+    	Qaullib_VoipLogCall();
+
+    	printf("PJSIP_INV_STATE_DISCONNECTED\n");
     }
 
     PJ_LOG(3,(THIS_FILE, "Call %d state=%.*s", call_id,
@@ -168,7 +235,9 @@ void Qaullib_VoipCallStart(char* ip)
 	// check if another call is in progress
 	if(pjsua_call_get_count() == 0)
 	{
-		is_caller = 1;
+		qaul_voip_call.outgoing = 1;
+		qaul_voip_call.call_logged = 0;
+		Qaullib_VoipSetNameByIp(ip);
 
 		// create uri
 		sprintf(stmt, "sip:%s@%s:%i", SIP_USER, ip, VOIP_PORT);
@@ -178,13 +247,11 @@ void Qaullib_VoipCallStart(char* ip)
 		pjsua_msg_data my_data;
 		pjsip_generic_string_hdr my_hdr;
 		pj_str_t hname = pj_str("qaul_name");
-		//pj_str_t hvalue = pj_str("%D9%82%D9%88%D9%84");
 		pj_str_t hvalue = pj_str("qaul");
 		pjsua_msg_data_init(&my_data);
 		pjsip_generic_string_hdr_init2(&my_hdr, &hname, &hvalue);
 		pj_list_push_back(&my_data.hdr_list, &my_hdr);
 
-		//status = pjsua_call_make_call(qaul_voip_acc_id, &uri, 0, qaul_username, &my_data, &qaul_voip_callid);
 		status = pjsua_call_make_call(qaul_voip_acc_id, &uri, 0, NULL, &my_data, &qaul_voip_callid);
 		if (status != PJ_SUCCESS)
 		{
@@ -204,8 +271,11 @@ void Qaullib_VoipCallAccept(void)
 
 void Qaullib_VoipCallEnd(void)
 {
+	printf("Qaullib_VoipCallEnd()\n");
+
 	Qaullib_VoipRegisterThread();
 	pjsua_call_hangup_all();
+	Qaullib_VoipLogCall();
 }
 
 int Qaullib_VoipStart(void)
@@ -218,7 +288,6 @@ int Qaullib_VoipStart(void)
 	qaul_voip_event_code = 400;
 	qaul_voip_callid = 0;
 	qaul_voip_new_call = 0;
-	is_caller = 0;
 
 	// init thread list
 	qaul_voip_LL_count = 0;

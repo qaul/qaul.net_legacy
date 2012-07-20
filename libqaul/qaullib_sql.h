@@ -19,8 +19,10 @@ extern "C" {
  * message types:
  * 1:  public message received
  * 2:  private message received
+ * 3:  voip incoming call
  * 11: public message sent by me
  * 12: private message sent by me
+ * 13: voip outgoing call
  */
 static const char* sql_msg_table = "CREATE TABLE IF NOT EXISTS 'msg' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 'type' INTEGER DEFAULT 1 NOT NULL, 'name' TEXT, 'msg' TEXT, 'ip' TEXT, 'ipv' INTEGER DEFAULT 4, 'ipv4' INTEGER, 'ipv6' CHAR(16), 'time' INTEGER DEFAULT CURRENT_TIMESTAMP, 'hops' INTEGER, 'ttl' INTEGER, 'seqnr' INTEGER, 'olsrtime' INTEGER, 'read' INTEGER DEFAULT 0);";
 
@@ -40,6 +42,8 @@ static const char* sql_msg_update_read = "UPDATE 'msg' SET read = 1 WHERE id = %
 // insert message
 static const char* sql_msg_set_received = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','hops','ttl','seqnr','olsrtime') VALUES (%i,'%s','%s','%s',%i,%i,%i,%i,%i);";
 static const char* sql_msg_set_my = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','read') VALUES (%i,'%s','%s','%s',%i,1);";
+static const char* sql_msg_set_voip = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','read') VALUES (%i,'%s','%s','%s',%i,0);";
+
 
 /**
  * configuration table

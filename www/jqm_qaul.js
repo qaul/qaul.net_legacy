@@ -30,6 +30,7 @@ var qaulinitialized = false;
 var chat_initialized = false;
 var is_chrome = false;
 var call_page_origin = "page_chat";
+var user_page_origin = "pager_users";
 
 // ======================================================
 // initialize
@@ -266,8 +267,18 @@ function init_chat()
 function show_user(id, name, ip)
 {
 	user_last_id = 0;
+
 	// open page
+	if(
+		$.mobile.activePage.attr('id') != "page_call" &&
+		$.mobile.activePage.attr('id') != "page_user" &&
+		$.mobile.activePage.attr('id') != "page_tag" 
+	) 
+	{
+	 	user_page_origin = $.mobile.activePage.attr('id');
+	}
 	$.mobile.changePage($("#page_user"),"slide");
+	
 	// set page
 	$("#page_user_name").empty().append(name);
 	$("#page_user_name").attr("user_id",id);
@@ -309,6 +320,15 @@ function show_tag(tag)
 {
 	tag_last_id = 0;
 	tag_name = tag;
+	
+	if(
+		$.mobile.activePage.attr('id') != "page_call" &&
+		$.mobile.activePage.attr('id') != "page_user" &&
+		$.mobile.activePage.attr('id') != "page_tag" 
+	) 
+	{
+	 	user_page_origin = $.mobile.activePage.attr('id');
+	}
 	// open page
 	$.mobile.changePage($("#page_tag"),"slide");
 	// set page
@@ -573,29 +593,51 @@ function format_msg_file(msg, desc, name, ip)
 	return {"msg":msg,"button":button};
 }
 
+function format_msg_voip(item)
+{
+	var button;
+	button = '<div class="msg_voip"><img src="images/i_call_64.png" /></div>';
+	var msg;
+	if(item.type == 3)
+		msg = 'incoming call from ' +format_msg_userlink(item.name, item.ip, item.id);
+	else
+		msg = 'you called ' +format_msg_userlink(item.name, item.ip, item.id);
+		
+	return {"msg":msg,"button":button};
+}
+
+function format_msg_userlink(name, ip, id)
+{
+	return '<a href="#page_user" onClick="javascript:show_user(' 
+					+id +',\'' +name +'\',\'' +ip 
+					+'\');">' +name +'</a>';
+}
+
 function format_msg(item)
 {
 	// format message
-	var formated = format_msg_file(format_msg_txt(item.msg), item.msg, item.name, item.ip);
+	var formated;
+	if(item.type == 3 || item.type == 13)
+		formated = format_msg_voip(item);
+	else
+		formated = format_msg_file(format_msg_txt(item.msg), item.msg, item.name, item.ip);
 	
 	// create html
 	var msg = '<div id="msg_' +item.id +'" class="msg msg_' +item.type  +'">';
 	msg += formated.button;
 	msg += '<div class="msg_time"><abbr class="timeago" id="abbr_msg_' +item.id +'" title="' +item.time +'">' +time2str(item.time) +'</abbr></div>';
 	// from
-	if(item.type < 10)
-	{
-		msg += '<div class="sender"><a href="#page_user" onClick="javascript:show_user(' 
-				+item.id +',\'' +item.name +'\',\'' +item.ip 
-				+'\');">' +item.name +'</a></div>';
-	}
+	if(item.type == 3 || item.type == 13)
+		;
+	else if(item.type < 10)
+		msg += '<div class="sender">' +format_msg_userlink(item.name, item.ip, item.id) +'</div>';
 	else 
-	{
 		msg += '<div class="sender">' +user_name +'</div>';
-	}
+
 	// message
 	msg += '<div class="message">' +formated.msg +'</div>';
 	msg += '</div>';
+
 	return msg;
 }
 
@@ -1293,6 +1335,11 @@ function user_changetochat(active)
 {
 	$("#page_user_tab_files").hide();
 	$("#page_user_tab_chat").show();
+}
+
+function user_goback()
+{
+	$.mobile.changePage($("#" +user_page_origin));
 }
 
 // ======================================================

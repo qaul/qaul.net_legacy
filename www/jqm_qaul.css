@@ -109,6 +109,8 @@ abbr.timeago {
 .msg {
 	padding:1px;
 	border-top:1px dotted #999999;
+	min-height:64px;
+	clear:both;
 }
 .msg_1, .msg_11 {
 	background-color:#eeeeee;
@@ -120,6 +122,10 @@ abbr.timeago {
 	margin:10px 10px 5px 10px;
 	font-weight:bold;
 	color:#000;
+}
+.msg_3 div.message, .msg_13 div.message {
+	margin-top:20px;
+	text-align:center;
 }
 .msg .sender a {
 	/*color:#000;*/
@@ -207,7 +213,7 @@ a.unavailable {
 	float:right;
 	margin: 5px 5px 0 0;
 }
-.msg_filebutton {
+.msg_filebutton, .msg_voip {
 	float:left;
 }
 .f_img {

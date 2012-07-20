@@ -195,10 +195,10 @@
 <div data-role="page" id="page_user" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
 		<h1 id="page_user_name" user_id="">username</h1>
-		<a href="javascript:history.go(-1)" data-icon="arrow-l" data-direction="reverse">back</a>
+		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse">back</a>
 	</div>
 	<div data-role="content" id="page_user_content">
-		<p class="c_voip"><a href="javascript:call_start()" data-role="button" class="button_call" data-inline ="true">&nbsp;</a></p>
+		<p class="c_voip"><a href="javascript:call_start()" data-role="button" class="button_call">&nbsp;</a></p>
 		<!--
 		<div id="page_user_image"></div>
 		<fieldset class="ui-grid-a">
@@ -244,7 +244,7 @@
 <div data-role="page" id="page_tag" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
 		<h1 id="page_tag_name">#tag</h1>
-		<a href="javascript:history.go(-1)" data-icon="arrow-l" data-direction="reverse">back</a>
+		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse">back</a>
 	</div>
 	<div data-role="content" id="page_tag_content">
 		<p>
