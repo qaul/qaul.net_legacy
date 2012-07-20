@@ -1,0 +1,8 @@
+{
+"locale":"de",
+"name":"bla",
+"is_mobile":true,
+"msg_max":20,
+"c_quit":true,
+"c_debug":true
+}
