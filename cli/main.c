@@ -39,7 +39,8 @@ int main(int argc, char *argv[])
 	Qaullib_Init(cCurrentPath);
 	if(!Qaullib_WebserverStart()) printf("Webserver startup failed\n");
 	if(!Qaullib_IpcConnect()) printf("Ipc connection failed\n");
-	// TODO: start captive portal
+	if(!Qaullib_SetConfVoip()) printf("Voice over IP failed\n");
+	if(!Qaullib_CaptivePortal()) printf("Captive Portal failed\n");
 	Qaullib_ConfigurationFinished();
 
 	// test config
