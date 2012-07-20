@@ -1,465 +1,2792 @@
 EXPORTS
-    Qaul_dhcp_LL_root @1 DATA
-    Qaul_user_LL_table @2 DATA
-    Qaullib_CaptiveStart @3
-    Qaullib_Captive_CreateIP @4
-    Qaullib_Captive_Dhcp_LL_Init @5
-    Qaullib_Captive_IpExists @6
-    Qaullib_ConfigStart @7
-    Qaullib_ConfigurationFinished @8
-    Qaullib_CreateIP @9
-    Qaullib_DHCP_Options @10
-    Qaullib_DHCP_Server @11
-    Qaullib_DNS_Server @12
-    Qaullib_DbGetConfigValue @13
-    Qaullib_DbGetConfigValueInt @14
-    Qaullib_DbInit @15
-    Qaullib_DbPopulateConfig @16
-    Qaullib_DbSetConfigValue @17
-    Qaullib_Dhcp_LL_Add @18
-    Qaullib_Dhcp_LL_Clean @19
-    Qaullib_Dhcp_LL_Delete_Item @20
-    Qaullib_Dhcp_LL_Search_Ip @21
-    Qaullib_Dhcp_LL_Search_IpMAC @22
-    Qaullib_ExistsLocale @23
-    Qaullib_ExistsUsername @24
-    Qaullib_Exit @25
-    Qaullib_FileAdd @26
-    Qaullib_FileAvailable @27
-    Qaullib_FileCheckScheduled @28
-    Qaullib_FileCheckSockets @29
-    Qaullib_FileConnect @30
-    Qaullib_FileCreatePath @31
-    Qaullib_FileDeleteById @32
-    Qaullib_FileExists @33
-    Qaullib_FilePicked @34
-    Qaullib_FilePopulate @35
-    Qaullib_GetAppEventOpenPath @36
-    Qaullib_GetIP @37
-    Qaullib_GetLocale @38
-    Qaullib_GetNetBssId @39
-    Qaullib_GetNetBssIdSet @40
-    Qaullib_GetNetGateway @41
-    Qaullib_GetNetIbss @42
-    Qaullib_GetNetMask @43
-    Qaullib_GetNetProtocol @44
-    Qaullib_GetUsername @45
-    Qaullib_Init @46
-    Qaullib_IpcClose @47
-    Qaullib_IpcConnect @48
-    Qaullib_IpcEvaluateChat @49
-    Qaullib_IpcEvaluateCom @50
-    Qaullib_IpcEvaluateMessage @51
-    Qaullib_IpcEvaluateTopo @52
-    Qaullib_IpcReceive @53
-    Qaullib_IpcSend @54
-    Qaullib_IpcSendCom @55
-    Qaullib_MAC_Compare @56
-    Qaullib_ProtectString @57
-    Qaullib_SetConfQuit @58
-    Qaullib_SetConfVoIP @59
-    Qaullib_SetIP @60
-    Qaullib_SetLocale @61
-    Qaullib_SetUsername @62
-    Qaullib_TimedCheckAppEvent @63
-    Qaullib_TimedDownload @64
-    Qaullib_TimedSocketReceive @65
-    Qaullib_UnprotectString @66
-    Qaullib_UrlDecode @67
-    Qaullib_UrlEncode @68
-    Qaullib_UrlFromHex @69
-    Qaullib_UrlToHex @70
-    Qaullib_UserCheckNonames @71
-    Qaullib_UserCheckSockets @72
-    Qaullib_UserCheckUser @73
-    Qaullib_UserGetInfo @74
-    Qaullib_UserInit @75
-    Qaullib_UserTouchIp @76
-    Qaullib_User_LL_Add @77
-    Qaullib_User_LL_Clean @78
-    Qaullib_User_LL_Delete_Item @79
-    Qaullib_User_LL_Init @80
-    Qaullib_User_LL_InitNode @81
-    Qaullib_User_LL_IpExists @82
-    Qaullib_User_LL_IpSearch @83
-    Qaullib_User_LL_NextNode @84
-    Qaullib_WebserverStart @85
-    Qaullib_WgetClose @86
-    Qaullib_WgetConnect @87
-    Qaullib_WgetReceive @88
-    Qaullib_WgetSendHeader @89
-    Qaullib_WwwEvent_handler @90
-    StrError @91
-    WinSockPError @92
-    _get_output_format @93
-    app_event @94 DATA
-    balloc @95
-    ballocmin @96
-    bassign @97
-    bassignblk @98
-    bassigncstr @99
-    bassignformat @100
-    bassigngets @101
-    bassignmidstr @102
-    bcatblk @103
-    bcatcstr @104
-    bconcat @105
-    bconchar @106
-    bcstrfree @107
-    bdelete @108
-    bdestroy @109
-    bfindreplace @110
-    bfindreplacecaseless @111
-    bformat @112
-    bformata @113
-    bfromcstr @114
-    bfromcstralloc @115
-    bgets @116
-    bgetsa @117
-    binchr @118
-    binchrr @119
-    binsert @120
-    binsertch @121
-    binstr @122
-    binstrcaseless @123
-    binstrr @124
-    binstrrcaseless @125
-    biseq @126
-    biseqcaseless @127
-    biseqcstr @128
-    biseqcstrcaseless @129
-    bisstemeqblk @130
-    bisstemeqcaselessblk @131
-    bjoin @132
-    blk2bstr @133
-    bltrimws @134
-    bmidstr @135
-    bninchr @136
-    bninchrr @137
-    bpattern @138
-    bread @139
-    breada @140
-    breplace @141
-    brtrimws @142
-    bsbufflength @143
-    bsclose @144
-    bseof @145
-    bsetstr @146
-    bsopen @147
-    bspeek @148
-    bsplit @149
-    bsplitcb @150
-    bsplits @151
-    bsplitscb @152
-    bsplitstr @153
-    bsplitstrcb @154
-    bsread @155
-    bsreada @156
-    bsreadln @157
-    bsreadlna @158
-    bsreadlns @159
-    bsreadlnsa @160
-    bssplitscb @161
-    bssplitstrcb @162
-    bstr2cstr @163
-    bstrListAlloc @164
-    bstrListAllocMin @165
-    bstrListCreate @166
-    bstrListDestroy @167
-    bstrchrp @168
-    bstrcmp @169
-    bstrcpy @170
-    bstricmp @171
-    bstrncmp @172
-    bstrnicmp @173
-    bstrrchrp @174
-    bsunread @175
-    btolower @176
-    btoupper @177
-    btrimws @178
-    btrunc @179
-    bvcformata @180
-    ctx @181 DATA
-    db @182 DATA
-    dbPath @183 DATA
-    fileconnections @184 DATA
-    inet_aton @185
-    inet_ntop @186
-    inet_pton @187
-    ipc_conn @188 DATA
-    ipc_connected @189 DATA
-    ipc_socket @190 DATA
-    me_to_reltime @191
-    mg_connect @192
-    mg_get_cookie @193
-    mg_get_header @194
-    mg_get_option @195
-    mg_get_valid_option_names @196
-    mg_get_var @197
-    mg_md5 @198
-    mg_modify_passwords_file @199
-    mg_printf @200
-    mg_read @201
-    mg_start @202
-    mg_stop @203
-    mg_version @204
-    mg_write @205
-    olsr_ip_hashing @206
-    pickFileCheck @207 DATA
-    pickFilePath @208 DATA
-    pin @209 DATA
-    pthread_cond_broadcast @210
-    pthread_cond_destroy @211
-    pthread_cond_init @212
-    pthread_cond_signal @213
-    pthread_cond_wait @214
-    pthread_mutex_destroy @215
-    pthread_mutex_init @216
-    pthread_mutex_lock @217
-    pthread_mutex_unlock @218
-    pthread_self @219
-    qaul_captive_running @220 DATA
-    qaul_chunksize @221 DATA
-    qaul_conf_quit @222 DATA
-    qaul_conf_voip @223 DATA
-    qaul_configured @224 DATA
-    qaul_dhcp_LL_count @225 DATA
-    qaul_dhcp_thread @226 DATA
-    qaul_dns_thread @227 DATA
-    qaul_gui_pagename_set @228 DATA
-    qaul_in_msg @229 DATA
-    qaul_ip_addr @230 DATA
-    qaul_ip_captive @231 DATA
-    qaul_ip_set @232 DATA
-    qaul_ip_size @233 DATA
-    qaul_ip_str @234 DATA
-    qaul_ip_version @235 DATA
-    qaul_loading_wait @236 DATA
-    qaul_locale @237 DATA
-    qaul_locale_set @238 DATA
-    qaul_net_bssid @239 DATA
-    qaul_net_gateway @240 DATA
-    qaul_net_ibss @241 DATA
-    qaul_new_msg @242 DATA
-    qaul_user_LL_count @243 DATA
-    qaul_user_LL_id @244 DATA
-    qaul_username @245 DATA
-    qaul_username_set @246 DATA
-    qaullib_AppEventOpenPath @247 DATA
-    qaullib_GuiPageName @248 DATA
-    qaullib_mutex_userLL @249 DATA
-    qaullib_pthread_start @250
-    readdir @251
-    reltime_to_me @252
-    sha1 @253
-    sha1_file @254
-    sha1_finish @255
-    sha1_hmac @256
-    sha1_hmac_finish @257
-    sha1_hmac_reset @258
-    sha1_hmac_starts @259
-    sha1_hmac_update @260
-    sha1_self_test @261
-    sha1_starts @262
-    sha1_update @263
-    sleep @264
-    sqlite3_aggregate_context @265
-    sqlite3_aggregate_count @266
-    sqlite3_auto_extension @267
-    sqlite3_backup_finish @268
-    sqlite3_backup_init @269
-    sqlite3_backup_pagecount @270
-    sqlite3_backup_remaining @271
-    sqlite3_backup_step @272
-    sqlite3_bind_blob @273
-    sqlite3_bind_double @274
-    sqlite3_bind_int @275
-    sqlite3_bind_int64 @276
-    sqlite3_bind_null @277
-    sqlite3_bind_parameter_count @278
-    sqlite3_bind_parameter_index @279
-    sqlite3_bind_parameter_name @280
-    sqlite3_bind_text @281
-    sqlite3_bind_text16 @282
-    sqlite3_bind_value @283
-    sqlite3_bind_zeroblob @284
-    sqlite3_blob_bytes @285
-    sqlite3_blob_close @286
-    sqlite3_blob_open @287
-    sqlite3_blob_read @288
-    sqlite3_blob_reopen @289
-    sqlite3_blob_write @290
-    sqlite3_busy_handler @291
-    sqlite3_busy_timeout @292
-    sqlite3_changes @293
-    sqlite3_clear_bindings @294
-    sqlite3_close @295
-    sqlite3_collation_needed @296
-    sqlite3_collation_needed16 @297
-    sqlite3_column_blob @298
-    sqlite3_column_bytes @299
-    sqlite3_column_bytes16 @300
-    sqlite3_column_count @301
-    sqlite3_column_decltype @302
-    sqlite3_column_decltype16 @303
-    sqlite3_column_double @304
-    sqlite3_column_int @305
-    sqlite3_column_int64 @306
-    sqlite3_column_name @307
-    sqlite3_column_name16 @308
-    sqlite3_column_text @309
-    sqlite3_column_text16 @310
-    sqlite3_column_type @311
-    sqlite3_column_value @312
-    sqlite3_commit_hook @313
-    sqlite3_compileoption_get @314
-    sqlite3_compileoption_used @315
-    sqlite3_complete @316
-    sqlite3_complete16 @317
-    sqlite3_config @318
-    sqlite3_context_db_handle @319
-    sqlite3_create_collation @320
-    sqlite3_create_collation16 @321
-    sqlite3_create_collation_v2 @322
-    sqlite3_create_function @323
-    sqlite3_create_function16 @324
-    sqlite3_create_function_v2 @325
-    sqlite3_create_module @326
-    sqlite3_create_module_v2 @327
-    sqlite3_data_count @328
-    sqlite3_db_config @329
-    sqlite3_db_filename @330
-    sqlite3_db_handle @331
-    sqlite3_db_mutex @332
-    sqlite3_db_readonly @333
-    sqlite3_db_release_memory @334
-    sqlite3_db_status @335
-    sqlite3_declare_vtab @336
-    sqlite3_enable_load_extension @337
-    sqlite3_enable_shared_cache @338
-    sqlite3_errcode @339
-    sqlite3_errmsg @340
-    sqlite3_errmsg16 @341
-    sqlite3_exec @342
-    sqlite3_expired @343
-    sqlite3_extended_errcode @344
-    sqlite3_extended_result_codes @345
-    sqlite3_file_control @346
-    sqlite3_finalize @347
-    sqlite3_free @348
-    sqlite3_free_table @349
-    sqlite3_get_autocommit @350
-    sqlite3_get_auxdata @351
-    sqlite3_get_table @352
-    sqlite3_global_recover @353
-    sqlite3_initialize @354
-    sqlite3_interrupt @355
-    sqlite3_last_insert_rowid @356
-    sqlite3_libversion @357
-    sqlite3_libversion_number @358
-    sqlite3_limit @359
-    sqlite3_load_extension @360
-    sqlite3_log @361
-    sqlite3_malloc @362
-    sqlite3_memory_alarm @363
-    sqlite3_memory_highwater @364
-    sqlite3_memory_used @365
-    sqlite3_mprintf @366
-    sqlite3_mutex_alloc @367
-    sqlite3_mutex_enter @368
-    sqlite3_mutex_free @369
-    sqlite3_mutex_leave @370
-    sqlite3_mutex_try @371
-    sqlite3_next_stmt @372
-    sqlite3_open @373
-    sqlite3_open16 @374
-    sqlite3_open_v2 @375
-    sqlite3_os_end @376
-    sqlite3_os_init @377
-    sqlite3_overload_function @378
-    sqlite3_prepare @379
-    sqlite3_prepare16 @380
-    sqlite3_prepare16_v2 @381
-    sqlite3_prepare_v2 @382
-    sqlite3_profile @383
-    sqlite3_progress_handler @384
-    sqlite3_randomness @385
-    sqlite3_realloc @386
-    sqlite3_release_memory @387
-    sqlite3_reset @388
-    sqlite3_reset_auto_extension @389
-    sqlite3_result_blob @390
-    sqlite3_result_double @391
-    sqlite3_result_error @392
-    sqlite3_result_error16 @393
-    sqlite3_result_error_code @394
-    sqlite3_result_error_nomem @395
-    sqlite3_result_error_toobig @396
-    sqlite3_result_int @397
-    sqlite3_result_int64 @398
-    sqlite3_result_null @399
-    sqlite3_result_text @400
-    sqlite3_result_text16 @401
-    sqlite3_result_text16be @402
-    sqlite3_result_text16le @403
-    sqlite3_result_value @404
-    sqlite3_result_zeroblob @405
-    sqlite3_rollback_hook @406
-    sqlite3_set_authorizer @407
-    sqlite3_set_auxdata @408
-    sqlite3_shutdown @409
-    sqlite3_sleep @410
-    sqlite3_snprintf @411
-    sqlite3_soft_heap_limit @412
-    sqlite3_soft_heap_limit64 @413
-    sqlite3_sourceid @414
-    sqlite3_sql @415
-    sqlite3_status @416
-    sqlite3_step @417
-    sqlite3_stmt_busy @418
-    sqlite3_stmt_readonly @419
-    sqlite3_stmt_status @420
-    sqlite3_stricmp @421
-    sqlite3_strnicmp @422
-    sqlite3_temp_directory @423 DATA
-    sqlite3_test_control @424
-    sqlite3_thread_cleanup @425
-    sqlite3_threadsafe @426
-    sqlite3_total_changes @427
-    sqlite3_trace @428
-    sqlite3_transfer_bindings @429
-    sqlite3_update_hook @430
-    sqlite3_uri_boolean @431
-    sqlite3_uri_int64 @432
-    sqlite3_uri_parameter @433
-    sqlite3_user_data @434
-    sqlite3_value_blob @435
-    sqlite3_value_bytes @436
-    sqlite3_value_bytes16 @437
-    sqlite3_value_double @438
-    sqlite3_value_int @439
-    sqlite3_value_int64 @440
-    sqlite3_value_numeric_type @441
-    sqlite3_value_text @442
-    sqlite3_value_text16 @443
-    sqlite3_value_text16be @444
-    sqlite3_value_text16le @445
-    sqlite3_value_type @446
-    sqlite3_version @447 DATA
-    sqlite3_vfs_find @448
-    sqlite3_vfs_register @449
-    sqlite3_vfs_unregister @450
-    sqlite3_vmprintf @451
-    sqlite3_vsnprintf @452
-    sqlite3_vtab_config @453
-    sqlite3_vtab_on_conflict @454
-    sqlite3_wal_autocheckpoint @455
-    sqlite3_wal_checkpoint @456
-    sqlite3_wal_checkpoint_v2 @457
-    sqlite3_wal_hook @458
-    sqlite3_win32_mbcs_to_utf8 @459
-    sqlite3_win32_utf8_to_mbcs @460
-    strscpy @461
-    userconnections @462 DATA
-    webPath @463 DATA
-    winSysInfo @464 DATA
+    AbsQuantW @1
+    AllPoleFilter @2
+    AllZeroFilter @3
+    Decode @4
+    DecoderInterpolateLSF @5
+    DownSample @6
+    FrameClassify @7
+    Gsm_Coder @8
+    Gsm_Decoder @9
+    Gsm_LPC_Analysis @10
+    Gsm_Long_Term_Predictor @11
+    Gsm_Long_Term_Synthesis_Filtering @12
+    Gsm_Preprocess @13
+    Gsm_RPE_Decoding @14
+    Gsm_RPE_Encoding @15
+    Gsm_Short_Term_Analysis_Filter @16
+    Gsm_Short_Term_Synthesis_Filter @17
+    LPCencode @18
+    LSF_check @19
+    LSFinterpolate2a_dec @20
+    LSFinterpolate2a_enc @21
+    NearestNeighbor @22
+    PJSIP_SYN_ERR_EXCEPTION @23 DATA
+    PJ_AF_INET @24 DATA
+    PJ_AF_INET6 @25 DATA
+    PJ_AF_IRDA @26 DATA
+    PJ_AF_PACKET @27 DATA
+    PJ_AF_UNIX @28 DATA
+    PJ_AF_UNSPEC @29 DATA
+    PJ_FD_CLR @30
+    PJ_FD_COUNT @31
+    PJ_FD_ISSET @32
+    PJ_FD_SET @33
+    PJ_FD_ZERO @34
+    PJ_GUID_STRING_LENGTH @35 DATA
+    PJ_IPTOS_LOWDELAY @36 DATA
+    PJ_IPTOS_MINCOST @37 DATA
+    PJ_IPTOS_RELIABILITY @38 DATA
+    PJ_IPTOS_THROUGHPUT @39 DATA
+    PJ_IP_ADD_MEMBERSHIP @40 DATA
+    PJ_IP_DROP_MEMBERSHIP @41 DATA
+    PJ_IP_MULTICAST_IF @42 DATA
+    PJ_IP_MULTICAST_LOOP @43 DATA
+    PJ_IP_MULTICAST_TTL @44 DATA
+    PJ_IP_TOS @45 DATA
+    PJ_MSG_DONTROUTE @46 DATA
+    PJ_MSG_OOB @47 DATA
+    PJ_MSG_PEEK @48 DATA
+    PJ_NO_MEMORY_EXCEPTION @49 DATA
+    PJ_SOCK_DGRAM @50 DATA
+    PJ_SOCK_RAW @51 DATA
+    PJ_SOCK_RDM @52 DATA
+    PJ_SOCK_STREAM @53 DATA
+    PJ_SOL_IP @54 DATA
+    PJ_SOL_IPV6 @55 DATA
+    PJ_SOL_SOCKET @56 DATA
+    PJ_SOL_TCP @57 DATA
+    PJ_SOL_UDP @58 DATA
+    PJ_SO_NOSIGPIPE @59 DATA
+    PJ_SO_PRIORITY @60 DATA
+    PJ_SO_RCVBUF @61 DATA
+    PJ_SO_REUSEADDR @62 DATA
+    PJ_SO_SNDBUF @63 DATA
+    PJ_SO_TYPE @64 DATA
+    PJ_TCP_NODELAY @65 DATA
+    PJ_VERSION @66 DATA
+    PaSkeleton_Initialize @67
+    PaUtil_AllocateMemory @68
+    PaUtil_BeginBufferProcessing @69
+    PaUtil_BeginCpuLoadMeasurement @70
+    PaUtil_CopyInput @71
+    PaUtil_CopyOutput @72
+    PaUtil_CountCurrentlyAllocatedBlocks @73
+    PaUtil_CreateAllocationGroup @74
+    PaUtil_DestroyAllocationGroup @75
+    PaUtil_DeviceIndexToHostApiDeviceIndex @76
+    PaUtil_DummyGetCpuLoad @77
+    PaUtil_DummyGetReadAvailable @78
+    PaUtil_DummyGetWriteAvailable @79
+    PaUtil_DummyRead @80
+    PaUtil_DummyWrite @81
+    PaUtil_EndBufferProcessing @82
+    PaUtil_EndCpuLoadMeasurement @83
+    PaUtil_FreeAllAllocations @84
+    PaUtil_FreeMemory @85
+    PaUtil_Generate16BitTriangularDither @86
+    PaUtil_GenerateFloatTriangularDither @87
+    PaUtil_GetBufferProcessorInputLatency @88
+    PaUtil_GetBufferProcessorOutputLatency @89
+    PaUtil_GetCpuLoad @90
+    PaUtil_GetHostApiRepresentation @91
+    PaUtil_GetTime @92
+    PaUtil_GroupAllocateMemory @93
+    PaUtil_GroupFreeMemory @94
+    PaUtil_InitializeBufferProcessor @95
+    PaUtil_InitializeClock @96
+    PaUtil_InitializeCpuLoadMeasurer @97
+    PaUtil_InitializeStreamInterface @98
+    PaUtil_InitializeStreamRepresentation @99
+    PaUtil_InitializeTriangularDitherState @100
+    PaUtil_IsBufferProcessorOutputEmpty @101
+    PaUtil_ResetBufferProcessor @102
+    PaUtil_ResetCpuLoadMeasurer @103
+    PaUtil_SelectClosestAvailableFormat @104
+    PaUtil_SelectConverter @105
+    PaUtil_SelectZeroer @106
+    PaUtil_Set2ndInputChannel @107
+    PaUtil_Set2ndInputFrameCount @108
+    PaUtil_Set2ndInterleavedInputChannels @109
+    PaUtil_Set2ndInterleavedOutputChannels @110
+    PaUtil_Set2ndNonInterleavedInputChannel @111
+    PaUtil_Set2ndNonInterleavedOutputChannel @112
+    PaUtil_Set2ndOutputChannel @113
+    PaUtil_Set2ndOutputFrameCount @114
+    PaUtil_SetInputChannel @115
+    PaUtil_SetInputFrameCount @116
+    PaUtil_SetInterleavedInputChannels @117
+    PaUtil_SetInterleavedOutputChannels @118
+    PaUtil_SetLastHostErrorInfo @119
+    PaUtil_SetNoInput @120
+    PaUtil_SetNoOutput @121
+    PaUtil_SetNonInterleavedInputChannel @122
+    PaUtil_SetNonInterleavedOutputChannel @123
+    PaUtil_SetOutputChannel @124
+    PaUtil_SetOutputFrameCount @125
+    PaUtil_TerminateBufferProcessor @126
+    PaUtil_TerminateStreamRepresentation @127
+    PaUtil_ValidateStreamPointer @128
+    PaUtil_ZeroOutput @129
+    PaWinMME_GetStreamInputHandle @130
+    PaWinMME_GetStreamInputHandleCount @131
+    PaWinMME_GetStreamOutputHandle @132
+    PaWinMME_GetStreamOutputHandleCount @133
+    PaWinMme_Initialize @134
+    PaWin_DefaultChannelMask @135
+    PaWin_InitializeWaveFormatEx @136
+    PaWin_InitializeWaveFormatExtensible @137
+    PaWin_SampleFormatToLinearWaveFormatTag @138
+    Pa_AbortStream @139
+    Pa_CloseStream @140
+    Pa_GetDefaultHostApi @141
+    Pa_GetDefaultInputDevice @142
+    Pa_GetDefaultOutputDevice @143
+    Pa_GetDeviceCount @144
+    Pa_GetDeviceInfo @145
+    Pa_GetErrorText @146
+    Pa_GetHostApiCount @147
+    Pa_GetHostApiInfo @148
+    Pa_GetLastHostErrorInfo @149
+    Pa_GetSampleSize @150
+    Pa_GetStreamCpuLoad @151
+    Pa_GetStreamInfo @152
+    Pa_GetStreamReadAvailable @153
+    Pa_GetStreamTime @154
+    Pa_GetStreamWriteAvailable @155
+    Pa_GetVersion @156
+    Pa_GetVersionText @157
+    Pa_HostApiDeviceIndexToDeviceIndex @158
+    Pa_HostApiTypeIdToHostApiIndex @159
+    Pa_Initialize @160
+    Pa_IsFormatSupported @161
+    Pa_IsStreamActive @162
+    Pa_IsStreamStopped @163
+    Pa_OpenDefaultStream @164
+    Pa_OpenStream @165
+    Pa_ReadStream @166
+    Pa_SetStreamFinishedCallback @167
+    Pa_Sleep @168
+    Pa_StartStream @169
+    Pa_StopStream @170
+    Pa_Terminate @171
+    Pa_WriteStream @172
+    Qaul_dhcp_LL_root @173 DATA
+    Qaul_user_LL_table @174 DATA
+    Qaullib_CaptiveStart @175
+    Qaullib_Captive_CreateIP @176
+    Qaullib_Captive_Dhcp_LL_Init @177
+    Qaullib_Captive_IpExists @178
+    Qaullib_ConfigStart @179
+    Qaullib_ConfigurationFinished @180
+    Qaullib_CreateIP @181
+    Qaullib_DHCP_Options @182
+    Qaullib_DHCP_Server @183
+    Qaullib_DNS_Server @184
+    Qaullib_DbGetConfigValue @185
+    Qaullib_DbGetConfigValueInt @186
+    Qaullib_DbInit @187
+    Qaullib_DbPopulateConfig @188
+    Qaullib_DbSetConfigValue @189
+    Qaullib_Dhcp_LL_Add @190
+    Qaullib_Dhcp_LL_Clean @191
+    Qaullib_Dhcp_LL_Delete_Item @192
+    Qaullib_Dhcp_LL_Search_Ip @193
+    Qaullib_Dhcp_LL_Search_IpMAC @194
+    Qaullib_ExistsLocale @195
+    Qaullib_ExistsUsername @196
+    Qaullib_Exit @197
+    Qaullib_FileAdd @198
+    Qaullib_FileAvailable @199
+    Qaullib_FileCheckScheduled @200
+    Qaullib_FileCheckSockets @201
+    Qaullib_FileConnect @202
+    Qaullib_FileCreatePath @203
+    Qaullib_FileDeleteById @204
+    Qaullib_FileExists @205
+    Qaullib_FilePicked @206
+    Qaullib_FilePopulate @207
+    Qaullib_GetAppEventOpenPath @208
+    Qaullib_GetIP @209
+    Qaullib_GetLocale @210
+    Qaullib_GetNetBssId @211
+    Qaullib_GetNetBssIdSet @212
+    Qaullib_GetNetGateway @213
+    Qaullib_GetNetIbss @214
+    Qaullib_GetNetMask @215
+    Qaullib_GetNetProtocol @216
+    Qaullib_GetUsername @217
+    Qaullib_Init @218
+    Qaullib_IpcClose @219
+    Qaullib_IpcConnect @220
+    Qaullib_IpcEvaluateChat @221
+    Qaullib_IpcEvaluateCom @222
+    Qaullib_IpcEvaluateMessage @223
+    Qaullib_IpcEvaluateTopo @224
+    Qaullib_IpcReceive @225
+    Qaullib_IpcSend @226
+    Qaullib_IpcSendCom @227
+    Qaullib_MAC_Compare @228
+    Qaullib_ProtectString @229
+    Qaullib_SetConfQuit @230
+    Qaullib_SetConfVoIP @231
+    Qaullib_SetIP @232
+    Qaullib_SetLocale @233
+    Qaullib_SetUsername @234
+    Qaullib_TimedCheckAppEvent @235
+    Qaullib_TimedDownload @236
+    Qaullib_TimedSocketReceive @237
+    Qaullib_UnprotectString @238
+    Qaullib_UrlDecode @239
+    Qaullib_UrlEncode @240
+    Qaullib_UrlFromHex @241
+    Qaullib_UrlToHex @242
+    Qaullib_UserCheckNonames @243
+    Qaullib_UserCheckSockets @244
+    Qaullib_UserCheckUser @245
+    Qaullib_UserGetInfo @246
+    Qaullib_UserInit @247
+    Qaullib_UserTouchIp @248
+    Qaullib_User_LL_Add @249
+    Qaullib_User_LL_Clean @250
+    Qaullib_User_LL_Delete_Item @251
+    Qaullib_User_LL_Init @252
+    Qaullib_User_LL_InitNode @253
+    Qaullib_User_LL_IpExists @254
+    Qaullib_User_LL_IpSearch @255
+    Qaullib_User_LL_NextNode @256
+    Qaullib_VoipCallAccept @257
+    Qaullib_VoipCallEnd @258
+    Qaullib_VoipCallStart @259
+    Qaullib_VoipStart @260
+    Qaullib_VoipStop @261
+    Qaullib_Voip_LL_Add @262
+    Qaullib_Voip_LL_Clean @263
+    Qaullib_Voip_LL_Delete_Item @264
+    Qaullib_WebserverStart @265
+    Qaullib_WgetClose @266
+    Qaullib_WgetConnect @267
+    Qaullib_WgetReceive @268
+    Qaullib_WgetSendHeader @269
+    Qaullib_WwwEvent_handler @270
+    RACK @271 DATA
+    RSEQ @272 DATA
+    SHA_K0 @273 DATA
+    SHA_K1 @274 DATA
+    SHA_K2 @275 DATA
+    SHA_K3 @276 DATA
+    STR_APPLICATION @277 DATA
+    STR_APP_PIDF_XML @278 DATA
+    STR_APP_XPIDF_XML @279 DATA
+    STR_EVENT @280 DATA
+    STR_MESSAGE @281 DATA
+    STR_PIDF_XML @282 DATA
+    STR_PRESENCE @283 DATA
+    STR_REFER @284 DATA
+    STR_SIPFRAG @285 DATA
+    STR_SIPFRAG_VERSION @286 DATA
+    STR_XPIDF_XML @287 DATA
+    SimpleAnalysis @288
+    SimpleInterpolateLSF @289
+    SimplelsfDEQ @290
+    SimplelsfQ @291
+    SplitVQ @292
+    StateConstructW @293
+    StateSearchW @294
+    StrError @295
+    StrTCpyToC @296
+    StrTLen @297
+    ULP_20msTbl @298 DATA
+    ULP_30msTbl @299 DATA
+    WinSockPError @300
+    ZeroPoleFilter @301
+    _get_output_format @302
+    _spx_autocorr @303
+    _spx_lpc @304
+    a2lsf @305
+    acquire_call @306
+    aes_cbc @307 DATA
+    aes_cbc_alloc @308
+    aes_cbc_context_init @309
+    aes_cbc_dealloc @310
+    aes_cbc_decrypt @311
+    aes_cbc_description @312 DATA
+    aes_cbc_encrypt @313
+    aes_cbc_nist_decrypt @314
+    aes_cbc_nist_encrypt @315
+    aes_cbc_set_iv @316
+    aes_cbc_test_case_0 @317 DATA
+    aes_cbc_test_case_0_ciphertext @318 DATA
+    aes_cbc_test_case_0_iv @319 DATA
+    aes_cbc_test_case_0_key @320 DATA
+    aes_cbc_test_case_0_plaintext @321 DATA
+    aes_cbc_test_case_1 @322 DATA
+    aes_cbc_test_case_1_ciphertext @323 DATA
+    aes_cbc_test_case_1_iv @324 DATA
+    aes_cbc_test_case_1_key @325 DATA
+    aes_cbc_test_case_1_plaintext @326 DATA
+    aes_decrypt @327
+    aes_encrypt @328
+    aes_expand_decryption_key @329
+    aes_expand_encryption_key @330
+    aes_icm @331 DATA
+    aes_icm_advance @332
+    aes_icm_advance_ismacryp @333
+    aes_icm_alloc @334
+    aes_icm_alloc_ismacryp @335
+    aes_icm_context_init @336
+    aes_icm_dealloc @337
+    aes_icm_description @338 DATA
+    aes_icm_encrypt @339
+    aes_icm_encrypt_ismacryp @340
+    aes_icm_output @341
+    aes_icm_set_iv @342
+    aes_icm_set_octet @343
+    aes_icm_test_case_0 @344 DATA
+    aes_icm_test_case_0_ciphertext @345 DATA
+    aes_icm_test_case_0_key @346 DATA
+    aes_icm_test_case_0_nonce @347 DATA
+    aes_icm_test_case_0_plaintext @348 DATA
+    anaFilter @349
+    app_event @350 DATA
+    append_salt_to_key @351
+    attenuation @352 DATA
+    auth_get_key_length @353
+    auth_get_prefix_length @354
+    auth_get_tag_length @355
+    auth_type_get_ref_count @356
+    auth_type_self_test @357
+    autocorr @358
+    balloc @359
+    ballocmin @360
+    base64_char @361 DATA
+    base64_char_to_sextet @362
+    base64_string_to_octet_string @363
+    bassign @364
+    bassignblk @365
+    bassigncstr @366
+    bassignformat @367
+    bassigngets @368
+    bassignmidstr @369
+    bcatblk @370
+    bcatcstr @371
+    bconcat @372
+    bconchar @373
+    bcstrfree @374
+    bdelete @375
+    bdestroy @376
+    bfindreplace @377
+    bfindreplacecaseless @378
+    bformat @379
+    bformata @380
+    bfromcstr @381
+    bfromcstralloc @382
+    bgets @383
+    bgetsa @384
+    binchr @385
+    binchrr @386
+    binsert @387
+    binsertch @388
+    binstr @389
+    binstrcaseless @390
+    binstrr @391
+    binstrrcaseless @392
+    biseq @393
+    biseqcaseless @394
+    biseqcstr @395
+    biseqcstrcaseless @396
+    bisstemeqblk @397
+    bisstemeqcaselessblk @398
+    bit_string @399 DATA
+    bjoin @400
+    blk2bstr @401
+    bltrimws @402
+    bmidstr @403
+    bninchr @404
+    bninchrr @405
+    bpattern @406
+    bread @407
+    breada @408
+    breplace @409
+    brtrimws @410
+    bsbufflength @411
+    bsclose @412
+    bseof @413
+    bsetstr @414
+    bsopen @415
+    bspeek @416
+    bsplit @417
+    bsplitcb @418
+    bsplits @419
+    bsplitscb @420
+    bsplitstr @421
+    bsplitstrcb @422
+    bsread @423
+    bsreada @424
+    bsreadln @425
+    bsreadlna @426
+    bsreadlns @427
+    bsreadlnsa @428
+    bssplitscb @429
+    bssplitstrcb @430
+    bstr2cstr @431
+    bstrListAlloc @432
+    bstrListAllocMin @433
+    bstrListCreate @434
+    bstrListDestroy @435
+    bstrchrp @436
+    bstrcmp @437
+    bstrcpy @438
+    bstricmp @439
+    bstrncmp @440
+    bstrnicmp @441
+    bstrrchrp @442
+    bsunread @443
+    btolower @444
+    btoupper @445
+    btrimws @446
+    btrunc @447
+    bvcformata @448
+    bw_lpc @449
+    bwexpand @450
+    call_media_on_event @451
+    cbfiltersTbl @452 DATA
+    cdbk_nb @453 DATA
+    cdbk_nb_high1 @454 DATA
+    cdbk_nb_high2 @455 DATA
+    cdbk_nb_low1 @456 DATA
+    cdbk_nb_low2 @457 DATA
+    cipher_bits_per_second @458
+    cipher_get_key_length @459
+    cipher_output @460
+    cipher_type_self_test @461
+    compCorr @462
+    compute_impulse_response @463
+    compute_rms @464
+    compute_rms16 @465
+    createAugmentedVec @466
+    crypto_alloc @467
+    crypto_free @468
+    crypto_get_random @469
+    crypto_kernel @470 DATA
+    crypto_kernel_alloc_auth @471
+    crypto_kernel_alloc_cipher @472
+    crypto_kernel_get_auth_type @473
+    crypto_kernel_get_cipher_type @474
+    crypto_kernel_init @475
+    crypto_kernel_list_debug_modules @476
+    crypto_kernel_load_auth_type @477
+    crypto_kernel_load_cipher_type @478
+    crypto_kernel_load_debug_module @479
+    crypto_kernel_set_debug_module @480
+    crypto_kernel_shutdown @481
+    crypto_kernel_status @482
+    crypto_policy_set_aes_cm_128_hmac_sha1_32 @483
+    crypto_policy_set_aes_cm_128_null_auth @484
+    crypto_policy_set_from_profile_for_rtcp @485
+    crypto_policy_set_from_profile_for_rtp @486
+    crypto_policy_set_null_cipher_hmac_sha1_80 @487
+    crypto_policy_set_rtcp_default @488
+    crypto_policy_set_rtp_default @489
+    ctr_prng @490 DATA
+    ctr_prng_deinit @491
+    ctr_prng_get_octet_string @492
+    ctr_prng_init @493
+    ctx @494 DATA
+    db @495 DATA
+    dbPath @496 DATA
+    deinit_sip_parser @497
+    dim_lsfCbTbl @498 DATA
+    doThePLC @499
+    dopack @500
+    echo_supp_cancel_echo @501
+    echo_supp_create @502
+    echo_supp_destroy @503
+    echo_supp_reset @504
+    echo_supp_soft_reset @505
+    enh_plocsTbl @506 DATA
+    enh_upsample @507
+    enhancer @508
+    enhancerInterface @509
+    err_level @510 DATA
+    err_report @511
+    err_reporting_init @512
+    err_reporting_set_level @513
+    exc_10_16_table @514 DATA
+    exc_10_32_table @515 DATA
+    exc_20_32_table @516 DATA
+    exc_5_256_table @517 DATA
+    exc_5_64_table @518 DATA
+    exc_8_128_table @519 DATA
+    exc_gain_quant_scal1 @520 DATA
+    exc_gain_quant_scal1_bound @521 DATA
+    exc_gain_quant_scal3 @522 DATA
+    exc_gain_quant_scal3_bound @523 DATA
+    fileconnections @524 DATA
+    filter_mem16 @525
+    filterbank_compute_bank @526
+    filterbank_compute_bank32 @527
+    filterbank_compute_psd @528
+    filterbank_compute_psd16 @529
+    filterbank_destroy @530
+    filterbank_new @531
+    filterbank_psy_smooth @532
+    filteredCBvecs @533
+    find_str @534
+    fir_mem16 @535
+    firstOpenStream_ @536 DATA
+    forced_pitch_quant @537
+    forced_pitch_unquant @538
+    g722_dec_decode @539
+    g722_dec_deinit @540
+    g722_dec_init @541
+    g722_enc_deinit @542
+    g722_enc_encode @543
+    g722_enc_init @544
+    g722_qmf_coeff @545 DATA
+    gain_cdbk_lbr @546 DATA
+    gain_cdbk_nb @547 DATA
+    gain_sq3Tbl @548 DATA
+    gain_sq4Tbl @549 DATA
+    gain_sq5Tbl @550 DATA
+    gaindequant @551
+    gainquant @552
+    getCBvec @553
+    get_libsrtp_errstr @554
+    get_tpname @555
+    getsseq @556
+    gsm_A @557 DATA
+    gsm_B @558 DATA
+    gsm_DLB @559 DATA
+    gsm_FAC @560 DATA
+    gsm_H @561 DATA
+    gsm_INVA @562 DATA
+    gsm_L_add @563
+    gsm_L_asl @564
+    gsm_L_asr @565
+    gsm_L_mult @566
+    gsm_L_sub @567
+    gsm_MAC @568 DATA
+    gsm_MIC @569 DATA
+    gsm_NRFAC @570 DATA
+    gsm_QLB @571 DATA
+    gsm_abs @572
+    gsm_add @573
+    gsm_asl @574
+    gsm_asr @575
+    gsm_create @576
+    gsm_decode @577
+    gsm_destroy @578
+    gsm_div @579
+    gsm_encode @580
+    gsm_mult @581
+    gsm_mult_r @582
+    gsm_norm @583
+    gsm_sub @584
+    hex_char_to_nibble @585
+    hex_string_to_octet_string @586
+    hexc_10_32_table @587 DATA
+    hexc_table @588 DATA
+    high_lsp_cdbk @589 DATA
+    high_lsp_cdbk2 @590 DATA
+    highpass @591
+    hmac @592 DATA
+    hmac_alloc @593
+    hmac_compute @594
+    hmac_dealloc @595
+    hmac_description @596 DATA
+    hmac_init @597
+    hmac_start @598
+    hmac_test_case_0 @599 DATA
+    hmac_test_case_0_data @600 DATA
+    hmac_test_case_0_key @601 DATA
+    hmac_test_case_0_tag @602 DATA
+    hmac_update @603
+    hpInput @604
+    hpOutput @605
+    hpi_pole_coefsTbl @606 DATA
+    hpi_zero_coefsTbl @607 DATA
+    hpo_pole_coefsTbl @608 DATA
+    hpo_zero_coefsTbl @609 DATA
+    iCBConstruct @610
+    iCBSearch @611
+    iLBC_decode @612
+    iLBC_encode @613
+    iir_mem16 @614
+    index_advance @615
+    index_conv_dec @616
+    index_conv_enc @617
+    index_guess @618
+    index_init @619
+    inet_aton @620
+    inet_ntop @621
+    inet_pton @622
+    initDecode @623
+    initEncode @624
+    init_sip_parser @625
+    inner_prod @626
+    interp_pitch @627
+    interpolate @628
+    inv_set_cause @629
+    inv_set_state @630
+    ioqueue_dispatch_exception_event @631
+    ioqueue_dispatch_read_event @632
+    ioqueue_dispatch_write_event @633
+    ipc_conn @634 DATA
+    ipc_connected @635 DATA
+    ipc_socket @636 DATA
+    is_hex_string @637
+    key_limit_check @638
+    key_limit_clone @639
+    key_limit_set @640
+    key_limit_update @641
+    lag_window @642 DATA
+    levdurb @643
+    lock_buddy @644
+    lpFilt_coefsTbl @645 DATA
+    lpc_asymwinTbl @646 DATA
+    lpc_lagwinTbl @647 DATA
+    lpc_to_lsp @648
+    lpc_winTbl @649 DATA
+    lpc_window @650 DATA
+    lsf2a @651
+    lsfCbTbl @652 DATA
+    lsf_weightTbl_20ms @653 DATA
+    lsf_weightTbl_30ms @654 DATA
+    lsfmeanTbl @655 DATA
+    lsp_enforce_margin @656
+    lsp_interpolate @657
+    lsp_quant_high @658
+    lsp_quant_lbr @659
+    lsp_quant_nb @660
+    lsp_to_lpc @661
+    lsp_unquant_high @662
+    lsp_unquant_lbr @663
+    lsp_unquant_nb @664
+    me_to_reltime @665
+    memLfTbl @666 DATA
+    mg_connect @667
+    mg_get_cookie @668
+    mg_get_header @669
+    mg_get_option @670
+    mg_get_valid_option_names @671
+    mg_get_var @672
+    mg_md5 @673
+    mg_modify_passwords_file @674
+    mg_printf @675
+    mg_read @676
+    mg_start @677
+    mg_stop @678
+    mg_version @679
+    mg_write @680
+    mod_aes_cbc @681 DATA
+    mod_aes_icm @682 DATA
+    mod_alloc @683 DATA
+    mod_auth @684 DATA
+    mod_cipher @685 DATA
+    mod_crypto_kernel @686 DATA
+    mod_hmac @687 DATA
+    mod_sha1 @688 DATA
+    mod_srtp @689 DATA
+    mod_stat @690 DATA
+    mod_stateful_util @691 DATA
+    multicomb @692
+    mycorr1 @693
+    nb_decode @694
+    nb_decoder_ctl @695
+    nb_decoder_destroy @696
+    nb_decoder_init @697
+    nb_encode @698
+    nb_encoder_ctl @699
+    nb_encoder_destroy @700
+    nb_encoder_init @701
+    nb_mode_query @702
+    nibble_to_hex_char @703
+    noise_codebook_quant @704
+    noise_codebook_unquant @705
+    normalize_route_uri @706
+    null_auth @707 DATA
+    null_auth_alloc @708
+    null_auth_compute @709
+    null_auth_dealloc @710
+    null_auth_description @711 DATA
+    null_auth_init @712
+    null_auth_start @713
+    null_auth_test_case_0 @714 DATA
+    null_auth_update @715
+    null_cipher @716 DATA
+    null_cipher_alloc @717
+    null_cipher_dealloc @718
+    null_cipher_description @719 DATA
+    null_cipher_encrypt @720
+    null_cipher_init @721
+    null_cipher_set_iv @722
+    null_cipher_test_0 @723 DATA
+    octet_get_weight @724
+    octet_string_hex_string @725
+    octet_string_is_eq @726
+    octet_string_set_to_zero @727
+    octet_weight @728 DATA
+    olsr_ip_hashing @729
+    on_dlg_forked @730
+    open_loop_nbest_pitch @731
+    paConverters @732 DATA
+    paDefaultHostApiIndex @733 DATA
+    paHostApiInitializers @734 DATA
+    paZeroers @735 DATA
+    packcombine @736
+    packsplit @737
+    pickFileCheck @738 DATA
+    pickFilePath @739 DATA
+    pin @740 DATA
+    pitch_search_3tap @741
+    pitch_unquant_3tap @742
+    pitch_xcorr @743
+    pj_GUID_STRING_LENGTH @744
+    pj_NO_MEMORY_EXCEPTION @745
+    pj_activesock_cfg_default @746
+    pj_activesock_close @747
+    pj_activesock_create @748
+    pj_activesock_create_udp @749
+    pj_activesock_get_user_data @750
+    pj_activesock_send @751
+    pj_activesock_sendto @752
+    pj_activesock_set_user_data @753
+    pj_activesock_start_accept @754
+    pj_activesock_start_connect @755
+    pj_activesock_start_read @756
+    pj_activesock_start_read2 @757
+    pj_activesock_start_recvfrom @758
+    pj_activesock_start_recvfrom2 @759
+    pj_array_erase @760
+    pj_array_find @761
+    pj_array_insert @762
+    pj_atexit @763
+    pj_atomic_add @764
+    pj_atomic_add_and_get @765
+    pj_atomic_create @766
+    pj_atomic_dec @767
+    pj_atomic_dec_and_get @768
+    pj_atomic_destroy @769
+    pj_atomic_get @770
+    pj_atomic_inc @771
+    pj_atomic_inc_and_get @772
+    pj_atomic_set @773
+    pj_base64_decode @774
+    pj_base64_encode @775
+    pj_caching_pool_destroy @776
+    pj_caching_pool_init @777
+    pj_cis_add_alpha @778
+    pj_cis_add_cis @779
+    pj_cis_add_num @780
+    pj_cis_add_range @781
+    pj_cis_add_str @782
+    pj_cis_buf_init @783
+    pj_cis_del_range @784
+    pj_cis_del_str @785
+    pj_cis_dup @786
+    pj_cis_init @787
+    pj_cis_invert @788
+    pj_crc32_calc @789
+    pj_crc32_final @790
+    pj_crc32_init @791
+    pj_crc32_update @792
+    pj_create_random_string @793
+    pj_create_unique_string @794
+    pj_dns_get_type_name @795
+    pj_dns_init_a_rr @796
+    pj_dns_init_cname_rr @797
+    pj_dns_init_srv_rr @798
+    pj_dns_make_query @799
+    pj_dns_packet_dup @800
+    pj_dns_parse_a_response @801
+    pj_dns_parse_packet @802
+    pj_dns_resolver_add_entry @803
+    pj_dns_resolver_cancel_query @804
+    pj_dns_resolver_create @805
+    pj_dns_resolver_destroy @806
+    pj_dns_resolver_dump @807
+    pj_dns_resolver_get_cached_count @808
+    pj_dns_resolver_get_settings @809
+    pj_dns_resolver_handle_events @810
+    pj_dns_resolver_set_ns @811
+    pj_dns_resolver_set_settings @812
+    pj_dns_resolver_start_query @813
+    pj_dns_settings_default @814
+    pj_dns_srv_cancel_query @815
+    pj_dns_srv_resolve @816
+    pj_dump_config @817
+    pj_elapsed_cycle @818
+    pj_elapsed_msec @819
+    pj_elapsed_msec64 @820
+    pj_elapsed_nanosec @821
+    pj_elapsed_time @822
+    pj_elapsed_usec @823
+    pj_enter_critical_section @824
+    pj_enum_ip_interface @825
+    pj_enum_ip_route @826
+    pj_errno_clear_handlers @827
+    pj_event_create @828
+    pj_event_destroy @829
+    pj_event_pulse @830
+    pj_event_reset @831
+    pj_event_set @832
+    pj_event_trywait @833
+    pj_event_wait @834
+    pj_exception_id_alloc @835
+    pj_exception_id_free @836
+    pj_exception_id_name @837
+    pj_file_close @838
+    pj_file_delete @839
+    pj_file_exists @840
+    pj_file_flush @841
+    pj_file_getpos @842
+    pj_file_getstat @843
+    pj_file_move @844
+    pj_file_open @845
+    pj_file_read @846
+    pj_file_setpos @847
+    pj_file_size @848
+    pj_file_write @849
+    pj_generate_unique_string @850
+    pj_get_netos_error @851
+    pj_get_os_error @852
+    pj_get_sys_info @853
+    pj_get_timestamp @854
+    pj_get_timestamp_freq @855
+    pj_get_version @856
+    pj_getaddrinfo @857
+    pj_getdefaultipinterface @858
+    pj_gethostaddr @859
+    pj_gethostbyname @860
+    pj_gethostip @861
+    pj_gethostname @862
+    pj_getpid @863
+    pj_gettickcount @864
+    pj_gettimeofday @865
+    pj_hash_calc @866
+    pj_hash_calc_tolower @867
+    pj_hash_count @868
+    pj_hash_create @869
+    pj_hash_first @870
+    pj_hash_get @871
+    pj_hash_next @872
+    pj_hash_set @873
+    pj_hash_set_np @874
+    pj_hash_this @875
+    pj_hmac_sha1 @876
+    pj_hmac_sha1_final @877
+    pj_hmac_sha1_init @878
+    pj_hmac_sha1_update @879
+    pj_htonl @880
+    pj_htons @881
+    pj_ice_calc_foundation @882
+    pj_ice_get_cand_type_name @883
+    pj_ice_sess_add_cand @884
+    pj_ice_sess_change_role @885
+    pj_ice_sess_create @886
+    pj_ice_sess_create_check_list @887
+    pj_ice_sess_destroy @888
+    pj_ice_sess_find_default_cand @889
+    pj_ice_sess_get_options @890
+    pj_ice_sess_on_rx_pkt @891
+    pj_ice_sess_options_default @892
+    pj_ice_sess_role_name @893
+    pj_ice_sess_send_data @894
+    pj_ice_sess_set_options @895
+    pj_ice_sess_set_prefs @896
+    pj_ice_sess_start_check @897
+    pj_ice_strans_cfg_copy @898
+    pj_ice_strans_cfg_default @899
+    pj_ice_strans_change_role @900
+    pj_ice_strans_create @901
+    pj_ice_strans_destroy @902
+    pj_ice_strans_enum_cands @903
+    pj_ice_strans_get_cands_count @904
+    pj_ice_strans_get_def_cand @905
+    pj_ice_strans_get_options @906
+    pj_ice_strans_get_role @907
+    pj_ice_strans_get_running_comp_cnt @908
+    pj_ice_strans_get_state @909
+    pj_ice_strans_get_ufrag_pwd @910
+    pj_ice_strans_get_user_data @911
+    pj_ice_strans_get_valid_pair @912
+    pj_ice_strans_has_sess @913
+    pj_ice_strans_init_ice @914
+    pj_ice_strans_sendto @915
+    pj_ice_strans_sess_is_complete @916
+    pj_ice_strans_sess_is_running @917
+    pj_ice_strans_set_options @918
+    pj_ice_strans_start_ice @919
+    pj_ice_strans_state_name @920
+    pj_ice_strans_stop_ice @921
+    pj_inet_addr @922
+    pj_inet_addr2 @923
+    pj_inet_aton @924
+    pj_inet_ntoa @925
+    pj_inet_ntop @926
+    pj_inet_ntop2 @927
+    pj_inet_pton @928
+    pj_init @929
+    pj_ioqueue_accept @930
+    pj_ioqueue_connect @931
+    pj_ioqueue_create @932
+    pj_ioqueue_destroy @933
+    pj_ioqueue_get_user_data @934
+    pj_ioqueue_is_pending @935
+    pj_ioqueue_lock_key @936
+    pj_ioqueue_name @937
+    pj_ioqueue_op_key_init @938
+    pj_ioqueue_poll @939
+    pj_ioqueue_post_completion @940
+    pj_ioqueue_recv @941
+    pj_ioqueue_recvfrom @942
+    pj_ioqueue_register_sock @943
+    pj_ioqueue_send @944
+    pj_ioqueue_sendto @945
+    pj_ioqueue_set_concurrency @946
+    pj_ioqueue_set_default_concurrency @947
+    pj_ioqueue_set_lock @948
+    pj_ioqueue_set_user_data @949
+    pj_ioqueue_unlock_key @950
+    pj_ioqueue_unregister @951
+    pj_leave_critical_section @952
+    pj_list_erase @953
+    pj_list_find_node @954
+    pj_list_insert_after @955
+    pj_list_insert_before @956
+    pj_list_insert_nodes_after @957
+    pj_list_insert_nodes_before @958
+    pj_list_merge_first @959
+    pj_list_merge_last @960
+    pj_list_search @961
+    pj_list_size @962
+    pj_lock_acquire @963
+    pj_lock_create_null_mutex @964
+    pj_lock_create_recursive_mutex @965
+    pj_lock_create_semaphore @966
+    pj_lock_create_simple_mutex @967
+    pj_lock_destroy @968
+    pj_lock_release @969
+    pj_lock_tryacquire @970
+    pj_log @971
+    pj_log_1 @972
+    pj_log_2 @973
+    pj_log_3 @974
+    pj_log_4 @975
+    pj_log_5 @976
+    pj_log_add_indent @977
+    pj_log_get_color @978
+    pj_log_get_decor @979
+    pj_log_get_level @980
+    pj_log_get_log_func @981
+    pj_log_init @982
+    pj_log_pop_indent @983
+    pj_log_push_indent @984
+    pj_log_set_color @985
+    pj_log_set_decor @986
+    pj_log_set_level @987
+    pj_log_set_log_func @988
+    pj_log_write @989
+    pj_md5_final @990
+    pj_md5_init @991
+    pj_md5_update @992
+    pj_mutex_create @993
+    pj_mutex_create_recursive @994
+    pj_mutex_create_simple @995
+    pj_mutex_destroy @996
+    pj_mutex_is_locked @997
+    pj_mutex_lock @998
+    pj_mutex_trylock @999
+    pj_mutex_unlock @1000
+    pj_ntohl @1001
+    pj_ntohs @1002
+    pj_perror @1003
+    pj_perror_1 @1004
+    pj_perror_2 @1005
+    pj_perror_3 @1006
+    pj_perror_4 @1007
+    pj_perror_5 @1008
+    pj_pool_alloc @1009
+    pj_pool_alloc_from_block @1010
+    pj_pool_allocate_find @1011
+    pj_pool_calloc @1012
+    pj_pool_create @1013
+    pj_pool_create_int @1014
+    pj_pool_create_on_buf @1015
+    pj_pool_destroy_int @1016
+    pj_pool_factory_default_policy @1017 DATA
+    pj_pool_factory_get_default_policy @1018
+    pj_pool_get_capacity @1019
+    pj_pool_get_used_size @1020
+    pj_pool_getobjname @1021
+    pj_pool_init_int @1022
+    pj_pool_release @1023
+    pj_pool_reset @1024
+    pj_pop_exception_handler_ @1025
+    pj_push_exception_handler_ @1026
+    pj_qos_get_params @1027
+    pj_qos_get_type @1028
+    pj_rand @1029
+    pj_register_strerror @1030
+    pj_run_app @1031
+    pj_rwmutex_create @1032
+    pj_rwmutex_destroy @1033
+    pj_rwmutex_lock_read @1034
+    pj_rwmutex_lock_write @1035
+    pj_rwmutex_unlock_read @1036
+    pj_rwmutex_unlock_write @1037
+    pj_scan_advance_n @1038
+    pj_scan_fini @1039
+    pj_scan_get @1040
+    pj_scan_get_char @1041
+    pj_scan_get_n @1042
+    pj_scan_get_newline @1043
+    pj_scan_get_quote @1044
+    pj_scan_get_quotes @1045
+    pj_scan_get_unescape @1046
+    pj_scan_get_until @1047
+    pj_scan_get_until_ch @1048
+    pj_scan_get_until_chr @1049
+    pj_scan_init @1050
+    pj_scan_peek @1051
+    pj_scan_peek_n @1052
+    pj_scan_peek_until @1053
+    pj_scan_restore_state @1054
+    pj_scan_save_state @1055
+    pj_scan_skip_line @1056
+    pj_scan_skip_whitespace @1057
+    pj_scan_strcmp @1058
+    pj_scan_stricmp @1059
+    pj_scan_stricmp_alnum @1060
+    pj_sem_create @1061
+    pj_sem_destroy @1062
+    pj_sem_post @1063
+    pj_sem_trywait @1064
+    pj_sem_wait @1065
+    pj_set_netos_error @1066
+    pj_set_os_error @1067
+    pj_sha1_final @1068
+    pj_sha1_init @1069
+    pj_sha1_update @1070
+    pj_shutdown @1071
+    pj_sock_accept @1072
+    pj_sock_apply_qos @1073
+    pj_sock_apply_qos2 @1074
+    pj_sock_bind @1075
+    pj_sock_bind_in @1076
+    pj_sock_close @1077
+    pj_sock_connect @1078
+    pj_sock_get_qos_params @1079
+    pj_sock_get_qos_type @1080
+    pj_sock_getpeername @1081
+    pj_sock_getsockname @1082
+    pj_sock_getsockopt @1083
+    pj_sock_listen @1084
+    pj_sock_recv @1085
+    pj_sock_recvfrom @1086
+    pj_sock_select @1087
+    pj_sock_send @1088
+    pj_sock_sendto @1089
+    pj_sock_set_qos_params @1090
+    pj_sock_set_qos_type @1091
+    pj_sock_setsockopt @1092
+    pj_sock_shutdown @1093
+    pj_sock_socket @1094
+    pj_sockaddr_cmp @1095
+    pj_sockaddr_copy_addr @1096
+    pj_sockaddr_cp @1097
+    pj_sockaddr_get_addr @1098
+    pj_sockaddr_get_addr_len @1099
+    pj_sockaddr_get_len @1100
+    pj_sockaddr_get_port @1101
+    pj_sockaddr_has_addr @1102
+    pj_sockaddr_in_get_addr @1103
+    pj_sockaddr_in_get_port @1104
+    pj_sockaddr_in_init @1105
+    pj_sockaddr_in_set_addr @1106
+    pj_sockaddr_in_set_port @1107
+    pj_sockaddr_in_set_str_addr @1108
+    pj_sockaddr_init @1109
+    pj_sockaddr_parse @1110
+    pj_sockaddr_parse2 @1111
+    pj_sockaddr_print @1112
+    pj_sockaddr_set_port @1113
+    pj_sockaddr_set_str_addr @1114
+    pj_srand @1115
+    pj_str @1116
+    pj_str_unescape @1117
+    pj_strassign @1118
+    pj_strcat @1119
+    pj_strcat2 @1120
+    pj_strcmp @1121
+    pj_strcmp2 @1122
+    pj_strcpy @1123
+    pj_strcpy2 @1124
+    pj_strcpy_unescape @1125
+    pj_strdup @1126
+    pj_strdup2 @1127
+    pj_strdup2_with_null @1128
+    pj_strdup3 @1129
+    pj_strdup_with_null @1130
+    pj_strerror @1131
+    pj_stricmp @1132
+    pj_stricmp2 @1133
+    pj_stristr @1134
+    pj_strltrim @1135
+    pj_strncmp @1136
+    pj_strncmp2 @1137
+    pj_strncpy @1138
+    pj_strncpy2_escape @1139
+    pj_strncpy_escape @1140
+    pj_strncpy_with_null @1141
+    pj_strnicmp @1142
+    pj_strnicmp2 @1143
+    pj_strrtrim @1144
+    pj_strstr @1145
+    pj_strtoul @1146
+    pj_strtoul2 @1147
+    pj_strtrim @1148
+    pj_stun_attr_clone @1149
+    pj_stun_auth_cred_dup @1150
+    pj_stun_auth_valid_for_msg @1151
+    pj_stun_authenticate_request @1152
+    pj_stun_authenticate_response @1153
+    pj_stun_binary_attr_create @1154
+    pj_stun_binary_attr_init @1155
+    pj_stun_client_tsx_create @1156
+    pj_stun_client_tsx_destroy @1157
+    pj_stun_client_tsx_get_data @1158
+    pj_stun_client_tsx_is_complete @1159
+    pj_stun_client_tsx_on_rx_msg @1160
+    pj_stun_client_tsx_retransmit @1161
+    pj_stun_client_tsx_schedule_destroy @1162
+    pj_stun_client_tsx_send_msg @1163
+    pj_stun_client_tsx_set_data @1164
+    pj_stun_create_key @1165
+    pj_stun_detect_nat_type @1166
+    pj_stun_empty_attr_create @1167
+    pj_stun_errcode_attr_create @1168
+    pj_stun_get_attr_name @1169
+    pj_stun_get_class_name @1170
+    pj_stun_get_err_reason @1171
+    pj_stun_get_method_name @1172
+    pj_stun_get_nat_name @1173
+    pj_stun_msg_add_attr @1174
+    pj_stun_msg_add_binary_attr @1175
+    pj_stun_msg_add_empty_attr @1176
+    pj_stun_msg_add_errcode_attr @1177
+    pj_stun_msg_add_msgint_attr @1178
+    pj_stun_msg_add_sockaddr_attr @1179
+    pj_stun_msg_add_string_attr @1180
+    pj_stun_msg_add_uint64_attr @1181
+    pj_stun_msg_add_uint_attr @1182
+    pj_stun_msg_add_unknown_attr @1183
+    pj_stun_msg_check @1184
+    pj_stun_msg_clone @1185
+    pj_stun_msg_create @1186
+    pj_stun_msg_create_response @1187
+    pj_stun_msg_decode @1188
+    pj_stun_msg_destroy_tdata @1189
+    pj_stun_msg_dump @1190
+    pj_stun_msg_encode @1191
+    pj_stun_msg_find_attr @1192
+    pj_stun_msg_init @1193
+    pj_stun_msgint_attr_create @1194
+    pj_stun_req_cred_info_dup @1195
+    pj_stun_session_cancel_req @1196
+    pj_stun_session_create @1197
+    pj_stun_session_create_ind @1198
+    pj_stun_session_create_req @1199
+    pj_stun_session_create_res @1200
+    pj_stun_session_destroy @1201
+    pj_stun_session_get_user_data @1202
+    pj_stun_session_on_rx_pkt @1203
+    pj_stun_session_respond @1204
+    pj_stun_session_retransmit_req @1205
+    pj_stun_session_send_msg @1206
+    pj_stun_session_set_credential @1207
+    pj_stun_session_set_lock @1208
+    pj_stun_session_set_log @1209
+    pj_stun_session_set_software_name @1210
+    pj_stun_session_set_user_data @1211
+    pj_stun_session_use_fingerprint @1212
+    pj_stun_set_padding_char @1213
+    pj_stun_sock_cfg_default @1214
+    pj_stun_sock_create @1215
+    pj_stun_sock_destroy @1216
+    pj_stun_sock_get_info @1217
+    pj_stun_sock_get_user_data @1218
+    pj_stun_sock_op_name @1219
+    pj_stun_sock_sendto @1220
+    pj_stun_sock_set_user_data @1221
+    pj_stun_sock_start @1222
+    pj_stun_sockaddr_attr_create @1223
+    pj_stun_sockaddr_attr_init @1224
+    pj_stun_string_attr_create @1225
+    pj_stun_string_attr_init @1226
+    pj_stun_uint64_attr_create @1227
+    pj_stun_uint_attr_create @1228
+    pj_stun_unknown_attr_create @1229
+    pj_term_get_color @1230
+    pj_term_set_color @1231
+    pj_thread_create @1232
+    pj_thread_destroy @1233
+    pj_thread_get_name @1234
+    pj_thread_get_os_handle @1235
+    pj_thread_get_prio @1236
+    pj_thread_get_prio_max @1237
+    pj_thread_get_prio_min @1238
+    pj_thread_init @1239
+    pj_thread_is_registered @1240
+    pj_thread_join @1241
+    pj_thread_local_alloc @1242
+    pj_thread_local_free @1243
+    pj_thread_local_get @1244
+    pj_thread_local_set @1245
+    pj_thread_register @1246
+    pj_thread_resume @1247
+    pj_thread_set_prio @1248
+    pj_thread_sleep @1249
+    pj_thread_this @1250
+    pj_throw_exception_ @1251
+    pj_time_decode @1252
+    pj_time_encode @1253
+    pj_time_val_normalize @1254
+    pj_timer_entry_init @1255
+    pj_timer_heap_cancel @1256
+    pj_timer_heap_count @1257
+    pj_timer_heap_create @1258
+    pj_timer_heap_destroy @1259
+    pj_timer_heap_earliest_time @1260
+    pj_timer_heap_mem_size @1261
+    pj_timer_heap_poll @1262
+    pj_timer_heap_schedule @1263
+    pj_timer_heap_set_lock @1264
+    pj_timer_heap_set_max_timed_out_per_poll @1265
+    pj_turn_alloc_param_copy @1266
+    pj_turn_alloc_param_default @1267
+    pj_turn_session_alloc @1268
+    pj_turn_session_bind_channel @1269
+    pj_turn_session_create @1270
+    pj_turn_session_destroy @1271
+    pj_turn_session_get_info @1272
+    pj_turn_session_get_user_data @1273
+    pj_turn_session_on_rx_pkt @1274
+    pj_turn_session_sendto @1275
+    pj_turn_session_set_credential @1276
+    pj_turn_session_set_log @1277
+    pj_turn_session_set_perm @1278
+    pj_turn_session_set_server @1279
+    pj_turn_session_set_software_name @1280
+    pj_turn_session_set_user_data @1281
+    pj_turn_session_shutdown @1282
+    pj_turn_sock_alloc @1283
+    pj_turn_sock_bind_channel @1284
+    pj_turn_sock_cfg_default @1285
+    pj_turn_sock_create @1286
+    pj_turn_sock_destroy @1287
+    pj_turn_sock_get_info @1288
+    pj_turn_sock_get_user_data @1289
+    pj_turn_sock_lock @1290
+    pj_turn_sock_sendto @1291
+    pj_turn_sock_set_log @1292
+    pj_turn_sock_set_perm @1293
+    pj_turn_sock_set_software_name @1294
+    pj_turn_sock_set_user_data @1295
+    pj_turn_sock_unlock @1296
+    pj_turn_state_name @1297
+    pj_utoa @1298
+    pj_utoa_pad @1299
+    pj_xml_add_attr @1300
+    pj_xml_add_node @1301
+    pj_xml_attr_new @1302
+    pj_xml_clone @1303
+    pj_xml_find @1304
+    pj_xml_find_attr @1305
+    pj_xml_find_next_node @1306
+    pj_xml_find_node @1307
+    pj_xml_find_node_rec @1308
+    pj_xml_find_rec @1309
+    pj_xml_node_new @1310
+    pj_xml_parse @1311
+    pj_xml_print @1312
+    pjlib_util_init @1313
+    pjlib_util_strerror @1314
+    pjmedia_add_rtpmap_for_static_pt @1315 DATA
+    pjmedia_alaw2linear_tab @1316 DATA
+    pjmedia_aud_dev_cap_name @1317
+    pjmedia_aud_dev_count @1318
+    pjmedia_aud_dev_default_param @1319
+    pjmedia_aud_dev_get_info @1320
+    pjmedia_aud_dev_lookup @1321
+    pjmedia_aud_dev_refresh @1322
+    pjmedia_aud_param_get_cap @1323
+    pjmedia_aud_param_set_cap @1324
+    pjmedia_aud_register_factory @1325
+    pjmedia_aud_stream_create @1326
+    pjmedia_aud_stream_destroy @1327
+    pjmedia_aud_stream_get_cap @1328
+    pjmedia_aud_stream_get_param @1329
+    pjmedia_aud_stream_set_cap @1330
+    pjmedia_aud_stream_start @1331
+    pjmedia_aud_stream_stop @1332
+    pjmedia_aud_subsys_get_pool_factory @1333
+    pjmedia_aud_subsys_init @1334
+    pjmedia_aud_subsys_shutdown @1335
+    pjmedia_aud_unregister_factory @1336
+    pjmedia_audio_codec_config_default @1337
+    pjmedia_audiodev_strerror @1338
+    pjmedia_calc_avg_signal @1339
+    pjmedia_clock_create @1340
+    pjmedia_clock_create2 @1341
+    pjmedia_clock_destroy @1342
+    pjmedia_clock_modify @1343
+    pjmedia_clock_src_get_current_timestamp @1344
+    pjmedia_clock_src_get_time_msec @1345
+    pjmedia_clock_src_init @1346
+    pjmedia_clock_src_update @1347
+    pjmedia_clock_start @1348
+    pjmedia_clock_stop @1349
+    pjmedia_clock_wait @1350
+    pjmedia_codec_g711_deinit @1351
+    pjmedia_codec_g711_init @1352
+    pjmedia_codec_g722_deinit @1353
+    pjmedia_codec_g722_init @1354
+    pjmedia_codec_g722_set_pcm_shift @1355
+    pjmedia_codec_gsm_deinit @1356
+    pjmedia_codec_gsm_init @1357
+    pjmedia_codec_ilbc_deinit @1358
+    pjmedia_codec_ilbc_init @1359
+    pjmedia_codec_info_to_id @1360
+    pjmedia_codec_l16_deinit @1361
+    pjmedia_codec_l16_init @1362
+    pjmedia_codec_mgr_alloc_codec @1363
+    pjmedia_codec_mgr_dealloc_codec @1364
+    pjmedia_codec_mgr_destroy @1365
+    pjmedia_codec_mgr_enum_codecs @1366
+    pjmedia_codec_mgr_find_codecs_by_id @1367
+    pjmedia_codec_mgr_get_codec_info @1368
+    pjmedia_codec_mgr_get_default_param @1369
+    pjmedia_codec_mgr_init @1370
+    pjmedia_codec_mgr_register_factory @1371
+    pjmedia_codec_mgr_set_codec_priority @1372
+    pjmedia_codec_mgr_set_default_param @1373
+    pjmedia_codec_mgr_unregister_factory @1374
+    pjmedia_codec_register_audio_codecs @1375
+    pjmedia_codec_speex_deinit @1376
+    pjmedia_codec_speex_init @1377
+    pjmedia_codec_speex_init_default @1378
+    pjmedia_codec_speex_set_param @1379
+    pjmedia_conf_add_passive_port @1380
+    pjmedia_conf_add_port @1381
+    pjmedia_conf_adjust_rx_level @1382
+    pjmedia_conf_adjust_tx_level @1383
+    pjmedia_conf_configure_port @1384
+    pjmedia_conf_connect_port @1385
+    pjmedia_conf_create @1386
+    pjmedia_conf_destroy @1387
+    pjmedia_conf_disconnect_port @1388
+    pjmedia_conf_enum_ports @1389
+    pjmedia_conf_get_connect_count @1390
+    pjmedia_conf_get_master_port @1391
+    pjmedia_conf_get_port_count @1392
+    pjmedia_conf_get_port_info @1393
+    pjmedia_conf_get_ports_info @1394
+    pjmedia_conf_get_signal_level @1395
+    pjmedia_conf_remove_port @1396
+    pjmedia_conf_set_port0_name @1397
+    pjmedia_delay_buf_create @1398
+    pjmedia_delay_buf_destroy @1399
+    pjmedia_delay_buf_get @1400
+    pjmedia_delay_buf_put @1401
+    pjmedia_delay_buf_reset @1402
+    pjmedia_echo_cancel @1403
+    pjmedia_echo_capture @1404
+    pjmedia_echo_create @1405
+    pjmedia_echo_create2 @1406
+    pjmedia_echo_destroy @1407
+    pjmedia_echo_playback @1408
+    pjmedia_echo_reset @1409
+    pjmedia_endpt_atexit @1410
+    pjmedia_endpt_create @1411
+    pjmedia_endpt_create_audio_sdp @1412
+    pjmedia_endpt_create_base_sdp @1413
+    pjmedia_endpt_create_pool @1414
+    pjmedia_endpt_create_sdp @1415
+    pjmedia_endpt_destroy @1416
+    pjmedia_endpt_dump @1417
+    pjmedia_endpt_get_codec_mgr @1418
+    pjmedia_endpt_get_flag @1419
+    pjmedia_endpt_get_ioqueue @1420
+    pjmedia_endpt_get_thread @1421
+    pjmedia_endpt_get_thread_count @1422
+    pjmedia_endpt_set_flag @1423
+    pjmedia_format_copy @1424
+    pjmedia_format_get_audio_format_detail @1425
+    pjmedia_format_init_audio @1426
+    pjmedia_ice_create @1427
+    pjmedia_ice_create2 @1428
+    pjmedia_ice_create3 @1429
+    pjmedia_jbuf_create @1430
+    pjmedia_jbuf_destroy @1431
+    pjmedia_jbuf_get_frame @1432
+    pjmedia_jbuf_get_frame2 @1433
+    pjmedia_jbuf_get_frame3 @1434
+    pjmedia_jbuf_get_state @1435
+    pjmedia_jbuf_is_full @1436
+    pjmedia_jbuf_peek_frame @1437
+    pjmedia_jbuf_put_frame @1438
+    pjmedia_jbuf_put_frame2 @1439
+    pjmedia_jbuf_put_frame3 @1440
+    pjmedia_jbuf_remove_frame @1441
+    pjmedia_jbuf_reset @1442
+    pjmedia_jbuf_set_adaptive @1443
+    pjmedia_jbuf_set_discard @1444
+    pjmedia_jbuf_set_fixed @1445
+    pjmedia_linear2alaw_tab @1446 DATA
+    pjmedia_linear2ulaw_tab @1447 DATA
+    pjmedia_master_port_create @1448
+    pjmedia_master_port_destroy @1449
+    pjmedia_master_port_get_dport @1450
+    pjmedia_master_port_get_uport @1451
+    pjmedia_master_port_set_dport @1452
+    pjmedia_master_port_set_uport @1453
+    pjmedia_master_port_start @1454
+    pjmedia_master_port_stop @1455
+    pjmedia_master_port_wait @1456
+    pjmedia_null_port_create @1457
+    pjmedia_pa_factory @1458
+    pjmedia_plc_create @1459
+    pjmedia_plc_generate @1460
+    pjmedia_plc_save @1461
+    pjmedia_port_destroy @1462
+    pjmedia_port_get_clock_src @1463
+    pjmedia_port_get_frame @1464
+    pjmedia_port_info_init @1465
+    pjmedia_port_info_init2 @1466
+    pjmedia_port_put_frame @1467
+    pjmedia_resample_create @1468
+    pjmedia_resample_destroy @1469
+    pjmedia_resample_get_input_size @1470
+    pjmedia_resample_port_create @1471
+    pjmedia_resample_run @1472
+    pjmedia_rtcp_build_rtcp @1473
+    pjmedia_rtcp_build_rtcp_bye @1474
+    pjmedia_rtcp_build_rtcp_sdes @1475
+    pjmedia_rtcp_enable_xr @1476
+    pjmedia_rtcp_fini @1477
+    pjmedia_rtcp_get_ntp_time @1478
+    pjmedia_rtcp_init @1479
+    pjmedia_rtcp_init2 @1480
+    pjmedia_rtcp_init_stat @1481
+    pjmedia_rtcp_rx_rtcp @1482
+    pjmedia_rtcp_rx_rtp @1483
+    pjmedia_rtcp_rx_rtp2 @1484
+    pjmedia_rtcp_session_setting_default @1485
+    pjmedia_rtcp_tx_rtp @1486
+    pjmedia_rtp_decode_rtp @1487
+    pjmedia_rtp_encode_rtp @1488
+    pjmedia_rtp_seq_init @1489
+    pjmedia_rtp_seq_update @1490
+    pjmedia_rtp_session_init @1491
+    pjmedia_rtp_session_init2 @1492
+    pjmedia_rtp_session_update @1493
+    pjmedia_rtp_session_update2 @1494
+    pjmedia_sdp_attr_add @1495
+    pjmedia_sdp_attr_clone @1496
+    pjmedia_sdp_attr_create @1497
+    pjmedia_sdp_attr_create_rtcp @1498
+    pjmedia_sdp_attr_find @1499
+    pjmedia_sdp_attr_find2 @1500
+    pjmedia_sdp_attr_get_fmtp @1501
+    pjmedia_sdp_attr_get_rtcp @1502
+    pjmedia_sdp_attr_get_rtpmap @1503
+    pjmedia_sdp_attr_remove @1504
+    pjmedia_sdp_attr_remove_all @1505
+    pjmedia_sdp_attr_to_rtpmap @1506
+    pjmedia_sdp_bandw_clone @1507
+    pjmedia_sdp_conn_clone @1508
+    pjmedia_sdp_media_add_attr @1509
+    pjmedia_sdp_media_clone @1510
+    pjmedia_sdp_media_clone_deactivate @1511
+    pjmedia_sdp_media_deactivate @1512
+    pjmedia_sdp_media_find_attr @1513
+    pjmedia_sdp_media_find_attr2 @1514
+    pjmedia_sdp_media_remove_all_attr @1515
+    pjmedia_sdp_media_remove_attr @1516
+    pjmedia_sdp_neg_cancel_offer @1517
+    pjmedia_sdp_neg_create_w_local_offer @1518
+    pjmedia_sdp_neg_create_w_remote_offer @1519
+    pjmedia_sdp_neg_fmt_match @1520
+    pjmedia_sdp_neg_get_active_local @1521
+    pjmedia_sdp_neg_get_active_remote @1522
+    pjmedia_sdp_neg_get_neg_local @1523
+    pjmedia_sdp_neg_get_neg_remote @1524
+    pjmedia_sdp_neg_get_state @1525
+    pjmedia_sdp_neg_has_local_answer @1526
+    pjmedia_sdp_neg_modify_local_offer @1527
+    pjmedia_sdp_neg_negotiate @1528
+    pjmedia_sdp_neg_register_fmt_match_cb @1529
+    pjmedia_sdp_neg_send_local_offer @1530
+    pjmedia_sdp_neg_set_local_answer @1531
+    pjmedia_sdp_neg_set_prefer_remote_codec_order @1532
+    pjmedia_sdp_neg_set_remote_answer @1533
+    pjmedia_sdp_neg_set_remote_offer @1534
+    pjmedia_sdp_neg_state_str @1535
+    pjmedia_sdp_neg_was_answer_remote @1536
+    pjmedia_sdp_parse @1537
+    pjmedia_sdp_print @1538
+    pjmedia_sdp_rtpmap_to_attr @1539
+    pjmedia_sdp_session_add_attr @1540
+    pjmedia_sdp_session_clone @1541
+    pjmedia_sdp_transport_cmp @1542
+    pjmedia_sdp_validate @1543
+    pjmedia_silence_det_apply @1544
+    pjmedia_silence_det_create @1545
+    pjmedia_silence_det_detect @1546
+    pjmedia_silence_det_disable @1547
+    pjmedia_silence_det_set_adaptive @1548
+    pjmedia_silence_det_set_fixed @1549
+    pjmedia_silence_det_set_name @1550
+    pjmedia_silence_det_set_params @1551
+    pjmedia_snd_port_connect @1552
+    pjmedia_snd_port_create @1553
+    pjmedia_snd_port_create2 @1554
+    pjmedia_snd_port_create_player @1555
+    pjmedia_snd_port_create_rec @1556
+    pjmedia_snd_port_destroy @1557
+    pjmedia_snd_port_disconnect @1558
+    pjmedia_snd_port_get_clock_src @1559
+    pjmedia_snd_port_get_ec_tail @1560
+    pjmedia_snd_port_get_port @1561
+    pjmedia_snd_port_get_snd_stream @1562
+    pjmedia_snd_port_param_default @1563
+    pjmedia_snd_port_set_ec @1564
+    pjmedia_srtp_init_lib @1565
+    pjmedia_srtp_setting_default @1566
+    pjmedia_stream_check_dtmf @1567
+    pjmedia_stream_create @1568
+    pjmedia_stream_destroy @1569
+    pjmedia_stream_dial_dtmf @1570
+    pjmedia_stream_get_dtmf @1571
+    pjmedia_stream_get_info @1572
+    pjmedia_stream_get_last_jb_frame_type @1573
+    pjmedia_stream_get_port @1574
+    pjmedia_stream_get_stat @1575
+    pjmedia_stream_get_stat_jbuf @1576
+    pjmedia_stream_get_transport @1577
+    pjmedia_stream_info_from_sdp @1578
+    pjmedia_stream_info_parse_fmtp @1579
+    pjmedia_stream_pause @1580
+    pjmedia_stream_reset_stat @1581
+    pjmedia_stream_resume @1582
+    pjmedia_stream_send_rtcp_bye @1583
+    pjmedia_stream_send_rtcp_sdes @1584
+    pjmedia_stream_set_dtmf_callback @1585
+    pjmedia_stream_start @1586
+    pjmedia_strerror @1587
+    pjmedia_transport_srtp_create @1588
+    pjmedia_transport_srtp_decrypt_pkt @1589
+    pjmedia_transport_srtp_get_member @1590
+    pjmedia_transport_srtp_start @1591
+    pjmedia_transport_srtp_stop @1592
+    pjmedia_transport_udp_attach @1593
+    pjmedia_transport_udp_create @1594
+    pjmedia_transport_udp_create2 @1595
+    pjmedia_transport_udp_create3 @1596
+    pjmedia_ulaw2linear_tab @1597 DATA
+    pjmedia_wav_player_get_len @1598
+    pjmedia_wav_player_port_create @1599
+    pjmedia_wav_player_port_get_pos @1600
+    pjmedia_wav_player_port_set_pos @1601
+    pjmedia_wav_player_set_eof_cb @1602
+    pjmedia_wav_playlist_create @1603
+    pjmedia_wav_playlist_set_eof_cb @1604
+    pjmedia_wav_writer_port_create @1605
+    pjmedia_wav_writer_port_get_pos @1606
+    pjmedia_wav_writer_port_set_cb @1607
+    pjmedia_wave_hdr_file_to_host @1608
+    pjmedia_wave_hdr_host_to_file @1609
+    pjmedia_wmme_factory @1610
+    pjmedia_wsola_create @1611
+    pjmedia_wsola_destroy @1612
+    pjmedia_wsola_discard @1613
+    pjmedia_wsola_generate @1614
+    pjmedia_wsola_reset @1615
+    pjmedia_wsola_save @1616
+    pjmedia_wsola_set_max_expand @1617
+    pjnath_init @1618
+    pjnath_perror @1619
+    pjpidf_create @1620
+    pjpidf_op @1621 DATA
+    pjpidf_parse @1622
+    pjpidf_pres_add_note @1623
+    pjpidf_pres_add_tuple @1624
+    pjpidf_pres_construct @1625
+    pjpidf_pres_find_tuple @1626
+    pjpidf_pres_get_first_note @1627
+    pjpidf_pres_get_first_tuple @1628
+    pjpidf_pres_get_next_note @1629
+    pjpidf_pres_get_next_tuple @1630
+    pjpidf_pres_remove_tuple @1631
+    pjpidf_print @1632
+    pjpidf_status_construct @1633
+    pjpidf_status_is_basic_open @1634
+    pjpidf_status_set_basic_open @1635
+    pjpidf_tuple_add_note @1636
+    pjpidf_tuple_construct @1637
+    pjpidf_tuple_get_contact @1638
+    pjpidf_tuple_get_contact_prio @1639
+    pjpidf_tuple_get_first_note @1640
+    pjpidf_tuple_get_id @1641
+    pjpidf_tuple_get_next_note @1642
+    pjpidf_tuple_get_status @1643
+    pjpidf_tuple_get_timestamp @1644
+    pjpidf_tuple_set_contact @1645
+    pjpidf_tuple_set_contact_prio @1646
+    pjpidf_tuple_set_id @1647
+    pjpidf_tuple_set_timestamp @1648
+    pjpidf_tuple_set_timestamp_np @1649
+    pjrpid_add_element @1650
+    pjrpid_element_dup @1651
+    pjrpid_get_element @1652
+    pjsip_100rel_attach @1653
+    pjsip_100rel_create_prack @1654
+    pjsip_100rel_end_session @1655
+    pjsip_100rel_init_module @1656
+    pjsip_100rel_is_reliable @1657
+    pjsip_100rel_on_rx_prack @1658
+    pjsip_100rel_send_prack @1659
+    pjsip_100rel_tx_response @1660
+    pjsip_ALGORITHM_STR @1661 DATA
+    pjsip_AUTH_STR @1662 DATA
+    pjsip_CNONCE_STR @1663 DATA
+    pjsip_DIGEST_STR @1664 DATA
+    pjsip_DOMAIN_STR @1665 DATA
+    pjsip_FALSE_STR @1666 DATA
+    pjsip_MD5_STR @1667 DATA
+    pjsip_NC_STR @1668 DATA
+    pjsip_NONCE_STR @1669 DATA
+    pjsip_OPAQUE_STR @1670 DATA
+    pjsip_PGP_STR @1671 DATA
+    pjsip_QOP_STR @1672 DATA
+    pjsip_QUOTED_AUTH_STR @1673 DATA
+    pjsip_QUOTED_DIGEST_STR @1674 DATA
+    pjsip_QUOTED_FALSE_STR @1675 DATA
+    pjsip_QUOTED_MD5_STR @1676 DATA
+    pjsip_QUOTED_PGP_STR @1677 DATA
+    pjsip_QUOTED_TRUE_STR @1678 DATA
+    pjsip_REALM_STR @1679 DATA
+    pjsip_RESPONSE_STR @1680 DATA
+    pjsip_STALE_STR @1681 DATA
+    pjsip_TRUE_STR @1682 DATA
+    pjsip_URI_STR @1683 DATA
+    pjsip_USERNAME_STR @1684 DATA
+    pjsip_accept_hdr_create @1685
+    pjsip_accept_hdr_init @1686
+    pjsip_ack_method @1687 DATA
+    pjsip_allow_events_hdr_create @1688
+    pjsip_allow_hdr_create @1689
+    pjsip_allow_hdr_init @1690
+    pjsip_auth_clt_clone @1691
+    pjsip_auth_clt_get_prefs @1692
+    pjsip_auth_clt_init @1693
+    pjsip_auth_clt_init_req @1694
+    pjsip_auth_clt_pref_dup @1695
+    pjsip_auth_clt_reinit_req @1696
+    pjsip_auth_clt_set_credentials @1697
+    pjsip_auth_clt_set_prefs @1698
+    pjsip_auth_create_digest @1699
+    pjsip_auth_deinit_parser @1700
+    pjsip_auth_init_parser @1701
+    pjsip_authorization_hdr_create @1702
+    pjsip_bye_method @1703 DATA
+    pjsip_cancel_method @1704 DATA
+    pjsip_cid_hdr_create @1705
+    pjsip_cid_hdr_init @1706
+    pjsip_clen_hdr_create @1707
+    pjsip_clen_hdr_init @1708
+    pjsip_clone_text_data @1709
+    pjsip_concat_param_imp @1710
+    pjsip_contact_hdr_create @1711
+    pjsip_contact_hdr_init @1712
+    pjsip_create_sdp_body @1713
+    pjsip_cred_info_cmp @1714
+    pjsip_cred_info_dup @1715
+    pjsip_cseq_hdr_create @1716
+    pjsip_cseq_hdr_init @1717
+    pjsip_ctype_hdr_create @1718
+    pjsip_ctype_hdr_init @1719
+    pjsip_dlg_add_usage @1720
+    pjsip_dlg_create_request @1721
+    pjsip_dlg_create_response @1722
+    pjsip_dlg_create_uac @1723
+    pjsip_dlg_create_uas @1724
+    pjsip_dlg_dec_lock @1725
+    pjsip_dlg_dec_session @1726
+    pjsip_dlg_fork @1727
+    pjsip_dlg_get_inv_session @1728
+    pjsip_dlg_get_mod_data @1729
+    pjsip_dlg_get_remote_cap_hdr @1730
+    pjsip_dlg_has_usage @1731
+    pjsip_dlg_inc_lock @1732
+    pjsip_dlg_inc_session @1733
+    pjsip_dlg_lock_tls_id @1734 DATA
+    pjsip_dlg_modify_response @1735
+    pjsip_dlg_on_rx_request @1736
+    pjsip_dlg_on_rx_response @1737
+    pjsip_dlg_on_tsx_state @1738
+    pjsip_dlg_remote_has_cap @1739
+    pjsip_dlg_remove_remote_cap_hdr @1740
+    pjsip_dlg_respond @1741
+    pjsip_dlg_send_request @1742
+    pjsip_dlg_send_response @1743
+    pjsip_dlg_set_mod_data @1744
+    pjsip_dlg_set_remote_cap_hdr @1745
+    pjsip_dlg_set_route_set @1746
+    pjsip_dlg_set_transport @1747
+    pjsip_dlg_set_via_sent_by @1748
+    pjsip_dlg_terminate @1749
+    pjsip_dlg_try_inc_lock @1750
+    pjsip_dlg_update_remote_cap @1751
+    pjsip_endpt_acquire_transport @1752
+    pjsip_endpt_acquire_transport2 @1753
+    pjsip_endpt_add_capability @1754
+    pjsip_endpt_atexit @1755
+    pjsip_endpt_cancel_timer @1756
+    pjsip_endpt_create @1757
+    pjsip_endpt_create_ack @1758
+    pjsip_endpt_create_cancel @1759
+    pjsip_endpt_create_pool @1760
+    pjsip_endpt_create_request @1761
+    pjsip_endpt_create_request_from_hdr @1762
+    pjsip_endpt_create_resolver @1763
+    pjsip_endpt_create_response @1764
+    pjsip_endpt_create_tdata @1765
+    pjsip_endpt_destroy @1766
+    pjsip_endpt_dump @1767
+    pjsip_endpt_get_capability @1768
+    pjsip_endpt_get_ioqueue @1769
+    pjsip_endpt_get_request_headers @1770
+    pjsip_endpt_get_resolver @1771
+    pjsip_endpt_get_timer_heap @1772
+    pjsip_endpt_get_tpmgr @1773
+    pjsip_endpt_handle_events @1774
+    pjsip_endpt_handle_events2 @1775
+    pjsip_endpt_has_capability @1776
+    pjsip_endpt_log_error @1777
+    pjsip_endpt_name @1778
+    pjsip_endpt_register_module @1779
+    pjsip_endpt_release_pool @1780
+    pjsip_endpt_resolve @1781
+    pjsip_endpt_respond @1782
+    pjsip_endpt_respond_stateless @1783
+    pjsip_endpt_schedule_timer @1784
+    pjsip_endpt_send_raw @1785
+    pjsip_endpt_send_raw_to_uri @1786
+    pjsip_endpt_send_request @1787
+    pjsip_endpt_send_request_stateless @1788
+    pjsip_endpt_send_response @1789
+    pjsip_endpt_send_response2 @1790
+    pjsip_endpt_set_resolver @1791
+    pjsip_endpt_unregister_module @1792
+    pjsip_event_hdr_create @1793
+    pjsip_event_str @1794
+    pjsip_evsub_accept @1795
+    pjsip_evsub_add_header @1796
+    pjsip_evsub_create_uac @1797
+    pjsip_evsub_create_uas @1798
+    pjsip_evsub_current_notify @1799
+    pjsip_evsub_get_allow_events_hdr @1800
+    pjsip_evsub_get_mod_data @1801
+    pjsip_evsub_get_state @1802
+    pjsip_evsub_get_state_name @1803
+    pjsip_evsub_get_termination_reason @1804
+    pjsip_evsub_init_module @1805
+    pjsip_evsub_init_parser @1806
+    pjsip_evsub_initiate @1807
+    pjsip_evsub_instance @1808
+    pjsip_evsub_notify @1809
+    pjsip_evsub_register_pkg @1810
+    pjsip_evsub_send_request @1811
+    pjsip_evsub_set_mod_data @1812
+    pjsip_evsub_terminate @1813
+    pjsip_expires_hdr_create @1814
+    pjsip_expires_hdr_init @1815
+    pjsip_find_msg @1816
+    pjsip_from_hdr_create @1817
+    pjsip_from_hdr_init @1818
+    pjsip_fromto_hdr_set_from @1819
+    pjsip_fromto_hdr_set_to @1820
+    pjsip_generic_array_hdr_create @1821
+    pjsip_generic_array_hdr_init @1822
+    pjsip_generic_int_hdr_create @1823
+    pjsip_generic_int_hdr_init @1824
+    pjsip_generic_string_hdr_create @1825
+    pjsip_generic_string_hdr_init @1826
+    pjsip_generic_string_hdr_init2 @1827
+    pjsip_get_ack_method @1828
+    pjsip_get_bye_method @1829
+    pjsip_get_cancel_method @1830
+    pjsip_get_invite_method @1831
+    pjsip_get_notify_method @1832
+    pjsip_get_options_method @1833
+    pjsip_get_prack_method @1834
+    pjsip_get_refer_method @1835
+    pjsip_get_register_method @1836
+    pjsip_get_request_dest @1837
+    pjsip_get_response_addr @1838
+    pjsip_get_status_text @1839
+    pjsip_get_subscribe_method @1840
+    pjsip_hdr_clone @1841
+    pjsip_hdr_names @1842 DATA
+    pjsip_hdr_print_on @1843
+    pjsip_hdr_shallow_clone @1844
+    pjsip_include_allow_hdr_in_dlg @1845 DATA
+    pjsip_info_method @1846 DATA
+    pjsip_inv_answer @1847
+    pjsip_inv_create_ack @1848
+    pjsip_inv_create_uac @1849
+    pjsip_inv_create_uas @1850
+    pjsip_inv_end_session @1851
+    pjsip_inv_initial_answer @1852
+    pjsip_inv_invite @1853
+    pjsip_inv_process_redirect @1854
+    pjsip_inv_reinvite @1855
+    pjsip_inv_send_msg @1856
+    pjsip_inv_set_local_sdp @1857
+    pjsip_inv_set_sdp_answer @1858
+    pjsip_inv_state_name @1859
+    pjsip_inv_terminate @1860
+    pjsip_inv_uac_restart @1861
+    pjsip_inv_update @1862
+    pjsip_inv_usage_init @1863
+    pjsip_inv_usage_instance @1864
+    pjsip_inv_verify_request @1865
+    pjsip_inv_verify_request2 @1866
+    pjsip_inv_verify_request3 @1867
+    pjsip_invite_method @1868 DATA
+    pjsip_iscomposing_create_body @1869
+    pjsip_iscomposing_create_xml @1870
+    pjsip_iscomposing_parse @1871
+    pjsip_max_fwd_hdr_create @1872
+    pjsip_max_fwd_hdr_init @1873
+    pjsip_media_type_cmp @1874
+    pjsip_media_type_cp @1875
+    pjsip_media_type_init @1876
+    pjsip_media_type_init2 @1877
+    pjsip_media_type_print @1878
+    pjsip_message_method @1879 DATA
+    pjsip_method_cmp @1880
+    pjsip_method_copy @1881
+    pjsip_method_creates_dialog @1882
+    pjsip_method_init @1883
+    pjsip_method_init_np @1884
+    pjsip_method_set @1885
+    pjsip_min_expires_hdr_create @1886
+    pjsip_min_expires_hdr_init @1887
+    pjsip_min_se_hdr_create @1888
+    pjsip_msg_body_clone @1889
+    pjsip_msg_body_copy @1890
+    pjsip_msg_body_create @1891
+    pjsip_msg_clone @1892
+    pjsip_msg_create @1893
+    pjsip_msg_find_hdr @1894
+    pjsip_msg_find_hdr_by_name @1895
+    pjsip_msg_find_hdr_by_names @1896
+    pjsip_msg_find_remove_hdr @1897
+    pjsip_msg_print @1898
+    pjsip_multipart_add_part @1899
+    pjsip_multipart_clone_part @1900
+    pjsip_multipart_create @1901
+    pjsip_multipart_create_part @1902
+    pjsip_multipart_find_part @1903
+    pjsip_multipart_get_first_part @1904
+    pjsip_multipart_get_next_part @1905
+    pjsip_multipart_parse @1906
+    pjsip_mwi_accept @1907
+    pjsip_mwi_create_uac @1908
+    pjsip_mwi_create_uas @1909
+    pjsip_mwi_current_notify @1910
+    pjsip_mwi_init_module @1911
+    pjsip_mwi_initiate @1912
+    pjsip_mwi_instance @1913
+    pjsip_mwi_notify @1914
+    pjsip_mwi_send_request @1915
+    pjsip_mwi_terminate @1916
+    pjsip_name_addr_assign @1917
+    pjsip_name_addr_create @1918
+    pjsip_name_addr_init @1919
+    pjsip_notify_method @1920 DATA
+    pjsip_options_method @1921 DATA
+    pjsip_other_uri_create @1922
+    pjsip_param_clone @1923
+    pjsip_param_cmp @1924
+    pjsip_param_find @1925
+    pjsip_param_print_on @1926
+    pjsip_param_shallow_clone @1927
+    pjsip_parse_end_hdr_imp @1928
+    pjsip_parse_hdr @1929
+    pjsip_parse_headers @1930
+    pjsip_parse_msg @1931
+    pjsip_parse_param_imp @1932
+    pjsip_parse_rdata @1933
+    pjsip_parse_status_line @1934
+    pjsip_parse_uri @1935
+    pjsip_parse_uri_param_imp @1936
+    pjsip_parser_const @1937
+    pjsip_prack_method @1938 DATA
+    pjsip_pres_accept @1939
+    pjsip_pres_add_header @1940
+    pjsip_pres_create_pidf @1941
+    pjsip_pres_create_uac @1942
+    pjsip_pres_create_uas @1943
+    pjsip_pres_create_xpidf @1944
+    pjsip_pres_current_notify @1945
+    pjsip_pres_get_status @1946
+    pjsip_pres_init_module @1947
+    pjsip_pres_initiate @1948
+    pjsip_pres_instance @1949
+    pjsip_pres_notify @1950
+    pjsip_pres_parse_pidf @1951
+    pjsip_pres_parse_pidf2 @1952
+    pjsip_pres_parse_xpidf @1953
+    pjsip_pres_parse_xpidf2 @1954
+    pjsip_pres_send_request @1955
+    pjsip_pres_set_status @1956
+    pjsip_pres_terminate @1957
+    pjsip_print_text_body @1958
+    pjsip_process_route_set @1959
+    pjsip_proxy_authenticate_hdr_create @1960
+    pjsip_proxy_authorization_hdr_create @1961
+    pjsip_publish_method @1962 DATA
+    pjsip_publishc_create @1963
+    pjsip_publishc_destroy @1964
+    pjsip_publishc_get_pool @1965
+    pjsip_publishc_init @1966
+    pjsip_publishc_init_module @1967
+    pjsip_publishc_opt_default @1968
+    pjsip_publishc_publish @1969
+    pjsip_publishc_send @1970
+    pjsip_publishc_set_credentials @1971
+    pjsip_publishc_set_headers @1972
+    pjsip_publishc_set_route_set @1973
+    pjsip_publishc_set_via_sent_by @1974
+    pjsip_publishc_unpublish @1975
+    pjsip_publishc_update_expires @1976
+    pjsip_rdata_get_dlg @1977
+    pjsip_rdata_get_sdp_info @1978
+    pjsip_rdata_get_tsx @1979
+    pjsip_refer_method @1980 DATA
+    pjsip_regc_add_headers @1981
+    pjsip_regc_create @1982
+    pjsip_regc_destroy @1983
+    pjsip_regc_get_info @1984
+    pjsip_regc_get_pool @1985
+    pjsip_regc_init @1986
+    pjsip_regc_register @1987
+    pjsip_regc_release_transport @1988
+    pjsip_regc_send @1989
+    pjsip_regc_set_credentials @1990
+    pjsip_regc_set_delay_before_refresh @1991
+    pjsip_regc_set_prefs @1992
+    pjsip_regc_set_route_set @1993
+    pjsip_regc_set_transport @1994
+    pjsip_regc_set_via_sent_by @1995
+    pjsip_regc_unregister @1996
+    pjsip_regc_unregister_all @1997
+    pjsip_regc_update_contact @1998
+    pjsip_regc_update_expires @1999
+    pjsip_register_hdr_parser @2000
+    pjsip_register_method @2001 DATA
+    pjsip_register_uri_parser @2002
+    pjsip_replaces_hdr_create @2003
+    pjsip_replaces_init_module @2004
+    pjsip_replaces_verify_request @2005
+    pjsip_require_hdr_create @2006
+    pjsip_require_hdr_init @2007
+    pjsip_resolve @2008
+    pjsip_resolver_create @2009
+    pjsip_resolver_destroy @2010
+    pjsip_resolver_get_resolver @2011
+    pjsip_resolver_set_resolver @2012
+    pjsip_restore_strict_route_set @2013
+    pjsip_retry_after_hdr_create @2014
+    pjsip_retry_after_hdr_init @2015
+    pjsip_role_name @2016
+    pjsip_route_hdr_create @2017
+    pjsip_route_hdr_init @2018
+    pjsip_routing_hdr_set_route @2019
+    pjsip_routing_hdr_set_rr @2020
+    pjsip_rr_hdr_create @2021
+    pjsip_rr_hdr_init @2022
+    pjsip_rx_data_get_info @2023
+    pjsip_sess_expires_hdr_create @2024
+    pjsip_sip_cfg_var @2025 DATA
+    pjsip_sip_uri_assign @2026
+    pjsip_sip_uri_create @2027
+    pjsip_sip_uri_init @2028
+    pjsip_sip_uri_set_secure @2029
+    pjsip_strerror @2030
+    pjsip_sub_state_hdr_create @2031
+    pjsip_subscribe_method @2032 DATA
+    pjsip_supported_hdr_create @2033
+    pjsip_supported_hdr_init @2034
+    pjsip_target_assign_status @2035
+    pjsip_target_set_add_from_msg @2036
+    pjsip_target_set_add_uri @2037
+    pjsip_target_set_get_next @2038
+    pjsip_target_set_set_current @2039
+    pjsip_tcp_transport_cfg_default @2040
+    pjsip_tcp_transport_start @2041
+    pjsip_tcp_transport_start2 @2042
+    pjsip_tcp_transport_start3 @2043
+    pjsip_tel_nb_cmp @2044
+    pjsip_tel_uri_create @2045
+    pjsip_tel_uri_subsys_init @2046
+    pjsip_timer_end_session @2047
+    pjsip_timer_init_module @2048
+    pjsip_timer_init_session @2049
+    pjsip_timer_process_req @2050
+    pjsip_timer_process_resp @2051
+    pjsip_timer_setting_default @2052
+    pjsip_timer_update_req @2053
+    pjsip_timer_update_resp @2054
+    pjsip_to_hdr_create @2055
+    pjsip_to_hdr_init @2056
+    pjsip_tpmgr_acquire_transport @2057
+    pjsip_tpmgr_acquire_transport2 @2058
+    pjsip_tpmgr_create @2059
+    pjsip_tpmgr_destroy @2060
+    pjsip_tpmgr_dump_transports @2061
+    pjsip_tpmgr_find_local_addr @2062
+    pjsip_tpmgr_get_state_cb @2063
+    pjsip_tpmgr_get_transport_count @2064
+    pjsip_tpmgr_receive_packet @2065
+    pjsip_tpmgr_register_tpfactory @2066
+    pjsip_tpmgr_send_raw @2067
+    pjsip_tpmgr_set_state_cb @2068
+    pjsip_tpmgr_unregister_tpfactory @2069
+    pjsip_tpselector_add_ref @2070
+    pjsip_tpselector_dec_ref @2071
+    pjsip_transport_add_ref @2072
+    pjsip_transport_add_state_listener @2073
+    pjsip_transport_dec_ref @2074
+    pjsip_transport_destroy @2075
+    pjsip_transport_get_default_port_for_type @2076
+    pjsip_transport_get_flag_from_type @2077
+    pjsip_transport_get_type_desc @2078
+    pjsip_transport_get_type_from_flag @2079
+    pjsip_transport_get_type_from_name @2080
+    pjsip_transport_get_type_name @2081
+    pjsip_transport_register @2082
+    pjsip_transport_register_type @2083
+    pjsip_transport_remove_state_listener @2084
+    pjsip_transport_send @2085
+    pjsip_transport_shutdown @2086
+    pjsip_transport_type_get_af @2087
+    pjsip_tsx_create_key @2088
+    pjsip_tsx_create_uac @2089
+    pjsip_tsx_create_uas @2090
+    pjsip_tsx_get_dlg @2091
+    pjsip_tsx_get_evsub @2092
+    pjsip_tsx_layer_destroy @2093
+    pjsip_tsx_layer_dump @2094
+    pjsip_tsx_layer_find_tsx @2095
+    pjsip_tsx_layer_get_tsx_count @2096
+    pjsip_tsx_layer_init_module @2097
+    pjsip_tsx_layer_instance @2098
+    pjsip_tsx_recv_msg @2099
+    pjsip_tsx_retransmit_no_state @2100
+    pjsip_tsx_send_msg @2101
+    pjsip_tsx_set_timeout @2102
+    pjsip_tsx_set_transport @2103
+    pjsip_tsx_state_str @2104
+    pjsip_tsx_stop_retransmit @2105
+    pjsip_tsx_terminate @2106
+    pjsip_tx_data_add_ref @2107
+    pjsip_tx_data_create @2108
+    pjsip_tx_data_dec_ref @2109
+    pjsip_tx_data_encode @2110
+    pjsip_tx_data_get_info @2111
+    pjsip_tx_data_invalidate_msg @2112
+    pjsip_tx_data_is_valid @2113
+    pjsip_tx_data_set_transport @2114
+    pjsip_ua_destroy @2115
+    pjsip_ua_dump @2116
+    pjsip_ua_find_dialog @2117
+    pjsip_ua_get_dlg_set_count @2118
+    pjsip_ua_get_endpt @2119
+    pjsip_ua_init_module @2120
+    pjsip_ua_instance @2121
+    pjsip_ua_register_dlg @2122
+    pjsip_ua_unregister_dlg @2123
+    pjsip_udp_transport_attach @2124
+    pjsip_udp_transport_attach2 @2125
+    pjsip_udp_transport_get_socket @2126
+    pjsip_udp_transport_pause @2127
+    pjsip_udp_transport_restart @2128
+    pjsip_udp_transport_start @2129
+    pjsip_udp_transport_start6 @2130
+    pjsip_unsupported_hdr_create @2131
+    pjsip_unsupported_hdr_init @2132
+    pjsip_update_method @2133 DATA
+    pjsip_use_compact_form @2134 DATA
+    pjsip_via_hdr_create @2135
+    pjsip_via_hdr_init @2136
+    pjsip_warning_hdr_create @2137
+    pjsip_warning_hdr_create_from_status @2138
+    pjsip_www_authenticate_hdr_create @2139
+    pjsip_xfer_accept @2140
+    pjsip_xfer_create_uac @2141
+    pjsip_xfer_create_uas @2142
+    pjsip_xfer_current_notify @2143
+    pjsip_xfer_init_module @2144
+    pjsip_xfer_initiate @2145
+    pjsip_xfer_notify @2146
+    pjsip_xfer_send_request @2147
+    pjsipsimple_strerror @2148
+    pjstun_create_bind_req @2149
+    pjstun_get_mapped_addr @2150
+    pjstun_msg_find_attr @2151
+    pjstun_parse_msg @2152
+    pjsua_acc_add @2153
+    pjsua_acc_add_local @2154
+    pjsua_acc_config_default @2155
+    pjsua_acc_config_dup @2156
+    pjsua_acc_create_request @2157
+    pjsua_acc_create_uac_contact @2158
+    pjsua_acc_create_uas_contact @2159
+    pjsua_acc_del @2160
+    pjsua_acc_enum_info @2161
+    pjsua_acc_find_for_incoming @2162
+    pjsua_acc_find_for_outgoing @2163
+    pjsua_acc_get_config @2164
+    pjsua_acc_get_count @2165
+    pjsua_acc_get_default @2166
+    pjsua_acc_get_info @2167
+    pjsua_acc_get_user_data @2168
+    pjsua_acc_is_valid @2169
+    pjsua_acc_modify @2170
+    pjsua_acc_on_tp_state_changed @2171
+    pjsua_acc_set_default @2172
+    pjsua_acc_set_online_status @2173
+    pjsua_acc_set_online_status2 @2174
+    pjsua_acc_set_registration @2175
+    pjsua_acc_set_transport @2176
+    pjsua_acc_set_user_data @2177
+    pjsua_aud_channel_update @2178
+    pjsua_aud_stop_stream @2179
+    pjsua_aud_subsys_destroy @2180
+    pjsua_aud_subsys_init @2181
+    pjsua_aud_subsys_start @2182
+    pjsua_buddy_add @2183
+    pjsua_buddy_config_default @2184
+    pjsua_buddy_del @2185
+    pjsua_buddy_find @2186
+    pjsua_buddy_get_info @2187
+    pjsua_buddy_get_user_data @2188
+    pjsua_buddy_is_valid @2189
+    pjsua_buddy_set_user_data @2190
+    pjsua_buddy_subscribe_pres @2191
+    pjsua_buddy_update_pres @2192
+    pjsua_call_answer @2193
+    pjsua_call_answer2 @2194
+    pjsua_call_dial_dtmf @2195
+    pjsua_call_get_conf_port @2196
+    pjsua_call_get_count @2197
+    pjsua_call_get_info @2198
+    pjsua_call_get_max_count @2199
+    pjsua_call_get_med_transport_info @2200
+    pjsua_call_get_rem_nat_type @2201
+    pjsua_call_get_stream_info @2202
+    pjsua_call_get_stream_stat @2203
+    pjsua_call_get_user_data @2204
+    pjsua_call_hangup @2205
+    pjsua_call_hangup_all @2206
+    pjsua_call_has_media @2207
+    pjsua_call_is_active @2208
+    pjsua_call_make_call @2209
+    pjsua_call_media_init @2210
+    pjsua_call_on_incoming @2211
+    pjsua_call_process_redirect @2212
+    pjsua_call_reinvite @2213
+    pjsua_call_reinvite2 @2214
+    pjsua_call_remote_has_cap @2215
+    pjsua_call_send_im @2216
+    pjsua_call_send_request @2217
+    pjsua_call_send_typing_ind @2218
+    pjsua_call_set_hold @2219
+    pjsua_call_set_user_data @2220
+    pjsua_call_setting_default @2221
+    pjsua_call_subsys_init @2222
+    pjsua_call_subsys_start @2223
+    pjsua_call_update @2224
+    pjsua_call_update2 @2225
+    pjsua_call_xfer @2226
+    pjsua_call_xfer_replaces @2227
+    pjsua_cancel_stun_resolution @2228
+    pjsua_cancel_timer @2229
+    pjsua_check_snd_dev_idle @2230
+    pjsua_codec_get_param @2231
+    pjsua_codec_set_param @2232
+    pjsua_codec_set_priority @2233
+    pjsua_conf_add_port @2234
+    pjsua_conf_adjust_rx_level @2235
+    pjsua_conf_adjust_tx_level @2236
+    pjsua_conf_connect @2237
+    pjsua_conf_disconnect @2238
+    pjsua_conf_get_active_ports @2239
+    pjsua_conf_get_max_ports @2240
+    pjsua_conf_get_port_info @2241
+    pjsua_conf_get_signal_level @2242
+    pjsua_conf_remove_port @2243
+    pjsua_config_default @2244
+    pjsua_config_dup @2245
+    pjsua_create @2246
+    pjsua_destroy @2247
+    pjsua_destroy2 @2248
+    pjsua_detect_nat_type @2249
+    pjsua_dump @2250
+    pjsua_enum_accs @2251
+    pjsua_enum_aud_devs @2252
+    pjsua_enum_buddies @2253
+    pjsua_enum_calls @2254
+    pjsua_enum_codecs @2255
+    pjsua_enum_conf_ports @2256
+    pjsua_enum_snd_devs @2257
+    pjsua_enum_transports @2258
+    pjsua_get_buddy_count @2259
+    pjsua_get_ec_tail @2260
+    pjsua_get_nat_type @2261
+    pjsua_get_pjmedia_endpt @2262
+    pjsua_get_pjsip_endpt @2263
+    pjsua_get_pool_factory @2264
+    pjsua_get_snd_dev @2265
+    pjsua_get_state @2266
+    pjsua_get_var @2267
+    pjsua_handle_events @2268
+    pjsua_im_accept_pager @2269
+    pjsua_im_create_accept @2270
+    pjsua_im_init @2271
+    pjsua_im_process_pager @2272
+    pjsua_im_send @2273
+    pjsua_im_typing @2274
+    pjsua_init @2275
+    pjsua_init_tpselector @2276
+    pjsua_logging_config_default @2277
+    pjsua_logging_config_dup @2278
+    pjsua_media_apply_xml_control @2279
+    pjsua_media_channel_create_sdp @2280
+    pjsua_media_channel_deinit @2281
+    pjsua_media_channel_init @2282
+    pjsua_media_channel_update @2283
+    pjsua_media_config_default @2284
+    pjsua_media_prov_clean_up @2285
+    pjsua_media_subsys_destroy @2286
+    pjsua_media_subsys_init @2287
+    pjsua_media_subsys_start @2288
+    pjsua_msg_data_clone @2289
+    pjsua_msg_data_init @2290
+    pjsua_parse_media_type @2291
+    pjsua_perror @2292
+    pjsua_player_create @2293
+    pjsua_player_destroy @2294
+    pjsua_player_get_conf_port @2295
+    pjsua_player_get_port @2296
+    pjsua_player_set_pos @2297
+    pjsua_playlist_create @2298
+    pjsua_pool_create @2299
+    pjsua_pres_delete_acc @2300
+    pjsua_pres_dump @2301
+    pjsua_pres_init @2302
+    pjsua_pres_init_acc @2303
+    pjsua_pres_init_publish_acc @2304
+    pjsua_pres_notify @2305
+    pjsua_pres_shutdown @2306
+    pjsua_pres_start @2307
+    pjsua_pres_unpublish @2308
+    pjsua_pres_update_acc @2309
+    pjsua_process_msg_data @2310
+    pjsua_reconfigure_logging @2311
+    pjsua_recorder_create @2312
+    pjsua_recorder_destroy @2313
+    pjsua_recorder_get_conf_port @2314
+    pjsua_recorder_get_port @2315
+    pjsua_resolve_stun_servers @2316
+    pjsua_schedule_timer @2317
+    pjsua_schedule_timer2 @2318
+    pjsua_set_ec @2319
+    pjsua_set_media_tp_state @2320
+    pjsua_set_msg_route_set @2321
+    pjsua_set_no_snd_dev @2322
+    pjsua_set_null_snd_dev @2323
+    pjsua_set_snd_dev @2324
+    pjsua_set_state @2325
+    pjsua_snd_get_setting @2326
+    pjsua_snd_is_active @2327
+    pjsua_snd_set_setting @2328
+    pjsua_start @2329
+    pjsua_start_mwi @2330
+    pjsua_transport_close @2331
+    pjsua_transport_config_default @2332
+    pjsua_transport_config_dup @2333
+    pjsua_transport_create @2334
+    pjsua_transport_get_info @2335
+    pjsua_transport_register @2336
+    pjsua_transport_set_enable @2337
+    pjsua_var @2338 DATA
+    pjsua_verify_sip_url @2339
+    pjsua_verify_url @2340
+    pjxpidf_create @2341
+    pjxpidf_get_status @2342
+    pjxpidf_get_uri @2343
+    pjxpidf_parse @2344
+    pjxpidf_print @2345
+    pjxpidf_set_status @2346
+    pjxpidf_set_uri @2347
+    platform_strerror @2348
+    polarssl_sha1 @2349
+    polarssl_sha1_file @2350
+    polarssl_sha1_finish @2351
+    polarssl_sha1_hmac @2352
+    polarssl_sha1_hmac_finish @2353
+    polarssl_sha1_hmac_reset @2354
+    polarssl_sha1_hmac_starts @2355
+    polarssl_sha1_hmac_update @2356
+    polarssl_sha1_self_test @2357
+    polarssl_sha1_starts @2358
+    polarssl_sha1_update @2359
+    polyphaserTbl @2360 DATA
+    pthread_cond_broadcast @2361
+    pthread_cond_destroy @2362
+    pthread_cond_init @2363
+    pthread_cond_signal @2364
+    pthread_cond_wait @2365
+    pthread_mutex_destroy @2366
+    pthread_mutex_init @2367
+    pthread_mutex_lock @2368
+    pthread_mutex_unlock @2369
+    pthread_self @2370
+    qaul_captive_running @2371 DATA
+    qaul_chunksize @2372 DATA
+    qaul_conf_quit @2373 DATA
+    qaul_conf_voip @2374 DATA
+    qaul_configured @2375 DATA
+    qaul_dhcp_LL_count @2376 DATA
+    qaul_dhcp_thread @2377 DATA
+    qaul_dns_thread @2378 DATA
+    qaul_gui_pagename_set @2379 DATA
+    qaul_in_msg @2380 DATA
+    qaul_ip_addr @2381 DATA
+    qaul_ip_captive @2382 DATA
+    qaul_ip_set @2383 DATA
+    qaul_ip_size @2384 DATA
+    qaul_ip_str @2385 DATA
+    qaul_ip_version @2386 DATA
+    qaul_loading_wait @2387 DATA
+    qaul_locale @2388 DATA
+    qaul_locale_set @2389 DATA
+    qaul_net_bssid @2390 DATA
+    qaul_net_gateway @2391 DATA
+    qaul_net_ibss @2392 DATA
+    qaul_new_msg @2393 DATA
+    qaul_user_LL_count @2394 DATA
+    qaul_user_LL_id @2395 DATA
+    qaul_username @2396 DATA
+    qaul_username_set @2397 DATA
+    qaul_voip_LL_count @2398 DATA
+    qaul_voip_call @2399 DATA
+    qaul_voip_event @2400 DATA
+    qaul_voip_event_code @2401 DATA
+    qaul_voip_new_call @2402 DATA
+    qaullib_AppEventOpenPath @2403 DATA
+    qaullib_GuiPageName @2404 DATA
+    qaullib_mutex_userLL @2405 DATA
+    qaullib_pthread_start @2406
+    qmf_decomp @2407
+    qmf_synth @2408
+    rand_source_deinit @2409
+    rand_source_get_octet_string @2410
+    rand_source_init @2411
+    rdb_add_index @2412
+    rdb_check @2413
+    rdb_get_value @2414
+    rdb_increment @2415
+    rdb_init @2416
+    rdbx_add_index @2417
+    rdbx_check @2418
+    rdbx_estimate_index @2419
+    rdbx_init @2420
+    readdir @2421
+    refiner @2422
+    reltime_to_me @2423
+    res_GetXOFF @2424
+    res_Resample @2425
+    res_SrcLinear @2426
+    residue_percep_zero16 @2427
+    resolve_stun_server @2428
+    rx_qmf @2429
+    sanitize_values32 @2430
+    sb_decode @2431
+    sb_decoder_ctl @2432
+    sb_decoder_destroy @2433
+    sb_decoder_init @2434
+    sb_encode @2435
+    sb_encoder_ctl @2436
+    sb_encoder_destroy @2437
+    sb_encoder_init @2438
+    scal_quant @2439
+    scal_quant32 @2440
+    searchAugmentedCB @2441
+    search_rangeTbl @2442 DATA
+    sha1 @2443
+    sha1_core @2444
+    sha1_final @2445
+    sha1_init @2446
+    sha1_update @2447
+    shift_filt @2448 DATA
+    signal_div @2449
+    signal_mul @2450
+    size_lsfCbTbl @2451 DATA
+    sleep @2452
+    smath @2453
+    sort_sq @2454
+    speex_aec_cancel_echo @2455
+    speex_aec_create @2456
+    speex_aec_destroy @2457
+    speex_aec_reset @2458
+    speex_bits_advance @2459
+    speex_bits_destroy @2460
+    speex_bits_init @2461
+    speex_bits_init_buffer @2462
+    speex_bits_insert_terminator @2463
+    speex_bits_nbytes @2464
+    speex_bits_pack @2465
+    speex_bits_peek @2466
+    speex_bits_peek_unsigned @2467
+    speex_bits_read_from @2468
+    speex_bits_read_whole_bytes @2469
+    speex_bits_remaining @2470
+    speex_bits_reset @2471
+    speex_bits_rewind @2472
+    speex_bits_set_bit_buffer @2473
+    speex_bits_unpack_signed @2474
+    speex_bits_unpack_unsigned @2475
+    speex_bits_write @2476
+    speex_bits_write_whole_bytes @2477
+    speex_decode @2478
+    speex_decode_int @2479
+    speex_decode_native @2480
+    speex_decoder_ctl @2481
+    speex_decoder_destroy @2482
+    speex_decoder_init @2483
+    speex_default_user_handler @2484
+    speex_echo_cancel @2485
+    speex_echo_cancellation @2486
+    speex_echo_capture @2487
+    speex_echo_ctl @2488
+    speex_echo_get_residual @2489
+    speex_echo_playback @2490
+    speex_echo_state_destroy @2491
+    speex_echo_state_init @2492
+    speex_echo_state_reset @2493
+    speex_encode @2494
+    speex_encode_int @2495
+    speex_encode_native @2496
+    speex_encoder_ctl @2497
+    speex_encoder_destroy @2498
+    speex_encoder_init @2499
+    speex_get_next_frame @2500
+    speex_inband_handler @2501
+    speex_lib_ctl @2502
+    speex_lib_get_mode @2503
+    speex_mode_list @2504 DATA
+    speex_mode_query @2505
+    speex_nb_mode @2506 DATA
+    speex_preprocess @2507
+    speex_preprocess_ctl @2508
+    speex_preprocess_estimate_update @2509
+    speex_preprocess_run @2510
+    speex_preprocess_state_destroy @2511
+    speex_preprocess_state_init @2512
+    speex_std_char_handler @2513
+    speex_std_enh_request_handler @2514
+    speex_std_high_mode_request_handler @2515
+    speex_std_low_mode_request_handler @2516
+    speex_std_mode_request_handler @2517
+    speex_std_vbr_quality_request_handler @2518
+    speex_std_vbr_request_handler @2519
+    speex_uwb_mode @2520 DATA
+    speex_wb_mode @2521 DATA
+    split_cb_search_shape_sign @2522
+    split_cb_shape_sign_unquant @2523
+    spx_drft_backward @2524
+    spx_drft_clear @2525
+    spx_drft_forward @2526
+    spx_drft_init @2527
+    spx_fft @2528
+    spx_fft_destroy @2529
+    spx_fft_float @2530
+    spx_fft_init @2531
+    spx_ifft @2532
+    spx_ifft_float @2533
+    sqlite3_aggregate_context @2534
+    sqlite3_aggregate_count @2535
+    sqlite3_auto_extension @2536
+    sqlite3_backup_finish @2537
+    sqlite3_backup_init @2538
+    sqlite3_backup_pagecount @2539
+    sqlite3_backup_remaining @2540
+    sqlite3_backup_step @2541
+    sqlite3_bind_blob @2542
+    sqlite3_bind_double @2543
+    sqlite3_bind_int @2544
+    sqlite3_bind_int64 @2545
+    sqlite3_bind_null @2546
+    sqlite3_bind_parameter_count @2547
+    sqlite3_bind_parameter_index @2548
+    sqlite3_bind_parameter_name @2549
+    sqlite3_bind_text @2550
+    sqlite3_bind_text16 @2551
+    sqlite3_bind_value @2552
+    sqlite3_bind_zeroblob @2553
+    sqlite3_blob_bytes @2554
+    sqlite3_blob_close @2555
+    sqlite3_blob_open @2556
+    sqlite3_blob_read @2557
+    sqlite3_blob_reopen @2558
+    sqlite3_blob_write @2559
+    sqlite3_busy_handler @2560
+    sqlite3_busy_timeout @2561
+    sqlite3_changes @2562
+    sqlite3_clear_bindings @2563
+    sqlite3_close @2564
+    sqlite3_collation_needed @2565
+    sqlite3_collation_needed16 @2566
+    sqlite3_column_blob @2567
+    sqlite3_column_bytes @2568
+    sqlite3_column_bytes16 @2569
+    sqlite3_column_count @2570
+    sqlite3_column_decltype @2571
+    sqlite3_column_decltype16 @2572
+    sqlite3_column_double @2573
+    sqlite3_column_int @2574
+    sqlite3_column_int64 @2575
+    sqlite3_column_name @2576
+    sqlite3_column_name16 @2577
+    sqlite3_column_text @2578
+    sqlite3_column_text16 @2579
+    sqlite3_column_type @2580
+    sqlite3_column_value @2581
+    sqlite3_commit_hook @2582
+    sqlite3_compileoption_get @2583
+    sqlite3_compileoption_used @2584
+    sqlite3_complete @2585
+    sqlite3_complete16 @2586
+    sqlite3_config @2587
+    sqlite3_context_db_handle @2588
+    sqlite3_create_collation @2589
+    sqlite3_create_collation16 @2590
+    sqlite3_create_collation_v2 @2591
+    sqlite3_create_function @2592
+    sqlite3_create_function16 @2593
+    sqlite3_create_function_v2 @2594
+    sqlite3_create_module @2595
+    sqlite3_create_module_v2 @2596
+    sqlite3_data_count @2597
+    sqlite3_db_config @2598
+    sqlite3_db_filename @2599
+    sqlite3_db_handle @2600
+    sqlite3_db_mutex @2601
+    sqlite3_db_readonly @2602
+    sqlite3_db_release_memory @2603
+    sqlite3_db_status @2604
+    sqlite3_declare_vtab @2605
+    sqlite3_enable_load_extension @2606
+    sqlite3_enable_shared_cache @2607
+    sqlite3_errcode @2608
+    sqlite3_errmsg @2609
+    sqlite3_errmsg16 @2610
+    sqlite3_exec @2611
+    sqlite3_expired @2612
+    sqlite3_extended_errcode @2613
+    sqlite3_extended_result_codes @2614
+    sqlite3_file_control @2615
+    sqlite3_finalize @2616
+    sqlite3_free @2617
+    sqlite3_free_table @2618
+    sqlite3_get_autocommit @2619
+    sqlite3_get_auxdata @2620
+    sqlite3_get_table @2621
+    sqlite3_global_recover @2622
+    sqlite3_initialize @2623
+    sqlite3_interrupt @2624
+    sqlite3_last_insert_rowid @2625
+    sqlite3_libversion @2626
+    sqlite3_libversion_number @2627
+    sqlite3_limit @2628
+    sqlite3_load_extension @2629
+    sqlite3_log @2630
+    sqlite3_malloc @2631
+    sqlite3_memory_alarm @2632
+    sqlite3_memory_highwater @2633
+    sqlite3_memory_used @2634
+    sqlite3_mprintf @2635
+    sqlite3_mutex_alloc @2636
+    sqlite3_mutex_enter @2637
+    sqlite3_mutex_free @2638
+    sqlite3_mutex_leave @2639
+    sqlite3_mutex_try @2640
+    sqlite3_next_stmt @2641
+    sqlite3_open @2642
+    sqlite3_open16 @2643
+    sqlite3_open_v2 @2644
+    sqlite3_os_end @2645
+    sqlite3_os_init @2646
+    sqlite3_overload_function @2647
+    sqlite3_prepare @2648
+    sqlite3_prepare16 @2649
+    sqlite3_prepare16_v2 @2650
+    sqlite3_prepare_v2 @2651
+    sqlite3_profile @2652
+    sqlite3_progress_handler @2653
+    sqlite3_randomness @2654
+    sqlite3_realloc @2655
+    sqlite3_release_memory @2656
+    sqlite3_reset @2657
+    sqlite3_reset_auto_extension @2658
+    sqlite3_result_blob @2659
+    sqlite3_result_double @2660
+    sqlite3_result_error @2661
+    sqlite3_result_error16 @2662
+    sqlite3_result_error_code @2663
+    sqlite3_result_error_nomem @2664
+    sqlite3_result_error_toobig @2665
+    sqlite3_result_int @2666
+    sqlite3_result_int64 @2667
+    sqlite3_result_null @2668
+    sqlite3_result_text @2669
+    sqlite3_result_text16 @2670
+    sqlite3_result_text16be @2671
+    sqlite3_result_text16le @2672
+    sqlite3_result_value @2673
+    sqlite3_result_zeroblob @2674
+    sqlite3_rollback_hook @2675
+    sqlite3_set_authorizer @2676
+    sqlite3_set_auxdata @2677
+    sqlite3_shutdown @2678
+    sqlite3_sleep @2679
+    sqlite3_snprintf @2680
+    sqlite3_soft_heap_limit @2681
+    sqlite3_soft_heap_limit64 @2682
+    sqlite3_sourceid @2683
+    sqlite3_sql @2684
+    sqlite3_status @2685
+    sqlite3_step @2686
+    sqlite3_stmt_busy @2687
+    sqlite3_stmt_readonly @2688
+    sqlite3_stmt_status @2689
+    sqlite3_stricmp @2690
+    sqlite3_strnicmp @2691
+    sqlite3_temp_directory @2692 DATA
+    sqlite3_test_control @2693
+    sqlite3_thread_cleanup @2694
+    sqlite3_threadsafe @2695
+    sqlite3_total_changes @2696
+    sqlite3_trace @2697
+    sqlite3_transfer_bindings @2698
+    sqlite3_update_hook @2699
+    sqlite3_uri_boolean @2700
+    sqlite3_uri_int64 @2701
+    sqlite3_uri_parameter @2702
+    sqlite3_user_data @2703
+    sqlite3_value_blob @2704
+    sqlite3_value_bytes @2705
+    sqlite3_value_bytes16 @2706
+    sqlite3_value_double @2707
+    sqlite3_value_int @2708
+    sqlite3_value_int64 @2709
+    sqlite3_value_numeric_type @2710
+    sqlite3_value_text @2711
+    sqlite3_value_text16 @2712
+    sqlite3_value_text16be @2713
+    sqlite3_value_text16le @2714
+    sqlite3_value_type @2715
+    sqlite3_version @2716 DATA
+    sqlite3_vfs_find @2717
+    sqlite3_vfs_register @2718
+    sqlite3_vfs_unregister @2719
+    sqlite3_vmprintf @2720
+    sqlite3_vsnprintf @2721
+    sqlite3_vtab_config @2722
+    sqlite3_vtab_on_conflict @2723
+    sqlite3_wal_autocheckpoint @2724
+    sqlite3_wal_checkpoint @2725
+    sqlite3_wal_checkpoint_v2 @2726
+    sqlite3_wal_hook @2727
+    sqlite3_win32_mbcs_to_utf8 @2728
+    sqlite3_win32_utf8_to_mbcs @2729
+    srtp_add_stream @2730
+    srtp_create @2731
+    srtp_dealloc @2732
+    srtp_deinit @2733
+    srtp_event_reporter @2734
+    srtp_get_stream @2735
+    srtp_init @2736
+    srtp_install_event_handler @2737
+    srtp_kdf_clear @2738
+    srtp_kdf_generate @2739
+    srtp_kdf_init @2740
+    srtp_profile_get_master_key_length @2741
+    srtp_profile_get_master_salt_length @2742
+    srtp_protect @2743
+    srtp_protect_rtcp @2744
+    srtp_remove_stream @2745
+    srtp_stream_alloc @2746
+    srtp_stream_clone @2747
+    srtp_stream_dealloc @2748
+    srtp_stream_init @2749
+    srtp_stream_init_keys @2750
+    srtp_unprotect @2751
+    srtp_unprotect_rtcp @2752
+    stMemLTbl @2753 DATA
+    stack_based_factory @2754 DATA
+    stat_test_monobit @2755
+    stat_test_poker @2756
+    stat_test_rand_source @2757
+    stat_test_rand_source_with_repetition @2758
+    stat_test_runs @2759
+    state_frgqTbl @2760 DATA
+    state_names @2761 DATA
+    state_sq3Tbl @2762 DATA
+    strcasecmp @2763
+    strncasecmp @2764
+    strscpy @2765
+    syn_percep_zero16 @2766
+    syntFilter @2767
+    tag_100rel @2768 DATA
+    transport_names @2769 DATA
+    unpack @2770
+    update_service_route @2771
+    userconnections @2772 DATA
+    v128_bit_string @2773
+    v128_copy_octet_string @2774
+    v128_hex_string @2775
+    v128_left_shift @2776
+    v128_right_shift @2777
+    vbr_analysis @2778
+    vbr_destroy @2779
+    vbr_hb_thresh @2780 DATA
+    vbr_init @2781
+    vbr_nb_thresh @2782 DATA
+    vbr_uhb_thresh @2783 DATA
+    vq @2784
+    vq_nbest @2785
+    vq_nbest_sign @2786
+    wb_mode_query @2787
+    webPath @2788 DATA
+    winSysInfo @2789 DATA
+    window @2790
+    xCorrCoef @2791

@@ -8,20 +8,21 @@ qaul.net works on:
 Installation and Compile Instructions
 --------------------------------------
 
-Compile pjproject with MinGW (doesn't compile for me)
+Compile pjproject with mingw
+    
+	cd pjproject-2.0.1
+	./aconfigure --disable-ssl CFLAGS='-m32' LDFLAGS='-m32'
+	make dep
+    make
 
-Compile pjproject with Visual Studio Express 2008
+if make dep gives you - #error "PJ_HAS_HIGH_RES_TIMER is not defined!" - errors, download the pjproject as a zip from
+the web and extract it again - this is a known error http://trac.pjsip.org/repos/wiki/FAQ#mingw-configure
 
-    cd pjproject-2.0.1
-    ./configure --enable-shared --disable-static --enable-memalign-hack
-    make 
-    cd ..
-
-Compile libqaul.dll with Windows Power shell
+Compile libqaul.dll with MinGw
 
     cd libqaul
-    make win
-    cd ..
+    make OS=win
+    cd ../
 
 qaul.net is written in Visual C++ (managed code)
 
@@ -38,6 +39,8 @@ Open Visual Studio and run qaul.net
 ### Optional
 
 To develop and compile olsrd, olsrd_qaul plugin you will need to install MinGW
+* download and install mingw
+  http://sourceforge.net/projects/mingw/files/
 
 Compile olsrd
 

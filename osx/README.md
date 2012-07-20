@@ -29,7 +29,7 @@ Compile static qaullib
 
     # uncomment in libqaul/Makefile the line '#OSX_CFLAGS=-arch i386' to 'OSX_CFLAGS=-arch i386'
     cd libqaul
-    make osx
+    make OS=osx
     cd ../
 
 Open the OSX project in Xcode to run qaul.net

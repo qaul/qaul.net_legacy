@@ -25,7 +25,7 @@ Compile olsrd_qaul plugin
 Compile static qaullib
 
     cd libqaul
-    make linux
+    make OS=linux
     cd ../
 
 Compile pjp library for VoIP
