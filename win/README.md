@@ -9,6 +9,7 @@ Installation and Compile Instructions
 --------------------------------------
 
 Compile pjproject with mingw
+(at the end of compilation, pjlib-test will throw an error, ignore that error)
     
 	cd pjproject-2.0.1
 	./aconfigure --disable-ssl CFLAGS='-m32' LDFLAGS='-m32'

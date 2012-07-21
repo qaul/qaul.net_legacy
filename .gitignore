@@ -87,6 +87,7 @@ portfwd/tools/udp_snd
 
 # exclude other versioning systems
 CVS
+.svn
 
 # www folder
 www/files/*.dmg

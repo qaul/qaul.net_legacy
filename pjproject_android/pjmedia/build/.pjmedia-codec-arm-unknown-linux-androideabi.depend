@@ -1,0 +1,710 @@
+output/pjmedia-codec-arm-unknown-linux-androideabi/audio_codecs.o: ../src/pjmedia-codec/audio_codecs.c \
+ ../include/pjmedia-codec.h ../include/pjmedia-codec/audio_codecs.h \
+ ../include/pjmedia/endpoint.h ../include/pjmedia/codec.h \
+ ../include/pjmedia/port.h ../include/pjmedia/clock.h \
+ ../include/pjmedia/types.h ../include/pjmedia/config.h \
+ ../../pjlib/include/pj/config.h ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../include/pjmedia/event.h \
+ ../include/pjmedia/format.h ../include/pjmedia/signatures.h \
+ ../include/pjmedia/frame.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h \
+ ../../pjlib/include/pj/assert.h ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ ../../pjlib/include/pj/os.h ../../pjlib/include/pj/errno.h \
+ ../../pjlib/include/pj/compat/errno.h ../../pjlib/include/pj/list.h \
+ ../../pjlib/include/pj/pool.h ../include/pjmedia/sdp.h \
+ ../include/pjmedia/transport.h ../include/pjmedia/errno.h \
+ ../include/pjmedia-codec/passthrough.h ../include/pjmedia-codec/types.h \
+ ../include/pjmedia-codec/config.h ../include/pjmedia-codec/config_auto.h \
+ ../include/pjmedia-codec/l16.h \
+ ../include/pjmedia-codec/ffmpeg_vid_codecs.h \
+ ../include/pjmedia/vid_codec.h ../include/pjmedia-codec/gsm.h \
+ ../include/pjmedia-codec/speex.h ../include/pjmedia-codec/ilbc.h \
+ ../include/pjmedia-codec/g722.h ../include/pjmedia-codec/g7221.h \
+ ../include/pjmedia-codec/ipp_codecs.h \
+ ../include/pjmedia-codec/opencore_amrnb.h ../include/pjmedia/g711.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/ffmpeg_vid_codecs.o: ../src/pjmedia-codec/ffmpeg_vid_codecs.c \
+ ../include/pjmedia-codec/ffmpeg_vid_codecs.h \
+ ../include/pjmedia-codec/types.h ../include/pjmedia-codec/config.h \
+ ../include/pjmedia/types.h ../include/pjmedia/config.h \
+ ../../pjlib/include/pj/config.h ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../include/pjmedia-codec/config_auto.h \
+ ../include/pjmedia/codec.h ../include/pjmedia/port.h \
+ ../include/pjmedia/clock.h ../include/pjmedia/event.h \
+ ../include/pjmedia/format.h ../include/pjmedia/signatures.h \
+ ../include/pjmedia/frame.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h \
+ ../../pjlib/include/pj/assert.h ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ ../../pjlib/include/pj/os.h ../../pjlib/include/pj/errno.h \
+ ../../pjlib/include/pj/compat/errno.h ../../pjlib/include/pj/list.h \
+ ../../pjlib/include/pj/pool.h ../include/pjmedia/vid_codec.h \
+ ../include/pjmedia-codec/h263_packetizer.h \
+ ../include/pjmedia-codec/h264_packetizer.h ../include/pjmedia/errno.h \
+ ../include/pjmedia/vid_codec_util.h ../include/pjmedia/sdp_neg.h \
+ ../include/pjmedia/sdp.h ../../pjlib/include/pj/log.h \
+ ../../pjlib/include/pj/math.h \
+ ../../pjlib/include/pj/compat/high_precision.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/h263_packetizer.o: ../src/pjmedia-codec/h263_packetizer.c \
+ ../include/pjmedia-codec/h263_packetizer.h ../../pjlib/include/pj/pool.h \
+ ../../pjlib/include/pj/list.h ../../pjlib/include/pj/types.h \
+ ../../pjlib/include/pj/config.h ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h ../include/pjmedia/types.h \
+ ../include/pjmedia/config.h ../include/pjmedia/config_auto.h \
+ ../../pjlib/include/pj/sock.h ../../pjlib/include/pj/assert.h \
+ ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ ../../pjlib/include/pj/errno.h ../../pjlib/include/pj/compat/errno.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ ../../pjlib/include/pj/string.h ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/h264_packetizer.o: ../src/pjmedia-codec/h264_packetizer.c \
+ ../include/pjmedia-codec/h264_packetizer.h \
+ ../../pjlib/include/pj/types.h ../../pjlib/include/pj/config.h \
+ ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h ../include/pjmedia/types.h \
+ ../include/pjmedia/config.h ../include/pjmedia/config_auto.h \
+ ../../pjlib/include/pj/sock.h ../../pjlib/include/pj/assert.h \
+ ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ ../../pjlib/include/pj/errno.h ../../pjlib/include/pj/compat/errno.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ ../../pjlib/include/pj/log.h ../../pjlib/include/pj/pool.h \
+ ../../pjlib/include/pj/list.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/ipp_codecs.o: ../src/pjmedia-codec/ipp_codecs.c \
+ ../include/pjmedia-codec/ipp_codecs.h ../include/pjmedia-codec/types.h \
+ ../include/pjmedia-codec/config.h ../include/pjmedia/types.h \
+ ../include/pjmedia/config.h ../../pjlib/include/pj/config.h \
+ ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../include/pjmedia-codec/config_auto.h \
+ ../include/pjmedia/codec.h ../include/pjmedia/port.h \
+ ../include/pjmedia/clock.h ../include/pjmedia/event.h \
+ ../include/pjmedia/format.h ../include/pjmedia/signatures.h \
+ ../include/pjmedia/frame.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h \
+ ../../pjlib/include/pj/assert.h ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ ../../pjlib/include/pj/os.h ../../pjlib/include/pj/errno.h \
+ ../../pjlib/include/pj/compat/errno.h ../../pjlib/include/pj/list.h \
+ ../../pjlib/include/pj/pool.h ../include/pjmedia-codec/amr_sdp_match.h \
+ ../include/pjmedia/sdp_neg.h ../include/pjmedia/sdp.h \
+ ../include/pjmedia-codec/g7221_sdp_match.h ../include/pjmedia/errno.h \
+ ../include/pjmedia/endpoint.h ../include/pjmedia/transport.h \
+ ../include/pjmedia/plc.h ../include/pjmedia/silencedet.h \
+ ../../pjlib/include/pj/log.h ../../pjlib/include/pj/math.h \
+ ../../pjlib/include/pj/compat/high_precision.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/l16.o: ../src/pjmedia-codec/l16.c ../include/pjmedia-codec/l16.h \
+ ../include/pjmedia-codec/types.h ../include/pjmedia-codec/config.h \
+ ../include/pjmedia/types.h ../include/pjmedia/config.h \
+ ../../pjlib/include/pj/config.h ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../include/pjmedia-codec/config_auto.h \
+ ../include/pjmedia/codec.h ../include/pjmedia/port.h \
+ ../include/pjmedia/clock.h ../include/pjmedia/event.h \
+ ../include/pjmedia/format.h ../include/pjmedia/signatures.h \
+ ../include/pjmedia/frame.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h \
+ ../../pjlib/include/pj/assert.h ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ ../../pjlib/include/pj/os.h ../../pjlib/include/pj/errno.h \
+ ../../pjlib/include/pj/compat/errno.h ../../pjlib/include/pj/list.h \
+ ../../pjlib/include/pj/pool.h ../include/pjmedia/errno.h \
+ ../include/pjmedia/endpoint.h ../include/pjmedia/sdp.h \
+ ../include/pjmedia/transport.h ../include/pjmedia/plc.h \
+ ../include/pjmedia/silencedet.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/gsm.o: ../src/pjmedia-codec/gsm.c ../include/pjmedia-codec/gsm.h \
+ ../include/pjmedia-codec/types.h ../include/pjmedia-codec/config.h \
+ ../include/pjmedia/types.h ../include/pjmedia/config.h \
+ ../../pjlib/include/pj/config.h ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../include/pjmedia-codec/config_auto.h \
+ ../include/pjmedia/codec.h ../include/pjmedia/port.h \
+ ../include/pjmedia/clock.h ../include/pjmedia/event.h \
+ ../include/pjmedia/format.h ../include/pjmedia/signatures.h \
+ ../include/pjmedia/frame.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h \
+ ../../pjlib/include/pj/assert.h ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ ../../pjlib/include/pj/os.h ../../pjlib/include/pj/errno.h \
+ ../../pjlib/include/pj/compat/errno.h ../../pjlib/include/pj/list.h \
+ ../../pjlib/include/pj/pool.h ../include/pjmedia/errno.h \
+ ../include/pjmedia/endpoint.h ../include/pjmedia/sdp.h \
+ ../include/pjmedia/transport.h ../include/pjmedia/plc.h \
+ ../include/pjmedia/silencedet.h \
+ ../include/../../third_party/gsm/inc/gsm.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/speex_codec.o: ../src/pjmedia-codec/speex_codec.c \
+ ../include/pjmedia-codec/speex.h ../include/pjmedia-codec/types.h \
+ ../include/pjmedia-codec/config.h ../include/pjmedia/types.h \
+ ../include/pjmedia/config.h ../../pjlib/include/pj/config.h \
+ ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../include/pjmedia-codec/config_auto.h \
+ ../include/pjmedia/codec.h ../include/pjmedia/port.h \
+ ../include/pjmedia/clock.h ../include/pjmedia/event.h \
+ ../include/pjmedia/format.h ../include/pjmedia/signatures.h \
+ ../include/pjmedia/frame.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h \
+ ../../pjlib/include/pj/assert.h ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ ../../pjlib/include/pj/os.h ../../pjlib/include/pj/errno.h \
+ ../../pjlib/include/pj/compat/errno.h ../../pjlib/include/pj/list.h \
+ ../../pjlib/include/pj/pool.h ../include/pjmedia/errno.h \
+ ../include/pjmedia/endpoint.h ../include/pjmedia/sdp.h \
+ ../include/pjmedia/transport.h \
+ /home/sojus/src/meshnet/qaul.net_android/pjproject_android/third_party/speex/include/speex/speex.h \
+ /home/sojus/src/meshnet/qaul.net_android/pjproject_android/third_party/speex/include/speex/speex_bits.h \
+ /home/sojus/src/meshnet/qaul.net_android/pjproject_android/third_party/speex/include/speex/speex_types.h \
+ /home/sojus/src/meshnet/qaul.net_android/pjproject_android/third_party/build/speex/speex/speex_config_types.h \
+ ../../pjlib/include/pj/log.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/ilbc.o: ../src/pjmedia-codec/ilbc.c ../include/pjmedia-codec/ilbc.h \
+ ../include/pjmedia-codec/types.h ../include/pjmedia-codec/config.h \
+ ../include/pjmedia/types.h ../include/pjmedia/config.h \
+ ../../pjlib/include/pj/config.h ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../include/pjmedia-codec/config_auto.h \
+ ../include/pjmedia/codec.h ../include/pjmedia/port.h \
+ ../include/pjmedia/clock.h ../include/pjmedia/event.h \
+ ../include/pjmedia/format.h ../include/pjmedia/signatures.h \
+ ../include/pjmedia/frame.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h \
+ ../../pjlib/include/pj/assert.h ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ ../../pjlib/include/pj/os.h ../../pjlib/include/pj/errno.h \
+ ../../pjlib/include/pj/compat/errno.h ../../pjlib/include/pj/list.h \
+ ../../pjlib/include/pj/pool.h ../include/pjmedia/errno.h \
+ ../include/pjmedia/endpoint.h ../include/pjmedia/sdp.h \
+ ../include/pjmedia/transport.h ../include/pjmedia/plc.h \
+ ../include/pjmedia/silencedet.h ../../pjlib/include/pj/log.h \
+ ../include/../../third_party/ilbc/iLBC_encode.h \
+ ../include/../../third_party/ilbc/iLBC_define.h \
+ ../include/../../third_party/ilbc/iLBC_decode.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/g722.o: ../src/pjmedia-codec/g722.c ../include/pjmedia-codec/g722.h \
+ ../include/pjmedia-codec/types.h ../include/pjmedia-codec/config.h \
+ ../include/pjmedia/types.h ../include/pjmedia/config.h \
+ ../../pjlib/include/pj/config.h ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../include/pjmedia-codec/config_auto.h \
+ ../include/pjmedia/codec.h ../include/pjmedia/port.h \
+ ../include/pjmedia/clock.h ../include/pjmedia/event.h \
+ ../include/pjmedia/format.h ../include/pjmedia/signatures.h \
+ ../include/pjmedia/frame.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h \
+ ../../pjlib/include/pj/assert.h ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ ../../pjlib/include/pj/os.h ../../pjlib/include/pj/errno.h \
+ ../../pjlib/include/pj/compat/errno.h ../../pjlib/include/pj/list.h \
+ ../../pjlib/include/pj/pool.h ../include/pjmedia/errno.h \
+ ../include/pjmedia/endpoint.h ../include/pjmedia/sdp.h \
+ ../include/pjmedia/transport.h ../include/pjmedia/plc.h \
+ ../include/pjmedia/silencedet.h ../../pjlib/include/pj/log.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/g722_enc.o: ../src/pjmedia-codec/g722/g722_enc.c \
+ ../include/pjmedia/errno.h ../include/pjmedia/types.h \
+ ../include/pjmedia/config.h ../../pjlib/include/pj/config.h \
+ ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../../pjlib/include/pj/errno.h \
+ ../../pjlib/include/pj/compat/errno.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ ../../pjlib/include/pj/assert.h ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ ../../pjlib/include/pj/pool.h ../../pjlib/include/pj/list.h \
+ ../src/pjmedia-codec/g722/g722_enc.h ../include/pjmedia-codec/types.h \
+ ../include/pjmedia-codec/config.h ../include/pjmedia-codec/config_auto.h \
+ ../include/pjmedia/codec.h ../include/pjmedia/port.h \
+ ../include/pjmedia/clock.h ../include/pjmedia/event.h \
+ ../include/pjmedia/format.h ../include/pjmedia/signatures.h \
+ ../include/pjmedia/frame.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h \
+ ../../pjlib/include/pj/os.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/g722_dec.o: ../src/pjmedia-codec/g722/g722_dec.c \
+ ../include/pjmedia/errno.h ../include/pjmedia/types.h \
+ ../include/pjmedia/config.h ../../pjlib/include/pj/config.h \
+ ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../../pjlib/include/pj/errno.h \
+ ../../pjlib/include/pj/compat/errno.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ ../../pjlib/include/pj/assert.h ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ ../../pjlib/include/pj/pool.h ../../pjlib/include/pj/list.h \
+ ../src/pjmedia-codec/g722/g722_dec.h ../include/pjmedia-codec/types.h \
+ ../include/pjmedia-codec/config.h ../include/pjmedia-codec/config_auto.h \
+ ../include/pjmedia/codec.h ../include/pjmedia/port.h \
+ ../include/pjmedia/clock.h ../include/pjmedia/event.h \
+ ../include/pjmedia/format.h ../include/pjmedia/signatures.h \
+ ../include/pjmedia/frame.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h \
+ ../../pjlib/include/pj/os.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/g7221.o: ../src/pjmedia-codec/g7221.c ../include/pjmedia-codec/g7221.h \
+ ../include/pjmedia-codec/types.h ../include/pjmedia-codec/config.h \
+ ../include/pjmedia/types.h ../include/pjmedia/config.h \
+ ../../pjlib/include/pj/config.h ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../include/pjmedia-codec/config_auto.h \
+ ../include/pjmedia/codec.h ../include/pjmedia/port.h \
+ ../include/pjmedia/clock.h ../include/pjmedia/event.h \
+ ../include/pjmedia/format.h ../include/pjmedia/signatures.h \
+ ../include/pjmedia/frame.h ../../pjlib/include/pj/string.h \
+ ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h \
+ ../../pjlib/include/pj/assert.h ../../pjlib/include/pj/compat/assert.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/assert.h \
+ ../../pjlib/include/pj/os.h ../../pjlib/include/pj/errno.h \
+ ../../pjlib/include/pj/compat/errno.h ../../pjlib/include/pj/list.h \
+ ../../pjlib/include/pj/pool.h ../include/pjmedia-codec/g7221_sdp_match.h \
+ ../include/pjmedia/sdp_neg.h ../include/pjmedia/sdp.h \
+ ../include/pjmedia/errno.h ../include/pjmedia/endpoint.h \
+ ../include/pjmedia/transport.h ../include/pjmedia/silencedet.h \
+ ../../pjlib/include/pj/log.h ../../pjlib/include/pj/math.h \
+ ../../pjlib/include/pj/compat/high_precision.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/g7221_sdp_match.o: ../src/pjmedia-codec/g7221_sdp_match.c \
+ ../include/pjmedia-codec/g7221_sdp_match.h ../include/pjmedia/sdp_neg.h \
+ ../include/pjmedia/sdp.h ../include/pjmedia/types.h \
+ ../include/pjmedia/config.h ../../pjlib/include/pj/config.h \
+ ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../include/pjmedia/errno.h \
+ ../../pjlib/include/pj/errno.h ../../pjlib/include/pj/compat/errno.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ ../../pjlib/include/pj/pool.h ../../pjlib/include/pj/list.h \
+ ../../pjlib/include/pj/string.h ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h
+output/pjmedia-codec-arm-unknown-linux-androideabi/amr_sdp_match.o: ../src/pjmedia-codec/amr_sdp_match.c \
+ ../include/pjmedia-codec/amr_sdp_match.h ../include/pjmedia/sdp_neg.h \
+ ../include/pjmedia/sdp.h ../include/pjmedia/types.h \
+ ../include/pjmedia/config.h ../../pjlib/include/pj/config.h \
+ ../../pjlib/include/pj/compat/cc_gcc.h \
+ ../../pjlib/include/pj/compat/os_auto.h \
+ ../../pjlib/include/pj/compat/m_auto.h \
+ ../../pjlib/include/pj/compat/size_t.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ ../../pjlib/include/pj/config_site.h \
+ ../../pjlib/include/pj/config_site_sample.h \
+ ../include/pjmedia/config_auto.h ../../pjlib/include/pj/sock.h \
+ ../../pjlib/include/pj/types.h ../include/pjmedia/errno.h \
+ ../../pjlib/include/pj/errno.h ../../pjlib/include/pj/compat/errno.h \
+ /home/sojus/src/android/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stdarg.h \
+ ../../pjlib/include/pj/pool.h ../../pjlib/include/pj/list.h \
+ ../../pjlib/include/pj/string.h ../../pjlib/include/pj/compat/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/string.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/strings.h \
+ /home/sojus/src/android/android-ndk-r8/platforms/android-8/arch-arm/usr/include/memory.h
