@@ -4,7 +4,8 @@
  */
 
 #include "qaullib_private.h"
-#include "../pjproject-2.0.1/pjsip/include/pjsua-lib/pjsua.h"
+#include <pj/config_site.h> // local configuration needs to be included for android
+#include <pjsua-lib/pjsua.h>
 
 #define THIS_FILE	"qaullib_voip.c"
 #define SIP_USER	"qaul"
