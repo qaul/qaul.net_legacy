@@ -4,7 +4,8 @@ Android Instructions
 qaul.net was tested on:
 * Android 2.3 Gingerbread
 
-It should work on all ARM android devices starting from Android 2.2 Froyo. 
+It should work on all ARM android devices starting from Android 2.3 Gingerbread
+(due to before unsupported pthread functions in pjsip). 
 The Android device needs to be rooted.
 
 
@@ -25,7 +26,7 @@ Compile pjsip library for VoIP
 
     cd pjproject_android
     export ANDROID_NDK=/path_to_android_ndk_dir
-    export API_LEVEL=8
+    export API_LEVEL=9
     ./configure-android
     make dep
     make

@@ -57,29 +57,30 @@ LOCAL_CFLAGS := \
 	-I$(LOCAL_PATH)/../../pjproject_android/pjmedia/include \
 	-I$(LOCAL_PATH)/../../pjproject_android/pjnath/include
 LOCAL_STATIC_LIBRARIES := \
-	pjsip \
-    pjsip-simple \
+    pjsua \
     pjsip-ua \
-    pjmedia-videdev \
+    pjsip-simple \
+	pjsip \
+    pjsdp \
+	pjmedia-audiodev \
 	pjmedia-codec \
 	pjmedia \
-	pjmedia-audiodev \
+    pjmedia-videdev \
+    pjnath \
 	pjlib-util \
 	resample \
+    milenage \
+    srtp \
+	gsmcodec \
 	speex \
     ilbccodec \
-    resample \
-    milenage \
-	gsmcodec \
     g7221codec \
-    srtp \
-    pjnath \
-    pj \
-    pjsua 
+    pj 
 
 # add logging for debugging
 LOCAL_LDLIBS := \
 	-L$(SYSROOT)/usr/lib -llog \
+    -lOpenSLES
     
 include $(BUILD_SHARED_LIBRARY)
 
@@ -173,6 +174,11 @@ include $(CLEAR_VARS)
 LOCAL_MODULE            := pj
 LOCAL_SRC_FILES         := ../../pjproject_android/pjlib/lib/libpj-arm-unknown-linux-androideabi.a
 LOCAL_EXPORT_C_INCLUDES := ../../pjproject_android/pjlib/include
+include $(PREBUILT_STATIC_LIBRARY)
+include $(CLEAR_VARS)
+LOCAL_MODULE            := pjsdp
+LOCAL_SRC_FILES         := ../../pjproject_android/pjmedia/lib/libpjsdp-arm-unknown-linux-androideabi.a
+LOCAL_EXPORT_C_INCLUDES := ../../pjproject_android/pjmedia/include
 include $(PREBUILT_STATIC_LIBRARY)
 
 # libnativetask.so
