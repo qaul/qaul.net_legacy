@@ -85,6 +85,25 @@ portfwd/tools/t_vector
 portfwd/tools/udp_rcv
 portfwd/tools/udp_snd
 
+# pjsip
+*.depend
+os-auto.mak
+os-auto.h
+config_auto.h
+config_auto.mak
+pjproject_android/build.mak
+pjproject_android/build/cc-auto.mak
+pjproject_android/config.status
+pjproject_android/pjlib-util/bin/
+pjproject_android/pjlib/bin/
+pjproject_android/pjlib/include/pj/compat/m_auto.h
+pjproject_android/pjlib/include/pj/compat/os_auto.h
+pjproject_android/pjmedia/bin/
+pjproject_android/pjnath/bin/
+pjproject_android/pjsip-apps/bin/
+pjproject_android/pjsip/bin/
+pjproject_android/pjsip/include/pjsip/sip_autoconf.h
+
 # exclude other versioning systems
 CVS
 .svn
@@ -97,3 +116,4 @@ www/files/*.exe
 
 # binary creation
 binary_release/qaul.net/
+
