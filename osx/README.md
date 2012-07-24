@@ -10,7 +10,7 @@ qaul.net works on:
 Installation and Compile Instructions
 --------------------------------------
 
-Compile pjp library for VoIP
+Compile pjsip library for VoIP
 
     cd pjproject-2.0.1
     ./aconfigure --disable-ssl CFLAGS='-Wno-unused-label -m32' LDFLAGS='-m32'
@@ -25,9 +25,20 @@ FIXME: is that correct?
 You may need to install libssl and libcrypto (from mac ports /opt/loca/lib/libssl.a )
 
 
-Compile static qaullib
+Compile static qaullib. 
+You may need to fix the file pjproject-2.0.1/pjlib/include/pj/compat/os_darwinos.h manually.
+Change line 98
 
-    # uncomment in libqaul/Makefile the line '#OSX_CFLAGS=-arch i386' to 'OSX_CFLAGS=-arch i386'
+    typedef int socklen_t;
+    
+to
+   
+    #ifndef _SYS_SOCKET_H_
+    typedef int socklen_t;
+    #endif
+
+Now you should be able to successfully compile libqaul   
+
     cd libqaul
     make OS=osx
     cd ../

@@ -4,9 +4,7 @@
  */
 
 #include "qaullib_private.h"
-#ifdef __ANDROID__
 #include <pj/config_site.h> // local configuration needs to be included for android
-#endif
 #include <pjsua-lib/pjsua.h>
 
 #define THIS_FILE	"qaullib_voip.c"

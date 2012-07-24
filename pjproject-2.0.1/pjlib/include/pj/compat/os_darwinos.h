@@ -95,7 +95,9 @@
 /*
  * Socket related
  */
+#ifndef _SYS_SOCKET_H_
 typedef int socklen_t;
+#endif
 
 /* Set 1 if native sockaddr_in has sin_len member. 
  * Default: 0

@@ -390,16 +390,21 @@ function call_start()
 {
 	var name = $("#user_chat_name").val();
 	var ip = $("#user_chat_ip").val();
+	// change page
+	$("#call_info").text("searching");
+	call_show_page(name);
+	call_setButtonEnd();
+	// start call
 	var path = 'call_start?ip=' +ip +'&e=1';
 	$.ajax({
-		  url: path,
-		  cache: false, // needed for IE
-		  dataType: "json",
-		  success: function(data){
-			  $("#call_info").text("searching");
-			  call_show_page(name);
-			  call_setButtonEnd();
-		  }
+		url: path,
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data){
+		}
+	}).error(function(){
+		$("#call_buttons").empty();
+		call_goback();
 	});
 }
 
