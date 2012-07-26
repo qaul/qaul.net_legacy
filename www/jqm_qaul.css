@@ -33,6 +33,12 @@ input {
 	background-position:center;
 }
 
+#page_goodbye h1 {
+	text-align:center;
+	color:#999;
+	margin-top:50%;
+}
+
 #chat, #page_user_msgs { 
 	/*height:250px;
 	overflow:auto;*/
@@ -53,6 +59,9 @@ input {
 }
 .personal {
 	background-color:#d0e7ce;
+}
+.offline {
+	color:#ddd !important;
 }
 
 #users a {

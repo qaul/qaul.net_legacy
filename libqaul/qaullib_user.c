@@ -20,6 +20,9 @@ void Qaullib_UserInit(void)
 		userconnections[i].conn.ip.sin_family = AF_INET;
 		userconnections[i].conn.ip.sin_port = htons(WEB_PORT);
 	}
+
+	// fill in the favorites
+	Qaullib_UserFavoritesDB2LL();
 }
 
 // ------------------------------------------------------------
@@ -32,7 +35,7 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 	if(Qaullib_User_LL_IpSearch (ip, &user))
 	{
 		// if user exists: update lastseen_at
-		if(user->type < 1)
+		if(user->type < 2)
 		{
 			// set user name
 			strncpy(user->name, name, MAX_USER_LEN);
@@ -40,10 +43,10 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 			user->type = 2;
 			user->changed = 1;
 		}
-		else if(user->changed == 2)
+		else if(user->changed >= 2)
 		{
-			if(user->type == 2) user->changed = 1;
-			else user->changed = 0;
+			if(user->changed == 2) user->changed = 0;
+			else user->changed = 1;
 		}
 
 		user->time = time(NULL);
@@ -177,3 +180,115 @@ void Qaullib_UserCheckSockets(void)
 	}
 }
 
+// ------------------------------------------------------------
+void Qaullib_UserFavoriteAdd(char *name, char *ipstr)
+{
+	char buffer[1024];
+	char *stmt = buffer;
+	char *error_exec=NULL;
+	union olsr_ip_addr myip;
+	struct qaul_user_LL_item *myitem;
+	int myipint;
+
+	// create ip
+	if ( inet_pton(AF_INET, ipstr, &myip.v4) == 0 )
+	{
+		printf("inet_pton() ipv4 failed");
+		return;
+	}
+
+	// change it at user LL
+	if( Qaullib_User_LL_IpSearch (&myip, &myitem) )
+		myitem->favorite = 0;
+
+	// add it to DB
+	memcpy(&myipint, &myip.v4, sizeof(int));
+	sprintf(stmt, sql_user_set_ipv4, name, "", myipint);
+	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+	{
+		printf("SQLite error: %s\n",error_exec);
+		sqlite3_free(error_exec);
+		error_exec=NULL;
+	}
+}
+
+// ------------------------------------------------------------
+void Qaullib_UserFavoriteRemove(char *ipstr)
+{
+	char buffer[1024];
+	char *stmt = buffer;
+	char *error_exec=NULL;
+	union olsr_ip_addr myip;
+	struct qaul_user_LL_item *myitem;
+	int myipint;
+
+	// create ip
+	if ( inet_pton(AF_INET, ipstr, &myip.v4) == 0 )
+	{
+		printf("inet_pton() ipv4 failed");
+		return;
+	}
+
+	// change it at user LL
+	if( Qaullib_User_LL_IpSearch (&myip, &myitem) )
+		myitem->favorite = 0;
+
+	// remove it from DB
+	memcpy(&myipint, &myip.v4, sizeof(int));
+	sprintf(stmt, sql_user_delete_ipv4, myipint);
+	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+	{
+		printf("SQLite error: %s\n",error_exec);
+		sqlite3_free(error_exec);
+		error_exec=NULL;
+	}
+}
+
+// ------------------------------------------------------------
+void Qaullib_UserFavoritesDB2LL(void)
+{
+	sqlite3_stmt *ppStmt;
+	union olsr_ip_addr myip;
+	struct qaul_user_LL_item *myitem;
+	int myipint;
+
+	// Select rows from database
+	if( sqlite3_prepare_v2(db, sql_user_get_all, -1, &ppStmt, NULL) != SQLITE_OK )
+	{
+		printf("SQLite error: %s\n",sqlite3_errmsg(db));
+		return;
+	}
+
+	// For each row returned
+	while (sqlite3_step(ppStmt) == SQLITE_ROW)
+	{
+	  // For each column
+	  int jj;
+	  // search for ip
+	  for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
+	  {
+			if(strcmp(sqlite3_column_name(ppStmt,jj), "ipv4") == 0)
+			{
+				myipint = sqlite3_column_int(ppStmt, jj);
+				memcpy(&myip.v4, &myipint, sizeof(struct sockaddr_in));
+				break;
+			}
+	  }
+
+	  myitem = Qaullib_User_LL_Add(&myip);
+	  myitem->type = 2;
+	  myitem->favorite = 1;
+	  myitem->changed = 3;
+
+	  // fill in rest
+	  for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
+	  {
+			if(strcmp(sqlite3_column_name(ppStmt,jj), "name") == 0)
+			{
+				sprintf(myitem->name,"%s",sqlite3_column_text(ppStmt, jj));
+				break;
+			}
+	  }
+	}
+	sqlite3_finalize(ppStmt);
+}

@@ -25,16 +25,17 @@ struct qaul_user_LL_item {
 	float              lq;                    // link quality
 	char               name[MAX_USER_LEN +1]; // user name
 	char               icon[MAX_FILENAME_LEN +1]; // icon name
-	int                id;                    // user id (needed for gui, count from 0 ...)
 	int                type;                  // type of user:
 	                                          // 0: unchecked
 	                                          // -1: error / infrastructure node
                                               // 1: downloading
 	                                          // 2: known user
 	int                changed;               // this entry was changed:
-	                                          // 0: unchanged
+	                                          // 0: unchanged / online
 	                                          // 1: added or modified
 	                                          // 2: deleted
+											  // 3: cache (not online anymore, delete it after cache period expired)
+	int				   favorite;			  // user is favorite (don't delete it)
 };
 
 struct qaul_user_LL_node {

@@ -29,6 +29,9 @@ static void Qaullib_WwwCallStart(struct mg_connection *conn, const struct mg_req
 static void Qaullib_WwwCallEnd(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwCallAccept(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwCallEvent(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwFavoriteGet(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwFavoriteAdd(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwFavoriteDelete(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwSetPageName(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwGetConfig(struct mg_connection *conn, const struct mg_request_info *request_info);
 
@@ -136,6 +139,19 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 	else if (strcmp(request_info->uri, "/file_schedule.json") == 0)
 	{
 	  Qaullib_WwwFileSchedule(conn, request_info);
+	}
+	// user favorites
+	else if (strcmp(request_info->uri, "/fav_get.json") == 0)
+	{
+	  Qaullib_WwwFavoriteGet(conn, request_info);
+	}
+	else if (strcmp(request_info->uri, "/fav_add.json") == 0)
+	{
+	  Qaullib_WwwFavoriteAdd(conn, request_info);
+	}
+	else if (strcmp(request_info->uri, "/fav_del.json") == 0)
+	{
+	  Qaullib_WwwFavoriteDelete(conn, request_info);
 	}
 	// configuration
 	else if (strcmp(request_info->uri, "/getconfig.json") == 0)
@@ -300,6 +316,85 @@ static void Qaullib_WwwCallEnd(struct mg_connection *conn, const struct mg_reque
 static void Qaullib_WwwCallAccept(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
 	Qaullib_VoipCallAccept();
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
+}
+
+// ------------------------------------------------------------
+static void Qaullib_WwwFavoriteGet(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+
+	int first = 0;
+	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+
+	// print Users
+	mg_printf(conn, "{\"favorites\":[");
+	// loop LL and check for favorites
+	first = 0;
+	struct qaul_user_LL_node mynode;
+	Qaullib_User_LL_InitNode(&mynode);
+	while(Qaullib_User_LL_NextNode(&mynode))
+	{
+		// check if node is favorite
+		if(mynode.item->favorite > 0)
+		{
+			if(!first)
+				first = 1;
+			else
+				mg_printf(conn, ",");
+			// FIXME: ipv6
+			mg_printf(conn,
+					"{\"name\":\"%s\",\"ip\":\"%s\"}",
+					mynode.item->name,
+					inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf))
+					);
+		}
+	}
+	mg_printf(conn, "]}");
+}
+
+static void Qaullib_WwwFavoriteAdd(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	// get variables
+	char *content_length;
+	int  length;
+	char myname[MAX_USER_LEN +1];
+	char myipstr[MAX_IP_LEN +1];
+
+	content_length = (char *)mg_get_header(conn, "Content-Length");
+	length = atoi(content_length);
+	char *post = (char *)malloc(length+length/8+1);
+	mg_read(conn, post, length); //read post data
+	// extract variable
+	mg_get_var(post, strlen(post == NULL ? "" : post), "ip", myipstr, sizeof(myipstr));
+	mg_get_var(post, strlen(post == NULL ? "" : post), "name", myname, sizeof(myname));
+
+	printf("add favorite %s \n", myname);
+	Qaullib_UserFavoriteAdd(myname, myipstr);
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
+}
+
+static void Qaullib_WwwFavoriteDelete(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	// get variables
+	char *content_length;
+	int  length;
+	char myipstr[MAX_IP_LEN +1];
+
+	content_length = (char *)mg_get_header(conn, "Content-Length");
+	length = atoi(content_length);
+	char *post = (char *)malloc(length+length/8+1);
+	mg_read(conn, post, length); //read post data
+	// extract variable
+	mg_get_var(post, strlen(post == NULL ? "" : post), "ip", myipstr, sizeof(myipstr));
+
+	printf("delete favorite %s \n", myipstr);
+	Qaullib_UserFavoriteRemove(myipstr);
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
@@ -609,13 +704,13 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
 	//printf("[LL next] Qaullib_WwwGetUsers\n");
-
+	int add;
 	int first = 0;
 	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 
-	// print Users
+	// print newly
 	mg_printf(conn, "{\"users\":[");
 	// loop through LL
 	first = 0;
@@ -625,17 +720,31 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 	{
 		// TODO: only send changed items
 		// check if node was changed
-		if(mynode.item->type == 2)
+		if(
+				mynode.item->type == 2 &&
+				(mynode.item->changed == 1 ||
+				mynode.item->changed == 2)
+				)
 		{
-			if(!first) first = 1;
-			else mg_printf(conn, ",");
+			if(!first)
+				first = 1;
+			else
+				mg_printf(conn, ",");
+
+			if(mynode.item->changed == 1)
+				add = 1;
+			else
+				add = 0;
 			// FIXME: ipv6
 			mg_printf(conn,
-					"{\"id\":%i,\"name\":\"%s\",\"ip\":\"%s\",\"lq\":%f}",
-					mynode.item->id,
+					"{\"name\":\"%s\",\"ip\":\"%s\",\"lq\":%f,\"add\":%i}",
 					mynode.item->name,
 					inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
-					mynode.item->lq);
+					mynode.item->lq,
+					add
+					);
+
+			mynode.item->changed = 0;
 		}
 	}
 	mg_printf(conn, "]}");

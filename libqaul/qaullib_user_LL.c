@@ -19,17 +19,10 @@ void Qaullib_User_LL_Init (void)
 {
   int i;
 
-  //printf("[user LL] init user table\n");
   for (i = 0; i < HASHSIZE; i++)
   {
 	  Qaul_user_LL_table[i].next = &Qaul_user_LL_table[i];
 	  Qaul_user_LL_table[i].prev = &Qaul_user_LL_table[i];
-//	  printf("[user LL] hash: %i, &table: %i, next: %i, %i, prev: %i, %i\n",
-//			  i,
-//			  &Qaul_user_LL_table[i],
-//			  Qaul_user_LL_table[i].next, &Qaul_user_LL_table[i].next,
-//			  Qaul_user_LL_table[i].prev, &Qaul_user_LL_table[i].prev
-//			  );
   }
 }
 
@@ -43,25 +36,16 @@ void Qaullib_User_LL_InitNode(struct qaul_user_LL_node *node)
 
 int Qaullib_User_LL_NextNode (struct qaul_user_LL_node *node)
 {
-	//printf("index: %i, hash size: %i\n", node->index, HASHSIZE);
 	for(; node->index < HASHSIZE;)
 	{
-//		printf("index: %i, table: %i, item: %i, %i, next: %i, %i\n",
-//				node->index,
-//				&Qaul_user_LL_table[node->index],
-//				node->item, &node->item,
-//				node->item->next, &node->item->next
-//				);
 		if(node->item->next != &Qaul_user_LL_table[node->index])
 		{
-			//printf("item found\n", node->index);
 			node->item = node->item->next;
 			return 1;
 		}
 		node->index++;
 		node->item =  &Qaul_user_LL_table[node->index];
 	}
-	//printf("end loop index: %i\n", node->index, HASHSIZE);
 	return 0;
 }
 
@@ -77,27 +61,25 @@ struct qaul_user_LL_item* Qaullib_User_LL_Add (union olsr_ip_addr *ip)
 
 	// fill in content
 	qaul_user_LL_id++;
-	new_item->id = qaul_user_LL_id;
 	new_item->time = time(NULL);
 	new_item->type = 0;
 	new_item->changed = 0;
 	new_item->lq = 0;
+	new_item->favorite = 0;
 	memcpy((char *)&new_item->ip, ip, sizeof(union olsr_ip_addr));
 
+	// lock
+	pthread_mutex_lock( &qaullib_mutex_userLL );
 	// create links
 	new_item->prev = &Qaul_user_LL_table[hash];
 	new_item->next = Qaul_user_LL_table[hash].next;
-
-	// FIXME: I believe no locking is required as no harm can come from that...
-	// lock
-	//pthread_mutex_lock( &qaullib_mutex_userLL );
 
 	Qaul_user_LL_table[hash].next = new_item;
 	new_item->next->prev = new_item;
 	qaul_user_LL_count++;
 
 	// unlock
-	//pthread_mutex_unlock( &qaullib_mutex_userLL );
+	pthread_mutex_unlock( &qaullib_mutex_userLL );
 
 	return new_item;
 }
@@ -125,9 +107,7 @@ void Qaullib_User_LL_Delete_Item (struct qaul_user_LL_item *item)
 // ------------------------------------------------------------
 void Qaullib_User_LL_Clean (void)
 {
-	//printf("[LL next] Qaullib_User_LL_Clean\n");
-
-	// mark all clients older than 2 minutes as deleted
+	// mark all clients older than 30 seconds as deleted
 	// remove all clients older than 5 minutes
 	struct qaul_user_LL_node mynode;
 	Qaullib_User_LL_InitNode(&mynode);
@@ -135,9 +115,11 @@ void Qaullib_User_LL_Clean (void)
 	{
 		if(mynode.item->time +300 < time(NULL))
 		{
-			Qaullib_User_LL_Delete_Item (mynode.item);
+			// only delete if not a favorite
+			if(mynode.item->favorite == 0)
+				Qaullib_User_LL_Delete_Item (mynode.item);
 		}
-		else if(mynode.item->changed == 0 && mynode.item->time +120 < time(NULL))
+		else if(mynode.item->changed == 0 && mynode.item->time +30 < time(NULL))
 		{
 			if(mynode.item->type > 0) mynode.item->changed = 2;
 		}

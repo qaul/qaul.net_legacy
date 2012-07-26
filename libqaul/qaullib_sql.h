@@ -68,24 +68,16 @@ static const char* sql_config_delete = "DELETE FROM 'config' WHERE key = '%s';";
 
 
 /**
- * user table (not used at the moment)
- * todo: shall be used to save and remember friends
- *
- * online status
- * -1: user is infrastructure node (no real user, qaul is not running on this device, but olsrd is)
- *  0: no name yet
- *  1: downloading name
- *  2: name downloaded
+ * user table
+ * used to save and remember favorites
  */
-static const char* sql_user_table = "CREATE TABLE IF NOT EXISTS 'user' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL, 'name' TEXT, 'ip' TEXT, 'ipv' INTEGER DEFAULT 4, 'ipv4' INTEGER, 'ipv6' CHAR(16), 'linkquality' REAL DEFAULT 0.0, 'created_at' INTEGER DEFAULT CURRENT_TIMESTAMP, 'lastseen_at' INTEGER DEFAULT CURRENT_TIMESTAMP, 'online' INTEGER DEFAULT 0, 'icon' VARCHAR(255), 'geolon' REAL, 'geolat' REAL);";
+static const char* sql_user_table = "CREATE TABLE IF NOT EXISTS 'user' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL, 'name' TEXT, 'ipv' INTEGER DEFAULT 4, 'ipv4' INTEGER, 'ipv6' CHAR(16), 'icon' VARCHAR(255), 'created_at' INTEGER DEFAULT CURRENT_TIMESTAMP);";
 
 // set indexes
 static const char* sql_user_index = "CREATE INDEX IF NOT EXISTS 'user_name' ON 'user' ('name' ASC); CREATE INDEX IF NOT EXISTS 'user_ip' ON 'user' ('ipv4' ASC); CREATE INDEX IF NOT EXISTS 'user_lastseen_at' ON 'user' ('lastsee_at' DESC);";
 
 // get users
-static const char* sql_user_get_all = "SELECT * FROM 'user' WHERE online = 2 AND lastseen_at > DATETIME('now','-2 minute') ORDER BY linkquality DESC;";
-static const char* sql_user_get_name = "SELECT * FROM 'user' WHERE online = 0;";
-static const char* sql_user_get_nameless = "SELECT * FROM 'user' WHERE online = 0 ORDER BY linkquality DESC;";
+static const char* sql_user_get_all = "SELECT * FROM 'user' ORDER BY name ASC;";
 
 // check if user exists
 static const char* sql_user_check_ipv4 = "SELECT id FROM 'user' WHERE ipv = 4 AND ipv4 = %i;";
@@ -93,19 +85,17 @@ static const char* sql_user_check_ipv6 = "SELECT id FROM 'user' WHERE ipv = 6 AN
 
 // update user
 static const char* sql_user_update_lastseen = "UPDATE 'user' SET lastseen_at = DATETIME('now') WHERE id = %i ;";
-static const char* sql_user_update_online = "UPDATE 'user' SET online = %i WHERE id = %i ;";
 static const char* sql_user_update_nameicon = "UPDATE 'user' SET  lastseen_at = DATETIME('now'), name = '%s', icon = '%s', online = %i WHERE id = %i ;";
 static const char* sql_user_update_name = "UPDATE 'user' SET lastseen_at = DATETIME('now'), name = '%s', online = %i WHERE id = %i ;";
-static const char* sql_user_update_lq = "UPDATE 'user' SET lastseen_at = DATETIME('now'), linkquality = %i WHERE id = %i ;";
 
 // insert user
-static const char* sql_user_set_ip = "INSERT INTO 'user' ('name','icon','ip','ipv','ipv4','ipv6','online','linkquality') VALUES ('%s','%s','%s',%i,%i,'%s',%i,%i);";
-static const char* sql_user_set_ipv4 = "INSERT INTO 'user' ('name','icon','ip','ipv','ipv4','online','linkquality') VALUES ('%s','%s','%s',4,%i,%i,%i);";
-static const char* sql_user_set_ipv6 = "INSERT INTO 'user' ('name','icon','ip','ipv','ipv6','online','linkquality') VALUES ('%s','%s','%s',6,%s,%i,%i);";
+static const char* sql_user_set_ip = "INSERT INTO 'user' ('name','icon','ipv','ipv4','ipv6') VALUES ('%s','%s',%i,%i,'%s');";
+static const char* sql_user_set_ipv4 = "INSERT INTO 'user' ('name','icon','ipv','ipv4') VALUES ('%s','%s',4,%i);";
+static const char* sql_user_set_ipv6 = "INSERT INTO 'user' ('name','icon','ipv','ipv6') VALUES ('%s','%s',6,%s);";
 
 // delete users
-static const char* sql_user_delete_id = "DELETE FROM 'config' WHERE id = %i;";
-static const char* sql_user_delete_ipv4 = "DELETE FROM 'config' WHERE ipv4 = %i;";
+static const char* sql_user_delete_id = "DELETE FROM 'user' WHERE id = %i;";
+static const char* sql_user_delete_ipv4 = "DELETE FROM 'user' WHERE ipv4 = %i;";
 
 
 /**

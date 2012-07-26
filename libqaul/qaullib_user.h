@@ -78,6 +78,20 @@ void Qaullib_UserGetInfo(struct qaul_user_LL_item *user);
  */
 void Qaullib_UserCheckSockets(void);
 
+/**
+ * add a favorite
+ */
+void Qaullib_UserFavoriteAdd(char *name, char *ipstr);
+
+/**
+ * delete a favorite
+ */
+void Qaullib_UserFavoriteRemove(char *ipstr);
+
+/**
+ * fill favorites from DB into LL
+ */
+void Qaullib_UserFavoritesDB2LL(void);
 
 #ifdef __cplusplus
 }

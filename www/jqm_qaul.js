@@ -260,11 +260,26 @@ function init_chat()
 	eventstimer();
 }
 
+function init_favorites()
+{
+	var path = "fav_get.json";
+	$.ajax({
+		url:   path,
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			favorites_append(data);
+		} 
+	}).error(function(){
+			// todo: show error page
+	});	
+}
+
 // ======================================================
 // change views
 // ------------------------------------------------------
 
-function show_user(id, name, ip)
+function show_user(name, ip)
 {
 	user_last_id = 0;
 
@@ -281,7 +296,6 @@ function show_user(id, name, ip)
 	
 	// set page
 	$("#page_user_name").empty().append(name);
-	$("#page_user_name").attr("user_id",id);
 	$("#user_chat_name").val(name);
 	$("#user_chat_ip").val(ip);
 	$("#page_user_msgs").empty();
@@ -309,7 +323,7 @@ function show_user(id, name, ip)
 			});
       },
       error: function(d,msg) {
-          // put error info
+          // todo: show error info
 		  // create dialog
 		  $.mobile.changePage($("#page_dialog"),{role:"dialog"});
       }
@@ -369,14 +383,16 @@ function update_pageid()
 
 function quit_qaul()
 {
+	$.mobile.changePage('#page_goodbye');
 	$.ajax({
-		  url: "quit",
-		  cache: false, // needed for IE
-		  dataType: "json",
-		  success: function(data){
-			  $.mobile.changePage('#page_goodbye');
-		  }
-		});
+		url: "quit",
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data){
+		}
+	}).error(function(){
+		$.mobile.changePage('#page_pref');
+	});
 }
 
 // ======================================================
@@ -611,10 +627,9 @@ function format_msg_voip(item)
 	return {"msg":msg,"button":button};
 }
 
-function format_msg_userlink(name, ip, id)
+function format_msg_userlink(name, ip)
 {
-	return '<a href="#page_user" onClick="javascript:show_user(' 
-					+id +',\'' +name +'\',\'' +ip 
+	return '<a href="#page_user" onClick="javascript:show_user(\'' +name +'\',\'' +ip 
 					+'\');">' +name +'</a>';
 }
 
@@ -749,7 +764,7 @@ function get_msgs()
 
 function get_user_msgs()
 {
-	var path = 'getmsgs.json?t=5&id=' +user_last_id +'&v=' +encodeURIComponent($("#user_chat_name").val()) +'&e=1';
+	var path = 'getmsgs.json?t=5&ip=' +user_last_id +'&v=' +encodeURIComponent($("#user_chat_name").val()) +'&e=1';
 	$.ajax({
 		url:   path,
 		cache: false, // needed for IE
@@ -1161,7 +1176,12 @@ var loadingtimer=function()
 				if(data.change == 1) // change page
 				{
 					// initialize chat
-					if(data.page == "#page_chat" && !chat_initialized) init_chat();
+					if(data.page == "#page_chat" && !chat_initialized) 
+					{
+						init_chat();
+						// load favorites
+						init_favorites();
+					}
 					// display page
 					$.mobile.changePage($(data.page));
 				}
@@ -1303,19 +1323,57 @@ function get_users()
 function users_append(data)
 {
 	var items = [];
-	users.empty();
 	$.each(data.users, function(i,item){
-		$("<li></li>")
-            .prop('id',item.id)
-            .html('<a href="javascript:show_user(' +item.id +',\'' +item.name +'\',\'' +item.ip 
-						+'\')">' +item.name +'</a>'
-						//+'<a href="javascript:alert(\'add user to favorites\');" data-icon="plus">add</a>'
-						)
-			//.text(item.name)
-            //.insertAfter($("#users_divider"));
-            .prependTo(users)
+		if(item.add == 1) 
+			user_append(item.name, item.ip);
+		else
+			user_remove(item.name, item.ip);
 	});
 	$("#users").listview("refresh"); // This line now updates the listview
+}
+
+function user_append(name, ip)
+{
+	var id = ip2id(ip);
+	// check if it is a favorite
+	if($("#favorites #" +id).length)
+	{
+		$("#favorites #" +id +" a.fav")
+			.removeClass("offline")
+			.attr("onclick","").unbind("click").trigger("refresh");
+	}
+	else
+	{
+		$("<li></li>")
+			.prop('id',id)
+			.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
+				+'\')">' +name +'</a>'
+				+'<a href="javascript:favorite_add(\'' +name +'\',\'' +ip +'\');" data-icon="plus">add</a>'
+				)
+			//.text(item.name)
+			.insertAfter($("#users_divider"));
+			//.prependTo(users);
+		users.listview("refresh");
+    }
+}
+
+function user_remove(name, ip)
+{
+	var id = ip2id(ip);
+	// check if favorite
+	if($("#favorites #" +id).length)
+	{
+		$("#favorites #" +id +" a.fav")
+			.addClass("offline")
+			.click(function(){
+				return false;
+			});
+	}
+	// remove from list
+	else
+	{
+		$("#favorites #" +id).remove();
+	}
 }
 
 function set_usercount(nodes, users)
@@ -1345,6 +1403,83 @@ function user_changetochat(active)
 function user_goback()
 {
 	$.mobile.changePage($("#" +user_page_origin));
+}
+
+function favorites_append(data)
+{
+	var items = [];
+	$.each(data.favorites, function(i,item){
+		favorite_append(item.name, item.ip, false);
+	});
+	if ($("#favorites").hasClass('ui-listview')) 
+   		$("#favorites").listview('refresh'); // list view as initialized and gets refreshed
+	else
+	    $("#favorites").trigger('create');
+}
+
+function favorite_append(name, ip, online)
+{
+	var attr = ' onclick="javascript:return false;" class="offline fav"';
+	if(online) 
+		attr = ' class="fav"';
+	$("<li></li>")
+		.prop('id',ip2id(ip))
+		.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
+					+'\')" ' +attr +'>' +name +'</a>'
+					+'<a href="javascript:favorite_del(\'' +name +'\',\'' +ip 
+					+'\');" data-icon="minus">remove</a>'
+					)
+		.appendTo($("#favorites"));
+}
+
+function favorite_add(name, ip)
+{
+	$("#users #" +ip2id(ip)).remove();
+	var path = "fav_add.json";
+	$.ajax({
+		type:'POST',
+		url: path,
+		data:{"ip":ip,"name":name,"e":1},
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			favorite_append(name, ip, true);
+			$("#favorites").listview('refresh');
+		} 
+	}).error(function(){
+		user_append(name, ip);
+	});
+}
+
+function favorite_del(name, ip)
+{
+	var fav = $("#favorites #" +ip2id(ip));
+	var online = true;
+	if(fav.find("a.offline").length)
+		online = false;
+	fav.remove();
+	var path = "fav_del.json";
+	$.ajax({
+		type:'POST',
+		url: path,
+		data:{"ip":ip,"e":1},
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			if(online)
+				user_append(name, ip);
+		} 
+	}).error(function(){
+		favorite_append(name, ip, online);
+		$("#favorites").listview('refresh');
+	});
+}
+
+function ip2id(ip)
+{
+	var myip = ip.replace(/\./g,"_");
+	var myip2 = myip.replace(/:/g,"_");
+	return myip2;
 }
 
 // ======================================================

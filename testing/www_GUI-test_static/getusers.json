@@ -1,4 +1,5 @@
 {"users":[
-{"id":24,"name":"user","ip":"127.0.0.1","lq":0.9},
-{"id":25,"name":"otheruser","ip":"127.0.0.1","lq":0.2}
+{"name":"otheruser","ip":"10.0.0.2","lq":0.2,"add":1},
+{"name":"thirduser","ip":"10.0.0.3","lq":0.2,"add":0},
+{"name":"otheruser","ip":"10.95.0.4","lq":0.2,"add":1}
 ]}
