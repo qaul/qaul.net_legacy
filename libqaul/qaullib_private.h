@@ -54,6 +54,12 @@ extern "C" {
 #include <unistd.h>             // close()
 #endif
 
+
+/**
+ * for debugging messages switch this to 1
+ */
+#define QAUL_DEBUG              1
+
 /**
  * global variables and structures
  */
@@ -72,6 +78,7 @@ int ipc_connected;
 int qaul_loading_wait;
 int qaul_conf_quit;
 int qaul_conf_voip;
+int qaul_web_localip_set;
 
 union olsr_message *qaul_in_msg;
 
