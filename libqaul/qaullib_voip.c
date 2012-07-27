@@ -50,7 +50,7 @@ static void Qaullib_VoipSetNameByIp(char *ip)
 
 	printf("ip: %s\n", ip);
 
-	if(Qaullib_User_LL_IpSearch(&my_olsrip, &myuseritem))
+	if(Qaullib_User_LL_IpSearch(&my_olsrip, &myuseritem) && myuseritem->type == 2)
 		strcpy(qaul_voip_call.name, myuseritem->name);
 	else
 		strcpy(qaul_voip_call.name, "Unknown");
@@ -138,24 +138,6 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 	qaul_voip_call.call_logged = 0;
 
 	Qaullib_VoipSetNameByIp(rdata->pkt_info.src_name);
-/*
-	// get caller name
-	struct qaul_user_LL_item *myuseritem;
-	union olsr_ip_addr my_olsrip;
-	inet_pton(AF_INET, rdata->pkt_info.src_name, &my_olsrip.v4);
-	strcpy(qaul_voip_call.name, rdata->pkt_info.src_name);
-
-	printf("rdata->pkt_info.src_name: %s\n", rdata->pkt_info.src_name);
-
-	if(Qaullib_User_LL_IpSearch(&my_olsrip, &myuseritem))
-	{
-		strcpy(qaul_voip_call.name, myuseritem->name);
-	}
-	else
-	{
-		strcpy(qaul_voip_call.name, "Unknown");
-	}
-*/
 }
 
 /**

@@ -42,8 +42,10 @@ extern "C" {
 
 struct qaul_userinfo_msg
 {
+	union olsr_ip_addr ip;
 	char name[MAX_USER_LEN];
-	char icon[MAX_FILENAME_LEN];
+	char icon[MAX_HASH_LEN];
+	char suffix[MAX_SUFFIX_LEN];
 };
 
 struct qaul_filechunk_msg
@@ -57,7 +59,8 @@ struct qaul_filechunk_msg
 	//char chunk;
 };
 
-union qaul_inbuf{
+union qaul_inbuf
+{
 	char buf[BUFFSIZE + 1];
 	struct qaul_userinfo_msg userinfo;
 	struct qaul_filechunk_msg filechunk;

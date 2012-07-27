@@ -79,6 +79,13 @@ void Qaullib_UserGetInfo(struct qaul_user_LL_item *user);
 void Qaullib_UserCheckSockets(void);
 
 /**
+ * add discovered user information to LL
+ * this function adds names to the user entries in the user LL
+ * it creates new entries if a user does not exist yet
+ */
+void Qaullib_UserAddInfo(struct qaul_userinfo_msg *userinfo);
+
+/**
  * add a favorite
  */
 void Qaullib_UserFavoriteAdd(char *name, char *ipstr);

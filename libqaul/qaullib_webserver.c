@@ -739,7 +739,6 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 	Qaullib_User_LL_InitNode(&mynode);
 	while(Qaullib_User_LL_NextNode(&mynode))
 	{
-		// TODO: only send changed items
 		// check if node was changed
 		if(
 				mynode.item->type == 2 &&
@@ -1054,12 +1053,30 @@ static void Qaullib_WwwPubUsers(struct mg_connection *conn, const struct mg_requ
 	char buf[sizeof(struct qaul_userinfo_msg)];
 	struct qaul_userinfo_msg *msg = (struct qaul_userinfo_msg *) buf;
 
-	// pack message
+	// send your user name
+	memcpy(&msg->ip, &qaul_ip_addr, sizeof(union olsr_ip_addr));
 	memcpy(&msg->name, qaul_username, MAX_USER_LEN);
 	memcpy(&msg->icon, "\0", 1);
-
+	memcpy(&msg->suffix, "\0", 1);
 	// send message
 	mg_write(conn, buf, (size_t) sizeof(struct qaul_userinfo_msg));
+
+	// send all other known user names
+	// loop through LL
+	struct qaul_user_LL_node mynode;
+	Qaullib_User_LL_InitNode(&mynode);
+	while(Qaullib_User_LL_NextNode(&mynode))
+	{
+		if(mynode.item->type == 2 && mynode.item->changed < 2)
+		{
+			memcpy(&msg->ip, &mynode.item->ip, sizeof(union olsr_ip_addr));
+			memcpy(&msg->name, mynode.item->name, MAX_USER_LEN);
+			memcpy(&msg->icon, "\0", 1);
+			memcpy(&msg->suffix, "\0", 1);
+			// send info
+			mg_write(conn, buf, (size_t) sizeof(struct qaul_userinfo_msg));
+		}
+	}
 }
 
 // ------------------------------------------------------------

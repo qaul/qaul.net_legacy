@@ -110,7 +110,7 @@ void Qaullib_UserGetInfo(struct qaul_user_LL_item *user)
 	int i, success;
 	printf("[qaullib] Qaullib_UserGetInfo\n");
 
-	// check for username if there is a free connection
+	// check for user name if there is a free connection
 	for(i=0; i<MAX_USER_CONNECTIONS; i++)
 	{
 		if(userconnections[i].conn.connected == 0)
@@ -147,7 +147,7 @@ void Qaullib_UserGetInfo(struct qaul_user_LL_item *user)
 // ------------------------------------------------------------
 void Qaullib_UserCheckSockets(void)
 {
-	int i, bytes;
+	int i, bytes, bufpos;
 	// check user sockets
 	for(i=0; i<MAX_USER_CONNECTIONS; i++)
 	{
@@ -162,22 +162,72 @@ void Qaullib_UserCheckSockets(void)
 			}
 			else if(bytes >= sizeof(struct qaul_userinfo_msg))
 			{
-				// set user name
-				strncpy(userconnections[i].user->name, userconnections[i].conn.buf.userinfo.name, MAX_USER_LEN);
-				memcpy(&userconnections[i].user->name[MAX_USER_LEN], "\0", 1);
-				// set icon name
-				strncpy(userconnections[i].user->icon, userconnections[i].conn.buf.userinfo.icon, MAX_FILENAME_LEN);
-				memcpy(&userconnections[i].user->icon[MAX_FILENAME_LEN], "\0", 1);
-				// set type
-				userconnections[i].user->type = 2;
-				userconnections[i].user->changed = 1;
+				printf("Qaullib_UserCheckSockets received\n");
+				// check for first info (usually requested user)
+				if(memcmp(&userconnections[i].user->ip, &userconnections[i].conn.buf.userinfo.ip, sizeof(union olsr_ip_addr)) == 0)
+				{
+					printf("Qaullib_UserCheckSockets first is asked client\n");
+					strncpy(userconnections[i].user->name, userconnections[i].conn.buf.userinfo.name, MAX_USER_LEN);
+					userconnections[i].user->type = 2;
+				}
+				else
+					Qaullib_UserAddInfo(&userconnections[i].conn.buf.userinfo);
 
+				// check all further users
+				bufpos = sizeof(struct qaul_userinfo_msg);
+				while(bytes -bufpos >= sizeof(struct qaul_userinfo_msg))
+				{
+					printf("Qaullib_UserCheckSockets further user info\n");
+					// process information
+					Qaullib_UserAddInfo((struct qaul_userinfo_msg *)&userconnections[i].conn.buf.buf[bufpos]);
+					// set new bufpos
+					bufpos += sizeof(struct qaul_userinfo_msg);
+				}
 				// close connection
 				Qaullib_WgetClose(&userconnections[i].conn);
 			}
-			else if(bytes > 0) userconnections[i].conn.bufpos += bytes;
+			else if(bytes > 0)
+				userconnections[i].conn.bufpos += bytes;
 		}
 	}
+}
+
+void Qaullib_UserAddInfo(struct qaul_userinfo_msg *userinfo)
+{
+	struct qaul_user_LL_item *myuseritem;
+
+	printf("Qaullib_UserAddInfo\n");
+
+	// search for user
+	if(Qaullib_User_LL_IpSearch (&userinfo->ip, &myuseritem))
+	{
+		printf("Qaullib_UserAddInfo user found in LL\n");
+
+		// check if it is already known
+		if(myuseritem->type < 2)
+		{
+			printf("Qaullib_UserAddInfo name not known yet\n");
+			myuseritem->type = 2;
+			if(myuseritem->changed == 0)
+				myuseritem->changed = 1;
+		}
+		else
+			return;
+	}
+	else
+	{
+		printf("Qaullib_UserAddInfo user not found in LL: create it\n");
+		// create the user if it doesn't exist
+		myuseritem = Qaullib_User_LL_Add (&userinfo->ip);
+		// set user to cache
+		myuseritem->changed = 3;
+	}
+	myuseritem->type = 2;
+	// fill in name
+	strncpy(myuseritem->name, userinfo->name, MAX_USER_LEN);
+	memcpy(&myuseritem->name[MAX_USER_LEN], "\0", 1);
+	// todo: add icon info
+	printf("Qaullib_UserAddInfo survived\n");
 }
 
 // ------------------------------------------------------------
