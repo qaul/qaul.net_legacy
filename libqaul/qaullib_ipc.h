@@ -50,6 +50,29 @@ void Qaullib_IpcEvaluateCom(union olsr_message *msg);
 void Qaullib_IpcEvaluateTopo(union olsr_message *msg);
 
 /**
+ * process user hello message
+ *
+ * fill in new user name to user LL
+ */
+void Qaullib_IpcEvaluateUserhello(union olsr_message *msg);
+
+/**
+ * process file discover message
+ *
+ * check if you store this file, then answer,
+ * otherwise ignore this message
+ */
+void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg);
+
+/**
+ * process executable discover message
+ *
+ * check if you store the requested executables, then answer,
+ * otherwise ignore this message.
+ */
+void Qaullib_IpcEvaluateExediscover(union olsr_message *msg);
+
+/**
  * send message @msg over ipc
  */
 void Qaullib_IpcSend(union olsr_message *msg);

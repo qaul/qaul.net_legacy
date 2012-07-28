@@ -194,12 +194,20 @@ void Qaullib_UserCheckSockets(void)
 
 void Qaullib_UserAddInfo(struct qaul_userinfo_msg *userinfo)
 {
+	Qaullib_UserAdd(	&userinfo->ip,
+						userinfo->name,
+						userinfo->icon,
+						userinfo->suffix);
+}
+
+void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *suffix)
+{
 	struct qaul_user_LL_item *myuseritem;
 
-	printf("Qaullib_UserAddInfo\n");
+	printf("Qaullib_UserAdd\n");
 
 	// search for user
-	if(Qaullib_User_LL_IpSearch (&userinfo->ip, &myuseritem))
+	if(Qaullib_User_LL_IpSearch (ip, &myuseritem))
 	{
 		printf("Qaullib_UserAddInfo user found in LL\n");
 
@@ -218,16 +226,17 @@ void Qaullib_UserAddInfo(struct qaul_userinfo_msg *userinfo)
 	{
 		printf("Qaullib_UserAddInfo user not found in LL: create it\n");
 		// create the user if it doesn't exist
-		myuseritem = Qaullib_User_LL_Add (&userinfo->ip);
+		myuseritem = Qaullib_User_LL_Add (ip);
 		// set user to cache
 		myuseritem->changed = 3;
 	}
 	myuseritem->type = 2;
 	// fill in name
-	strncpy(myuseritem->name, userinfo->name, MAX_USER_LEN);
+	strncpy(myuseritem->name, name, MAX_USER_LEN);
 	memcpy(&myuseritem->name[MAX_USER_LEN], "\0", 1);
 	// todo: add icon info
-	printf("Qaullib_UserAddInfo survived\n");
+	memcpy(&myuseritem->icon[0], "\0", 1);
+	printf("Qaullib_User survived\n");
 }
 
 // ------------------------------------------------------------

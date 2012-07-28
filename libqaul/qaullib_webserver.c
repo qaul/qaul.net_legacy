@@ -642,7 +642,7 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 {
 	char *content_length;
 	int length;
-	char buffer[10240];
+	char buffer[1024];
 	char* stmt = buffer;
 	char *error_exec=NULL;
 	char local_msg[MAX_MESSAGE_LEN +1];
@@ -696,12 +696,12 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 	if(type == 11)
 	{
 		// ipv4 only at the moment
-		m->v4.olsr_msgtype = 222;
+		m->v4.olsr_msgtype = QAUL_CHAT_MESSAGE_TYPE;
 		//m.v4.ttl = MAX_TTL;
 		//m.v4.hopcnt = 0;
 		memcpy(&m->v4.message.chat.name, qaul_username, MAX_USER_LEN);
 		memcpy(&m->v4.message.chat.msg, local_msg, MAX_MESSAGE_LEN);
-		size = sizeof( struct qaulchatmsg);
+		size = sizeof( struct qaul_chat_msg);
 		size = size + sizeof(struct olsrmsg);
 		m->v4.olsr_msgsize = htons(size);
 
@@ -844,7 +844,7 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 			printf("send advertise message\n");
 
 			// ipv4 only at the moment
-			m->v4.olsr_msgtype = 222;
+			m->v4.olsr_msgtype = QAUL_USERHELLO_MESSAGE_TYPE;
 			memcpy(&m->v4.message.chat.name, qaul_username, MAX_USER_LEN);
 			// create message
 			strcpy(local_msg, local_hash);
@@ -857,7 +857,7 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 			strcat(local_msg, local_description);
 
 			memcpy(&m->v4.message.chat.msg, local_msg, MAX_MESSAGE_LEN);
-			size = sizeof( struct qaulchatmsg);
+			size = sizeof( struct qaul_chat_msg);
 			size = size + sizeof(struct olsrmsg);
 			m->v4.olsr_msgsize = htons(size);
 

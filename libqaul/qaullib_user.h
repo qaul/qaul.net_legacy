@@ -80,10 +80,16 @@ void Qaullib_UserCheckSockets(void);
 
 /**
  * add discovered user information to LL
+ * wrapper for @see Qaullib_UserAdd()
+ */
+void Qaullib_UserAddInfo(struct qaul_userinfo_msg *userinfo);
+
+/**
+ * add discovered user information to LL
  * this function adds names to the user entries in the user LL
  * it creates new entries if a user does not exist yet
  */
-void Qaullib_UserAddInfo(struct qaul_userinfo_msg *userinfo);
+void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *suffix);
 
 /**
  * add a favorite

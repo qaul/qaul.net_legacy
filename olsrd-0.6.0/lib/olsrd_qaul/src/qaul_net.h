@@ -1,6 +1,6 @@
 /*
- * written by contact@wachter-jud.net
- * License GPL
+ * qaul.net is free software
+ * licensed under GPL (version 3)
  */
 
 #ifndef _OLSRD_QAUL_NET

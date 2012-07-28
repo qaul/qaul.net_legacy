@@ -1,6 +1,6 @@
 /*
- * written by contact@wachter-jud.net
- * License GPL
+ * qaul.net is free software
+ * licensed under GPL (version 3)
  */
 
 /*
@@ -41,7 +41,7 @@
 #include <unistd.h>
 
 #include "qaul_ipc.h"
-#include "qaul_chat.h"
+#include "qaul_msg.h"
 #include "qaul_messages.h"
 #include "qaul_net.h"
 
@@ -110,25 +110,23 @@ void qaul_ipc_msg2gui(union olsr_message *m)
 
 void qaul_ipc_receive(void *foo __attribute__ ((unused)))
 {
-  int bytes, tmp_len;
-  char *tmp;
-  union {
-    char buf[BUFFSIZE + 1];
-    union olsr_message msg;
-  } inbuf;
+	int bytes, tmp_len;
+	char *tmp;
+	union {
+	char buf[BUFFSIZE + 1];
+	union olsr_message msg;
+	} inbuf;
 
 
-  if(ipc_active)
-  {
-  		memset(&inbuf, 0, sizeof(BUFFSIZE + 1));
+	if(ipc_active)
+	{
+		memset(&inbuf, 0, sizeof(BUFFSIZE + 1));
 
 		//OLSR_PRINTF(1, "[Qaul] ipc_sock = %i\n", ipc_sock);
 		bytes = recv(ipc_conn, (char *)&inbuf, BUFFSIZE, 0);
 		if (bytes == 0)
 		{
 			OLSR_PRINTF(1, "[Qaul] socket closed\n");
-			//perror("recv");
-			//exit(1);
 		}
 		else if(bytes > 0)
 		{
@@ -170,7 +168,7 @@ void qaul_ipc_receive(void *foo __attribute__ ((unused)))
 				}
 			}
 		}
-  }
+	}
 }
 
 void qaul_ipc_evaluate(union olsr_message *msg)
@@ -178,11 +176,25 @@ void qaul_ipc_evaluate(union olsr_message *msg)
 	OLSR_PRINTF(1, "[Qaul] message arrived: %i\n", msg->v4.olsr_msgtype);
 	switch(msg->v4.olsr_msgtype)
 	{
-		case 222:
-			qaul_ipc_evaluate_chat(msg);
+		case QAUL_CHAT_MESSAGE_TYPE:
+			//qaul_ipc_evaluate_chat(msg);
+			OLSR_PRINTF(1, "[QAUL] send chat message\n");
+			qaul_qaulmsg_send_all(msg, sizeof(struct qaul_chat_msg));
 			break;
-		case 223:
+		case QAUL_IPCCOM_MESSAGE_TYPE:
 			qaul_ipc_evaluate_com(msg);
+			break;
+		case QAUL_USERHELLO_MESSAGE_TYPE:
+			OLSR_PRINTF(1, "[QAUL] send user hello message\n");
+			qaul_qaulmsg_send_all(msg, sizeof(struct qaul_userhello_msg));
+			break;
+		case QAUL_FILEDISCOVER_MESSAGE_TYPE:
+			OLSR_PRINTF(1, "[QAUL] send file discover message\n");
+			qaul_qaulmsg_send_all(msg, sizeof(struct qaul_filediscover_msg));
+			break;
+		case QAUL_EXEDISCOVER_MESSAGE_TYPE:
+			OLSR_PRINTF(1, "[QAUL] send exe discover message\n");
+			qaul_qaulmsg_send_all(msg, sizeof(struct qaul_exediscover_msg));
 			break;
 		default:
 			OLSR_PRINTF(1, "not a known message type\n");
@@ -190,17 +202,31 @@ void qaul_ipc_evaluate(union olsr_message *msg)
 	}
 }
 
-
+/*
 void qaul_ipc_evaluate_chat(union olsr_message *msg)
 {
 	// forward it to all
-	chat_send_all(( struct qaulchatmsg *)ARM_NOWARN_ALIGN(&msg->v4.message));
+	chat_send_all(( struct qaul_chat_msg *)ARM_NOWARN_ALIGN(&msg->v4.message));
 }
 
 
+void qaul_ipc_evaluate_fildiscover(union olsr_message *msg)
+{
+	// forward it to all
+	chat_send_all(( struct qaul_chat_msg *)ARM_NOWARN_ALIGN(&msg->v4.message));
+}
+
+
+void qaul_ipc_evaluate_exediscover(union olsr_message *msg)
+{
+	// forward it to all
+	chat_send_all(( struct qaul_chat_msg *)ARM_NOWARN_ALIGN(&msg->v4.message));
+}
+*/
+
 void qaul_ipc_evaluate_com(union olsr_message *msg)
 {
-	struct qaulipcmsg *ipcCom = ( struct qaulipcmsg *)ARM_NOWARN_ALIGN(&msg->v4.message);
+	struct qaul_ipc_msg *ipcCom = ( struct qaul_ipc_msg *)ARM_NOWARN_ALIGN(&msg->v4.message);
 	switch(ipcCom->type)
 	{
 		case 0:

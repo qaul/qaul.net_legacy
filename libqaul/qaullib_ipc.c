@@ -100,75 +100,91 @@ int Qaullib_IpcClose(void)
 void Qaullib_IpcReceive(void)
 {
 	int bytes, tmp_len;
-  char *tmp;
-  union
-  {
-    char buf[BUFFSIZE + 1];
-    union olsr_message msg;
-  } inbuf;
+	char *tmp;
+	union
+	{
+		char buf[BUFFSIZE + 1];
+		union olsr_message msg;
+	} inbuf;
+	char buffer[1024];
+	int size;
+	union olsr_message *m = (union olsr_message *)buffer;
 
-  //printf("[qaullib] Qaullib_IpcReceive()\n");
-
-  if (!ipc_connected)
-  {
+	if (!ipc_connected)
+	{
 		printf("Connection closed, try to reconnect ...\n");
 		// connect to the application
-		Qaullib_IpcConnect();
-  }
-  else
-  {
-	  memset(&inbuf, 0, BUFFSIZE + 1);
-
-    bytes = recv(ipc_socket, (char *)&inbuf, BUFFSIZE, 0);
-    if (bytes == 0)
-    {
-      shutdown(ipc_socket, SHUT_RDWR);
-      printf("bytes == 0: close connection\n");
-      //set_net_info("Disconnected from server...", 1);
-      ipc_connected = 0;
-      close(ipc_socket);
-    }
-
-    if (bytes > 0)
-    {
-		printf("bytes: %i msg-size: %i type: %i\n", bytes, (int) ntohs(inbuf.msg.v4.olsr_msgsize), (int) inbuf.msg.v4.olsr_msgtype);
-
-      tmp = (char *)&inbuf.msg;
-      qaul_in_msg = &inbuf.msg;
-
-		// do it as often as needed until all messages are out of the buffer.
-		if (bytes > 0 && ntohs(inbuf.msg.v4.olsr_msgsize) <= bytes)
+		if(Qaullib_IpcConnect())
 		{
-			printf("[qaullib] IPC: message received \n");
+			// send user hello message
+			// todo: ipv6
+			m->v4.olsr_msgtype = QAUL_USERHELLO_MESSAGE_TYPE;
+			memcpy(&m->v4.message.userhello.name, qaul_username, MAX_USER_LEN);
+			//memcpy(&m->v4.message.userhello.icon, "\0", 1);
+			memset(&m->v4.message.userhello.icon, 0, sizeof(m->v4.message.userhello.icon));
+			memcpy(&m->v4.message.userhello.suffix, "\0", 1);
+			size = sizeof( struct qaul_chat_msg);
+			size = size + sizeof(struct olsrmsg);
+			m->v4.olsr_msgsize = htons(size);
 
-			while (bytes > 0 && ntohs(qaul_in_msg->v4.olsr_msgsize) <= bytes)
+			// send package
+			Qaullib_IpcSend(m);
+		}
+	}
+	else
+	{
+		memset(&inbuf, 0, BUFFSIZE + 1);
+
+		bytes = recv(ipc_socket, (char *)&inbuf, BUFFSIZE, 0);
+		if (bytes == 0)
+		{
+		  shutdown(ipc_socket, SHUT_RDWR);
+		  printf("bytes == 0: close connection\n");
+		  //set_net_info("Disconnected from server...", 1);
+		  ipc_connected = 0;
+		  close(ipc_socket);
+		}
+
+		if (bytes > 0)
+		{
+			printf("bytes: %i msg-size: %i type: %i\n", bytes, (int) ntohs(inbuf.msg.v4.olsr_msgsize), (int) inbuf.msg.v4.olsr_msgtype);
+
+		  tmp = (char *)&inbuf.msg;
+		  qaul_in_msg = &inbuf.msg;
+
+			// do it as often as needed until all messages are out of the buffer.
+			if (bytes > 0 && ntohs(inbuf.msg.v4.olsr_msgsize) <= bytes)
 			{
-				//printf("read out bytes: %i %i\n", bytes, ntohs(qaul_in_msg->v4.olsr_msgsize));
+				printf("[qaullib] IPC: message received \n");
 
-				// proceed
-				Qaullib_IpcEvaluateMessage(qaul_in_msg);
+				while (bytes > 0 && ntohs(qaul_in_msg->v4.olsr_msgsize) <= bytes)
+				{
+					//printf("read out bytes: %i %i\n", bytes, ntohs(qaul_in_msg->v4.olsr_msgsize));
 
-				// copy buffer to new location
-				tmp_len = ntohs(qaul_in_msg->v4.olsr_msgsize);
-				qaul_in_msg = (union olsr_message *)&tmp[tmp_len];
-				tmp = &tmp[tmp_len];
-				if (tmp_len == 0)
-					break;
-				bytes = bytes - tmp_len;
-				tmp_len = ntohs(qaul_in_msg->v4.olsr_msgsize);
+					// proceed
+					Qaullib_IpcEvaluateMessage(qaul_in_msg);
 
-				// Copy to start of buffer
-				if (tmp_len > bytes) {
-					// Copy the buffer
-					memcpy(&inbuf, tmp, bytes);
-					bytes = recv(ipc_socket, (char *)&inbuf.buf[bytes], tmp_len - bytes, 0);
-					tmp = (char *)&inbuf.msg;
-					qaul_in_msg = (union olsr_message *)tmp;
+					// copy buffer to new location
+					tmp_len = ntohs(qaul_in_msg->v4.olsr_msgsize);
+					qaul_in_msg = (union olsr_message *)&tmp[tmp_len];
+					tmp = &tmp[tmp_len];
+					if (tmp_len == 0)
+						break;
+					bytes = bytes - tmp_len;
+					tmp_len = ntohs(qaul_in_msg->v4.olsr_msgsize);
+
+					// Copy to start of buffer
+					if (tmp_len > bytes) {
+						// Copy the buffer
+						memcpy(&inbuf, tmp, bytes);
+						bytes = recv(ipc_socket, (char *)&inbuf.buf[bytes], tmp_len - bytes, 0);
+						tmp = (char *)&inbuf.msg;
+						qaul_in_msg = (union olsr_message *)tmp;
+					}
 				}
 			}
 		}
-    }
-  }
+	}
 }
 
 
@@ -178,14 +194,23 @@ void Qaullib_IpcEvaluateMessage(union olsr_message *msg)
 	//printf("message arrived: %i\n", msg->v4.olsr_msgtype);
 	switch(msg->v4.olsr_msgtype)
 	{
-		case 222:
+		case QAUL_CHAT_MESSAGE_TYPE:
 			Qaullib_IpcEvaluateChat(msg);
 			break;
-		case 223:
+		case QAUL_IPCCOM_MESSAGE_TYPE:
 			Qaullib_IpcEvaluateCom(msg);
 			break;
-		case 224:
+		case QAUL_IPCTOPO_MESSAGE_TYPE:
 			Qaullib_IpcEvaluateTopo(msg);
+			break;
+		case QAUL_USERHELLO_MESSAGE_TYPE:
+			Qaullib_IpcEvaluateUserhello(msg);
+			break;
+		case QAUL_FILEDISCOVER_MESSAGE_TYPE:
+			Qaullib_IpcEvaluateFilediscover(msg);
+			break;
+		case QAUL_EXEDISCOVER_MESSAGE_TYPE:
+			Qaullib_IpcEvaluateExediscover(msg);
 			break;
 		default:
 			printf("not a known message type\n");
@@ -206,7 +231,7 @@ void Qaullib_IpcEvaluateChat(union olsr_message *msg)
 	//printf("IpcEvaluateChat\n");
 	//printf("type: %i, name: %s\n", msg->v4.olsr_msgtype, msg->v4.message.chat.name);
 
-	// get chat & username
+	// get chat & user name
 	memcpy(&chat_user, msg->v4.message.chat.name, MAX_USER_LEN);
 	memcpy(&chat_user[MAX_USER_LEN], "\0", 1);
 	memcpy(&chat_msg, msg->v4.message.chat.msg, MAX_MESSAGE_LEN);
@@ -266,6 +291,118 @@ void Qaullib_IpcEvaluateTopo(union olsr_message *msg)
 }
 
 // ------------------------------------------------------------
+void Qaullib_IpcEvaluateUserhello(union olsr_message *msg)
+{
+	printf("Qaullib_IpcEvaluateUserhello()\n");
+	// todo: ipv6
+	union olsr_ip_addr ip;
+	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
+
+	Qaullib_UserAdd(	&ip,
+						msg->v4.message.userhello.name,
+						msg->v4.message.userhello.icon,
+						msg->v4.message.userhello.suffix);
+}
+
+// ------------------------------------------------------------
+void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg)
+{
+/*
+	char buffer[10240];
+	char* stmt = buffer;
+	char *error_exec = NULL;
+	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
+	char chat_msg[MAX_MESSAGE_LEN +1];
+	char chat_user[MAX_USER_LEN +1];
+
+	//printf("IpcEvaluateChat\n");
+	//printf("type: %i, name: %s\n", msg->v4.olsr_msgtype, msg->v4.message.chat.name);
+
+	// get chat & username
+	memcpy(&chat_user, msg->v4.message.chat.name, MAX_USER_LEN);
+	memcpy(&chat_user[MAX_USER_LEN], "\0", 1);
+	memcpy(&chat_msg, msg->v4.message.chat.msg, MAX_MESSAGE_LEN);
+	memcpy(&chat_msg[MAX_MESSAGE_LEN], "\0", 1);
+
+	// TODO: ipv6
+	sprintf(stmt, sql_msg_set_received,
+			1,
+			chat_user,
+			chat_msg,
+			inet_ntop(AF_INET, &msg->v4.originator, (char *)&ipbuf, sizeof(ipbuf)),
+			4,
+			(int)msg->v4.hopcnt,
+			(int)msg->v4.ttl,
+			(int)ntohs(msg->v4.seqno),
+			me_to_reltime(msg->v4.olsr_vtime)
+			);
+	//printf("statement: %s\n", stmt);
+	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+	{
+		printf("SQLite error: %s\n",error_exec);
+		sqlite3_free(error_exec);
+		error_exec=NULL;
+	}
+
+	// remember username
+	union olsr_ip_addr ip;
+	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
+	Qaullib_UserCheckUser(&ip, chat_user);
+
+	qaul_new_msg = 1;
+*/
+}
+
+// ------------------------------------------------------------
+void Qaullib_IpcEvaluateExediscover(union olsr_message *msg)
+{
+/*
+	char buffer[10240];
+	char* stmt = buffer;
+	char *error_exec = NULL;
+	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
+	char chat_msg[MAX_MESSAGE_LEN +1];
+	char chat_user[MAX_USER_LEN +1];
+
+	//printf("IpcEvaluateChat\n");
+	//printf("type: %i, name: %s\n", msg->v4.olsr_msgtype, msg->v4.message.chat.name);
+
+	// get chat & username
+	memcpy(&chat_user, msg->v4.message.chat.name, MAX_USER_LEN);
+	memcpy(&chat_user[MAX_USER_LEN], "\0", 1);
+	memcpy(&chat_msg, msg->v4.message.chat.msg, MAX_MESSAGE_LEN);
+	memcpy(&chat_msg[MAX_MESSAGE_LEN], "\0", 1);
+
+	// TODO: ipv6
+	sprintf(stmt, sql_msg_set_received,
+			1,
+			chat_user,
+			chat_msg,
+			inet_ntop(AF_INET, &msg->v4.originator, (char *)&ipbuf, sizeof(ipbuf)),
+			4,
+			(int)msg->v4.hopcnt,
+			(int)msg->v4.ttl,
+			(int)ntohs(msg->v4.seqno),
+			me_to_reltime(msg->v4.olsr_vtime)
+			);
+	//printf("statement: %s\n", stmt);
+	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+	{
+		printf("SQLite error: %s\n",error_exec);
+		sqlite3_free(error_exec);
+		error_exec=NULL;
+	}
+
+	// remember username
+	union olsr_ip_addr ip;
+	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
+	Qaullib_UserCheckUser(&ip, chat_user);
+
+	qaul_new_msg = 1;
+*/
+}
+
+// ------------------------------------------------------------
 void Qaullib_IpcSendCom(int commandId)
 {
 	char buffer[1024];
@@ -274,9 +411,9 @@ void Qaullib_IpcSendCom(int commandId)
 
 	// pack chat into olsr message
 	// ipv4 only at the moment
-    msg->v4.olsr_msgtype = 223;
+    msg->v4.olsr_msgtype = QAUL_IPCCOM_MESSAGE_TYPE;
     msg->v4.message.ipc.type = commandId;
-    size = sizeof( struct qaulipcmsg);
+    size = sizeof( struct qaul_ipc_msg);
 	size = size + sizeof(struct olsrmsg);
     msg->v4.olsr_msgsize = htons(size);
 
