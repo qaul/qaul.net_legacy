@@ -1,5 +1,5 @@
 #!/bin/bash
 make clean
-make win
+make OS=win
 ./qaul.exe
 

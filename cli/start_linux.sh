@@ -1,5 +1,5 @@
 #!/bin/bash
 make clean
-make linux
+make OS=linux
 ./qaul
 

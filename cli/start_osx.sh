@@ -1,5 +1,5 @@
 #!/bin/bash
 make clean
-make osx
+make OS=osx
 ./qaul
 
