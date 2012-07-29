@@ -22,10 +22,13 @@ extern "C" {
  * configuration procedure in the qaul
  *
  * initialize qaullib
+ * @see Qaullib_Init()
+ *
  * invoke configuration functions
  *
  * startup configuration (0):
  *   start web server
+ *   @see Qaullib_WebserverStart()
  *
  * startup configuration (10):
  *   check if you have sufficient authorization rights
@@ -38,21 +41,31 @@ extern "C" {
  *   connect to qaul.net
  *
  * startup configuration (30):
+ *   @see Qaullib_ConfigStart()
+ *
  *   check if user name was set
  *   wait until user name has been set
+ *   @see Qaullib_ExistsUsername()
  *
  * startup configuration (40):
  *   start olsrd routing
  *
  * startup configuration (45):
  *   connect ipc
+ *   @see Qaullib_IpcConnect()
  *
  * startup configuration (50):
  *   start voip
+ *   @see Qaullib_SetConfVoIP()
+ *
  *   start captive portal
+ *   @see Qaullib_CaptiveStart()
+ *
  *   start port forwarding
  *   start timers to continuously invoke
+ *
  *   tell qaullib that configuration is finished
+ *   @see Qaullib_ConfigurationFinished()
  */
 
 /**

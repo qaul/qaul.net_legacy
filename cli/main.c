@@ -38,6 +38,22 @@ int main(int argc, char *argv[])
 
 	Qaullib_Init(cCurrentPath);
 	if(!Qaullib_WebserverStart()) printf("Webserver startup failed\n");
+	Qaullib_ConfigStart();
+
+	// wait until user name is set
+	int username_flag = 0;
+	while(Qaullib_ExistsUsername() == 0)
+	{
+		if(username_flag == 0)
+		{
+			username_flag = 1;
+			printf("waiting until user name is set ...\n");
+			printf("open web browser with http://localhost:8081/jqm_qaul.html to set it ...\n");
+		}
+		sleep(1);
+	}
+	printf("user name successfully set!\n");
+
 	if(!Qaullib_IpcConnect()) printf("Ipc connection failed\n");
 	Qaullib_SetConfVoIP();
 	if(!Qaullib_CaptiveStart()) printf("Captive Portal failed\n");

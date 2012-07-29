@@ -22,18 +22,18 @@ Compile olsrd_qaul plugin
     make
     cd ../../../
 
-Compile static qaullib
-
-    cd libqaul
-    make OS=linux
-    cd ../
-
-Compile pjp library for VoIP
+Compile pjsip library for VoIP
 
     cd pjproject-2.0.1
     ./configure
     make dep
     make
+
+Compile static qaullib
+
+    cd libqaul
+    make OS=linux
+    cd ../
 
 qaul.net is implemented in C++ in QT. 
 

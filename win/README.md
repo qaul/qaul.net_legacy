@@ -8,7 +8,7 @@ qaul.net works on:
 Installation and Compile Instructions
 --------------------------------------
 
-Compile pjproject with mingw
+Compile pjsip library for VoIP with mingw
 (at the end of compilation, pjlib-test will throw an error, ignore that error)
     
 	cd pjproject-2.0.1

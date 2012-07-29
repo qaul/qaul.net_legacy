@@ -1,6 +1,6 @@
 /*
- * written by contact@wachter-jud.net
- * License GPL
+ * qaul.net is free software
+ * licensed under GPL (version 3)
  */
 
 #include "tc_set.h"
@@ -19,8 +19,8 @@ void qaul_net_topo2gui(void)
 	// create new message
 	union olsr_message *m = (union olsr_message *)buffer;
 	// fill message
-	m->v4.olsr_msgtype = 224;
-	m->v4.olsr_msgsize = htons(sizeof(struct qaulnodemsg) + sizeof(struct olsrmsg));
+	m->v4.olsr_msgtype = QAUL_IPCTOPO_MESSAGE_TYPE;
+	m->v4.olsr_msgsize = htons(sizeof(struct qaul_node_msg) + sizeof(struct olsrmsg));
 
 	// loop through the topology and add it to the message
 	OLSR_FOR_ALL_TC_ENTRIES(tc)
@@ -30,7 +30,7 @@ void qaul_net_topo2gui(void)
 		{
 		  if (tc_edge->edge_inv)
 		  {
-			  struct qaulnodemsg *node = (struct qaulnodemsg *) &m->v4.message;
+			  struct qaul_node_msg *node = (struct qaul_node_msg *) &m->v4.message;
 			  // fill the message
 			  memcpy(&node->ip, &tc_edge->T_dest_addr, sizeof(union olsr_ip_addr));
 			  memcpy(&node->gateway, &tc->addr, sizeof(union olsr_ip_addr));

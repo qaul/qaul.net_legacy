@@ -34,6 +34,13 @@ android/bin
 android/libs
 android/obj
 
+# CLI
+cli/qaul
+cli/qaul.exe
+cli/olsrd
+cli/olsrd.exe
+#cli/www
+
 # build files & executables
 *.[oad]
 *.exe
@@ -62,10 +69,6 @@ olsrd-0.6.0/olsrd
 gmon.out
 
 # project specific
-cli/qaul
-cli/Debug
-cli/Release
-cli/olsrd
 src/builddata.c
 qaullib.db
 olsrd-ipv4.lock

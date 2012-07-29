@@ -3,7 +3,7 @@
 #
 
 TOP:=$(dir $(lastword $(MAKEFILE_LIST)))
-PJBASE=$(TOP)/../pjproject-2.0.1
+PJBASE=$(TOP)../pjproject-2.0.1
 
 CC=gcc
 LIBDEST=./
@@ -77,29 +77,62 @@ endif
 # linux
 ifeq ($(OS),linux)
 LIBS= \
-	
+    -lpjsua-i686-pc-linux-gnu \
+    -lpjsip-ua-i686-pc-linux-gnu \
+    -lpjsip-simple-i686-pc-linux-gnu \
+    -lpjsip-i686-pc-linux-gnu \
+    -lpjmedia-codec-i686-pc-linux-gnu \
+    -lpjmedia-videodev-i686-pc-linux-gnu \
+    -lpjmedia-i686-pc-linux-gnu \
+    -lpjmedia-audiodev-i686-pc-linux-gnu \
+    -lpjnath-i686-pc-linux-gnu \
+    -lpjlib-util-i686-pc-linux-gnu \
+    -lresample-i686-pc-linux-gnu \
+    -lmilenage-i686-pc-linux-gnu \
+    -lsrtp-i686-pc-linux-gnu \
+    -lgsmcodec-i686-pc-linux-gnu \
+    -lspeex-i686-pc-linux-gnu \
+    -lilbccodec-i686-pc-linux-gnu \
+    -lg7221codec-i686-pc-linux-gnu \
+    -lportaudio-i686-pc-linux-gnu \
+    -lpj-i686-pc-linux-gnu \
+    \
+    -L/usr/local/lib \
+    -lavformat \
+    -lavcodec \
+    -lswscale \
+    -lavutil \
+    -lasound \
+    -lcrypto \
+    -lssl \
+    \
+    -lpthread \
+    -ldl \
+    -luuid \
+    -lm
 endif
 
 # windows
 ifeq ($(OS),win)
 LIBDEST_WIN= \
-		-I../libqaul \
-		-L../libqaul \
-		-lqaul
+	-I../libqaul \
+	-L../libqaul \
+	-lqaul
 
 SRC=main.c
 else
-CFLAGS= $(OSX_CFLAGS) \
-		-I$(PJBASE)/pjlib/include \
-		-I$(PJBASE)/pjlib-util/include \
-		-I$(PJBASE)/pjmedia/include \
-		-I$(PJBASE)/pjnath/include \
-		-I$(PJBASE)/pjsip/include \
-		-I$(PJBASE)/third_party/portaudio/include \
-		-I$(PJBASE)/third_party/resample/include \
-		-I$(PJBASE)/third_party/speex/include \
-		-I$(PJBASE)/third_party/srtp/crypto/include \
-		-I$(PJBASE)/third_party/srtp/include	
+CFLAGS= \
+	$(OSX_CFLAGS) \
+	-I$(PJBASE)/pjlib/include \
+	-I$(PJBASE)/pjlib-util/include \
+	-I$(PJBASE)/pjmedia/include \
+	-I$(PJBASE)/pjnath/include \
+	-I$(PJBASE)/pjsip/include \
+	-I$(PJBASE)/third_party/portaudio/include \
+	-I$(PJBASE)/third_party/resample/include \
+	-I$(PJBASE)/third_party/speex/include \
+	-I$(PJBASE)/third_party/srtp/crypto/include \
+	-I$(PJBASE)/third_party/srtp/include	
 
 SRC= ../libqaul/qaullib.c ../libqaul/qaullib_ipc.c ../libqaul/qaullib_webserver.c ../libqaul/qaullib_voip.c \
      ../libqaul/qaullib_webclient.c ../libqaul/qaullib_filesharing.c ../libqaul/qaullib_threads.c \
@@ -136,19 +169,32 @@ ifeq ($(OS),osx)
 	@cp ../olsrd-0.6.0/olsrd ./
 	@echo copy olsrd_qaul plugin into this directory
 	@cp ../olsrd-0.6.0/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
+	@echo copy www folder into this directory
+	@cp -R ../www ./
 endif
 ifeq ($(OS),linux)
 	@echo application Makefile - linking qaul
-	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul -lpthread -ldl -lm
+	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul $(LFLAGS)
 	@echo copy olsrd executable into this directory
 	@cp ../olsrd_0.6.2/olsrd ./
 	@echo copy olsrd_qaul plugin into this directory
 	@cp ../olsrd_0.6.2/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
+	@echo copy www folder into this directory
+	@cp -R ../www ./
 endif
 ifeq ($(OS),win)
 	@echo application Makefile - linking qaul.exe
 	@cp ../libqaul/libqaul.dll ./
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul.exe $(CFLAGS) $(LIBDEST_WIN)
+	@echo copy olsrd executable into this directory
+	@cp ../olsrd-0.6.0/olsrd.exe ./
+# todo: copy these files (set correct paths & suffixes)
+#	@echo copy olsrd_qaul plugin into this directory
+#	@cp ../olsrd-0.6.0/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
+#	@echo copy qaullib into this directory
+#	@cp ../qaullib/qaullib.dll ./
+	@echo copy www folder into this directory
+	@cp -R ../www ./
 endif
 endif
 

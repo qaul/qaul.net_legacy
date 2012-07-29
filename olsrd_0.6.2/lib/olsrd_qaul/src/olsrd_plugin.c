@@ -1,6 +1,6 @@
 /*
- * written by contact@wachter-jud.net
- * Licence GPL
+ * qaul.net is free software
+ * licensed under GPL (version 3)
  */
 
  /*
@@ -13,7 +13,7 @@
 #include "../../../src/olsrd_plugin.h"
 
 #include "olsrd_plugin.h"
-#include "qaul_chat.h"
+#include "qaul_msg.h"
 #include "qaul_ipc.h"
 #include "qaul_net.h"
 
@@ -92,7 +92,7 @@ int
 olsrd_plugin_init(void)
 {
   // init chat
-  qaul_chat_init();
+  qaul_msg_init();
 
   // init ipc
   qaul_ipc_init();
