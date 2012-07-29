@@ -480,7 +480,7 @@ void Qaul::QaulStartTimers(void)
 
     qaulTimerTopology = new QTimer(this);
     connect(qaulTimerTopology, SIGNAL(timeout()), this, SLOT(QaulCheckTopology()));
-    qaulTimerTopology->start(15000);
+    qaulTimerTopology->start(5000);
 
     qaulTimersSet = true;
 }
