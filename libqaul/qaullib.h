@@ -216,13 +216,13 @@ void Qaullib_TimedSocketReceive(void);
 
 /**
  * check if a file or a username needs to be downloaded
- * to be called every 15s
+ * to be called every 5s
  */
 void Qaullib_TimedDownload(void);
 
 /**
  * send ipc command
- * check for network topology every 15 seconds
+ * check for network topology every 5 seconds
  *
  * @param commandId == 0: exit command for olsrd
  * @param commandId == 1: check network topology / nodes

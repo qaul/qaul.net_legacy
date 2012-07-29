@@ -92,14 +92,12 @@ int main(int argc, char *argv[])
 		else
 			socketCounter++;
 
-		if(ipcCounter >= 1500)
+		// get network node IPs
+		// schedule downloads
+		if(ipcCounter >= 500)
 		{
-			// get network node IPs
 			Qaullib_IpcSendCom(1);
-
-			// schedule downloads
 			Qaullib_TimedDownload();
-
 			ipcCounter = 0;
 		}
 		else

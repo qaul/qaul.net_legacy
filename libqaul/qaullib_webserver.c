@@ -728,7 +728,7 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 // ------------------------------------------------------------
 static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
-	//printf("[LL next] Qaullib_WwwGetUsers\n");
+	printf("Qaullib_WwwGetUsers\n");
 	int add;
 	int first = 0;
 	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
@@ -750,6 +750,8 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 				mynode.item->changed == 2)
 				)
 		{
+			printf("changable user found\n");
+
 			if(!first)
 				first = 1;
 			else
@@ -768,7 +770,10 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 					add
 					);
 
-			mynode.item->changed = 0;
+			if(mynode.item->changed == 2)
+				mynode.item->changed = 3;
+			else
+				mynode.item->changed = 0;
 		}
 	}
 	mg_printf(conn, "]}");

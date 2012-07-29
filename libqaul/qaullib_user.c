@@ -68,13 +68,17 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 // ------------------------------------------------------------
 void Qaullib_UserTouchIp(union olsr_ip_addr *ip)
 {
+	printf("Qaullib_UserTouchIp \n");
+
 	struct qaul_user_LL_item *user;
 
 	// check if user exists in LL
 	if(Qaullib_User_LL_IpSearch (ip, &user))
 	{
+		printf("user exists \n");
+
 		// if user exists: update lastseen_at
-		if(user->changed == 2)
+		if(user->changed >= 2)
 		{
 			if(user->type == 2) user->changed = 1;
 			else user->changed = 0;
@@ -84,6 +88,8 @@ void Qaullib_UserTouchIp(union olsr_ip_addr *ip)
 	}
 	else
 	{
+		printf("user does not exist, create it \n");
+
 		// if user does not exist: create user
 		user = Qaullib_User_LL_Add (ip);
 	}
@@ -148,6 +154,7 @@ void Qaullib_UserGetInfo(struct qaul_user_LL_item *user)
 void Qaullib_UserCheckSockets(void)
 {
 	int i, bytes, bufpos;
+
 	// check user sockets
 	for(i=0; i<MAX_USER_CONNECTIONS; i++)
 	{
@@ -158,7 +165,8 @@ void Qaullib_UserCheckSockets(void)
 			{
 				printf("[qaullib] user connection error\n");
 				// mark user as node
-				userconnections[i].user->type = -1;
+				if(userconnections[i].user->type == 1)
+					userconnections[i].user->type = -1;
 			}
 			else if(bytes >= sizeof(struct qaul_userinfo_msg))
 			{
@@ -167,8 +175,13 @@ void Qaullib_UserCheckSockets(void)
 				if(memcmp(&userconnections[i].user->ip, &userconnections[i].conn.buf.userinfo.ip, sizeof(union olsr_ip_addr)) == 0)
 				{
 					printf("Qaullib_UserCheckSockets first is asked client\n");
-					strncpy(userconnections[i].user->name, userconnections[i].conn.buf.userinfo.name, MAX_USER_LEN);
-					userconnections[i].user->type = 2;
+					if(userconnections[i].user->type == 1)
+					{
+						strncpy(userconnections[i].user->name, userconnections[i].conn.buf.userinfo.name, MAX_USER_LEN);
+						memcpy(&userconnections[i].user->name[MAX_USER_LEN], "\0", 1);
+						userconnections[i].user->type = 2;
+						userconnections[i].user->changed = 1;
+					}
 				}
 				else
 					Qaullib_UserAddInfo(&userconnections[i].conn.buf.userinfo);
