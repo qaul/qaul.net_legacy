@@ -87,99 +87,99 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 			// local jqm gui
 			if (strcmp(request_info->uri, "/getmsgs.json") == 0)
 			{
-			  Qaullib_WwwGetMsgs(conn, request_info);
+				Qaullib_WwwGetMsgs(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/getevents.json") == 0)
 			{
-			  Qaullib_WwwGetEvents(conn, request_info);
+				Qaullib_WwwGetEvents(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/getusers.json") == 0)
 			{
-			  Qaullib_WwwGetUsers(conn, request_info);
+				Qaullib_WwwGetUsers(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/sendmsg") == 0)
 			{
-			  Qaullib_WwwSendMsg(conn, request_info);
+				Qaullib_WwwSendMsg(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/getname") == 0)
 			{
-			  Qaullib_WwwGetName(conn, request_info);
+				Qaullib_WwwGetName(conn, request_info);
 			}
 			// call handling
 			else if (strcmp(request_info->uri, "/call_event") == 0)
 			{
-			  Qaullib_WwwCallEvent(conn, request_info);
+				Qaullib_WwwCallEvent(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/call_start") == 0)
 			{
-			  Qaullib_WwwCallStart(conn, request_info);
+				Qaullib_WwwCallStart(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/call_end") == 0)
 			{
-			  Qaullib_WwwCallEnd(conn, request_info);
+				Qaullib_WwwCallEnd(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/call_accept") == 0)
 			{
-			  Qaullib_WwwCallAccept(conn, request_info);
+				Qaullib_WwwCallAccept(conn, request_info);
 			}
 			// file handling
 			else if (strcmp(request_info->uri, "/file_list.json") == 0)
 			{
-			  Qaullib_WwwFileList(conn, request_info);
+				Qaullib_WwwFileList(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/file_add.json") == 0)
 			{
-			  Qaullib_WwwFileAdd(conn, request_info);
+				Qaullib_WwwFileAdd(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/file_pick.json") == 0)
 			{
-			  Qaullib_WwwFilePick(conn, request_info);
+				Qaullib_WwwFilePick(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/file_pickcheck.json") == 0)
 			{
-			  Qaullib_WwwFilePickCheck(conn, request_info);
+				Qaullib_WwwFilePickCheck(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/file_open.json") == 0)
 			{
-			  Qaullib_WwwFileOpen(conn, request_info);
+				Qaullib_WwwFileOpen(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/file_delete.json") == 0)
 			{
-			  Qaullib_WwwFileDelete(conn, request_info);
+				Qaullib_WwwFileDelete(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/file_schedule.json") == 0)
 			{
-			  Qaullib_WwwFileSchedule(conn, request_info);
+				Qaullib_WwwFileSchedule(conn, request_info);
 			}
 			// user favorites
 			else if (strcmp(request_info->uri, "/fav_get.json") == 0)
 			{
-			  Qaullib_WwwFavoriteGet(conn, request_info);
+				Qaullib_WwwFavoriteGet(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/fav_add.json") == 0)
 			{
-			  Qaullib_WwwFavoriteAdd(conn, request_info);
+				Qaullib_WwwFavoriteAdd(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/fav_del.json") == 0)
 			{
-			  Qaullib_WwwFavoriteDelete(conn, request_info);
+				Qaullib_WwwFavoriteDelete(conn, request_info);
 			}
 			// configuration
 			else if (strcmp(request_info->uri, "/getconfig.json") == 0)
 			{
-			  Qaullib_WwwGetConfig(conn, request_info);
+				Qaullib_WwwGetConfig(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/setlocale") == 0)
 			{
-			  Qaullib_WwwSetLocale(conn, request_info);
+				Qaullib_WwwSetLocale(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/setname") == 0)
 			{
-			  Qaullib_WwwSetName(conn, request_info);
+				Qaullib_WwwSetName(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/setpagename") == 0)
 			{
-			  Qaullib_WwwSetPageName(conn, request_info);
+				Qaullib_WwwSetPageName(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/quit") == 0)
 			{
@@ -192,9 +192,9 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 			}
 			else
 			{
-			  // No suitable handler found, mark as not processed. Mongoose will
-			  // try to serve the request.
-			  processed = NULL;
+				// No suitable handler found, mark as not processed. Mongoose will
+				// try to serve the request.
+				processed = NULL;
 			}
 		}
 		else
@@ -202,15 +202,15 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 			// other qaul users (pub = public)
 			if (strcmp(request_info->uri, "/pub_users") == 0)
 			{
-			  Qaullib_WwwPubUsers(conn, request_info);
+				Qaullib_WwwPubUsers(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/pub_msg") == 0)
 			{
-			  Qaullib_WwwPubMsg(conn, request_info);
+				Qaullib_WwwPubMsg(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/pub_info.json") == 0)
 			{
-			  Qaullib_WwwPubInfo(conn, request_info);
+				Qaullib_WwwPubInfo(conn, request_info);
 			}
 			else if (strcmp(request_info->uri, "/pub_filechunk") == 0)
 			{
@@ -223,9 +223,9 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 			}
 			else
 			{
-			  // No suitable handler found, mark as not processed. Mongoose will
-			  // try to serve the request.
-			  processed = NULL;
+				// No suitable handler found, mark as not processed. Mongoose will
+				// try to serve the request.
+				processed = NULL;
 			}
 		}
 	}

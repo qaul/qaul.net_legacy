@@ -81,6 +81,10 @@ int Qaullib_IpcConnect(void)
     }
 #endif
     ipc_connected = 1;
+
+    // send user hello message
+    Qaullib_IpcSendUserhello();
+
     return 1;
   }
   return 0;
@@ -106,30 +110,12 @@ void Qaullib_IpcReceive(void)
 		char buf[BUFFSIZE + 1];
 		union olsr_message msg;
 	} inbuf;
-	char buffer[1024];
-	int size;
-	union olsr_message *m = (union olsr_message *)buffer;
 
 	if (!ipc_connected)
 	{
 		printf("Connection closed, try to reconnect ...\n");
 		// connect to the application
-		if(Qaullib_IpcConnect())
-		{
-			// send user hello message
-			// todo: ipv6
-			m->v4.olsr_msgtype = QAUL_USERHELLO_MESSAGE_TYPE;
-			memcpy(&m->v4.message.userhello.name, qaul_username, MAX_USER_LEN);
-			//memcpy(&m->v4.message.userhello.icon, "\0", 1);
-			memset(&m->v4.message.userhello.icon, 0, sizeof(m->v4.message.userhello.icon));
-			memcpy(&m->v4.message.userhello.suffix, "\0", 1);
-			size = sizeof( struct qaul_chat_msg);
-			size = size + sizeof(struct olsrmsg);
-			m->v4.olsr_msgsize = htons(size);
-
-			// send package
-			Qaullib_IpcSend(m);
-		}
+		Qaullib_IpcConnect();
 	}
 	else
 	{
@@ -433,4 +419,28 @@ void Qaullib_IpcSend(union olsr_message *msg)
 		CLOSE(ipc_socket);
 		ipc_connected = 0;
 	}
+}
+
+// ------------------------------------------------------------
+void Qaullib_IpcSendUserhello(void)
+{
+	char buffer[1024];
+	int size;
+	union olsr_message *m = (union olsr_message *)buffer;
+
+	printf("send user hello message \n");
+
+	// send user hello message
+	// todo: ipv6
+	m->v4.olsr_msgtype = QAUL_USERHELLO_MESSAGE_TYPE;
+	memcpy(&m->v4.message.userhello.name, qaul_username, MAX_USER_LEN);
+	//memcpy(&m->v4.message.userhello.icon, "\0", 1);
+	memset(&m->v4.message.userhello.icon, 0, sizeof(m->v4.message.userhello.icon));
+	memcpy(&m->v4.message.userhello.suffix, "\0", 1);
+	size = sizeof( struct qaul_chat_msg);
+	size = size + sizeof(struct olsrmsg);
+	m->v4.olsr_msgsize = htons(size);
+
+	// send package
+	Qaullib_IpcSend(m);
 }

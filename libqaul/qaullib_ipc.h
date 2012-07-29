@@ -77,6 +77,11 @@ void Qaullib_IpcEvaluateExediscover(union olsr_message *msg);
  */
 void Qaullib_IpcSend(union olsr_message *msg);
 
+/**
+ * send user hello message
+ */
+void Qaullib_IpcSendUserhello(void);
+
 
 #ifdef __cplusplus
 }
