@@ -379,7 +379,7 @@
     [qaullibTimer fire];
 	
 	[qaullibTimer2 invalidate];
-    qaullibTimer2 = [NSTimer scheduledTimerWithTimeInterval: 60.0 target:self selector:
+    qaullibTimer2 = [NSTimer scheduledTimerWithTimeInterval: 5.0 target:self selector:
 					@selector(checkIpcTopology:) userInfo:nil repeats:YES];
     [qaullibTimer2 fire];
 	
