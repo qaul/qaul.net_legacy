@@ -14,7 +14,7 @@ extern "C" {
 #define TIMEOUT_LASTRECEIVED 20
 #define TIMEOUT_CONNECTED    60
 
-#define MAX_SUFFIX_LEN        5
+#define MAX_SUFFIX_LEN        4
 #define MAX_DESCRIPTION_LEN  80
 #define MAX_HASH_LEN         20
 #define MAX_HASHSTR_LEN      40

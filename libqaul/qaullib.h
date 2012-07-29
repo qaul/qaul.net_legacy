@@ -66,6 +66,11 @@ extern "C" {
  *
  *   start port forwarding
  *   start timers to continuously invoke
+ *   @see Qaullib_TimedCheckAppEvent()
+ *   @see Qaullib_TimedSocketReceive()
+ *   @see Qaullib_TimedDownload()
+ *   continuously update network nodes:
+ *   @see Qaullib_IpcSendCom()
  *
  *   tell qaullib that configuration is finished
  *   @see Qaullib_ConfigurationFinished()

@@ -16,7 +16,7 @@
 #define MAX_FILENAME_LEN  46
 #define MAX_HASH_LEN      20
 #define MAX_HASHSTR_LEN   40
-#define MAX_SUFFIX_LEN     5
+#define MAX_SUFFIX_LEN     4
 
 // -------------------------------------------------------
 // message definitions
