@@ -197,9 +197,8 @@ void qaul_qaulmsg_send_all(union olsr_message *mymsg, int size)
 		message->v4.ttl = MAX_TTL;
 		message->v4.hopcnt = 0;
 		message->v4.seqno = htons(get_msg_seqno());
-		memcpy(&message->v4.message, &mymsg->v4.message, size);
-		size = size + sizeof(struct olsrmsg);
-		message->v4.olsr_msgsize = htons(size);
+		memcpy(&message->v4.message, &mymsg->v4.message, mymsg->v4.olsr_msgsize -sizeof(struct olsrmsg));
+		message->v4.olsr_msgsize = mymsg->v4.olsr_msgsize;
 	}
 	else
 	{
@@ -210,9 +209,8 @@ void qaul_qaulmsg_send_all(union olsr_message *mymsg, int size)
 		message->v6.ttl = MAX_TTL;
 		message->v6.hopcnt = 0;
 		message->v6.seqno = htons(get_msg_seqno());
-		memcpy(&message->v6.message, &mymsg->v6.message, size);
-		size = size + sizeof(struct olsrmsg6);
-		message->v6.olsr_msgsize = htons(size);
+		memcpy(&message->v6.message, &mymsg->v6.message, mymsg->v6.olsr_msgsize -sizeof(struct olsrmsg6));
+		message->v6.olsr_msgsize = mymsg->v6.olsr_msgsize;
 	}
 	//looping trough interfaces
 	for (ifn = ifnet; ifn; ifn = ifn->int_next)

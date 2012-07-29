@@ -667,7 +667,7 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 	// get type
 	mg_get_var(post, strlen(post == NULL ? "" : post), "t", local_type, sizeof(local_type));
 	type = atoi(local_type);
-	printf("[qaullib] msg-type: %i",type);
+	printf("[qaullib] msg-type: %i\n",type);
 	// get msg
 	mg_get_var(post, strlen(post == NULL ? "" : post), "m", local_msg, sizeof(local_msg));
 	// get name

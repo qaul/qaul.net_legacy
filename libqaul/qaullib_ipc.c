@@ -437,7 +437,7 @@ void Qaullib_IpcSendUserhello(void)
 	//memcpy(&m->v4.message.userhello.icon, "\0", 1);
 	memset(&m->v4.message.userhello.icon, 0, sizeof(m->v4.message.userhello.icon));
 	memcpy(&m->v4.message.userhello.suffix, "\0", 1);
-	size = sizeof( struct qaul_chat_msg);
+	size = sizeof( struct qaul_userhello_msg);
 	size = size + sizeof(struct olsrmsg);
 	m->v4.olsr_msgsize = htons(size);
 
