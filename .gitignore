@@ -39,7 +39,7 @@ cli/qaul
 cli/qaul.exe
 cli/olsrd
 cli/olsrd.exe
-#cli/www
+cli/www
 
 # build files & executables
 *.[oad]

@@ -22,7 +22,10 @@ extern "C" {
  * configuration procedure in the qaul
  *
  * initialize qaullib
- * @see Qaullib_Init()
+ *   @see Qaullib_Init()
+ *
+ *   platform specific initializations
+ *   @see Qaullib_SetConfQuit();
  *
  * invoke configuration functions
  *

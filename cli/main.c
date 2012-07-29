@@ -19,6 +19,7 @@
  #endif
 
 #include "../libqaul/qaullib.h"
+#include "../libqaul/qaullib_private.h"
 
 // ------------------------------------------------------------
 static int exit_flag;
@@ -37,6 +38,9 @@ int main(int argc, char *argv[])
 	printf ("The current working directory is %s\n", cCurrentPath);
 
 	Qaullib_Init(cCurrentPath);
+	// enable debug menu
+	qaul_conf_debug = 1;
+
 	if(!Qaullib_WebserverStart()) printf("Webserver startup failed\n");
 	Qaullib_ConfigStart();
 

@@ -24,6 +24,7 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_configured = 0;
 	qaul_loading_wait = 1;
 	qaul_conf_quit = 0;
+	qaul_conf_debug = 0;
 	qaul_conf_voip = 0;
 	qaul_web_localip_set = 0;
 
