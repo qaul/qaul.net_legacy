@@ -140,9 +140,6 @@ void qaul_ipc_receive(void *foo __attribute__ ((unused)))
 			{
 				while (bytes > 0 && ntohs(qaul_in_msg->v4.olsr_msgsize) <= bytes)
 				{
-					//printf("[Qaul] read out msg: %i %i\n", ntohs(inbuf.msg.v4.olsr_msgsize),inbuf.msg.v4.olsr_msgtype);
-					//printf("[Qaul] read out qaul_in_msg: %i %i\n", ntohs(qaul_in_msg->v4.olsr_msgsize),qaul_in_msg->v4.olsr_msgtype);
-					//printf("msg: [%s] %s\n", qaul_in_msg->v4.message.chat.name,qaul_in_msg->v4.message.chat.msg);
 					OLSR_PRINTF(1, "[Qaul] proceed\n");
 
 					// proceed
@@ -173,13 +170,12 @@ void qaul_ipc_receive(void *foo __attribute__ ((unused)))
 
 void qaul_ipc_evaluate(union olsr_message *msg)
 {
-	OLSR_PRINTF(1, "[Qaul] message arrived: %i\n", msg->v4.olsr_msgtype);
+	OLSR_PRINTF(1, "[Qaul] IPC message arrived! Message type: %i\n", msg->v4.olsr_msgtype);
 	switch(msg->v4.olsr_msgtype)
 	{
 		case QAUL_CHAT_MESSAGE_TYPE:
-			//qaul_ipc_evaluate_chat(msg);
 			OLSR_PRINTF(1, "[QAUL] send chat message\n");
-			qaul_qaulmsg_send_all(msg, sizeof(struct qaul_chat_msg));
+			qaul_qaulmsg_send_all(msg);
 			break;
 		case QAUL_IPCCOM_MESSAGE_TYPE:
 			OLSR_PRINTF(1, "[QAUL] check topology\n");
@@ -187,43 +183,21 @@ void qaul_ipc_evaluate(union olsr_message *msg)
 			break;
 		case QAUL_USERHELLO_MESSAGE_TYPE:
 			OLSR_PRINTF(1, "[QAUL] send user hello message\n");
-			qaul_qaulmsg_send_all(msg, sizeof(struct qaul_userhello_msg));
+			qaul_qaulmsg_send_all(msg);
 			break;
 		case QAUL_FILEDISCOVER_MESSAGE_TYPE:
 			OLSR_PRINTF(1, "[QAUL] send file discover message\n");
-			qaul_qaulmsg_send_all(msg, sizeof(struct qaul_filediscover_msg));
+			qaul_qaulmsg_send_all(msg);
 			break;
 		case QAUL_EXEDISCOVER_MESSAGE_TYPE:
 			OLSR_PRINTF(1, "[QAUL] send exe discover message\n");
-			qaul_qaulmsg_send_all(msg, sizeof(struct qaul_exediscover_msg));
+			qaul_qaulmsg_send_all(msg);
 			break;
 		default:
 			OLSR_PRINTF(1, "not a known message type\n");
 			break;
 	}
 }
-
-/*
-void qaul_ipc_evaluate_chat(union olsr_message *msg)
-{
-	// forward it to all
-	chat_send_all(( struct qaul_chat_msg *)ARM_NOWARN_ALIGN(&msg->v4.message));
-}
-
-
-void qaul_ipc_evaluate_fildiscover(union olsr_message *msg)
-{
-	// forward it to all
-	chat_send_all(( struct qaul_chat_msg *)ARM_NOWARN_ALIGN(&msg->v4.message));
-}
-
-
-void qaul_ipc_evaluate_exediscover(union olsr_message *msg)
-{
-	// forward it to all
-	chat_send_all(( struct qaul_chat_msg *)ARM_NOWARN_ALIGN(&msg->v4.message));
-}
-*/
 
 void qaul_ipc_evaluate_com(union olsr_message *msg)
 {
