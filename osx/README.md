@@ -60,4 +60,6 @@ Compile olsrd_qaul plugin
     cd olsrd-0.6.0/lib/olsrd_qaul
     make
     cp olsrd_qaul.so.0.1 ../../../osx/
+    # you need to install the shared library
+    sudo make install
     cd ../../../

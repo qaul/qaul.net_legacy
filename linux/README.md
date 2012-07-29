@@ -20,6 +20,8 @@ Compile olsrd_qaul plugin
 
     cd olsrd_0.6.2/lib/olsrd_qaul
     make
+    # you need to install the shared library
+    sudo make install
     cd ../../../
 
 Compile pjsip library for VoIP
