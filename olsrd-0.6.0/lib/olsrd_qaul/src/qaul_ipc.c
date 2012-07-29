@@ -182,6 +182,7 @@ void qaul_ipc_evaluate(union olsr_message *msg)
 			qaul_qaulmsg_send_all(msg, sizeof(struct qaul_chat_msg));
 			break;
 		case QAUL_IPCCOM_MESSAGE_TYPE:
+			OLSR_PRINTF(1, "[QAUL] check topology\n");
 			qaul_ipc_evaluate_com(msg);
 			break;
 		case QAUL_USERHELLO_MESSAGE_TYPE:

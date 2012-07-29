@@ -17,7 +17,8 @@ Compile Instructions
 Before building the CLI client executable you have to build the following 
 libraries and executables:
 * olsrd
-* olsrd_qaul plugin
+* olsrd_qaul plugin 
+  (you need to install the plugin to be found by the program)
 * pjsip library
 * qaullib
 

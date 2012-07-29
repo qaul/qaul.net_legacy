@@ -74,12 +74,17 @@ int main(int argc, char *argv[])
 	// main loop
 	while (exit_flag == 0) {
 		usleep(10000);
+
+		// get event
 		int event = Qaullib_TimedCheckAppEvent();
-		if(event == 100)
+		if(event == QAUL_EVENT_QUIT)
+			printf("quit app\n");
+		else if(event == QAUL_EVENT_CHOOSEFILE)
 			printf("open file chooser\n");
-		else if(event == 101)
+		else if(event == QAUL_EVENT_OPENFILE)
 			printf("open file\n");
 
+		// check sockets
 		if(socketCounter >= 10)
 		{
 			Qaullib_TimedSocketReceive();
@@ -90,7 +95,10 @@ int main(int argc, char *argv[])
 
 		if(ipcCounter >= 1500)
 		{
+			// get network node IPs
 			Qaullib_IpcSendCom(1);
+
+			// schedule downloads
 			Qaullib_TimedDownload();
 		}
 		else
