@@ -22,9 +22,6 @@
 #include "../libqaul/qaullib_private.h"
 
 // ------------------------------------------------------------
-static int exit_flag;
-
-// ------------------------------------------------------------
 int main(int argc, char *argv[])
 {
 	char cCurrentPath[FILENAME_MAX];
@@ -71,8 +68,10 @@ int main(int argc, char *argv[])
 	int socketCounter = 0;
 	int ipcCounter = 0;
 
+	printf("kill app to exit!\n");
+
 	// main loop
-	while (exit_flag == 0) {
+	while (1) {
 		usleep(10000);
 
 		// get event
@@ -100,17 +99,10 @@ int main(int argc, char *argv[])
 
 			// schedule downloads
 			Qaullib_TimedDownload();
+
+			ipcCounter = 0;
 		}
 		else
 			ipcCounter++;
-
-		if(getchar()) exit_flag = 1;
 	}
-	printf("Exiting on signal %d, waiting for all threads to finish...",exit_flag);
-
-	// shutdown olsrd
-	printf("send Qaullib_Exit()\n");
-	Qaullib_Exit();
-
-	return EXIT_SUCCESS;
 }
