@@ -1372,7 +1372,7 @@ function user_remove(name, ip)
 	// remove from list
 	else
 	{
-		$("#favorites #" +id).remove();
+		$("#users #" +id).remove();
 	}
 }
 
