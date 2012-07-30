@@ -21,7 +21,7 @@ void *Qaullib_CheckerThread(void)
 		Qaullib_TimedSocketReceive();
 
 		// user discovery
-		if(mycounter == 10)
+		if(mycounter == 50)
 		{
 			Qaullib_IpcSendCom(1);
 		}
