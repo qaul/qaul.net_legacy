@@ -220,12 +220,9 @@ int Qaullib_WebserverStart(void)
 	  NULL
 	};
 	ctx = mg_start(&Qaullib_WwwEvent_handler, options);
-	//mg_set_option(ctx, "dir_list", "no");
-	//assert(ctx != NULL);
 	if( ctx == NULL )
 	{
 		fprintf(stderr, "Can't open web server\n");
-		//exit(1);
 		return 0;
 	}
 

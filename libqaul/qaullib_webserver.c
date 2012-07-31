@@ -555,10 +555,7 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 	if(type == 5)
 	{
 		get_qsvar(request_info, "v", local_name, sizeof(local_name));
-/*
-		// extract variable v
-		mg_get_var(post, strlen(post == NULL ? "" : post), "v", local_name, sizeof(local_name));
-*/
+
 		// prepare statement
 		if(id == 0)
 			sprintf(stmt, sql_msg_get_user0, local_name, "%", local_name, "%");

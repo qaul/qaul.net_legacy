@@ -254,6 +254,9 @@ function qaul_translate(dictionary)
 	$("h1.i18n").each(function(){
 		$(this).text($.i18n._($(this).text()));
 	});
+	$("p.i18n").each(function(){
+		$(this).text($.i18n._($(this).text()));
+	});
 }
 
 function init_chat()
@@ -775,7 +778,7 @@ function send_direct_msg()
 
 function get_msgs()
 {
-	var path = "getmsgs.json?t=1";
+	var path = "getmsgs.json?t=1&e=1";
 	$.ajax({
 		url:   path,
 		cache: false, // needed for IE
@@ -790,7 +793,7 @@ function get_msgs()
 
 function get_user_msgs()
 {
-	var path = 'getmsgs.json?t=5&ip=' +user_last_id +'&v=' +encodeURIComponent($("#user_chat_name").val()) +'&e=1';
+	var path = 'getmsgs.json?t=5&id=' +user_last_id +'&v=' +encodeURIComponent($("#user_chat_name").val()) +'&e=1';
 	$.ajax({
 		url:   path,
 		cache: false, // needed for IE

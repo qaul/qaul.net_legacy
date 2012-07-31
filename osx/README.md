@@ -14,16 +14,15 @@ Compile pjsip library for VoIP
 
     cd pjproject-2.0.1
     ./aconfigure --disable-ssl CFLAGS='-Wno-unused-label -m32' LDFLAGS='-m32'
-    # FIXME: decide on which is working and best
-    # or do this (from https://github.com/eofster/Telephone)
-    #CFLAGS="-O2 -arch i386 -arch x86_64" ./configure --disable-ssl
     make dep
     make
     cd ../
 
-FIXME: is that correct?
-You may need to install libssl and libcrypto (from mac ports /opt/loca/lib/libssl.a )
-
+    # if the build goes wrong, one has to clean the directory to be able to rebuild 
+    # it sucessfully
+    make clean
+    find . | grep depend$ | xargs rm
+    find . | grep darwin10.8.0.a$ | xargs rm
 
 Compile static qaullib. 
 You may need to fix the file pjproject-2.0.1/pjlib/include/pj/compat/os_darwinos.h manually.

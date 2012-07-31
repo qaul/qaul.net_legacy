@@ -53,9 +53,6 @@
 					<input type="radio" name="l" id="locale_tr" value="tr"/>
 					<label for="locale_tr">Turkish</label>
 
-					<input type="radio" name="l" id="locale_it" value="it"/>
-					<label for="locale_it">Italiano</label>
-
 					<input type="radio" name="l" id="locale_fa" value="fa"/>
 					<label for="locale_fa">فارسی</label>
 
@@ -74,7 +71,7 @@
 			<form action="chat" method="post" id="name_form">
 				<label for="name_name" class="i18n">Choose a user name</label>
 				<input type="text" name="n" id="name_name" class="required nospaces userlen"/>
-				<input class="submit i18n" type="submit" value="save" id="name_submit"/>
+				<input class="submit i18n" type="submit" value="Save" id="name_submit"/>
 			</form>
 		</p>
 	</div>
@@ -86,7 +83,7 @@
 			<form action="chat" method="post" id="chat_form">
 				<input type="hidden" name="n" id="chat_name" value="undefined"/> 
 				<input type="text" name="m" id="chat_msg" class="required chatlen"/>
-				<input class="submit i18n" type="submit" value="send" id="chat_submit"/>
+				<input class="submit i18n" type="submit" value="Send" id="chat_submit"/>
 			</form>
 		</p>
 		<div id="chat">&nbsp;</div>
@@ -106,11 +103,11 @@
 <div data-role="page" id="page_users" data-theme="d">
 	<div data-role="content" >
 		<ul data-role="listview" data-inset="true" id="favorites">
-			<li id="favorites_divider" data-role="list-divider" class="i18n">favorites / friends</li>
+			<li id="favorites_divider" data-role="list-divider" class="i18n">Favorites / Friends</li>
 		</ul>
 		<br/>
 		<ul data-role="listview" data-inset="true" id="users" data-filter="true">
-			<li id="users_divider" data-role="list-divider" class="i18n">all users</li>
+			<li id="users_divider" data-role="list-divider" class="i18n">Other Users</li>
 		</ul>
 	</div>
 	<div data-role="footer" data-position="fixed" class="ui-body-d">
@@ -127,11 +124,11 @@
 
 <div data-role="page" id="page_pref" data-theme="d">
 	<div data-role="content" >
-		<p class="c_quit"><a href="javascript:quit_qaul()" data-role="button" class="i18n">quit qaul.net</a></p>
+		<p class="c_quit"><a href="javascript:quit_qaul()" data-role="button" class="i18n">Quit qaul.net</a></p>
 		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider" class="i18n">Information</li>
 			<li data-icon="info"><a href="javascript:qaul_openurl('info/about.html')" data-transition="none" class="i18n">About qaul.net</a></li>
-			<li data-icon="info"><a href="javascript:qaul_openurl('info/howto.html')" data-transition="none" class="i18n">How to's</a></li>
+			<li data-icon="info"><a href="javascript:qaul_openurl('info/howto.html')" data-transition="none" class="i18n">How To's</a></li>
 			<li data-icon="info"><a href="javascript:qaul_openurl('info/license.html')" data-transition="none" class="i18n">License</a></li>
 			<li data-role="list-divider" class="i18n">Configuration</li>
 			<li><a href="#page_config_locale" data-transition="none" class="i18n">Change Language</a></li>
@@ -152,7 +149,7 @@
 
 <div data-role="page" id="page_file" data-theme="d">
 	<div data-role="content" >
-		<p><a href="javascript:show_addfile_page()" id="file_addbutton" data-role="button" data-icon="plus" class="i18n">add file</a></p>
+		<p><a href="javascript:show_addfile_page()" id="file_addbutton" data-role="button" data-icon="plus" class="i18n">Add File</a></p>
 		<div id="page_file_list"></div>
 	</div>
 	<div data-role="footer" data-position="fixed" class="ui-body-d">
@@ -169,19 +166,19 @@
 
 <div data-role="page" id="page_file_add" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
-		<h1 class="i18n">add file</h1>
-		<a href="#page_file" data-icon="arrow-l" data-direction="reverse" class="i18n">back</a>
+		<h1 class="i18n">Add File</h1>
+		<a href="#page_file" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a>
 	</div>
 	<div data-role="content" >
 		<p>
 			<div id="file_add_filename"></div>
 			<form action="file_add" method="post" id="file_add_form">
 				<input type="hidden" name="p" id="file_add_path" value=""/>
-				<label for="file_add_msg" class="i18n">file description</label>
+				<label for="file_add_msg" class="i18n">File description</label>
 				<input type="text" name="m" id="file_add_msg" class="required filedesclen"/>
 				<input type="checkbox" checked="checked" name="a" value="1" id="file_add_advertise"/>
-				<label for="file_add_advertise" class="i18n">send advertise message</label>
-				<input class="submit" type="submit" value="add" id="file_add_submit"/>
+				<label for="file_add_advertise" class="i18n">Advertise file</label>
+				<input class="submit" type="submit" value="Add File" id="file_add_submit"/>
 			</form>
 		</p>
 	</div>
@@ -189,15 +186,15 @@
 
 <div data-role="page" id="page_user" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
-		<h1 id="page_user_name" user_id="" class="i18n">username</h1>
-		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse" class="i18n">back</a>
+		<h1 id="page_user_name" user_id="">username</h1>
+		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a>
 	</div>
 	<div data-role="content" id="page_user_content">
-		<p class="c_voip"><a href="javascript:call_start()" data-role="button" class="button_call">&nbsp;</a></p>
 		<div data-role="navbar">
 			<ul>
 				<li><a onclick="javascript:user_changetochat('chat')" id="user_tab_chat" class="i18n ui-btn-active">Chat</a></li>
-				<li><a onclick="javascript:user_changetofiles('files')" id="i18n user_tab_files">Files</a></li>
+				<li><a onclick="javascript:user_changetofiles('files')" id="user_tab_files" class="i18n">Files</a></li>
+				<li><a onclick="javascript:call_start()" class="button_call" style="background-color:#f8f8f8;">&nbsp;&nbsp;&nbsp;</a></li>
 			</ul>
 		</div>
 		<div id="page_user_tab_chat">
@@ -206,7 +203,7 @@
 					<input type="hidden" name="n" id="user_chat_name" value="undefined"/>
 					<input type="hidden" name="ip" id="user_chat_ip" value="undefined"/>
 					<input type="text" name="m" id="user_chat_msg" class="required chatlen"/>
-					<input class="submit" type="submit" value="submit private" id="user_chat_submit"/>
+					<input type="submit" value="Send Private Message" id="user_chat_submit" class="i18n submit"/>
 				</form>
 			</p>
 			<div id="page_user_msgs"></div>
@@ -230,14 +227,14 @@
 <div data-role="page" id="page_tag" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
 		<h1 id="page_tag_name">#tag</h1>
-		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse" class="i18n">back</a>
+		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a>
 	</div>
 	<div data-role="content" id="page_tag_content">
 		<p>
 			<form action="chat" method="post" id="tag_chat_form" class="validate">
 				<input type="hidden" name="n" id="tag_chat_name" value="undefined"/>
 				<input type="text" name="m" id="tag_chat_msg" class="required chatlen"/>
-				<input class="submit i18n" type="submit" value="submit" id="tag_chat_submit"/>
+				<input class="submit i18n" type="submit" value="Send" id="tag_chat_submit"/>
 			</form>
 		</p>
 		<div id="page_tag_msgs"></div>
@@ -274,10 +271,11 @@
 
 <div data-role="page" id="page_dialog">
 	<div data-role="header" data-position="fixed" data-theme="d">
-		<h1 id="page_dialog_title">Sending Error</h1>
+		<h1 id="page_dialog_title" class="i18n">An Error Occurred</h1>
 	</div>
 	<div data-role="content" id="page_dialog_content">
-		<p>Couldn't send message<br/> please try again</p>
+		<p class="i18n">Couldn't send message</p>
+		<p class="i18n">Please try again</p>
 	</div>
 </div>
 

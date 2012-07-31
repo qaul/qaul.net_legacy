@@ -34,8 +34,6 @@
 		5F7E58C015B0A70D002D011D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7E58BF15B0A70D002D011D /* CoreAudio.framework */; };
 		5F7E58C615B0A74D002D011D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7E58C515B0A74D002D011D /* AudioToolbox.framework */; };
 		5F7E599E15B0B6A0002D011D /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7E599D15B0B6A0002D011D /* AudioUnit.framework */; };
-		5F7E59C115B1E4DC002D011D /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7E59C015B1E4DC002D011D /* libssl.dylib */; };
-		5F7E59CC15B1EAF8002D011D /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7E59CB15B1EAF8002D011D /* libcrypto.dylib */; };
 		5F7E59D115B1EC4C002D011D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7E59D015B1EC4C002D011D /* Security.framework */; };
 		5F8FA1D51322E629005FD408 /* QaulConfigWifi.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FED4E901322CFC800C2E6E0 /* QaulConfigWifi.mm */; };
 		5F8FA36E13239A32005FD408 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 5F8FA35613239A32005FD408 /* www */; };
@@ -110,8 +108,6 @@
 		5F7E58BF15B0A70D002D011D /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		5F7E58C515B0A74D002D011D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		5F7E599D15B0B6A0002D011D /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
-		5F7E59C015B1E4DC002D011D /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.dylib; path = usr/lib/libssl.dylib; sourceTree = SDKROOT; };
-		5F7E59CB15B1EAF8002D011D /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
 		5F7E59D015B1EC4C002D011D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		5F8FA35613239A32005FD408 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../www; sourceTree = SOURCE_ROOT; };
 		5F8FA38D1323ADA2005FD408 /* olsrd_start.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = olsrd_start.sh; sourceTree = "<group>"; };
@@ -172,8 +168,6 @@
 				5F7E58C015B0A70D002D011D /* CoreAudio.framework in Frameworks */,
 				5F7E58C615B0A74D002D011D /* AudioToolbox.framework in Frameworks */,
 				5F7E599E15B0B6A0002D011D /* AudioUnit.framework in Frameworks */,
-				5F7E59C115B1E4DC002D011D /* libssl.dylib in Frameworks */,
-				5F7E59CC15B1EAF8002D011D /* libcrypto.dylib in Frameworks */,
 				5F7E59D115B1EC4C002D011D /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -197,8 +191,6 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5F7E59C015B1E4DC002D011D /* libssl.dylib */,
-				5F7E59CB15B1EAF8002D011D /* libcrypto.dylib */,
 				5FED4EAB1322E1CD00C2E6E0 /* SecurityFoundation.framework */,
 				5FED4EA81322E1B300C2E6E0 /* CoreFoundation.framework */,
 				5FED4E941322D0BA00C2E6E0 /* SystemConfiguration.framework */,
