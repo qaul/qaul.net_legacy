@@ -56,6 +56,19 @@ function init_start()
 	$(document).bind("pagechange", onPageChange);
 	$(document).bind("pagebeforechange", onPageBeforeChange);
 	
+	// add custom validation method
+	jQuery.validator.addMethod("nospaces", function(value, element) { 
+		return this.optional(element) || /^[^\s]+$/.test(value); 
+	}, "Spaces are not allowed in the user name.");
+
+	jQuery.validator.addMethod("userlen", function(value, element) { 
+		return this.optional(element) || utf8ByteCount(value)<=20; 
+	}, "User name too long");
+	
+	jQuery.validator.addMethod("chatlen", function(value, element) { 
+		return this.optional(element) || utf8ByteCount(value)<=140; 
+	}, "Message too long");
+
 	// message forms
 	chat_form.validate({
 		submitHandler: function(form){
@@ -192,6 +205,7 @@ function qaul_configure(data)
 	// set up everything
 	if(qaul_config.c_quit) $(".c_quit").show();
 	if(qaul_config.c_debug) $(".c_debug").show();
+	
 	if(qaul_config.locale)
 	{
 		// load locale
@@ -202,6 +216,8 @@ function qaul_configure(data)
 			success: function(data){
 				qaul_translate(data);
 			}
+		}).error(function(){
+			alert("i18n download error");
 		});
 		
 		// download language specific css
@@ -217,27 +233,24 @@ function qaul_configure(data)
 function qaul_translate(dictionary)
 {
 	$.i18n.setDictionary(dictionary);
-	
-	$("a.i18n_quit")._t('quit');
-	$("a.i18n_addfile")._t('add file');
-	$("label.i18n_choosename")._t('choose a nick name');
-	
-	$('input.i18n_choose').prop('value',$.i18n._('choose'));
-	$('input.i18n_choose').prev('span').find('span.ui-btn-text')._t('choose');
-	$('input.i18n_submit').prop('value',$.i18n._('submit'));
-	$('input.i18n_submit').prev('span').find('span.ui-btn-text')._t('submit');
-	$('input.i18n_add').prop('value',$.i18n._('add'));
-	$('input.i18n_add').prev('span').find('span.ui-btn-text')._t('add');
-}
-function i18n_translate_button(id, txt)
-{
-	// TODO: check if button was already changed by jqm
-}
-function i18n_translate_submit(id, txt)
-{
-	// TODO: check if submit button was already changed by jqm
-}
 
+	// check for all i18n classes
+	$("a.i18n").each(function(){
+		$(this).text($.i18n._($(this).text()));
+	});
+	$("li.i18n").each(function(){
+		$(this).text($.i18n._($(this).text()));
+	});
+	$("label.i18n").each(function(){
+		$(this).text($.i18n._($(this).text()));
+	});
+	$("input.i18n").each(function(){
+		$(this).prop('value',$.i18n._($(this).prop('value')));
+	});
+	$("h1.i18n").each(function(){
+		$(this).text($.i18n._($(this).text()));
+	});
+}
 
 function init_chat()
 {
@@ -395,6 +408,16 @@ function quit_qaul()
 	});
 }
 
+function qaul_openurl(url)
+{
+	$.post(
+		"setopenurl.json",
+		{"url": url, "e":1}
+	).error(function(){
+		alert("error qaul_openurl");
+	});
+}
+
 // ======================================================
 // VoIP
 // ------------------------------------------------------
@@ -490,38 +513,37 @@ function call_goback()
 
 function call_setRinging()
 {
-	$("#call_info").text("ringing");
+	$("#call_info").text($.i18n._("ringing"));
 	call_setButtonEnd();
 }
 
 function call_setCalling()
 {
-	$("#call_info").text("calling");
+	$("#call_info").text($.i18n._("calling"));
 	call_setButtonsIncoming();
 }
 
 function call_setConnecting()
 {
-	$("#call_info").text("connecting");
+	$("#call_info").text($.i18n._("connecting"));
 	call_setButtonEnd();
 }
 
 function call_setConnected()
 {
-	$("#call_info").text("connected");
+	$("#call_info").text($.i18n._("connected"));
 	call_setButtonEnd();
 }
 
 function call_setEnded(code)
 {
-	// set text
 	var reason;
 	if(code == 486)
-		reason = "busy";
+		reason = $.i18n._("busy");
 	else if(code == 487)
-		reason = "call ended";
+		reason = $.i18n._("call ended");
 	else
-		reason = "not reachable";
+		reason = $.i18n._("not reachable");
 		
 	call_schedule_end(reason);
 }
@@ -620,9 +642,9 @@ function format_msg_voip(item)
 	button = '<div class="msg_voip"><img src="images/i_call_64.png" /></div>';
 	var msg;
 	if(item.type == 3)
-		msg = 'incoming call from ' +format_msg_userlink(item.name, item.ip, item.id);
+		msg = $.i18n._("incoming call from %s", [format_msg_userlink(item.name, item.ip, item.id)]);
 	else
-		msg = 'you called ' +format_msg_userlink(item.name, item.ip, item.id);
+		msg = $.i18n._("you called %s", [format_msg_userlink(item.name, item.ip, item.id)]);
 		
 	return {"msg":msg,"button":button};
 }
@@ -1294,7 +1316,22 @@ var eventstimer=function()
 				// put buttons
 				call_setButtonsIncoming();
 			}
-			// TODO: check for unchecked messages
+			// check for unchecked files
+			if(!(typeof data.files === 'undefined'))
+			{
+				if(data.files > 0)
+					$(".i_filesharing .ui-li-count").text(data.files);
+				else
+					$(".i_filesharing .ui-li-count").empty();
+			}
+			// check for unchecked messages
+			if(!(typeof data.m_priv === 'undefined'))
+			{
+				if(data.m_priv > 0)
+					$(".i_chat .ui-li-count").text(data.m_priv);
+				else
+					$(".i_chat .ui-li-count").empty();
+			}
 			// set timer
 			setTimeout(function(){eventstimer();},1000);
 		} 
@@ -1519,14 +1556,6 @@ function removeIFrame()
 		$("#bugfix_footer").remove();
 		$("#bugfix_header").remove();
 	}	
-}
-
-//======================================================
-//debug
-//------------------------------------------------------
-function debugScreenSize(w, h)
-{
-	window.open(document.URL, w +"_" +h, "width="+w +",height="+h +",status=no,location=no");
 }
 
 //-----------------------------------------------------

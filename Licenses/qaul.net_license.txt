@@ -4,8 +4,8 @@ qaul.net license
 qaul.net was written by and is part of the Art project qaul.net: 
 http://www.qaul.net 
 
-qaul.net stays under the GPL license (Version 3) and can be freely 
-downloaded from the Internet: http://www.qaul.net
+qaul.net is free software. It stays under the GPL license (Version 3).
+You can download it from the Internet: http://www.qaul.net
 
 
 CREDITS
@@ -17,7 +17,7 @@ http://www.wachter-jud.net
 qaul.net includes and makes use of other great open-source software.
 That software may have different licenses.
 
-* olsrd written by Andreas Tonnesen & Thomas Lopatic see olsrd_license.txt
+* olsrd written by Andreas Tonnesen & Thomas Lopatic see olsrd_BSD-license.txt
   source & more information: http://www.olsr.org
 * mongoose by Sergey Lyubka see mongoose_license.txt
   source & more information: http://code.google.com/p/mongoose/

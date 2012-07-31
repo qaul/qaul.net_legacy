@@ -15,6 +15,7 @@
 	<script type="text/javascript" src="jquery.progressbar.min.js"></script>
 	<script type="text/javascript" src="jquery.i18n.min.js"></script>
 	<script type="text/javascript" src="jquery.mobile.min.js"></script>
+	<script type="text/javascript" src="string2byte.js"></script>
 	<script type="text/javascript" src="jqm_qaul.js"></script>
 </head>
 <body>
@@ -34,11 +35,32 @@
 					<input type="radio" name="l" id="locale_en" value="en" checked="checked"/>
 					<label for="locale_en">English</label>
 			
+					<input type="radio" name="l" id="locale_es" value="es"/>
+					<label for="locale_es">Español</label>
+
 					<input type="radio" name="l" id="locale_ar" value="ar"/>
 					<label for="locale_ar">العربية</label>
 			
+					<input type="radio" name="l" id="locale_fr" value="fr"/>
+					<label for="locale_fr">Français</label>
+
+					<input type="radio" name="l" id="locale_ja" value="ja"/>
+					<label for="locale_ja">日本語</label>
+
 					<input type="radio" name="l" id="locale_de" value="de"/>
 					<label for="locale_de">Deutsch</label>
+
+					<input type="radio" name="l" id="locale_tr" value="tr"/>
+					<label for="locale_tr">Turkish</label>
+
+					<input type="radio" name="l" id="locale_it" value="it"/>
+					<label for="locale_it">Italiano</label>
+
+					<input type="radio" name="l" id="locale_fa" value="fa"/>
+					<label for="locale_fa">فارسی</label>
+
+					<input type="radio" name="l" id="locale_el" value="el"/>
+					<label for="locale_el">ελληνικά</label>
 				</fieldset>
 				<input class="submit" type="submit" value="OK" id="locale_submit" data-icon="arrow-r" data-iconpos="right"/>
 			</form>
@@ -50,9 +72,9 @@
 	<div data-role="content" >
 		<p>
 			<form action="chat" method="post" id="name_form">
-				<label for="name_name" class="i18n_choosename">choose a nick name</label>
-				<input type="text" name="n" id="name_name" class="required"/>
-				<input class="submit i18n_submit" type="submit" value="choose" id="name_submit"/>
+				<label for="name_name" class="i18n">Choose a user name</label>
+				<input type="text" name="n" id="name_name" class="required nospaces userlen"/>
+				<input class="submit i18n" type="submit" value="save" id="name_submit"/>
 			</form>
 		</p>
 	</div>
@@ -63,8 +85,8 @@
 		<p>
 			<form action="chat" method="post" id="chat_form">
 				<input type="hidden" name="n" id="chat_name" value="undefined"/> 
-				<input type="text" name="m" id="chat_msg" class="required"/>
-				<input class="submit i18n_submit" type="submit" value="submit" id="chat_submit"/>
+				<input type="text" name="m" id="chat_msg" class="required chatlen"/>
+				<input class="submit i18n" type="submit" value="send" id="chat_submit"/>
 			</form>
 		</p>
 		<div id="chat">&nbsp;</div>
@@ -84,20 +106,20 @@
 <div data-role="page" id="page_users" data-theme="d">
 	<div data-role="content" >
 		<ul data-role="listview" data-inset="true" id="favorites">
-			<li id="favorites_divider" data-role="list-divider">favorites / friends</li>
+			<li id="favorites_divider" data-role="list-divider" class="i18n">favorites / friends</li>
 		</ul>
 		<br/>
 		<ul data-role="listview" data-inset="true" id="users" data-filter="true">
-			<li id="users_divider" data-role="list-divider">all users</li>
+			<li id="users_divider" data-role="list-divider" class="i18n">all users</li>
 		</ul>
 	</div>
 	<div data-role="footer" data-position="fixed" class="ui-body-d">
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#page_chat" data-transition="none" class="i_chat">&nbsp;</a></li>
-				<li><a href="#page_users" data-theme="b" data-transition="none" class="i_users">&nbsp;</a></li>
-				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;</a></li>
-				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;</a></li>
+				<li><a href="#page_chat" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_users" data-theme="b" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -105,40 +127,24 @@
 
 <div data-role="page" id="page_pref" data-theme="d">
 	<div data-role="content" >
-		<p class="c_quit"><a href="javascript:quit_qaul()" data-role="button" class="i18n_quit">Quit qaul.net</a></p>
-		<div data-role="collapsible-set" data-content-theme="d" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d">
-			<div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d">
-				<h2 data-icon="arrow-r">how qaul.net works</h2>
-				<p>this is how qaul.net works</p>
-			</div>
-			<div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d">
-				<h2 data-icon="arrow-r" class="i18n_config">Configuration</h2>
-				<p>
-					<a href="#page_config_locale" data-role="button" class="i18n_lang">Language</a>
-					<a href="#page_config_name" data-role="button" class="i18n_name">User Name</a>
-				</p>
-			</div>
-			<div class="c_debug" data-role="collapsible">
-				<h2 data-icon="arrow-r">Test Screen Sizes</h2>
-				<p><a onclick="debugScreenSize(400,592)" data-role="button">Desktop (400 x 592)</a></p>
-				<h3>phones</h3>
-				<p>Xperia mini pro (320 x 480) <a onclick="debugScreenSize(320,480)" data-role="button" data-inline="true" data-mini="true">portrait</a> <a onclick="debugScreenSize(480,400)" data-role="button" data-inline="true" data-mini="true">landscape</a></p>
-				<p>Nokia N97 (360 x 640) <a onclick="debugScreenSize(360,640)" data-role="button" data-inline="true" data-mini="true">portrait</a> <a onclick="debugScreenSize(640,360)" data-role="button" data-inline="true" data-mini="true">landscape</a></p>
-				<p>iPhone 3G/3GS, iPod (320 x 480, 164ppi) <a onclick="debugScreenSize(320,480)" data-role="button" data-inline="true" data-mini="true">portrait</a> <a onclick="debugScreenSize(480,320)" data-role="button" data-inline="true" data-mini="true">landscape</a></p>
-				<p>iPhone 4/4S (640 x 960, 326ppi) <a onclick="debugScreenSize(640,960)" data-role="button" data-inline="true" data-mini="true">portrait</a> <a onclick="debugScreenSize(960,640)" data-role="button" data-inline="true" data-mini="true">landscape</a></p>
-				<p>Galaxy S, Galaxy S2, N900 (480 x 800, 266ppi) <a onclick="debugScreenSize(480,800)" data-role="button" data-inline="true" data-mini="true">portrait</a> <a onclick="debugScreenSize(800,480)" data-role="button" data-inline="true" data-mini="true">landscape</a></p>
-				<h3>tablets</h3>
-				<p>iPad (768 x 1024) <a onclick="debugScreenSize(768,1024)" data-role="button" data-inline="true" data-mini="true">portrait</a> <a onclick="debugScreenSize(1024,768)" data-role="button" data-inline="true" data-mini="true">landscape</a></p>
-			</div>
-		</div>
+		<p class="c_quit"><a href="javascript:quit_qaul()" data-role="button" class="i18n">quit qaul.net</a></p>
+		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider" class="i18n">Information</li>
+			<li data-icon="info"><a href="javascript:qaul_openurl('info/about.html')" data-transition="none" class="i18n">About qaul.net</a></li>
+			<li data-icon="info"><a href="javascript:qaul_openurl('info/howto.html')" data-transition="none" class="i18n">How to's</a></li>
+			<li data-icon="info"><a href="javascript:qaul_openurl('info/license.html')" data-transition="none" class="i18n">License</a></li>
+			<li data-role="list-divider" class="i18n">Configuration</li>
+			<li><a href="#page_config_locale" data-transition="none" class="i18n">Change Language</a></li>
+			<li><a href="#page_config_name" data-transition="none" class="i18n">Change User Name</a></li>
+		</ul>
 	</div>
 	<div data-role="footer" data-position="fixed" class="ui-body-d">
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#page_chat" data-transition="none" class="i_chat">&nbsp;</a></li>
-				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;</a></li>
-				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;</a></li>
-				<li><a href="#page_pref" data-theme="b" data-transition="none" class="i_prefs">&nbsp;</a></li>
+				<li><a href="#page_chat" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_pref" data-theme="b" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -146,16 +152,16 @@
 
 <div data-role="page" id="page_file" data-theme="d">
 	<div data-role="content" >
-		<p><a href="javascript:show_addfile_page()" id="file_addbutton" class="i18n_addfile" data-role="button" data-icon="plus">add file</a></p>
+		<p><a href="javascript:show_addfile_page()" id="file_addbutton" data-role="button" data-icon="plus" class="i18n">add file</a></p>
 		<div id="page_file_list"></div>
 	</div>
 	<div data-role="footer" data-position="fixed" class="ui-body-d">
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#page_chat" data-transition="none" class="i_chat">&nbsp;</a></li>
-				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;</a></li>
-				<li><a href="#page_file" data-theme="b" data-transition="none" class="i_filesharing">&nbsp;</a></li>
-				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;</a></li>
+				<li><a href="#page_chat" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_file" data-theme="b" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -163,18 +169,18 @@
 
 <div data-role="page" id="page_file_add" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
-		<h1 class="i18n_addfile">add file</h1>
-		<a href="#page_file" data-icon="arrow-l" data-direction="reverse">back</a>
+		<h1 class="i18n">add file</h1>
+		<a href="#page_file" data-icon="arrow-l" data-direction="reverse" class="i18n">back</a>
 	</div>
 	<div data-role="content" >
 		<p>
 			<div id="file_add_filename"></div>
 			<form action="file_add" method="post" id="file_add_form">
 				<input type="hidden" name="p" id="file_add_path" value=""/>
-				<label for="file_add_msg">file description</label>
-				<input type="text" name="m" id="file_add_msg" class="required"/>
+				<label for="file_add_msg" class="i18n">file description</label>
+				<input type="text" name="m" id="file_add_msg" class="required chatlen"/>
 				<input type="checkbox" checked="checked" name="a" value="1" id="file_add_advertise"/>
-				<label for="file_add_advertise">send advertise message</label>
+				<label for="file_add_advertise" class="i18n">send advertise message</label>
 				<input class="submit" type="submit" value="add" id="file_add_submit"/>
 			</form>
 		</p>
@@ -183,23 +189,15 @@
 
 <div data-role="page" id="page_user" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
-		<h1 id="page_user_name" user_id="">username</h1>
-		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse">back</a>
+		<h1 id="page_user_name" user_id="" class="i18n">username</h1>
+		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse" class="i18n">back</a>
 	</div>
 	<div data-role="content" id="page_user_content">
 		<p class="c_voip"><a href="javascript:call_start()" data-role="button" class="button_call">&nbsp;</a></p>
-		<!--
-		<div id="page_user_image"></div>
-		<fieldset class="ui-grid-a">
-			<div class="ui-block-a"><a data-role="button">Voice</a></div>
-			<div class="ui-block-b"><a data-role="button">Video</a></div>
-		</fieldset>
-		<hr/>
-		-->
 		<div data-role="navbar">
 			<ul>
-				<li><a onclick="javascript:user_changetochat('chat')" id="user_tab_chat" class="ui-btn-active">Chat</a></li>
-				<li><a onclick="javascript:user_changetofiles('files')" id="user_tab_files">Files</a></li>
+				<li><a onclick="javascript:user_changetochat('chat')" id="user_tab_chat" class="i18n ui-btn-active">Chat</a></li>
+				<li><a onclick="javascript:user_changetofiles('files')" id="i18n user_tab_files">Files</a></li>
 			</ul>
 		</div>
 		<div id="page_user_tab_chat">
@@ -207,24 +205,23 @@
 				<form action="user_chat" method="post" id="user_chat_form">
 					<input type="hidden" name="n" id="user_chat_name" value="undefined"/>
 					<input type="hidden" name="ip" id="user_chat_ip" value="undefined"/>
-					<input type="text" name="m" id="user_chat_msg" class="required"/>
+					<input type="text" name="m" id="user_chat_msg" class="required chatlen"/>
 					<input class="submit" type="submit" value="submit private" id="user_chat_submit"/>
 				</form>
 			</p>
 			<div id="page_user_msgs"></div>
 		</div>
 		<div id="page_user_tab_files">
-			<h3>Files</h3>
 			<div id="page_user_files"></div>
 		</div>
 	</div>
 	<div data-role="footer" data-position="fixed" class="ui-body-d">
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#page_chat" data-theme="b" data-transition="none" class="i_chat">&nbsp;</a></li>
-				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;</a></li>
-				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;</a></li>
-				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;</a></li>
+				<li><a href="#page_chat" data-theme="b" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -233,14 +230,14 @@
 <div data-role="page" id="page_tag" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
 		<h1 id="page_tag_name">#tag</h1>
-		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse">back</a>
+		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse" class="i18n">back</a>
 	</div>
 	<div data-role="content" id="page_tag_content">
 		<p>
 			<form action="chat" method="post" id="tag_chat_form" class="validate">
 				<input type="hidden" name="n" id="tag_chat_name" value="undefined"/>
-				<input type="text" name="m" id="tag_chat_msg" class="required"/>
-				<input class="submit i18n_submit" type="submit" value="submit" id="tag_chat_submit"/>
+				<input type="text" name="m" id="tag_chat_msg" class="required chatlen"/>
+				<input class="submit i18n" type="submit" value="submit" id="tag_chat_submit"/>
 			</form>
 		</p>
 		<div id="page_tag_msgs"></div>
@@ -248,10 +245,10 @@
 	<div data-role="footer" data-position="fixed" class="ui-body-d">
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#page_chat" data-theme="b" data-transition="none" class="i_chat">&nbsp;</a></li>
-				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;</a></li>
-				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;</a></li>
-				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;</a></li>
+				<li><a href="#page_chat" data-theme="b" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_users" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_file" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -271,7 +268,7 @@
 
 <div data-role="page" id="page_goodbye">
 	<div data-role="content">
-		<h1 class="i18n_goodbye">Goodbye</h1>
+		<h1 class="i18n" class="i18n">Goodbye</h1>
 	</div>
 </div>
 
@@ -281,21 +278,6 @@
 	</div>
 	<div data-role="content" id="page_dialog_content">
 		<p>Couldn't send message<br/> please try again</p>
-	</div>
-</div>
-
-<div data-role="page" id="page_license" data-theme="d">
-	<div data-role="header" data-position="fixed" data-theme="d">
-		<h1>License</h1>
-	</div>
-	<div data-role="content" >
-		<p>
-		qaul.net is open source under the GPL license
-		more information online http://qaul.net
-		</p>
-		<p>
-		qaul.net includes many great open source software:
-		</p>
 	</div>
 </div>
 

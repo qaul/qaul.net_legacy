@@ -1,10 +1,44 @@
 {
-"submit":"absenden",
+"OK":"OK",
+"save":"speichern",
+"send":"senden",
+"delete":"löschen",
+"back":"zurück",
+
+"favorites / friends":"Favoriten / Freunde",
+"all users":"Alle Benutzer",
 "Filter items":"Einträge filtern",
+
 "add file":"Datei hinzufügen",
-"add":"hinzufügen",
-"quit":"Programm beenden",
-"choose a nick name":"Wähle einen Namen",
-"choose":"speichern",
-"delete":"löschen"
+
+"Choose a user name":"Wähle einen Benutzer-Namen",
+"quit qaul.net":"Programm beenden",
+
+"Information":"Information",
+"About qaul.net":"Über qaul.net",
+"How to's":"Anleitungen",
+"License":"Lizenz",
+"Configuration":"Konfiguration",
+"Change Language":"Sprache Ändern",
+"Change User Name":"Nutzer Name ändern",
+
+"searching":"searching",
+"ringing":"klingeln",
+"calling":"ruft an",
+"connecting":"verbinden",
+"connected":"verbunden",
+"call ended":"Das Gespräch wurde beendet",
+"busy":"besetzt",
+"not reachable":"nicht erreichbar",
+"End Call":"Aufhängen",
+"Accept Call":"Gespräch annehmen",
+"Reject Call":"Gespräch ablehnen",
+"you called %s":"%s wurde angerufen",
+"incoming call from %s":"Eingehender Anruf von %s",
+
+"Spaces are not allowed in the user name":"Es sind keine Leerschläge im Benutzernamen erlaubt",
+"User name too long":"Der Benutzername ist zu lang",
+"Message too long":"Die Mitteilung ist zu lang",
+
+"Goodbye":"Auf Wiedersehen"
 }
