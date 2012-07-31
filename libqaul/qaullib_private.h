@@ -80,6 +80,7 @@ int qaul_conf_quit;
 int qaul_conf_debug;
 int qaul_conf_voip;
 int qaul_web_localip_set;
+char qaullib_AppEventOpenURL[MAX_URL_LEN];
 
 union olsr_message *qaul_in_msg;
 

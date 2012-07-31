@@ -417,7 +417,9 @@
 	int appEvent = Qaullib_TimedCheckAppEvent();
 	if (appEvent > 0)
 	{
-		if(appEvent == 100)
+		NSLog([NSString stringWithFormat:@"appEvent found: %i\n", appEvent]);
+
+		if(appEvent == QAUL_EVENT_CHOOSEFILE)
 		{
 			// show file picker
 			int i; // Loop counter.
@@ -453,11 +455,15 @@
 				}
 			}			
 		}
-		else if(appEvent == 101)
+		else if(appEvent == QAUL_EVENT_OPENFILE)
 		{
 			// open file
-			NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-			[workspace openFile:[NSString stringWithFormat:@"%s", Qaullib_GetAppEventOpenPath()]];
+			[[NSWorkspace sharedWorkspace] openFile:[NSString stringWithFormat:@"%s", Qaullib_GetAppEventOpenPath()]];
+		}
+		else if(appEvent == QAUL_EVENT_OPENURL)
+		{
+			// open url
+			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", Qaullib_GetAppEventOpenURL()]]];
 		}
 	}
 }

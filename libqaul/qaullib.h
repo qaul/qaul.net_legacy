@@ -14,6 +14,7 @@ extern "C" {
 #define QAUL_EVENT_QUIT        99
 #define QAUL_EVENT_CHOOSEFILE 100
 #define QAUL_EVENT_OPENFILE   101
+#define QAUL_EVENT_OPENURL    102
 
 #define QAUL_ERROR_NOWIFI       1
 #define QAUL_ERROR_NOROOT       2
@@ -205,6 +206,7 @@ void Qaullib_ConfigurationFinished(void);
  * @retval QAUL_EVENT_QUIT       quit app
  * @retval QAUL_EVENT_CHOOSEFILE open file picker
  * @retval QAUL_EVENT_OPENFILE   open file
+ * @retval QAUL_EVENT_OPENURL    open url in external web browser
  */
 int  Qaullib_TimedCheckAppEvent(void);
 
@@ -234,6 +236,12 @@ void Qaullib_IpcSendCom(int commandId);
  * to be called after Qaullib_TimedCheckEvent() received QAUL_EVENT_CHOOSEFILE
  */
 const char* Qaullib_GetAppEventOpenPath(void);
+
+/**
+ * get the URL of the page to open
+ * to be called after Qaullib_TimedCheckEvent() received QAUL_EVENT_OPENURL
+ */
+const char* Qaullib_GetAppEventOpenURL(void);
 
 /**
  * tell qaullib @a check if the user has picked a file

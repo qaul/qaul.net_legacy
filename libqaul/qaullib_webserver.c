@@ -33,6 +33,7 @@ static void Qaullib_WwwFavoriteGet(struct mg_connection *conn, const struct mg_r
 static void Qaullib_WwwFavoriteAdd(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwFavoriteDelete(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwSetPageName(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwSetOpenUrl(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwGetConfig(struct mg_connection *conn, const struct mg_request_info *request_info);
 
 /**
@@ -181,6 +182,10 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 			{
 				Qaullib_WwwSetPageName(conn, request_info);
 			}
+			else if (strcmp(request_info->uri, "/setopenurl.json") == 0)
+			{
+				Qaullib_WwwSetOpenUrl(conn, request_info);
+			}
 			else if (strcmp(request_info->uri, "/quit") == 0)
 			{
 				Qaullib_WwwQuit(conn, request_info);
@@ -295,9 +300,31 @@ static void Qaullib_WwwSetPageName(struct mg_connection *conn, const struct mg_r
 }
 
 // ------------------------------------------------------------
+static void Qaullib_WwwSetOpenUrl(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	char *content_length;
+	int length;
+
+	// Fetch url
+	content_length = (char *)mg_get_header(conn, "Content-Length");
+	length = atoi(content_length);
+	char *post = (char *)malloc(length+length/8+1);
+	mg_read(conn, post, length); //read post data
+	// extract variable
+	mg_get_var(post, strlen(post == NULL ? "" : post), "url", qaullib_AppEventOpenURL+22, sizeof(qaullib_AppEventOpenURL)-22);
+
+	printf("set event url to open: %s\n", qaullib_AppEventOpenURL);
+	app_event = QAUL_EVENT_OPENURL;
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
+
+	free(post);
+}
+// ------------------------------------------------------------
 static void Qaullib_WwwQuit(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
-	app_event = 99;
+	app_event = QAUL_EVENT_QUIT;
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
@@ -900,7 +927,7 @@ static void Qaullib_WwwFilePick(struct mg_connection *conn, const struct mg_requ
 
 	// open file picker
 	pickFileCheck = 1;
-	app_event = 100;
+	app_event = QAUL_EVENT_CHOOSEFILE;
 
 	// deliver answer
 	mg_printf(conn, "{");
@@ -961,12 +988,11 @@ static void Qaullib_WwwFileOpen(struct mg_connection *conn, const struct mg_requ
     strcat(qaullib_AppEventOpenPath, local_filename);
 
 	// open file
-	app_event = 101;
+	app_event = QAUL_EVENT_OPENFILE;
 
 	// deliver answer
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
-	mg_printf(conn, "{");
-	mg_printf(conn, "}");
+	mg_printf(conn, "{}");
 }
 
 // ------------------------------------------------------------
@@ -986,8 +1012,7 @@ static void Qaullib_WwwFileDelete(struct mg_connection *conn, const struct mg_re
 
 	// deliver answer
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
-	mg_printf(conn, "{");
-	mg_printf(conn, "}");
+	mg_printf(conn, "{}");
 }
 
 // ------------------------------------------------------------

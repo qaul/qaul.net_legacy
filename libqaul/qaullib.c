@@ -27,6 +27,7 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_conf_debug = 0;
 	qaul_conf_voip = 0;
 	qaul_web_localip_set = 0;
+	sprintf(qaullib_AppEventOpenURL, "http://%s:%s/", IPC_ADDR, CHAT_PORT);
 
 	// -------------------------------------------------
 	// create buffers for socket communication
@@ -201,6 +202,12 @@ void Qaullib_TimedDownload(void)
 const char* Qaullib_GetAppEventOpenPath(void)
 {
 	return qaullib_AppEventOpenPath;
+}
+
+// ------------------------------------------------------------
+const char* Qaullib_GetAppEventOpenURL(void)
+{
+	return qaullib_AppEventOpenURL;
 }
 
 // ------------------------------------------------------------
