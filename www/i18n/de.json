@@ -37,8 +37,9 @@
 "incoming call from %s":"Eingehender Anruf von %s",
 
 "Spaces are not allowed in the user name":"Es sind keine Leerschläge im Benutzernamen erlaubt",
-"User name too long":"Der Benutzername ist zu lang",
-"Message too long":"Die Mitteilung ist zu lang",
+"User name is too long":"Der Benutzername ist zu lang",
+"Message is too long":"Die Mitteilung ist zu lang",
+"Description is too long":"Die Beschreibung ist zu lang",
 
 "Goodbye":"Auf Wiedersehen"
 }

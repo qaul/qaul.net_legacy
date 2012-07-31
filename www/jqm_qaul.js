@@ -59,15 +59,19 @@ function init_start()
 	// add custom validation method
 	jQuery.validator.addMethod("nospaces", function(value, element) { 
 		return this.optional(element) || /^[^\s]+$/.test(value); 
-	}, "Spaces are not allowed in the user name.");
+	}, "Spaces are not allowed in the user name");
 
 	jQuery.validator.addMethod("userlen", function(value, element) { 
 		return this.optional(element) || utf8ByteCount(value)<=20; 
-	}, "User name too long");
+	}, "User name is too long");
 	
 	jQuery.validator.addMethod("chatlen", function(value, element) { 
 		return this.optional(element) || utf8ByteCount(value)<=140; 
-	}, "Message too long");
+	}, "Message is too long");
+
+	jQuery.validator.addMethod("filedesclen", function(value, element) { 
+		return this.optional(element) || utf8ByteCount(value)<=80; 
+	}, "Description is too long");
 
 	// message forms
 	chat_form.validate({
