@@ -487,8 +487,8 @@ static void Qaullib_WwwGetEvents(struct mg_connection *conn, const struct mg_req
 	mg_printf(conn, "{");
 
 	// get number of waiting incoming messages
-	mg_printf(conn, "\"m_pub\":%i,",0);
-	mg_printf(conn, "\"m_priv\":%i,",0);
+	mg_printf(conn, "\"m_pub\":%i,", qaul_new_msg);
+	mg_printf(conn, "\"m_priv\":%i,", qaul_new_msg);
 
 	// get newly downloaded files
 	mg_printf(conn, "\"files\":%i,",0);
@@ -1165,7 +1165,7 @@ static void Qaullib_WwwPubMsg(struct mg_connection *conn, const struct mg_reques
 	}
 
 	// set new messages flag
-	qaul_new_msg = 1;
+	qaul_new_msg++;
 
 	// return 200 ok
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");

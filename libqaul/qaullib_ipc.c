@@ -248,7 +248,7 @@ void Qaullib_IpcEvaluateChat(union olsr_message *msg)
 	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
 	Qaullib_UserCheckUser(&ip, chat_user);
 
-	qaul_new_msg = 1;
+	qaul_new_msg++;
 }
 
 // ------------------------------------------------------------
@@ -335,7 +335,7 @@ void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg)
 	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
 	Qaullib_UserCheckUser(&ip, chat_user);
 
-	qaul_new_msg = 1;
+	qaul_new_msg++;
 */
 }
 
@@ -384,7 +384,7 @@ void Qaullib_IpcEvaluateExediscover(union olsr_message *msg)
 	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
 	Qaullib_UserCheckUser(&ip, chat_user);
 
-	qaul_new_msg = 1;
+	qaul_new_msg++;
 */
 }
 
