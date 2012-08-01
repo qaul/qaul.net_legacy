@@ -499,7 +499,7 @@ void Qaul::QaulCheckEvents(void)
 
     if(myEvent > 0)
     {
-        if(myEvent == 100)
+        if(myEvent == QAUL_EVENT_CHOOSEFILE)
         {
             // open file selection
             QString fileName = QFileDialog::getOpenFileName(
@@ -519,13 +519,20 @@ void Qaul::QaulCheckEvents(void)
             }
 
         }
-        else if(myEvent == 101)
+        else if(myEvent == QAUL_EVENT_OPENFILE)
         {
             // open file in default application
             QString filepath = "file://";
             filepath += Qaullib_GetAppEventOpenPath();
             qDebug() << filepath;
             QDesktopServices::openUrl(QUrl(filepath));
+        }
+        else if(myEvent == QAUL_EVENT_OPENURL)
+        {
+            // open URL in browser
+            QString urlpath = Qaullib_GetAppEventOpenURL();
+            qDebug() << urlpath;
+            QDesktopServices::openUrl(QUrl(urlpath));
         }
     }
 }
