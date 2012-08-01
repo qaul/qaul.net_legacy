@@ -1,0 +1,11 @@
+To compile this you need libgtk installed. This is
+from my system, which compiles fine:
+
+dpkg -l "*gtk2*"|grep ^ii>>README
+ii  gtk2-engines-pixbuf                        2.12.9-3ubuntu5                                      Pixbuf-based theme for GTK+ 2.x
+ii  libgtk2.0-0                                2.12.9-3ubuntu5                                      The GTK+ graphical user interface library
+ii  libgtk2.0-common                           2.12.9-3ubuntu5                                      Common files for the GTK+ graphical user int
+ii  libgtk2.0-dev                              2.12.9-3ubuntu5                                      Development files for the GTK+ library
+ii  libwxgtk2.6-0                              2.6.3.2.2-2ubuntu4                                   wxWidgets Cross-platform C++ GUI toolkit (GT
+ii  python-gtk2                                2.12.1-0ubuntu1                                      Python bindings for the GTK+ widget set
+ii  python-gtk2-dev                            2.12.1-0ubuntu1                                      GTK+ bindings: devel files
