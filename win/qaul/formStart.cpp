@@ -623,7 +623,7 @@ void formStart::CheckAppEvents( Object^ myObject, EventArgs^ myEventArgs)
 	if(appEvent > 0)
 	{
 		// show file picker
-		if(appEvent == 100)
+		if(appEvent == QAUL_EVENT_CHOOSEFILE)
 		{
 			Debug::WriteLine(L"AppEvent add file");
 
@@ -653,7 +653,7 @@ void formStart::CheckAppEvents( Object^ myObject, EventArgs^ myEventArgs)
 			}
 		}
 		// open file
-		else if(appEvent == 101)
+		else if(appEvent == QAUL_EVENT_OPENFILE)
 		{
 			Debug::WriteLine(L"AppEvent open file");
 			// open file with default application
@@ -663,6 +663,17 @@ void formStart::CheckAppEvents( Object^ myObject, EventArgs^ myEventArgs)
 			memset(openPathW, 0, len);
 			MultiByteToWideChar(CP_ACP, NULL, openPath, -1, openPathW, len);
 			ShellExecute(NULL, L"open", openPathW, NULL, NULL, SW_SHOWNORMAL);
+		}
+		else if(appEvent == QAUL_EVENT_OPENURL)
+		{
+			Debug::WriteLine(L"AppEvent open URL");
+			// open file with default application
+			const char* openURL = Qaullib_GetAppEventOpenURL();
+			int len = strlen(openURL) + 1;
+			wchar_t *openURLW = new wchar_t[len];
+			memset(openURLW, 0, len);
+			MultiByteToWideChar(CP_ACP, NULL, openURL, -1, openURLW, len);
+			ShellExecute(NULL, L"open", openURLW, NULL, NULL, SW_SHOWNORMAL);
 		}
 	}
 }

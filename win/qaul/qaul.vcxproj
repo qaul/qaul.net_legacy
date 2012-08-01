@@ -96,6 +96,11 @@
     <CustomBuildStep>
       <Command>xcopy "$(ProjectDir)..\www" "$(TargetDir)www\" /e</Command>
     </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>xcopy ..\..\www ..\Release\www\ /e
+xcopy ..\..\www ..\Debug\www\ /e
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="System" />
