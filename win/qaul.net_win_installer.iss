@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "qaul.net"
-#define MyAppVersion "prototype march 2012"
+#define MyAppVersion "public alpha 31. July 2012"
 #define MyAppPublisher "qaul.net"
 #define MyAppURL "http://www.qaul.net/"
 #define MyAppExeName "qaul.exe"
@@ -23,10 +23,10 @@ DefaultDirName={pf}\qaul.net
 DisableDirPage=yes
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
-LicenseFile=C:\Users\sojus\src\meshnet\qaul\binary_release\qaul.net\Licenses\qaul.net_license.txt
-OutputDir=C:\Users\sojus\src\meshnet\qaul\binary_release
+LicenseFile=..\binary_release\qaul.net\Licenses\qaul.net_license.txt
+OutputDir=..\binary_release
 OutputBaseFilename=qaul.net_win7_installer
-SetupIconFile=C:\Users\sojus\src\meshnet\qaul\win\qaul\app.ico
+SetupIconFile=.\qaul\app.ico
 Compression=lzma
 SolidCompression=yes
 
@@ -60,8 +60,8 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\sojus\src\meshnet\qaul\binary_release\qaul.net\qaul.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\sojus\src\meshnet\qaul\binary_release\qaul.net\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\binary_release\qaul.net\qaul.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\binary_release\qaul.net\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
