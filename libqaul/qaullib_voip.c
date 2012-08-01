@@ -92,7 +92,7 @@ static void Qaullib_VoipLogCall(void)
 			error_exec=NULL;
 		}
 		else
-			qaul_new_msg = 1;
+			qaul_new_msg++;
 	}
 }
 
