@@ -1,41 +1,41 @@
 /*
- * written by contact@wachter-jud.net
- * License GPL
+ * qaul.net is free software
+ * licensed under GPL (version 3)
  */
 
 #include <string.h>
 #include "olsr.h"
 
 
-#include "qaul_chat_LL.h"
+#include "qaul_msg_LL.h"
 
 
-struct qaul_chat_LL_item {
-	struct qaul_chat_LL_item *next;           // next node
-	struct qaul_chat_LL_item *prev;           // previous node
+struct qaul_msg_LL_item {
+	struct qaul_msg_LL_item *next;           // next node
+	struct qaul_msg_LL_item *prev;           // previous node
 	union olsr_ip_addr ip;                    // originator address
 	uint16_t           seqno;				  // olsr package sequence number
 	time_t             time;                  // time when first received
 };
 
-void Qaul_Chat_LL_Add (uint16_t seqno, union olsr_ip_addr *ip);
-void Qaul_Chat_LL_Delete_Item (struct qaul_chat_LL_item *item);
+void Qaul_Msg_LL_Add (uint16_t seqno, union olsr_ip_addr *ip);
+void Qaul_Msg_LL_Delete_Item (struct qaul_msg_LL_item *item);
 
 
-static int qaul_chat_LL_count;
-static struct qaul_chat_LL_item root_item;
+static int qaul_msg_LL_count;
+static struct qaul_msg_LL_item root_item;
 
 
-void Qaul_Chat_LL_Init (void)
+void Qaul_Msg_LL_Init (void)
 {
-	qaul_chat_LL_count = 0;
+	qaul_msg_LL_count = 0;
 	root_item.next = &root_item;
 	root_item.prev = &root_item;
 }
 
-int  Qaul_Chat_LL_IsDuplicate (uint16_t seqno, union olsr_ip_addr *ip)
+int  Qaul_Msg_LL_IsDuplicate (uint16_t seqno, union olsr_ip_addr *ip)
 {
-	struct qaul_chat_LL_item *myitem = &root_item;
+	struct qaul_msg_LL_item *myitem = &root_item;
 
 	// check if message already exists
 	while(myitem->next != &root_item)
@@ -53,17 +53,17 @@ int  Qaul_Chat_LL_IsDuplicate (uint16_t seqno, union olsr_ip_addr *ip)
 	}
 
 	// it doesn't exist yet: add it to list
-	Qaul_Chat_LL_Add (seqno, ip);
+	Qaul_Msg_LL_Add (seqno, ip);
 
 	return 0;
 }
 
 
-void Qaul_Chat_LL_Add (uint16_t seqno, union olsr_ip_addr *ip)
+void Qaul_Msg_LL_Add (uint16_t seqno, union olsr_ip_addr *ip)
 {
 	// create new item
-	struct qaul_chat_LL_item *new_item;
-	new_item = (struct qaul_chat_LL_item *)malloc(sizeof(struct qaul_chat_LL_item));
+	struct qaul_msg_LL_item *new_item;
+	new_item = (struct qaul_msg_LL_item *)malloc(sizeof(struct qaul_msg_LL_item));
 
 	OLSR_PRINTF(1, "add item\n");
 
@@ -77,17 +77,17 @@ void Qaul_Chat_LL_Add (uint16_t seqno, union olsr_ip_addr *ip)
 	new_item->next = root_item.next;
 	root_item.next = new_item;
 
-	qaul_chat_LL_count++;
+	qaul_msg_LL_count++;
 }
 
 
-void Qaul_Chat_LL_Delete_Item (struct qaul_chat_LL_item *item)
+void Qaul_Msg_LL_Delete_Item (struct qaul_msg_LL_item *item)
 {
 	OLSR_PRINTF(1, "delete item\n");
 
 	item->prev->next = item->next;
 	item->next->prev = item->prev;
-	qaul_chat_LL_count--;
+	qaul_msg_LL_count--;
 
 	free(item);
 }
@@ -96,17 +96,17 @@ void Qaul_Chat_LL_Delete_Item (struct qaul_chat_LL_item *item)
 /**
  * delete all items older than 30 seconds
  */
-void Qaul_Chat_LL_Clean (void *foo __attribute__ ((unused)))
+void Qaul_Msg_LL_Clean (void *foo __attribute__ ((unused)))
 {
 	time_t mytime = time(NULL) -30;
-	struct qaul_chat_LL_item *myitem = &root_item;
+	struct qaul_msg_LL_item *myitem = &root_item;
 
 	while(myitem->prev != &root_item)
 	{
 		myitem = myitem->prev;
 
 		if(myitem->time < mytime)
-			Qaul_Chat_LL_Delete_Item (myitem);
+			Qaul_Msg_LL_Delete_Item (myitem);
 		else
 			break;
 	}
