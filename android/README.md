@@ -42,6 +42,7 @@ Compile olsrd & olsrd_qaul plugin
 
     cd android
     make -C external
+    cp external/olsrd/olsrd res/raw/olsrd
     cp external/olsrd/lib/olsrd_qaul/olsrd_qaul.so.0.1 res/raw/olsrd_qaul_so_0_1
     cd ../
 

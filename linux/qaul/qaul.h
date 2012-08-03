@@ -55,6 +55,7 @@ private slots:
     void QaulCheckSockets(void);
     void QaulCheckTopology(void);
     void QaulConfigureDelayFired(void);
+    bool QaulCopyDir(const QString &srcPath, const QString &dstPath);
 };
 
 #endif // QAUL_H

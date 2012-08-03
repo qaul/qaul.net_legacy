@@ -14,12 +14,14 @@ Compile olsrd
 
     cd olsrd_0.6.2
     make
+    cp olsrd ../linux/qaul-build-desktop/
     cd ../
 
 Compile olsrd_qaul plugin
 
     cd olsrd_0.6.2/lib/olsrd_qaul
     make
+    cp olsrd_qaul.so.0.1 ../../../linux/qaul-build-desktop/
     # you need to install the shared library
     sudo make install
     cd ../../../

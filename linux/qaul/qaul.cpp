@@ -7,17 +7,37 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QFileDialog>
+#include <QDir>
 
 Qaul::Qaul(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Qaul)
 { 
+    QDir myDir;
+    QString qaulLocalDirectory = QDir::homePath();
+    qaulLocalDirectory += "/.qaul";
+    qDebug() << "Local path: " << qaulLocalDirectory;
+
+    // create ~/.qaul directory
+    if(!myDir.exists(qaulLocalDirectory))
+    {
+        qDebug() << "Local path does not exist yet";
+        if(myDir.mkpath(qaulLocalDirectory))
+        {
+            qDebug() << "Local path created";
+
+            // copy www folder into ~/.qaul directory
+            this->QaulCopyDir(QApplication::applicationDirPath() +"/www", qaulLocalDirectory +"/www");
+            //QaulCopyDir(const QString &srcPath, const QString &dstPath)
+        }
+    }
+
     // set rendering system for rounded corners in web view
     //QApplication::setGraphicsSystem("raster");
 
     // initialize library
-    QString qpath = QApplication::applicationDirPath();
-    Qaullib_Init(qpath.toLocal8Bit().data());
+    //QString qpath = QApplication::applicationDirPath();
+    Qaullib_Init(qaulLocalDirectory.toLocal8Bit().data());
     // start web server
     // TODO: make QDialog::exec() as modal information for the user if web server failes
     if(!Qaullib_WebserverStart()) qDebug() << "web server startup failed";
@@ -549,3 +569,36 @@ void Qaul::QaulCheckTopology(void)
     Qaullib_TimedDownload();
 }
 
+bool Qaul::QaulCopyDir(const QString &srcPath, const QString &dstPath)
+{
+    //rmDir(dstPath);
+    QDir parentDstDir(QFileInfo(dstPath).path());
+    if (!parentDstDir.mkdir(QFileInfo(dstPath).fileName()))
+        return false;
+
+    QDir srcDir(srcPath);
+    foreach(const QFileInfo &info, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+    {
+        QString srcItemPath = srcPath + "/" + info.fileName();
+        QString dstItemPath = dstPath + "/" + info.fileName();
+        if (info.isDir())
+        {
+            if (!this->QaulCopyDir(srcItemPath, dstItemPath))
+            {
+                return false;
+            }
+        }
+        else if (info.isFile())
+        {
+            if (!QFile::copy(srcItemPath, dstItemPath))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            qDebug() << "Unhandled item" << info.filePath() << "in cpDir";
+        }
+    }
+    return true;
+}
