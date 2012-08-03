@@ -97,6 +97,10 @@
 	
 	// TODO: stop timers
 	
+	// check for Authorization
+	if([mysudo testAuthorization:authorizationRef]) NSLog(@"Authorization tested success");
+	else NSLog(@"Authorization tested error");
+	
 	// stop library
 	Qaullib_Exit();
 	
