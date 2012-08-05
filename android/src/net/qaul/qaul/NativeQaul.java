@@ -40,6 +40,7 @@ public class NativeQaul
 
 	public native void filePicked(int check, String path);
 	public native String getAppEventOpenPath();
+	public native String getAppEventOpenURL();
 	
 	public native int timedCheckAppEvent();
 	public native void timedSocketReceive();

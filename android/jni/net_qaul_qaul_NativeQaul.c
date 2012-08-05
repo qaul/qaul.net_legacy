@@ -133,6 +133,14 @@ JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getAppEventOpenPath
 	return myString;
 }
 
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getAppEventOpenURL
+  (JNIEnv *env, jobject obj)
+{
+	jstring myString;
+	myString = (*env)->NewStringUTF(env, Qaullib_GetAppEventOpenURL());
+	return myString;
+}
+
 JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_timedCheckAppEvent
   (JNIEnv *env, jobject obj)
 {
