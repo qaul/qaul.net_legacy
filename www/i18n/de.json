@@ -13,13 +13,13 @@
 
 "Chat":"Chat",
 "File Sharing":"File Sharing",
-"Files":"Dateien",
 "Send Private Message":"Private Mitteilung senden",
 "User Discovery":"Kontaktliste",
 
 "File description":"Beschreibung der Datei",
 "Advertise file":"Datei bekannt machen",
 "Add File":"Datei hinzufügen",
+"%s has no shared files":"%s hat keine öffentlichen Dateien.",
 
 "Choose a user name":"Wähle einen Benutzernamen",
 "Quit qaul.net":"Programm beenden",
