@@ -329,7 +329,10 @@ function show_user(name, ip)
       callback: "abc",
       data: {},
       success: function(data) {
-			$.each(data.files, function(i,item){
+			var nofiles = true;
+			$.each(data.files, function(i,item)
+			{
+				nofiles = false;
 				var file = "<div class=\"file\">";
 				file    += file_button_schedule(item.hash, item.suffix, item.size, item.description, name, ip);
 				file    += "<div class=\"filename\">" +format_msg_txt(item.description) +"</div>";
@@ -340,6 +343,11 @@ function show_user(name, ip)
 				var myfile = $("#page_user_files").append(file);
 				myfile.trigger('create');
 			});
+			
+			if(nofiles)
+			{
+				$("#page_user_files").append("<h2>" +$.i18n._("%s has no shared files", [name]) +"</h2>");
+			}
       },
       error: function(d,msg) {
           // todo: show error info
