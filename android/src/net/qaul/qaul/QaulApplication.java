@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
@@ -120,6 +121,11 @@ public class QaulApplication extends Application {
     		{
     			Log.d(MSG_TAG, "qaulCheckEvents: open file");
     			qaulOpenFile(nativeQaul.getAppEventOpenPath());
+    		}
+    		else if(event == 102)
+    		{
+    			Log.d(MSG_TAG, "qaulCheckEvents: open URL");
+    			qaulOpenURL(nativeQaul.getAppEventOpenURL());
     		}
     		else
     		{
@@ -550,6 +556,21 @@ public class QaulApplication extends Application {
 				}
 	    	}
 		}
+    }
+    
+    private void qaulOpenURL(String myURL)
+    {
+    	Uri uriUrl = Uri.parse(myURL);
+    	Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+    	
+    	if(myMainActivity != null)
+    	{
+    		Log.d(MSG_TAG, "QaulActivity reference set");
+    		myMainActivity.startActivity(launchBrowser);
+    	}
+    	else
+    		Log.d(MSG_TAG, "QaulActivity no Activity set");
+    	
     }
     
     public void qaulSetActivity(QaulActivity myActivity)

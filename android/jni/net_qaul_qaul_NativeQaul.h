@@ -113,6 +113,14 @@ JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getAppEventOpenPath
 
 /*
  * Class:     net_qaul_qaul_NativeQaul
+ * Method:    getAppEventOpenURL
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getAppEventOpenURL
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
  * Method:    timedCheckAppEvent
  * Signature: ()I
  */
