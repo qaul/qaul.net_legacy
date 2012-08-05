@@ -106,7 +106,7 @@
 			<li id="favorites_divider" data-role="list-divider" class="i18n">Favorites / Friends</li>
 		</ul>
 		<br/>
-		<ul data-role="listview" data-inset="true" id="users" data-filter="true">
+		<ul data-role="listview" data-inset="true" id="users"  data-theme="d" data-filter="true">
 			<li id="users_divider" data-role="list-divider" class="i18n">Other Users</li>
 		</ul>
 	</div>
@@ -190,14 +190,14 @@
 		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a>
 	</div>
 	<div data-role="content" id="page_user_content">
-		<div data-role="navbar">
-			<ul>
-				<li><a onclick="javascript:user_changetochat('chat')" id="user_tab_chat" class="i18n ui-btn-active">Chat</a></li>
-				<li><a onclick="javascript:user_changetofiles('files')" id="user_tab_files" class="i18n">Files</a></li>
-				<li><a onclick="javascript:call_start()" class="button_call" style="background-color:#f8f8f8;">&nbsp;&nbsp;&nbsp;</a></li>
-			</ul>
-		</div>
 		<div id="page_user_tab_chat">
+			<div data-role="navbar">
+				<ul>
+					<li><a onclick="javascript:user_changetochat('chat')" data-theme="b"><img src="images/i_chat_32.png"/></a></li>
+					<li><a onclick="javascript:user_changetofiles('files')" class="page_user_tab_blue"><img src="images/i_file_32.png"/></a></li>
+					<li><a onclick="javascript:call_start()" class="page_user_tab_blue"><img src="images/i_call_32.png"/></a></li>
+				</ul>
+			</div>
 			<p id="page_user_send">
 				<form action="user_chat" method="post" id="user_chat_form">
 					<input type="hidden" name="n" id="user_chat_name" value="undefined"/>
@@ -209,6 +209,13 @@
 			<div id="page_user_msgs"></div>
 		</div>
 		<div id="page_user_tab_files">
+			<div data-role="navbar">
+				<ul>
+					<li><a onclick="javascript:user_changetochat('chat')" class="page_user_tab_blue"><img src="images/i_chat_32.png"/></a></li>
+					<li><a onclick="javascript:user_changetofiles('files')" data-theme="b"><img src="images/i_file_32.png"/></a></li>
+					<li><a onclick="javascript:call_start()" class="page_user_tab_blue"><img src="images/i_call_32.png"/></a></li>
+				</ul>
+			</div>
 			<div id="page_user_files"></div>
 		</div>
 	</div>
@@ -251,19 +258,19 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_call">
+<div data-role="page" id="page_call" data-theme="d">
 	<div id="page_call_header" data-role="header" data-position="fixed" data-theme="d">
-		<h1 id="page_call_title"><img src="images/i_call_32.png"/></h1>
+		<h1 id="page_call_title"><img src="images/i_call_sign_32.png"/></h1>
 	</div>
 	<div data-role="content" id="page_call_content">
 		<h2 id="call_user">User</h2>
-		<p id="call_info">Calling</p>
+		<p id="call_info">calling</p>
 		<p id="call_buttons">
 		</p>
 	</div>
 </div>
 
-<div data-role="page" id="page_goodbye">
+<div data-role="page" id="page_goodbye" data-theme="d">
 	<div data-role="content">
 		<h1 class="i18n" class="i18n">Goodbye</h1>
 	</div>

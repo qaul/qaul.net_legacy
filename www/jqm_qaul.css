@@ -49,11 +49,6 @@ input {
 	overflow:auto;*/
 }
 
-#users, #page_user_files { 
-	min-height:70px;
-	overflow:auto;
-}
-
 .private {
 	background-color:#fffb8c;
 }
@@ -62,10 +57,6 @@ input {
 }
 .offline {
 	color:#ddd !important;
-}
-
-#users a {
-	margin-right:5px;
 }
 
 abbr.timeago {
@@ -78,39 +69,47 @@ abbr.timeago {
 	display:none;
 }
 
+.page_user_tab_blue {
+	background-color:#d5e4f2 !important;
+}
+
 /* --- icons & buttons --- */
 .i_chat {
 	background-image: url('images/i_chat_64.png');
-	background-position: 50% 50%;
+	background-position: 50% -10px;
 	background-repeat: no-repeat; 
 	background-size: 64px 64px;	
 }
 
 .i_users {
 	background-image: url('images/i_users_64.png'); 
-	background-position: 50% 50%;
+	background-position: 50% -10px;
 	background-repeat: no-repeat; 
 	background-size: 64px 64px;	
 }
 
 .i_filesharing {
 	background-image: url('images/i_files_64.png'); 
-	background-position: 50% 50%;
+	background-position: 50% -10px;
 	background-repeat: no-repeat; 
 	background-size: 64px 64px;	
 }
 
 .i_prefs {
 	background-image: url('images/i_prefs_64.png'); 
-	background-position: 50% 50%;
+	background-position: 50% -10px;
 	background-repeat: no-repeat; 
 	background-size: 64px 64px;
+}
+
+.ui-footer a {
+	height:40px;
 }
 
 .ui-footer .ui-li-count {
 	position:relative;
 	top:-5px;
-	right:-20px;
+	right:-25px;
 }
 
 
@@ -118,14 +117,14 @@ abbr.timeago {
 .msg {
 	padding:1px;
 	border-top:1px dotted #999999;
-	min-height:64px;
+	min-height:67px;
 	clear:both;
 }
 .msg_1, .msg_11 {
-	background-color:#eeeeee;
-}
-.msg_2, msg_12 {
 	background-color:#f9f9f9;
+}
+.msg_2, .msg_12, .msg_3, .msg_13 {
+	background-color:#d5e4f2;
 }
 .msg .sender {
 	margin:10px 10px 5px 10px;
@@ -278,6 +277,25 @@ span.suffix {
 }
 .call_button_deny .ui-btn-inner {
 	/*background-color:#ff0000;*/
+}
+
+.call_button_accept {
+	background-image: url('images/b_callaccept_64.png') !important;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-color:#36BB3E;
+}
+.call_button_reject {
+	background-image: url('images/b_callend_64.png') !important;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-color:#EA2A2A;
+}
+.call_button_end {
+	background-image: url('images/b_callend_64.png') !important;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-color:#EA2A2A;
 }
 
 /* buttons */

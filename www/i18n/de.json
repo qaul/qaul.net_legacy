@@ -40,9 +40,6 @@
 "Call ended":"Das Gespräch wurde beendet",
 "Is busy":"Besetzt",
 "Not reachable":"Nicht erreichbar",
-"End Call":"Aufhängen",
-"Accept Call":"Gespräch annehmen",
-"Reject Call":"Gespräch ablehnen",
 "You called %s":"%s wurde angerufen",
 "Incoming call from %s":"Eingehender Anruf von %s",
 

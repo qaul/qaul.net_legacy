@@ -315,7 +315,7 @@ function show_user(name, ip)
 	$.mobile.changePage($("#page_user"),"slide");
 	
 	// set page
-	$("#page_user_name").empty().append(name);
+	$("#page_user_name").empty().append("@" +name);
 	$("#user_chat_name").val(name);
 	$("#user_chat_ip").val(ip);
 	$("#page_user_msgs").empty();
@@ -331,7 +331,6 @@ function show_user(name, ip)
       success: function(data) {
 			$.each(data.files, function(i,item){
 				var file = "<div class=\"file\">";
-				file    += file_suffix2icon(item.suffix);
 				file    += file_button_schedule(item.hash, item.suffix, item.size, item.description, name, ip);
 				file    += "<div class=\"filename\">" +format_msg_txt(item.description) +"</div>";
 				file    += "<div class=\"filemeta\"><span class=\"suffix\">" +item.suffix +"</span> " +file_filesize(item.size) +" ";
@@ -428,9 +427,9 @@ function qaul_openurl(url)
 // ======================================================
 // VoIP
 // ------------------------------------------------------
-var call_button_accept = '<a href="javascript:call_accept();" data-role="button" class="call_button_accept">Accept Call</a>';
-var call_button_reject = '<a href="javascript:call_end();" data-role="button" class="call_button_deny">Reject Call</a>';
-var call_button_end = '<a href="javascript:call_end();" data-role="button" class="call_button_deny">End Call</a>';
+var call_button_accept = '<a href="javascript:call_accept();" data-role="button" class="call_button_accept">&nbsp;</a>';
+var call_button_reject = '<a href="javascript:call_end();" data-role="button" class="call_button_reject">&nbsp;</a>';
+var call_button_end = '<a href="javascript:call_end();" data-role="button" class="call_button_end">&nbsp;</a>';
 
 function call_start()
 {
@@ -646,12 +645,17 @@ function format_msg_file(msg, desc, name, ip)
 function format_msg_voip(item)
 {
 	var button;
-	button = '<div class="msg_voip"><img src="images/i_call_64.png" /></div>';
 	var msg;
 	if(item.type == 3)
+	{
+		button = '<div class="msg_voip"><img src="images/i_call_in_64.png" /></div>';
 		msg = $.i18n._("incoming call from %s", [format_msg_userlink(item.name, item.ip, item.id)]);
+	}
 	else
+	{
+		button = '<div class="msg_voip"><img src="images/i_call_out_64.png" /></div>';
 		msg = $.i18n._("you called %s", [format_msg_userlink(item.name, item.ip, item.id)]);
+	}
 		
 	return {"msg":msg,"button":button};
 }
@@ -1434,12 +1438,14 @@ function update_footer()
 
 function user_changetofiles(active)
 {
+	$("#page_user_tab_files a.ui-btn-active").removeClass("ui-btn-active");
 	$("#page_user_tab_chat").hide();
 	$("#page_user_tab_files").show();
 }
 
 function user_changetochat(active)
 {
+	$("#page_user_tab_chat a.ui-btn-active").removeClass("ui-btn-active");
 	$("#page_user_tab_files").hide();
 	$("#page_user_tab_chat").show();
 }
