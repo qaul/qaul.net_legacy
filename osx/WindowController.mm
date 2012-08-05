@@ -108,13 +108,17 @@
 	if(![mysudo stopOlsrd:authorizationRef]) NSLog(@"olsrd not killed");
 	// stop portforwarding 
 	if(![mysudo stopPortForwarding:authorizationRef]) NSLog(@"portforwarding not removed");
+	
+	// FIXME: somehow the routing table gets messed up
+	// idea: unjoin the network fist ...
+	// 
 	usleep(50000);
 	// set dhcp for wifi
 	if(![mysudo setDhcp:authorizationRef service:qaulServiceId interface:qaulWifiInterface]) NSLog(@"dhcp not set");
 	usleep(50000);
 	// stop wifi
 	if(![mysudo stopAirport:authorizationRef interface:qaulWifiInterface]) NSLog(@"airport not stopped");
-
+	
 	return TRUE;
 }
 
