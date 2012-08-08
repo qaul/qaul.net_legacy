@@ -61,7 +61,7 @@ static void Qaullib_WwwPubInfo(struct mg_connection *conn, const struct mg_reque
 static void Qaullib_WwwExtBinaries(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwLoading(struct mg_connection *conn, const struct mg_request_info *request_info);
 static int  Qaullib_WwwGetMsgsCallback(void *NotUsed, int number_of_lines, char **column_value, char **column_name);
-static void Qaullib_WwwJsonFiles(struct mg_connection *conn, const char* sqlStmt);
+static void Qaullib_WwwFile2Json(struct mg_connection *conn, struct qaul_file_LL_item *file);
 static void get_qsvar(const struct mg_request_info *request_info, const char *name, char *dst, size_t dst_len);
 
 
@@ -806,10 +806,30 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 // ------------------------------------------------------------
 static void Qaullib_WwwFileList(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
-	//printf("Qaullib_WwwFileList\n");
+	int firstitem;
+	struct qaul_file_LL_node mynode;
+	Qaullib_File_LL_InitNode(&mynode);
+
+	printf("Qaullib_WwwFileList\n");
+
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{");
-	Qaullib_WwwJsonFiles(conn, sql_file_get_all);
+	mg_printf(conn, "\"files\":[");
+
+	// loop through files
+	firstitem = 1;
+	while(Qaullib_File_LL_NextNodeGuiPriv(&mynode))
+	{
+		if(firstitem)
+			firstitem = 0;
+		else
+			mg_printf(conn, ",");
+
+		Qaullib_WwwFile2Json(conn, mynode.item);
+		mynode.item->gui_notify = 0;
+	}
+
+	mg_printf(conn, "]");
 	mg_printf(conn, "}");
 }
 
@@ -817,17 +837,15 @@ static void Qaullib_WwwFileList(struct mg_connection *conn, const struct mg_requ
 static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
 	char *content_length;
-	char buffer[10240];
+	char buffer[1024];
 	char* stmt = buffer;
 	char *error_exec=NULL;
-	char local_description[MAX_DESCRIPTION_LEN +1];
-	char local_msg[MAX_MESSAGE_LEN +1];
-	char local_path[MAX_PATH_LEN +1];
+	int length, advertise, size;
+	struct qaul_file_LL_item file_item;
 	char local_advertise[2];
-	char local_hash[MAX_HASHSTR_LEN +1];
-	char local_suffix[MAX_SUFFIX_LEN +1];
+	char local_path[MAX_PATH_LEN +1];
+	char local_msg[MAX_MESSAGE_LEN +1];
 	union olsr_message *m = (union olsr_message *)buffer;
-	int length, local_size, advertise, size;
 
 	printf("Qaullib_WwwFileAdd\n");
 
@@ -837,38 +855,28 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 	char *post = (char *)malloc(length+length/8+1);
 	mg_read(conn, post, length); //read post data
 
-	printf("POST:\n%s\n", post);
 	// get path
 	mg_get_var(post, strlen(post == NULL ? "" : post), "p", local_path, sizeof(local_path));
 	// get msg
-	mg_get_var(post, strlen(post == NULL ? "" : post), "m", local_description, sizeof(local_description));
+	mg_get_var(post, strlen(post == NULL ? "" : post), "m", file_item.description, sizeof(file_item.description));
 	// get advertise
 	mg_get_var(post, strlen(post == NULL ? "" : post), "a", local_advertise, sizeof(local_advertise));
 	advertise = atoi(local_advertise);
 
-	printf("a: %i | %s, m: %s, p: %s\n", advertise, local_advertise, local_msg, local_path);
-
 	// copy file into directory & make hash
-	local_size = Qaullib_FileAdd(local_path, local_hash, local_suffix);
-	printf("file size: %i\n", local_size);
+	file_item.size = Qaullib_FileCopyNew(local_path, file_item.hashstr, file_item.suffix);
+	printf("file size: %i\n", file_item.size);
 
-	if(local_size > 0)
+	if(file_item.size > 0)
 	{
-		// write to db
-		sprintf(stmt, sql_file_set,
-			local_hash,
-			local_suffix,
-			local_description,
-			local_size
-		);
-		printf("statement: %s\n", stmt);
-		if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
-		{
-			// execution failed
-			printf("SQLite error: %s\n",error_exec);
-			sqlite3_free(error_exec);
-			error_exec=NULL;
-		}
+		// add file
+		file_item.type = QAUL_FILETYPE_FILE;
+		file_item.status = QAUL_FILESTATUS_MYFILE;
+		sprintf(file_item.adv_name, "");
+		memset(&file_item.adv_ip, 0, sizeof(file_item.adv_ip));
+		file_item.adv_validip = 0;
+
+		Qaullib_FileAdd(&file_item);
 
 		// FIXME: make ipv6 compatible
 		// pack chat into olsr message
@@ -877,17 +885,17 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 			printf("send advertise message\n");
 
 			// ipv4 only at the moment
-			m->v4.olsr_msgtype = QAUL_USERHELLO_MESSAGE_TYPE;
+			m->v4.olsr_msgtype = QAUL_CHAT_MESSAGE_TYPE;
 			memcpy(&m->v4.message.chat.name, qaul_username, MAX_USER_LEN);
 			// create message
-			strcpy(local_msg, local_hash);
-			if(strlen(local_suffix) > 0)
+			strncpy(local_msg, file_item.hashstr, sizeof(file_item.hashstr));
+			if(strlen(file_item.suffix) > 0)
 			{
 				strcat(local_msg, ".");
-				strcat(local_msg, local_suffix);
+				strcat(local_msg, file_item.suffix);
 			}
 			strcat(local_msg, " ");
-			strcat(local_msg, local_description);
+			strcat(local_msg, file_item.description);
 
 			memcpy(&m->v4.message.chat.msg, local_msg, MAX_MESSAGE_LEN);
 			size = sizeof( struct qaul_chat_msg);
@@ -900,8 +908,9 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 			Qaullib_IpcSend(m);
 		}
 
-		// todo: check wether sending was successful...
+		// todo: check whether sending was successful...
 	}
+
 	// send answer
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{");
@@ -910,9 +919,6 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 
 	// free memory
 	free(post);
-
-	// check if any file needs to be downloaded
-	Qaullib_FileCheckScheduled();
 }
 
 // ------------------------------------------------------------
@@ -995,37 +1001,46 @@ static void Qaullib_WwwFileOpen(struct mg_connection *conn, const struct mg_requ
 // ------------------------------------------------------------
 static void Qaullib_WwwFileDelete(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
-	char local_id[MAX_INTSTR_LEN +1];
-	int id, success;
+	char local_hashstr[MAX_HASHSTR_LEN +1];
+	unsigned char local_hash[MAX_HASH_LEN];
+	struct qaul_file_LL_item *file_item;
 
 	printf("Qaullib_WwwFileDelete\n");
 
 	// get file variable
-	get_qsvar(request_info, "id", local_id, sizeof(local_id));
-	id = atoi(local_id);
+	get_qsvar(request_info, "hash", local_hashstr, sizeof(local_hashstr));
 
+	printf("hashstr %s\n", local_hashstr);
 	// delete file
-	success = Qaullib_FileDeleteById(id);
+	// todo: delete file (by hash)
+	if(Qaullib_StringToHash(local_hashstr, local_hash))
+	{
+		if(Qaullib_File_LL_HashSearch(local_hash, &file_item))
+		{
+			printf("3\n");
+			Qaullib_FileDelete(file_item);
+		}
+	}
+	printf("4\n");
 
 	// deliver answer
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
+
+	printf("5\n");
 }
 
 // ------------------------------------------------------------
 static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
 	char *content_length;
-	char buffer[10240];
+	char buffer[1024];
 	char* stmt = buffer;
 	char *error_exec=NULL;
-	char local_hash[MAX_HASHSTR_LEN +1];
-	char local_suffix[MAX_SUFFIX_LEN +1];
-	char local_description[MAX_DESCRIPTION_LEN +1];
-	char local_name[MAX_USER_LEN +1];
-	char local_ip[MAX_IP_LEN +1];
+	int length;
+	struct qaul_file_LL_item file_item;
 	char local_size[MAX_INTSTR_LEN +1];
-	int  length, local_size_int;
+	char local_ip[MAX_IP_LEN +1];
 
 	printf("Qaullib_WwwFileSchedule\n");
 
@@ -1036,34 +1051,25 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	mg_read(conn, post, length); //read post data
 
 	// get hash
-	mg_get_var(post, strlen(post == NULL ? "" : post), "hash", local_hash, MAX_HASHSTR_LEN +1);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "hash", file_item.hashstr, MAX_HASHSTR_LEN +1);
+	Qaullib_StringToHash(file_item.hashstr, file_item.hash);
 	// get suffix
-	mg_get_var(post, strlen(post == NULL ? "" : post), "suffix", local_suffix, MAX_SUFFIX_LEN +1);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "suffix", file_item.suffix, MAX_SUFFIX_LEN +1);
 	// get description
-	mg_get_var(post, strlen(post == NULL ? "" : post), "description", local_description, MAX_DESCRIPTION_LEN +1);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "description", file_item.description, MAX_DESCRIPTION_LEN +1);
 	// get size
 	mg_get_var(post, strlen(post == NULL ? "" : post), "size", local_size, MAX_INTSTR_LEN +1);
-	local_size_int = atoi(local_size);
+	file_item.size = atoi(local_size);
 	// get advertised by
 	mg_get_var(post, strlen(post == NULL ? "" : post), "ip", local_ip, MAX_IP_LEN +1);
-	mg_get_var(post, strlen(post == NULL ? "" : post), "name", local_name, MAX_USER_LEN +1);
 
-	// write to db
-	sprintf(stmt, sql_file_schedule,
-		local_hash,
-		local_suffix,
-		local_description,
-		local_size_int,
-		local_name,
-		local_ip
-	);
-	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
-	{
-		// execution failed
-		printf("SQLite error: %s\n",error_exec);
-		sqlite3_free(error_exec);
-		error_exec=NULL;
-	}
+
+	mg_get_var(post, strlen(post == NULL ? "" : post), "name", file_item.adv_name, MAX_USER_LEN +1);
+
+	// add file
+	file_item.type = QAUL_FILETYPE_FILE;
+	file_item.status = QAUL_FILESTATUS_NEW;
+	Qaullib_FileAdd(&file_item);
 
 	// send answer
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
@@ -1186,11 +1192,27 @@ static void Qaullib_WwwPubMsg(struct mg_connection *conn, const struct mg_reques
 // ------------------------------------------------------------
 static void Qaullib_WwwPubInfo(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
+	int firstitem;
+	struct qaul_file_LL_node mynode;
+	Qaullib_File_LL_InitNode(&mynode);
+
 	printf("Qaullib_WwwGetFiles\n");
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "abc({");
 	mg_printf(conn, "\"name\":\"%s\",",qaul_username);
-	Qaullib_WwwJsonFiles(conn, sql_file_get_pub);
+
+	// loop through files
+	firstitem = 1;
+	while(Qaullib_File_LL_NextNodePub(&mynode))
+	{
+		if(firstitem)
+			firstitem = 0;
+		else
+			mg_printf(conn, ",");
+
+		Qaullib_WwwFile2Json(conn, mynode.item);
+	}
+
 	mg_printf(conn, "})");
 }
 
@@ -1242,7 +1264,7 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 	char local_chunkpos[MAX_INTSTR_LEN +1];
 	char local_file[MAX_PATH_LEN +1];
 	int  chunkpos, mychunksize;
-	struct qaul_file myfile;
+	struct qaul_file_LL_item *myfile;
 	union qaul_inbuf msgbuf;
 
 
@@ -1252,23 +1274,23 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 	printf("Qaullib_WwwPubFilechunk\n");
 
 	// get hash
-	get_qsvar(request_info, "h", local_hash, MAX_HASHSTR_LEN +1);
+	get_qsvar(request_info, "h", local_hash, sizeof(local_hash));
 	// get suffix
-	get_qsvar(request_info, "s", local_suffix, MAX_SUFFIX_LEN +1);
+	get_qsvar(request_info, "s", local_suffix, sizeof(local_suffix));
 	// get chunk starting position
-	get_qsvar(request_info, "c", local_chunkpos, MAX_SUFFIX_LEN +1);
+	get_qsvar(request_info, "c", local_chunkpos, sizeof(local_chunkpos));
 	chunkpos = atoi(local_chunkpos);
 
 	// check if file exists
-	if(Qaullib_FileAvailable(local_hash, local_suffix, chunkpos, &myfile))
+	if(Qaullib_FileAvailable(local_hash, local_suffix, myfile))
 	{
-		printf("Qaullib_WwwPubFilechunk size: %i\n", myfile.size);
+		printf("Qaullib_WwwPubFilechunk size: %i\n", myfile->size);
 
 		// check if file is big enough
-		if(myfile.size < chunkpos)
+		if(myfile->size < chunkpos)
 		{
 			msgbuf.filechunk.type = htonl(3);
-			msgbuf.filechunk.filesize = htonl(myfile.size);
+			msgbuf.filechunk.filesize = htonl(myfile->size);
 			mg_write(conn, msgbuf.buf, sizeof(struct qaul_filechunk_msg));
 			return;
 		}
@@ -1285,13 +1307,13 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 			// send type
 			msgbuf.filechunk.type = htonl(1);
 			// send file size
-			msgbuf.filechunk.filesize = htonl(myfile.size);
+			msgbuf.filechunk.filesize = htonl(myfile->size);
 			// send chunk size
-			if(chunkpos + qaul_chunksize > myfile.size) mychunksize = myfile.size - chunkpos;
+			if(chunkpos + qaul_chunksize > myfile->size) mychunksize = myfile->size - chunkpos;
 			else mychunksize = qaul_chunksize;
 			msgbuf.filechunk.chunksize = htonl(mychunksize);
 
-			printf("chunkpos %i, filesize %i, chunksize %i, BUFSIZ %i, iterations %i\n", chunkpos, myfile.size, mychunksize, BUFSIZ, (int) ceil(mychunksize/BUFSIZ));
+			printf("chunkpos %i, filesize %i, chunksize %i, BUFSIZ %i, iterations %i\n", chunkpos, myfile->size, mychunksize, BUFSIZ, (int) ceil(mychunksize/BUFSIZ));
 
 			// TODO: send chunk hash
 			memcpy(msgbuf.filechunk.chunkhash, "01234567890123456789", MAX_HASH_LEN);
@@ -1342,101 +1364,47 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 
 
 // ------------------------------------------------------------
-static void Qaullib_WwwJsonFiles(struct mg_connection *conn, const char* sqlStmt)
+static void Qaullib_WwwFile2Json(struct mg_connection *conn, struct qaul_file_LL_item *file)
 {
-	sqlite3_stmt *ppStmt;
-	//char buffer[10240];
-	//char* stmt = buffer;
-	char *error_exec=NULL;
-	int first;
+	printf("Qaullib_WwwFile2Json\n");
 
-	//printf("Qaullib_WwwJsonFiles\n");
-
-	// Select rows from database
-	if( sqlite3_prepare_v2(db, sqlStmt, -1, &ppStmt, NULL) != SQLITE_OK )
-	{
-		printf("SQLite error: %s\n",sqlite3_errmsg(db));
-	}
-
-	mg_printf(conn, "\"files\":[");
-	// For each row returned
-	first = 0;
-	while (sqlite3_step(ppStmt) == SQLITE_ROW)
-	{
-	  if(!first) first = 1;
-	  else mg_printf(conn, ",");
-	  mg_printf(conn, "{");
-
-	  // For each column
-	  int jj;
-	  for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
-	  {
-		    if(strcmp(sqlite3_column_name(ppStmt,jj), "id") == 0)
-			{
-		    	if(jj>0) mg_printf(conn, ",");
-		    	mg_printf(conn, "\"id\":%i", sqlite3_column_int(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "hash") == 0)
-			{
-		    	if(jj>0) mg_printf(conn, ",");
-				mg_printf(conn, "\"hash\":\"%s\"", sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "size") == 0)
-			{
-		    	if(jj>0) mg_printf(conn, ",");
-				mg_printf(conn, "\"size\":%i", sqlite3_column_int(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "suffix") == 0)
-			{
-		    	if(jj>0) mg_printf(conn, ",");
-				mg_printf(conn, "\"suffix\":\"%s\"", sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "adv_name") == 0)
-			{
-		    	if(jj>0) mg_printf(conn, ",");
-				mg_printf(conn, "\"adv_name\":\"%s\"", sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "adv_ip") == 0)
-			{
-		    	if(jj>0) mg_printf(conn, ",");
-				mg_printf(conn, "\"adv_ip\":\"%s\"", sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "description") == 0)
-			{
-		    	if(jj>0) mg_printf(conn, ",");
-				mg_printf(conn, "\"description\":\"%s\"", sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "created_at") == 0)
-			{
-		    	if(jj>0) mg_printf(conn, ",");
-				mg_printf(conn, "\"time\":\"%s\"", sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "status") == 0)
-			{
-		    	if(jj>0) mg_printf(conn, ",");
-				mg_printf(conn, "\"status\":%i", sqlite3_column_int(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "downloaded") == 0)
-			{
-		    	if(jj>0) mg_printf(conn, ",");
-		    	int downloaded = sqlite3_column_int(ppStmt, jj);
-				mg_printf(conn, "\"downloaded\":%i", downloaded);
-			}
-	  }
-	  mg_printf(conn, "}");
-	}
-	mg_printf(conn, "]");
-	sqlite3_finalize(ppStmt);
+	mg_printf(conn, "{");
+	//mg_printf(conn, "\"id\":%i,", file->id);
+	mg_printf(conn, "\"hash\":\"%s\",", file->hashstr);
+	mg_printf(conn, "\"size\":%i,", file->size);
+	mg_printf(conn, "\"suffix\":\"%s\",", file->suffix);
+	mg_printf(conn, "\"description\":\"%s\",", file->description);
+	mg_printf(conn, "\"time\":\"%s\",", file->created_at);
+	mg_printf(conn, "\"status\":%i,", file->status);
+	mg_printf(conn, "\"downloaded\":%i", file->downloaded);
+	mg_printf(conn, "}");
 }
+
 
 // ------------------------------------------------------------
 static void Qaullib_WwwExtBinaries(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
+	int firstitem;
+	struct qaul_file_LL_node mynode;
+	Qaullib_File_LL_InitNode(&mynode);
+
 	printf("Qaullib_WwwGetFiles\n");
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{");
 	mg_printf(conn, "\"name\":\"%s\",",qaul_username);
-	Qaullib_WwwJsonFiles(conn, sql_file_get_pub_binaries);
+
+	// loop through files
+	firstitem = 1;
+	while(Qaullib_File_LL_NextNodePubBinaries(&mynode))
+	{
+		if(firstitem)
+			firstitem = 0;
+		else
+			mg_printf(conn, ",");
+
+		Qaullib_WwwFile2Json(conn, mynode.item);
+	}
+
 	mg_printf(conn, "}");
 }
 

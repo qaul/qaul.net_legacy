@@ -270,7 +270,8 @@ void Qaullib_IpcEvaluateTopo(union olsr_message *msg)
 	// check if user has our ip
 	//inet_ntop(AF_INET, &msg->v4.message.node.ip.v4, &ipbuf, sizeof(ipbuf));
 	//if(strcmp(qaul_ip_str, ipbuf)==0) return;
-	if(memcmp(&qaul_ip_addr.v4, &msg->v4.message.node.ip.v4, 4) == 0) return;
+	if(memcmp(&qaul_ip_addr.v4, &msg->v4.message.node.ip.v4, sizeof(msg->v4.message.node.ip.v4)) == 0)
+		return;
 
 	// check if user exists, create it if not
 	Qaullib_UserTouchIp(&msg->v4.message.node.ip);

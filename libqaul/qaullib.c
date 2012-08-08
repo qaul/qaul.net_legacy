@@ -88,8 +88,9 @@ void Qaullib_Init(const char* resourcePath)
 		Qaullib_DbPopulateConfig();
 	}
 
-	// initialize linked list
-	Qaullib_UserInit ();
+	// initialize linked lists
+	Qaullib_UserInit();
+	Qaullib_FileInit();
 
 #ifdef WIN32
 	// needs to be called before socket()

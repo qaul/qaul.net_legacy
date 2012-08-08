@@ -22,7 +22,6 @@ var node_count = 0;
 var user_count = 0;
 
 var qaulfiles = [];
-var qaulfileevent = 0;
 var qaulusers = [];
 var qauluserevent = 0;
 var qaulmessageevent = 0;
@@ -31,6 +30,15 @@ var chat_initialized = false;
 var is_chrome = false;
 var call_page_origin = "page_chat";
 var user_page_origin = "pager_users";
+
+var QAUL_FILESTATUS_DELETED     = -2;
+var QAUL_FILESTATUS_ERROR       = -1;
+var QAUL_FILESTATUS_NEW         =  0;
+var QAUL_FILESTATUS_DISCOVERING =  1;
+var QAUL_FILESTATUS_DISCOVERED  =  2;
+var QAUL_FILESTATUS_DOWNLOADING =  3;
+var QAUL_FILESTATUS_DOWNLOADED  =  4;
+var QAUL_FILESTATUS_MYFILE      =  5;
 
 // ======================================================
 // initialize
@@ -844,6 +852,12 @@ function time2str(timestr)
 	return timestr.substr(11,5);
 }
 
+function timestamp2str(timestamp)
+{
+	var date = new Date(timestamp *1000);
+	return date.getHours() +":" +date.getMinutes();
+}
+
 var updatetimer=function()
 {
 	if($.mobile.activePage.attr("id")=="page_chat")
@@ -965,10 +979,10 @@ function open_file(filename)
 	});
 }
 
-function file_delete(id)
+function file_delete(hash)
 {
 	// delete file by id
-	var path = "file_delete.json?id=" +id;
+	var path = "file_delete.json?hash=" +hash;
 	$.ajax({
 		url:   path,
 		cache: false, // needed for IE
@@ -1046,17 +1060,15 @@ function file_check(hash, suffix)
 
 function file_update()
 {
-	var path = "file_list.json?fe=" +qaulfileevent +"&e=1";
+	var path = "file_list.json";
 	var files = $("#page_file_list");
 	$.ajax({
 		url:   path,
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
-			var old_event = qaulfileevent;
 			$.each(data.files, function(i,item){
 				file_update_check(item);
-				if(item.event > qaulfileevent) qaulfileevent = item.event;
 			});
 		} 
 	}).error(function(){
@@ -1072,44 +1084,44 @@ function file_update_check(item)
 	var i;
 	for(i=0; i < qaulfiles.length; i++)
 	{
-		if(qaulfiles[i].id == item.id)
+		if(qaulfiles[i].hash == item.hash)
 		{
 			// update entry
 			exists = true;
 			// delete entry
-			if(item.status == -2) 
+			if(item.status == QAUL_FILESTATUS_DELETED) 
 			{
-				$("#file_" +item.id).remove();
+				$("#file_" +item.hash).remove();
 				//qaulfiles.splice(i,1);
 				//break;
 			}
 			// download failed
-			else if(item.status == -1)
+			else if(item.status == QAUL_FILESTATUS_ERROR)
 			{
-				$("#file_" +item.id).removeClass("scheduled downloading").addClass("failed");
-				$("#file_" +item.id +" .fileicon64").attr("src","images/f_failed_64.png");
-				$("#file_bar_" +item.id).remove();
+				$("#file_" +item.hash).removeClass("scheduled downloading").addClass("failed");
+				$("#file_" +item.hash +" .fileicon64").attr("src","images/f_failed_64.png");
+				$("#file_bar_" +item.hash).remove();
 			}
 			// update progress bar
-			else if(item.status == 1)
+			else if(item.status == QAUL_FILESTATUS_DOWNLOADING)
 			{
-				$("#file_bar_" +item.id).progressBar(item.downloaded);
+				$("#file_bar_" +item.hash).progressBar(item.downloaded);
 			}
 			// file sucessfully downloaded
-			else if(item.status == 2)
+			else if(item.status == QAUL_FILESTATUS_DOWNLOADED)
 			{
-				if(qaulfiles[i].status <= 1)
+				if(qaulfiles[i].status <= QAUL_FILESTATUS_DOWNLOADING)
 				{
-					$("#file_" +item.id).removeClass("scheduled downloading");
-					$("#file_bar_" +item.id).progressBar(100);
+					$("#file_" +item.hash).removeClass("scheduled downloading");
+					$("#file_bar_" +item.hash).progressBar(100);
 					// add open file link
 					var filename = item.hash;
 					if(item.suffix != "") filename += "." +item.suffix;
-					$("#file_" +item.id +" img.fileicon64").wrap("<a href=\"#\" onClick=\"javascript:open_file('" +filename +"')\"></a>");
+					$("#file_" +item.hash +" img.fileicon64").wrap("<a href=\"#\" onClick=\"javascript:open_file('" +filename +"')\"></a>");
 					// add readvertise button
 					var button = "<a href=\"#\" onClick=\"javascript:file_advertise('" +item.hash +"','" +item.suffix +"','" +item.size +"','" +item.description +"')\" class=\"filebutton\"><img src=\"images/b_advertise.png\" alt=\"advertise\" /></a>";
-					$("#file_" +item.id +" a.filebutton").after(button);
-					//$("#file_" +item.id).trigger('create');
+					$("#file_" +item.hash +" a.filebutton").after(button);
+					//$("#file_" +item.hash).trigger('create');
 				}
 			}
 			qaulfiles[i] = item;
@@ -1125,8 +1137,8 @@ function file_update_check(item)
 		myitem.trigger('create');
 		//htmlitem.slideDown().fadeIn('slow');
 		var percent = 0;
-		if(item.status == 1) percent = item.downloaded;
-		myitem.find("#file_bar_" +item.id).progressBar(percent,{barImage:'images/progressbg_black.gif'});
+		if(item.status == QAUL_FILESTATUS_DOWNLOADING) percent = item.downloaded;
+		myitem.find("#file_bar_" +item.hash).progressBar(percent,{barImage:'images/progressbg_black.gif'});
 		
 		// deactivate schedule buttons
 		file_button_deactivate(item.hash, item.suffix);
@@ -1136,29 +1148,29 @@ function file_update_check(item)
 function file_create_html(item)
 {
 	var filename = item.hash;
-	if(item.suffix.length > 0) filename += "." +item.suffix;
+	if(item.suffix.length > QAUL_FILESTATUS_NEW) filename += "." +item.suffix;
 	var fileclass = "";
-	if(item.status == 0) fileclass = "scheduled";
-	else if(item.status == 1) fileclass = "downloading";
-	else if(item.status < 0) fileclass = "failed";
+	if(item.status >= QAUL_FILESTATUS_NEW && item.status >= QAUL_FILESTATUS_DISCOVERED) fileclass = "scheduled";
+	else if(item.status == QAUL_FILESTATUS_DOWNLOADING) fileclass = "downloading";
+	else if(item.status < QAUL_FILESTATUS_NEW) fileclass = "failed";
 	var percent = 0;
-	if(item.status == 1) percent = item.downloaded;
-	var file = "<div class=\"file " +fileclass +"\" id=\"file_" +item.id +"\">";
-	if(item.status >= 2) 
+	if(item.status == QAUL_FILESTATUS_DOWNLOADING) percent = item.downloaded;
+	var file = "<div class=\"file " +fileclass +"\" id=\"file_" +item.hash +"\">";
+	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) 
 		file += "<a href=\"#\" onClick=\"javascript:open_file('" +filename +"')\">";
-	if(item.status < 0) 
+	if(item.status <= QAUL_FILESTATUS_ERROR) 
 		file += "<img src=\"images/f_failed_64.png\" class=\"fileicon64\">";
 	else
 		file += file_suffix2icon(item.suffix);
-	if(item.status >= 2) file += "</a>";
-	file     += "<a href=\"#\" onClick=\"javascript:file_delete('" +item.id +"')\" class=\"filebutton\"><img src=\"images/b_delete.png\" alt=\"delete\" /></a>";
-	if(item.status >= 2) 
+	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) file += "</a>";
+	file     += "<a href=\"#\" onClick=\"javascript:file_delete('" +item.hash +"')\" class=\"filebutton\"><img src=\"images/b_delete.png\" alt=\"delete\" /></a>";
+	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) 
 		file += "<a href=\"#\" onClick=\"javascript:file_advertise('" +item.hash +"','" +item.suffix +"','" +item.size +"','" +item.description +"')\" class=\"filebutton\"><img src=\"images/b_advertise.png\" alt=\"advertise\" /></a>";
 	file     += "<div class=\"filename\">" +format_msg_txt(item.description) +"</div>";
-	if(item.status == 0 || item.status == 1)
-		file += "<div class=\"fileprogress\"><span class=\"progressBar\" id=\"file_bar_" +item.id +"\">" +percent +"%</span></div>";
+	if(item.status >= QAUL_FILESTATUS_NEW && item.status <= QAUL_FILESTATUS_DOWNLOADING)
+		file += "<div class=\"fileprogress\"><span class=\"progressBar\" id=\"file_bar_" +item.hash +"\">" +percent +"%</span></div>";
 	file     += "<div class=\"filemeta\"><span class=\"suffix\">" +item.suffix +"</span> " +file_filesize(item.size) +" " ;
-	file     += '<abbr class="timeago" id="abbr_msg_' +item.id +'" title="' +item.time +'">' +time2str(item.time) +'</abbr>';
+	file     += '<abbr class="timeago" id="abbr_msg_' +item.hash +'" title="' +item.time +'">' +time2str(item.time) +'</abbr>';
 	file     += "</div>";
 	file     += "</div>";
 	return file;

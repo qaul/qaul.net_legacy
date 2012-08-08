@@ -1,0 +1,142 @@
+/*
+ * qaul.net is free software
+ * licensed under GPL (version 3)
+ */
+
+#ifndef _QAULLIB_FILE_LL
+#define _QAULLIB_FILE_LL
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+/**
+ * the file table contains an array of linked lists.
+ * the file entries are added to a linked list in the array according
+ * to the file hash.
+ * (The hash is created from the last byte of the file hash.)
+ *
+ * @var qaul_file_LL_item::type
+ * type of the file
+ * 1: File
+ * 2: Profile image
+ * 4: qaul.net executable
+ *
+ * @var qaul_file_LL_item::status
+ * status of the file
+ * -1: download error
+ * 0: not downloaded yet
+ * 1: downloading
+ * 2: successfully downloaded
+ * 4: my own file
+ *
+ */
+
+struct qaul_file_LL_item {
+	struct qaul_file_LL_item *next;           /// next node
+	struct qaul_file_LL_item *prev;           /// previous node
+
+    int id;                                   /// data base ID of the file entry
+    int type;
+    char hash[MAX_HASH_LEN];                  /// file hash
+    char hashstr[MAX_HASHSTR_LEN +1];         /// file hash string
+    char suffix[MAX_SUFFIX_LEN +1];           /// file suffix
+    char description[MAX_DESCRIPTION_LEN +1]; /// file description
+    char created_at[MAX_TIME_LEN +1];         /// when this file entry was created (not the date of the file!)
+    int status;
+    int size;                                 /// file size in bytes
+    int downloaded;                           /// number of downloaded bytes
+
+    char adv_name[MAX_USER_LEN +1];           /// todo: to be removed, name of the advertiser
+    union olsr_ip_addr adv_ip;                /// todo: to be removed, ip of the advertiser
+    int adv_validip;                           /// todo: to be removed, checks if ip is valid
+
+    int gui_notify;                           /// 0: if nothing has changed, 1: if the file status has changed
+};
+
+struct qaul_file_LL_node {
+	struct qaul_file_LL_item *item;           // this node
+	uint32_t                  index;          // where it is
+};
+
+/**
+ * to be called once at startup to create the linked list
+ */
+void Qaullib_File_LL_Init (void);
+
+/**
+ * creates a new list entry
+ *
+ * @retval pointer to the item
+ */
+struct qaul_file_LL_item* Qaullib_File_LL_Add (struct qaul_file_LL_item *item);
+
+/**
+ * delete @a item from list
+ */
+void Qaullib_File_LL_Delete_Item (struct qaul_file_LL_item *item);
+
+/**
+ * loops through the list and checks if a file with @a hash exists.
+ * If it exists, @a item will contain the pointer to it.
+ *
+ * @retval 1 entry exists
+ * @retval 0 entry does not exist
+ */
+int  Qaullib_File_LL_HashSearch (char *hash, struct qaul_file_LL_item **item);
+
+/**
+ * loops through the list and checks if a file with @a hash exists.
+ *
+ * @retval 1 entry exists
+ * @retval 0 entry does not exist
+ */
+int  Qaullib_File_LL_HashExists (char *hash);
+
+/**
+ * initializes a @a node with the first entry of the file table
+ */
+void Qaullib_File_LL_InitNode (struct qaul_file_LL_node *node);
+
+/**
+ * Checks whether there is a next item while looping through the whole table
+ * The function links the item into the @a node
+ *
+ * @retval 1 there is a next item
+ * @retval 0 there is no next item
+ */
+int  Qaullib_File_LL_NextNode (struct qaul_file_LL_node *node);
+
+/**
+ * Checks whether there is a next item ready for download
+ * The function links the item into the @a node
+ *
+ * @retval 1 there is a next item
+ * @retval 0 there is no next item
+ */
+int  Qaullib_File_LL_NextNodePub (struct qaul_file_LL_node *node);
+
+/**
+ * Checks whether there is a next item displayable in GUI
+ * The function links the item into the @a node
+ *
+ * @retval 1 there is a next item
+ * @retval 0 there is no next item
+ */
+int  Qaullib_File_LL_NextNodePriv (struct qaul_file_LL_node *node);
+
+/**
+ * Checks whether there is a next item with a publicly available binary.
+ * The function links the item into the @a node
+ *
+ * @retval 1 there is a next item
+ * @retval 0 there is no next item
+ */
+int  Qaullib_File_LL_NextNodePubBinaries (struct qaul_file_LL_node *node);
+
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
+
+#endif

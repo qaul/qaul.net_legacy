@@ -45,6 +45,7 @@
 #define	HASHMASK	(HASHSIZE - 1)
 
 uint32_t olsr_ip_hashing(const union olsr_ip_addr *);
+uint32_t jenkins_hash(const uint8_t * k, uint32_t length);
 
 #endif
 

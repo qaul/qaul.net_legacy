@@ -34,6 +34,12 @@ void Qaullib_User_LL_InitNode(struct qaul_user_LL_node *node)
 	node->item = &Qaul_user_LL_table[0];
 }
 
+void Qaullib_User_LL_InitNodeWithIP(struct qaul_user_LL_node *node, union olsr_ip_addr *ip)
+{
+	node->index = olsr_ip_hashing(ip);
+	node->item = &Qaul_user_LL_table[node->index];
+}
+
 int Qaullib_User_LL_NextNode (struct qaul_user_LL_node *node)
 {
 	for(; node->index < HASHSIZE;)
@@ -49,6 +55,15 @@ int Qaullib_User_LL_NextNode (struct qaul_user_LL_node *node)
 	return 0;
 }
 
+int Qaullib_User_LL_NextItem (struct qaul_user_LL_node *node)
+{
+	if(node->item->next != &Qaul_user_LL_table[node->index])
+	{
+		node->item = node->item->next;
+		return 1;
+	}
+	return 0;
+}
 
 // ------------------------------------------------------------
 struct qaul_user_LL_item* Qaullib_User_LL_Add (union olsr_ip_addr *ip)
@@ -133,8 +148,8 @@ int Qaullib_User_LL_IpExists (union olsr_ip_addr *ip)
 	//printf("[LL next] Qaullib_User_LL_IpExists\n");
 
 	struct qaul_user_LL_node mynode;
-	Qaullib_User_LL_InitNode(&mynode);
-	while(Qaullib_User_LL_NextNode(&mynode))
+	Qaullib_User_LL_InitNodeWithIP(&mynode, ip);
+	while(Qaullib_User_LL_NextItem(&mynode))
 	{
 		if(memcmp(&mynode.item->ip, ip, qaul_ip_size) == 0)
 		{
@@ -151,8 +166,8 @@ int Qaullib_User_LL_IpSearch (union olsr_ip_addr *ip, struct qaul_user_LL_item *
 	//printf("[LL next] Qaullib_User_LL_IpSearch\n");
 
 	struct qaul_user_LL_node mynode;
-	Qaullib_User_LL_InitNode(&mynode);
-	while(Qaullib_User_LL_NextNode(&mynode))
+	Qaullib_User_LL_InitNodeWithIP(&mynode, ip);
+	while(Qaullib_User_LL_NextItem(&mynode))
 	{
 		if(memcmp(&mynode.item->ip, ip, qaul_ip_size) == 0)
 		{

@@ -23,6 +23,7 @@ extern "C" {
 #define MAX_LOCALE_LEN        6
 #define MAX_VARCHAR_LEN     255
 #define MAX_URL_LEN         512
+#define MAX_TIME_LEN         20
 
 #define FLAG_EXE_WIN7      0x01
 #define FLAG_EXE_OSX105    0x02

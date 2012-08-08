@@ -83,9 +83,14 @@ int  Qaullib_User_LL_IpExists (union olsr_ip_addr *ip);
 int  Qaullib_User_LL_IpSearch (union olsr_ip_addr *ip, struct qaul_user_LL_item **item);
 
 /**
- * creates initializes a @a node with the first entry of the user table
+ * initializes a @a node with the first entry of the user table
  */
 void Qaullib_User_LL_InitNode (struct qaul_user_LL_node *node);
+
+/**
+ * initializes a @a node of the user table according to the @a ip
+ */
+void Qaullib_User_LL_InitNodeWithIP(struct qaul_user_LL_node *node, union olsr_ip_addr *ip);
 
 /**
  * checks if there is a next item in the user table

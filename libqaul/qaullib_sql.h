@@ -113,33 +113,45 @@ static const char* sql_user_delete_ipv4 = "DELETE FROM 'user' WHERE ipv4 = %i;";
  * 2: successfully downloaded
  * 4: my own file
  */
+#define QAUL_FILETYPE_FILE           1
+#define QAUL_FILETYPE_PROFILEIMAGE   2
+#define QAUL_FILETYPE_EXECUTABLE     4
+
+#define QAUL_FILESTATUS_DELETED     -2
+#define QAUL_FILESTATUS_ERROR       -1
+#define QAUL_FILESTATUS_NEW          0
+#define QAUL_FILESTATUS_DISCOVERING  1
+#define QAUL_FILESTATUS_DISCOVERED   2
+#define QAUL_FILESTATUS_DOWNLOADING  3
+#define QAUL_FILESTATUS_DOWNLOADED   4
+#define QAUL_FILESTATUS_MYFILE       5
+
+
+
 static const char* sql_file_table = "CREATE TABLE IF NOT EXISTS 'file' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'type' INTEGER NOT NULL DEFAULT 1, 'hash' TEXT, 'suffix' CHAR(5), 'description' TEXT, 'size' INTEGER, 'status' INTEGER DEFAULT 0, 'favorite' INTEGER DEFAULT 0, 'created_at' INTEGER DEFAULT CURRENT_TIMESTAMP, 'adv_name' TEXT, 'adv_ip' TEXT, 'geolon' REAL, 'geolat' REAL, 'requests' INTEGER DEFAULT 0, 'downloaded' FLOAT DEFAULT 0);";
 
 // set indexes
 static const char* sql_file_index = "CREATE INDEX IF NOT EXISTS 'file_hash' ON 'file' ('hash' DESC); CREATE INDEX IF NOT EXISTS 'file_suffix' ON 'file' ('suffix' DESC);";
 
 // get files
-static const char* sql_file_get_all = "SELECT * FROM 'file' WHERE type = 1 ORDER BY status ASC, id DESC;";
-static const char* sql_file_get_pub = "SELECT * FROM 'file' WHERE type = 1 AND status > 1;";
-static const char* sql_file_get_pub_binaries = "SELECT * FROM 'file' WHERE type = 4 AND status > 1;";
+static const char* sql_file_get_everything = "SELECT * FROM 'file' ORDER BY status ASC, id DESC;";
 static const char* sql_file_get_hash = "SELECT * FROM 'file' WHERE hash = '%s' LIMIT 1;";
 static const char* sql_file_get_id = "SELECT * FROM 'file' WHERE id = %i LIMIT 1;";
-static const char* sql_file_get_suffix = "SELECT * FROM 'file' WHERE suffix = '%s';";
-static const char* sql_file_get_scheduled = "SELECT * FROM 'file' WHERE status = 0;";
 
 // update file
-static const char* sql_file_update_status = "UPDATE 'file' SET status = %i WHERE id = %i ;";
-static const char* sql_file_update_downloaded = "UPDATE 'file' SET downloaded = %i WHERE id = %i ;";
-static const char* sql_file_update_size = "UPDATE 'file' SET size = %i WHERE id = %i ;";
-static const char* sql_file_update_favorite = "UPDATE 'file' SET favorite = %i WHERE id = %i ;";
+static const char* sql_file_update_status = "UPDATE 'file' SET status = %i WHERE hash = '%s' ;";
+static const char* sql_file_update_downloaded = "UPDATE 'file' SET downloaded = %i WHERE hash = '%s' ;";
+static const char* sql_file_update_size = "UPDATE 'file' SET size = %i WHERE hash = '%s' ;";
+static const char* sql_file_update_favorite = "UPDATE 'file' SET favorite = %i WHERE hash = '%s' ;";
 
 // insert file
-static const char* sql_file_set = "INSERT INTO 'file' ('hash','suffix','description','size','status','type') VALUES ('%s','%s','%s',%i,4,1);";
-static const char* sql_file_set_all = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES ('%s','%s','%s',%i,%i,%i,'','');";
+static const char* sql_file_add = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES ('%s','%s','%s',%i,%i,%i,'%s','%s');";
+
+// todo: remove this
+static const char* sql_file_set = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES ('%s','%s','%s',%i,5,1,'','');";
 static const char* sql_file_schedule = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES ('%s','%s','%s',%i,0,1,'%s','%s');";
 
 // delete files
-static const char* sql_file_delete_id = "DELETE FROM 'file' WHERE id = %i;";
 static const char* sql_file_delete_hash = "DELETE FROM 'file' WHERE hash = '%s';";
 
 
