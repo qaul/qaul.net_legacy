@@ -243,23 +243,9 @@ int Qaullib_File_LL_HashExists (char *filehash)
 // ------------------------------------------------------------
 static uint32_t Qaullib_File_LL_Hashing(unsigned char *filehash)
 {
-	// FIXME: make that work!
-/*
 	uint32_t hash;
-	hash = jenkins_hash(filehash, MAX_HASH_LEN);
+	hash = jenkins_hash((const uint8_t *)filehash, MAX_HASH_LEN);
 	printf("Qaullib_File_LL_Hashing mask: %u u: %u\n", HASHMASK, hash & HASHMASK);
 	return hash & HASHMASK;
-*/
-
-	/*
-	uint32_t hash;
-
-	memcpy(&hash, filehash, sizeof(uint32_t));
-	printf("Qaullib_File_LL_Hashing mask: %u u: %u\n", HASHMASK, hash & HASHMASK);
-
-	return hash & HASHMASK;
-	*/
-
-	return 1;
 }
 
