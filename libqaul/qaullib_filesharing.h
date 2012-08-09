@@ -70,6 +70,11 @@ int Qaullib_FileCopyNew(char *path, char *hashstr, char *suffix);
 void Qaullib_FileCheckScheduled(void);
 
 /**
+ * flood discovery message via IPC over olsr
+ */
+void Qaullib_FileSendDiscoveryMsg(struct qaul_file_LL_item *file_item);
+
+/**
  * check if file is downloading, unschedule it
  */
 void Qaullib_FileStopDownload(struct qaul_file_LL_item *file_item);

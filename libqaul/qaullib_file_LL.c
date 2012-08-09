@@ -201,7 +201,6 @@ void Qaullib_File_LL_Delete_Item (struct qaul_file_LL_item *item)
 	free(item);
 }
 
-
 // ------------------------------------------------------------
 int Qaullib_File_LL_HashSearch (char *filehash, struct qaul_file_LL_item **item)
 {
@@ -216,7 +215,7 @@ int Qaullib_File_LL_HashSearch (char *filehash, struct qaul_file_LL_item **item)
 
 		if(memcmp(&mynode.item->hash, filehash, MAX_HASH_LEN) == 0)
 		{
-			*item = mynode.item;
+			item = &mynode.item;
 			return 1;
 		}
 	}
@@ -236,7 +235,6 @@ int Qaullib_File_LL_HashExists (char *filehash)
 			return 1;
 		}
 	}
-
 	return 0;
 }
 
@@ -249,3 +247,117 @@ static uint32_t Qaullib_File_LL_Hashing(unsigned char *filehash)
 	return hash & HASHMASK;
 }
 
+// ------------------------------------------------------------
+void Qaullib_Filediscovery_LL_AddSeederIp (struct qaul_file_LL_item *file, union olsr_ip_addr *ip)
+{
+	struct qaul_filediscovery_LL_item *new_item;
+
+	// check if the ip already exists
+	if(!Qaullib_Filediscovery_LL_IpExists(file, ip))
+	{
+		new_item = (struct qaul_filediscovery_LL_item *)malloc(sizeof(struct qaul_filediscovery_LL_item));
+		memcpy(&new_item->ip, ip, sizeof(union olsr_ip_addr));
+
+		// lock
+		pthread_mutex_lock( &qaullib_mutex_filediscoveryLL );
+
+		new_item->prev = file->discoveryLL.prev;
+		new_item->next = &file->discoveryLL;
+		file->discoveryLL.prev->next = new_item;
+		file->discoveryLL.prev = new_item;
+
+		file->discovery_count++;
+		file->discovery_timestamp = time(NULL);
+
+		// unlock
+		pthread_mutex_unlock( &qaullib_mutex_filediscoveryLL );
+	}
+}
+
+// ------------------------------------------------------------
+void Qaullib_Filediscovery_LL_DeleteSeederIp (struct qaul_file_LL_item *file, union olsr_ip_addr *ip)
+{
+	struct qaul_filediscovery_LL_item *item;
+	// get entry
+	if(Qaullib_Filediscovery_LL_SearchIp(file, ip, item))
+	{
+		// delete ip
+		Qaullib_Filediscovery_LL_DeleteItem(item);
+	}
+}
+
+// ------------------------------------------------------------
+int  Qaullib_Filediscovery_LL_GetBestSeeder (struct qaul_file_LL_item *file, union olsr_ip_addr *ip)
+{
+	struct qaul_filediscovery_LL_item *item, *best_item;
+	int found;
+	float LQ;
+
+	item = &file->discoveryLL;
+	found = 0;
+	LQ = 0;
+
+	// loop through list and check the LQ for every seeder
+	while(Qaullib_Filediscovery_LL_NextItem (file, item))
+	{
+		// todo: check users LQ
+		found = 1;
+		best_item = item;
+		break;
+	}
+
+	// return the best seeder
+	if(found)
+	{
+		memcpy(ip, &best_item->ip, sizeof(ip));
+		return 1;
+	}
+
+	return 0;
+}
+
+// ------------------------------------------------------------
+int  Qaullib_Filediscovery_LL_IpExists (struct qaul_file_LL_item *file, union olsr_ip_addr *ip)
+{
+	struct qaul_filediscovery_LL_item *discovery_item;
+	return Qaullib_Filediscovery_LL_SearchIp (file, ip, &discovery_item);
+}
+
+// ------------------------------------------------------------
+int  Qaullib_Filediscovery_LL_SearchIp (struct qaul_file_LL_item *file, union olsr_ip_addr *ip, struct qaul_filediscovery_LL_item *discovery_item)
+{
+	discovery_item = &file->discoveryLL;
+	// loop through list and check for ip
+	while(Qaullib_Filediscovery_LL_NextItem(file, discovery_item))
+	{
+		if(memcmp(&discovery_item->ip, ip, sizeof(ip)))
+			return 1;
+	}
+	return 0;
+}
+
+// ------------------------------------------------------------
+void Qaullib_Filediscovery_LL_DeleteItem (struct qaul_filediscovery_LL_item *item)
+{
+	// lock
+	pthread_mutex_lock( &qaullib_mutex_filediscoveryLL );
+
+	item->prev->next = item->next;
+	item->next->prev = item->prev;
+
+	// unlock
+	pthread_mutex_unlock( &qaullib_mutex_filediscoveryLL );
+
+	free(item);
+}
+
+// ------------------------------------------------------------
+int  Qaullib_Filediscovery_LL_NextItem (struct qaul_file_LL_item *file,  struct qaul_filediscovery_LL_item *discovery_item)
+{
+	if(discovery_item->next != &file->discoveryLL)
+	{
+		discovery_item = discovery_item->next;
+		return 1;
+	}
+	return 0;
+}

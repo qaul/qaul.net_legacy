@@ -234,13 +234,58 @@ void Qaullib_FileCheckScheduled(void)
 	Qaullib_File_LL_InitNode(&mynode);
 
 	// loop through files
-	while(Qaullib_File_LL_NextNodePubBinaries(&mynode))
+	while(Qaullib_File_LL_NextNode(&mynode))
 	{
-		if(mynode.item->adv_validip)
+		if(mynode.item->status < QAUL_FILESTATUS_DOWNLOADED && mynode.item->status >= QAUL_FILESTATUS_NEW)
 		{
-			Qaullib_FileConnect(mynode.item);
+			if(mynode.item->status == QAUL_FILESTATUS_NEW)
+			{
+				Qaullib_FileSendDiscoveryMsg(mynode.item);
+			}
+			else if(mynode.item->status == QAUL_FILESTATUS_DISCOVERING)
+			{
+				// check if timeout expired
+				if(mynode.item->discovery_timestamp < time(NULL) -QAUL_FILEDISCOVERY_TIMEOUT)
+					Qaullib_FileSendDiscoveryMsg(mynode.item);
+			}
+			else if(mynode.item->status == QAUL_FILESTATUS_DISCOVERED)
+			{
+				// connect it
+				Qaullib_FileConnect(mynode.item);
+			}
+			else if(mynode.item->status == QAUL_FILESTATUS_DOWNLOADING)
+			{
+				// check if timeout expired
+
+			}
 		}
 	}
+}
+
+// ------------------------------------------------------------
+void Qaullib_FileSendDiscoveryMsg(struct qaul_file_LL_item *file_item)
+{
+	char buffer[1024];
+	int size;
+	union olsr_message *m;
+	m = (union olsr_message *)buffer;
+
+	printf("send user discovery message for file: %s\n", file_item->hashstr);
+
+	// set time stamp change file status
+	file_item->discovery_timestamp = time(NULL);
+	file_item->status = QAUL_FILESTATUS_DISCOVERING;
+
+	// todo: ipv6
+	m->v4.olsr_msgtype = QAUL_FILEDISCOVER_MESSAGE_TYPE;
+	memcpy(&m->v4.message.filediscover.hash, &file_item->hash, MAX_HASH_LEN);
+
+	size  = sizeof(struct qaul_filediscover_msg);
+	size += sizeof(struct olsrmsg);
+	m->v4.olsr_msgsize = htons(size);
+
+	// send package
+	Qaullib_IpcSend(m);
 }
 
 // ------------------------------------------------------------

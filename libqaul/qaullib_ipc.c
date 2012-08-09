@@ -415,7 +415,8 @@ void Qaullib_IpcSend(union olsr_message *msg)
 	int size;
 	size = (int) ntohs(msg->v4.olsr_msgsize);
 
-	if (send(ipc_socket,(const char *)msg, size, MSG_NOSIGNAL) < 0) {
+	if (send(ipc_socket,(const char *)msg, size, MSG_NOSIGNAL) < 0)
+	{
 		printf("[qaullib] IPC connection lost!\n");
 		CLOSE(ipc_socket);
 		ipc_connected = 0;

@@ -10,9 +10,20 @@
 extern "C" {
 #endif // __cplusplus
 
+
 /**
- * the file table contains an array of linked lists.
- * the file entries are added to a linked list in the array according
+ * Contains entries of the
+ */
+struct qaul_filediscovery_LL_item {
+	struct qaul_filediscovery_LL_item *next;  /// next node
+	struct qaul_filediscovery_LL_item *prev;  /// previous node
+
+	union olsr_ip_addr ip;                    /// ip of the seeder
+};
+
+/**
+ * The file table contains an array of linked lists.
+ * The file entries are added to a linked list in the array according
  * to the file hash.
  * (The hash is created from the last byte of the file hash.)
  *
@@ -31,7 +42,6 @@ extern "C" {
  * 4: my own file
  *
  */
-
 struct qaul_file_LL_item {
 	struct qaul_file_LL_item *next;           /// next node
 	struct qaul_file_LL_item *prev;           /// previous node
@@ -47,9 +57,13 @@ struct qaul_file_LL_item {
     int size;                                 /// file size in bytes
     int downloaded;                           /// number of downloaded bytes
 
+    time_t discovery_timestamp;               /// time stamp when discovery started
+    int discovery_count;                      /// how many seeders were discovered
+    struct qaul_filediscovery_LL_item discoveryLL; /// first item of the discovery LL (always empty)
+
     char adv_name[MAX_USER_LEN +1];           /// todo: to be removed, name of the advertiser
     union olsr_ip_addr adv_ip;                /// todo: to be removed, ip of the advertiser
-    int adv_validip;                           /// todo: to be removed, checks if ip is valid
+    int adv_validip;                          /// todo: to be removed, checks if ip is valid
 
     int gui_notify;                           /// 0: if nothing has changed, 1: if the file status has changed
 };
@@ -133,6 +147,50 @@ int  Qaullib_File_LL_NextNodePriv (struct qaul_file_LL_node *node);
  * @retval 0 there is no next item
  */
 int  Qaullib_File_LL_NextNodePubBinaries (struct qaul_file_LL_node *node);
+
+/**
+ * Adds the @a ip as a seeder to @a file
+ */
+void Qaullib_Filediscovery_LL_AddSeederIp (struct qaul_file_LL_item *file, union olsr_ip_addr *ip);
+
+/**
+ * Deletes the seeder with @a ip from the @a file list
+ */
+void Qaullib_Filediscovery_LL_DeleteSeederIp (struct qaul_file_LL_item *file, union olsr_ip_addr *ip);
+
+/**
+ * Sets @a ip to the best seeder for this @a file
+ *
+ * @retval 1 seeder found
+ * @retval 0 no seeder found
+ */
+int  Qaullib_Filediscovery_LL_GetBestSeeder (struct qaul_file_LL_item *file, union olsr_ip_addr *ip);
+
+/**
+ * Searches the file discovery LL of @a file for @a ip
+ *
+ * @retval 1 ip found
+ * @retval 0 ip not found
+ */
+int  Qaullib_Filediscovery_LL_IpExists (struct qaul_file_LL_item *file, union olsr_ip_addr *ip);
+
+/**
+ * Sets link to next @a item
+ *
+ * @retval 1 next item found
+ * @retval 0 no next item
+ */
+int  Qaullib_Filediscovery_LL_NextItem (struct qaul_file_LL_item *file,  struct qaul_filediscovery_LL_item *discovery_item);
+
+/**
+ * Empty the file discovery LL list of @a file
+ */
+void Qaullib_Filediscovery_LL_EmptyList (struct qaul_file_LL_item *file);
+
+/**
+ * Delete file discovery LL @a item
+ */
+void Qaullib_Filediscovery_LL_DeleteItem (struct qaul_filediscovery_LL_item *item);
 
 
 #ifdef __cplusplus
