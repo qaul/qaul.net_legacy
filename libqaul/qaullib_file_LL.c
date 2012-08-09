@@ -337,6 +337,29 @@ int  Qaullib_Filediscovery_LL_SearchIp (struct qaul_file_LL_item *file, union ol
 }
 
 // ------------------------------------------------------------
+int  Qaullib_Filediscovery_LL_NextItem (struct qaul_file_LL_item *file,  struct qaul_filediscovery_LL_item *discovery_item)
+{
+	if(discovery_item->next != &file->discoveryLL)
+	{
+		discovery_item = discovery_item->next;
+		return 1;
+	}
+	return 0;
+}
+
+// ------------------------------------------------------------
+void Qaullib_Filediscovery_LL_EmptyList (struct qaul_file_LL_item *file)
+{
+	discovery_item = &file->discoveryLL;
+	// loop through list
+	while(Qaullib_Filediscovery_LL_NextItem(file, discovery_item))
+	{
+		Qaullib_Filediscovery_LL_DeleteItem(discovery_item);
+		discovery_item = &file->discoveryLL;
+	}
+}
+
+// ------------------------------------------------------------
 void Qaullib_Filediscovery_LL_DeleteItem (struct qaul_filediscovery_LL_item *item)
 {
 	// lock
@@ -349,15 +372,4 @@ void Qaullib_Filediscovery_LL_DeleteItem (struct qaul_filediscovery_LL_item *ite
 	pthread_mutex_unlock( &qaullib_mutex_filediscoveryLL );
 
 	free(item);
-}
-
-// ------------------------------------------------------------
-int  Qaullib_Filediscovery_LL_NextItem (struct qaul_file_LL_item *file,  struct qaul_filediscovery_LL_item *discovery_item)
-{
-	if(discovery_item->next != &file->discoveryLL)
-	{
-		discovery_item = discovery_item->next;
-		return 1;
-	}
-	return 0;
 }

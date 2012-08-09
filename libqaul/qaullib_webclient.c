@@ -153,6 +153,3 @@ int Qaullib_WgetReceive(struct qaul_wget_connection *myConn)
 	}
 	return bytes;
 }
-
-
-

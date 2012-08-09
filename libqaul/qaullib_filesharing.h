@@ -103,6 +103,11 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item);
 void Qaullib_FileCheckSockets(void);
 
 /**
+ * check file sockets for incoming traffic
+ */
+void Qaullib_FileAddSeeder(char *hash, char *suffix, int filesize, union olsr_ip_addr ip);
+
+/**
  * check if file @a path exists
  *
  * @retval 1 file exists

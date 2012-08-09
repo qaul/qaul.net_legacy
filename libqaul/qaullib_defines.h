@@ -52,6 +52,7 @@ extern "C" {
 #define CHAT_PORT          "8081"
 #define WEB_PORT             8081
 #define VOIP_PORT            8060
+#define UDP_PORT             8083
 #define MAX_USER_CONNECTIONS    3
 #define MAX_FILE_CONNECTIONS    5
 
@@ -68,6 +69,7 @@ struct qaul_userinfo_msg
 
 struct qaul_fileavailable_msg
 {
+    uint8_t  msgtype;
 	char     hash[MAX_HASH_LEN];
 	char     suffix[MAX_SUFFIX_LEN];
 	uint32_t filesize;
@@ -76,6 +78,7 @@ struct qaul_fileavailable_msg
 // todo: cluster exeavailable messages
 struct qaul_exeavailable_msg
 {
+    uint8_t  msgtype;
 	uint32_t platform;
 	char     hash[MAX_HASH_LEN];
 	char     suffix[MAX_SUFFIX_LEN];
@@ -106,6 +109,7 @@ struct qaul_exeavailable_msg
 #define QAUL_EXEDISCOVER_PARSER_TYPE    QAUL_EXEDISCOVER_MESSAGE_TYPE
 #define QAUL_EXEAVAILABLE_MESSAGE_TYPE  229
 #define QAUL_EXEAVAILABLE_PARSER_TYPE   QAUL_EXEAVAILABLE_MESSAGE_TYPE
+
 
 struct qaul_chat_msg
 {

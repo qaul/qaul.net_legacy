@@ -294,50 +294,25 @@ void Qaullib_IpcEvaluateUserhello(union olsr_message *msg)
 // ------------------------------------------------------------
 void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg)
 {
-/*
-	char buffer[10240];
+	char buffer[1024];
 	char* stmt = buffer;
 	char *error_exec = NULL;
-	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
-	char chat_msg[MAX_MESSAGE_LEN +1];
-	char chat_user[MAX_USER_LEN +1];
+	char hash[MAX_HASH_LEN];
+	struct qaul_file_LL_item file_item;
 
-	//printf("IpcEvaluateChat\n");
-	//printf("type: %i, name: %s\n", msg->v4.olsr_msgtype, msg->v4.message.chat.name);
+	printf("Qaullib_IpcEvaluateFilediscover\n");
 
-	// get chat & username
-	memcpy(&chat_user, msg->v4.message.chat.name, MAX_USER_LEN);
-	memcpy(&chat_user[MAX_USER_LEN], "\0", 1);
-	memcpy(&chat_msg, msg->v4.message.chat.msg, MAX_MESSAGE_LEN);
-	memcpy(&chat_msg[MAX_MESSAGE_LEN], "\0", 1);
+	// todo: ipv6
+	// get hash
+	memcpy(hash, msg->v4.message.filediscover.hash, MAX_HASH_LEN);
 
-	// TODO: ipv6
-	sprintf(stmt, sql_msg_set_received,
-			1,
-			chat_user,
-			chat_msg,
-			inet_ntop(AF_INET, &msg->v4.originator, (char *)&ipbuf, sizeof(ipbuf)),
-			4,
-			(int)msg->v4.hopcnt,
-			(int)msg->v4.ttl,
-			(int)ntohs(msg->v4.seqno),
-			me_to_reltime(msg->v4.olsr_vtime)
-			);
-	//printf("statement: %s\n", stmt);
-	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+	// check if hash exists
+	if(Qaullib_File_LL_HashSearch (&hash, &file_item))
 	{
-		printf("SQLite error: %s\n",error_exec);
-		sqlite3_free(error_exec);
-		error_exec=NULL;
+		// send available message
+		printf("file found: %s\n", file_item->hashstr);
+		printf("send file available message\n");
 	}
-
-	// remember username
-	union olsr_ip_addr ip;
-	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
-	Qaullib_UserCheckUser(&ip, chat_user);
-
-	qaul_new_msg++;
-*/
 }
 
 // ------------------------------------------------------------

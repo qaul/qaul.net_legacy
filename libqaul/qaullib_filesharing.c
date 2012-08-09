@@ -343,6 +343,9 @@ int Qaullib_FileDelete(struct qaul_file_LL_item *file_item)
 		error_exec=NULL;
 	}
 
+	// empty the discovery entries
+	Qaullib_Filediscovery_LL_EmptyList(file_item);
+
 	// mark file in LL as deleted
 	file_item->status = QAUL_FILESTATUS_DELETED;
 	file_item->gui_notify = 1;
