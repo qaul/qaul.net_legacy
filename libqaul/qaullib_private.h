@@ -50,6 +50,7 @@ extern "C" {
 #include "qaullib_filesharing.h"
 #include "qaullib_ipc.h"
 #include "qaullib_voip.h"
+#include "qaullib_udp_communication.h"
 
 #ifndef WIN32
 #include <unistd.h>             // close()

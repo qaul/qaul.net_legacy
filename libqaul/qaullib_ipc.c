@@ -298,27 +298,40 @@ void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg)
 	char* stmt = buffer;
 	char *error_exec = NULL;
 	char hash[MAX_HASH_LEN];
-	struct qaul_file_LL_item file_item;
+	struct qaul_file_LL_item *file_item;
+	struct qaul_fileavailable_msg fileavailable_msg;
+	union olsr_ip_addr ip;
 
 	printf("Qaullib_IpcEvaluateFilediscover\n");
 
 	// todo: ipv6
 	// get hash
-	memcpy(hash, msg->v4.message.filediscover.hash, MAX_HASH_LEN);
+	//memcpy(hash, msg->v4.message.filediscover.hash, MAX_HASH_LEN);
 
 	// check if hash exists
-	if(Qaullib_File_LL_HashSearch (&hash, &file_item))
+	if(Qaullib_File_LL_HashSearch(msg->v4.message.filediscover.hash, &file_item))
 	{
 		// send available message
 		printf("file found: %s\n", file_item->hashstr);
 		printf("send file available message\n");
+
+		// todo: send file available message
+		// generate the file available message
+		fileavailable_msg.msgtype = htons(QAUL_FILEAVAILABLE_MESSAGE_TYPE);
+
+		memcpy(&fileavailable_msg.hash, file_item->hash, MAX_HASH_LEN);
+		memcpy(&fileavailable_msg.suffix, file_item->suffix, MAX_SUFFIX_LEN);
+		fileavailable_msg.filesize = htonl(file_item->size);
+
+		Qaullib_UDP_SendFileavailabeMsg(&fileavailable_msg, &ip);
 	}
 }
 
 // ------------------------------------------------------------
 void Qaullib_IpcEvaluateExediscover(union olsr_message *msg)
 {
-/*
+	printf("Qaullib_IpcEvaluateExediscover\n");
+	/*
 	char buffer[10240];
 	char* stmt = buffer;
 	char *error_exec = NULL;

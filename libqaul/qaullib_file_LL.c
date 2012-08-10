@@ -350,6 +350,7 @@ int  Qaullib_Filediscovery_LL_NextItem (struct qaul_file_LL_item *file,  struct 
 // ------------------------------------------------------------
 void Qaullib_Filediscovery_LL_EmptyList (struct qaul_file_LL_item *file)
 {
+	struct qaul_filediscovery_LL_item *discovery_item;
 	discovery_item = &file->discoveryLL;
 	// loop through list
 	while(Qaullib_Filediscovery_LL_NextItem(file, discovery_item))

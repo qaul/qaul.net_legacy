@@ -26,12 +26,12 @@ int  Qaullib_UDP_StartServer(void);
 /**
  * Send the message to the
  */
-void Qaullib_UDP_SendFileavailabeMsg(struct qaul_fileavailable_msg *msg, union olsr_ip_add *ip);
+void Qaullib_UDP_SendFileavailabeMsg(struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip);
 
 /**
  * Send the message to the
  */
-void Qaullib_UDP_SendExeavailabeMsg(struct qaul_exeavailable_msg *msg, union olsr_ip_add *ip);
+void Qaullib_UDP_SendExeavailabeMsg(struct qaul_exeavailable_msg *msg, union olsr_ip_addr *ip);
 
 /**
  * Check for incoming messages

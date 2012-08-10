@@ -69,16 +69,16 @@ struct qaul_userinfo_msg
 
 struct qaul_fileavailable_msg
 {
-    uint8_t  msgtype;
-	char     hash[MAX_HASH_LEN];
-	char     suffix[MAX_SUFFIX_LEN];
-	uint32_t filesize;
+	uint16_t  msgtype;
+	char      hash[MAX_HASH_LEN];
+	char      suffix[MAX_SUFFIX_LEN];
+	uint32_t  filesize;
 };
 
 // todo: cluster exeavailable messages
 struct qaul_exeavailable_msg
 {
-    uint8_t  msgtype;
+	uint16_t msgtype;
 	uint32_t platform;
 	char     hash[MAX_HASH_LEN];
 	char     suffix[MAX_SUFFIX_LEN];
