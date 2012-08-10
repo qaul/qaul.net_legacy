@@ -352,6 +352,10 @@
 	{
 		// start VoIP
 		Qaullib_SetConfVoIP();
+		
+		// start 
+		Qaullib_UDP_StartServer();
+		
 		// start captive portal
 		Qaullib_CaptiveStart();
 		
