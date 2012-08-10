@@ -62,6 +62,9 @@ extern "C" {
  *   start voip
  *   @see Qaullib_SetConfVoIP()
  *
+ *   start UDP server
+ *   @see Qaullib_UDP_StartServer()
+ *
  *   start captive portal
  *   @see Qaullib_CaptiveStart()
  *
@@ -188,6 +191,15 @@ const char* Qaullib_GetIP(void);
  * @retval 0 failed
  */
 int Qaullib_CaptiveStart(void);
+
+/**
+ * Start UDP Server on port 8083
+ *
+ * @retval 1 sucessfully started
+ * @retval 0 failed
+ */
+int Qaullib_UDP_StartServer(void);
+
 
 /**
  * tell qaullib to exit waiting screen

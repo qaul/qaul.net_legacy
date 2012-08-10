@@ -1282,7 +1282,7 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 	chunkpos = atoi(local_chunkpos);
 
 	// check if file exists
-	if(Qaullib_FileAvailable(local_hash, local_suffix, myfile))
+	if(Qaullib_FileAvailable(local_hash, local_suffix, &myfile))
 	{
 		printf("Qaullib_WwwPubFilechunk size: %i\n", myfile->size);
 

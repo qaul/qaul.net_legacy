@@ -320,7 +320,8 @@ int Qaullib_FileDelete(struct qaul_file_LL_item *file_item)
 	int success = 0;
 	char path[MAX_PATH_LEN +1];
 
-	printf("Qaullib_FileDelete\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileDelete\n");
 
 	// FIXME: check if file is scheduled
 	// unschedule the file
@@ -356,7 +357,8 @@ int Qaullib_FileDelete(struct qaul_file_LL_item *file_item)
 // ------------------------------------------------------------
 void Qaullib_FileDB2LL(void)
 {
-	printf("Qaullib_FileDB2LL\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileDB2LL\n");
 
 	sqlite3_stmt *ppStmt;
 	char *error_exec=NULL;
@@ -520,17 +522,33 @@ void Qaullib_FileCreatePath(char *filepath, char *hash, char *suffix)
 }
 
 // ------------------------------------------------------------
-int Qaullib_FileAvailable(char *hashstr, char *suffix, struct qaul_file_LL_item *file_item)
+int Qaullib_FileAvailable(char *hashstr, char *suffix, struct qaul_file_LL_item **file_item)
 {
 	unsigned char hash[MAX_HASH_LEN];
+	struct qaul_file_LL_item *found_file_item;
+
+	printf("Qaullib_FileAvailable\n");
+
 	// convert hashstr to hash
 	if(Qaullib_StringToHash(hashstr, hash))
 	{
 		// loop through file list
-		if(Qaullib_File_LL_HashSearch (hash, &file_item))
+		if(Qaullib_File_LL_HashSearch(hash, &found_file_item))
 		{
-			if(strncmp(suffix, file_item->suffix, sizeof(suffix)) == 0)
+			printf("Qaullib_FileAvailable 2\n");
+
+			// check if file has finished downloading
+			if(
+				strncmp(suffix, found_file_item->suffix, sizeof(suffix)) == 0 //&&
+				//found_file_item->status >= QAUL_FILESTATUS_DOWNLOADED
+				)
+			{
+				printf("QFA file found: %s\n", found_file_item->hashstr);
+				printf("QFA file suffix: %s\n", found_file_item->suffix);
+
+				*file_item = found_file_item;
 				return 1;
+			}
 		}
 	}
 	return 0;

@@ -41,13 +41,20 @@ int  Qaullib_UDP_StartServer(void)
 	//setsockopt(s2, SOL_SOCKET, SO_BINDTODEVICE, optval2, 4);
 
 	printf("UDP server started\n");
+
+	return qaul_UDP_started;
 }
 
 // ------------------------------------------------------------
 void Qaullib_UDP_SendFileavailabeMsg(struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip)
 {
-	struct sockaddr destAddr;
+	struct sockaddr_in destAddr;
 	int status;
+
+	destAddr.sin_family = AF_INET;
+	destAddr.sin_port = htons(UDP_PORT);
+	// todo: ipv6
+	destAddr.sin_addr.s_addr = htonl(ip->v4.s_addr);
 
 	status = sendto(
 					qaul_UDP_socket,

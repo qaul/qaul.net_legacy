@@ -156,6 +156,7 @@ void Qaul::QaulConfigure(void)
     if(qaulConfigureCounter == 46)
     {
         Qaullib_SetConfVoIP();
+        Qaullib_UDP_StartServer();
         Qaullib_CaptiveStart();
         QaulConfigureFirewall();
         qaulConfigureCounter = 50;

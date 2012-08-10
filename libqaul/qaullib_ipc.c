@@ -280,7 +280,8 @@ void Qaullib_IpcEvaluateTopo(union olsr_message *msg)
 // ------------------------------------------------------------
 void Qaullib_IpcEvaluateUserhello(union olsr_message *msg)
 {
-	printf("Qaullib_IpcEvaluateUserhello()\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_IpcEvaluateUserhello()\n");
 	// todo: ipv6
 	union olsr_ip_addr ip;
 	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
@@ -302,7 +303,8 @@ void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg)
 	struct qaul_fileavailable_msg fileavailable_msg;
 	union olsr_ip_addr ip;
 
-	printf("Qaullib_IpcEvaluateFilediscover\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_IpcEvaluateFilediscover\n");
 
 	// todo: ipv6
 	// get hash
@@ -312,7 +314,8 @@ void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg)
 	if(Qaullib_File_LL_HashSearch(msg->v4.message.filediscover.hash, &file_item))
 	{
 		// send available message
-		printf("file found: %s\n", file_item->hashstr);
+		printf("Qaullib_IpcEvaluateFilediscover file found: %s\n", file_item->hashstr);
+		printf("Qaullib_IpcEvaluateFilediscover file suffix: %s\n", file_item->suffix);
 		printf("send file available message\n");
 
 		// todo: send file available message

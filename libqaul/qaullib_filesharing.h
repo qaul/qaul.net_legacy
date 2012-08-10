@@ -90,7 +90,7 @@ void Qaullib_FileCreatePath(char *filepath, char *hash, char *suffix);
  * @retval 1 file is available
  * @retval 0 file is not available from this position
  */
-int Qaullib_FileAvailable(char *hashstr, char *suffix, struct qaul_file_LL_item *file_item);
+int Qaullib_FileAvailable(char *hashstr, char *suffix, struct qaul_file_LL_item **file_item);
 
 /**
  * try to download a file
@@ -101,11 +101,6 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item);
  * check file sockets for incoming traffic
  */
 void Qaullib_FileCheckSockets(void);
-
-/**
- * check file sockets for incoming traffic
- */
-void Qaullib_FileAddSeeder(char *hash, char *suffix, int filesize, union olsr_ip_addr ip);
 
 /**
  * check if file @a path exists

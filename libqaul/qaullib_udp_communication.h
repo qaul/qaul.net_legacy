@@ -19,11 +19,6 @@ int qaul_UDP_socket;
 int qaul_UDP_started;
 
 /**
- * Start UDP Server on port 8083
- */
-int  Qaullib_UDP_StartServer(void);
-
-/**
  * Send the message to the
  */
 void Qaullib_UDP_SendFileavailabeMsg(struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip);

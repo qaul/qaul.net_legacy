@@ -26,7 +26,6 @@ void Qaullib_User_LL_Init (void)
   }
 }
 
-
 // ------------------------------------------------------------
 void Qaullib_User_LL_InitNode(struct qaul_user_LL_node *node)
 {
@@ -71,6 +70,9 @@ struct qaul_user_LL_item* Qaullib_User_LL_Add (union olsr_ip_addr *ip)
 	struct qaul_user_LL_item *new_item;
 	new_item = (struct qaul_user_LL_item *)malloc(sizeof(struct qaul_user_LL_item));
 
+	if(QAUL_DEBUG)
+		printf("Qaullib_User_LL_Add\n");
+
 	// get index
 	uint32_t hash = olsr_ip_hashing(ip);
 
@@ -103,7 +105,8 @@ struct qaul_user_LL_item* Qaullib_User_LL_Add (union olsr_ip_addr *ip)
 // ------------------------------------------------------------
 void Qaullib_User_LL_Delete_Item (struct qaul_user_LL_item *item)
 {
-	printf("Delete item\n");
+	if(QAUL_DEBUG)
+		printf("Delete item\n");
 
 	// lock
 	pthread_mutex_lock( &qaullib_mutex_userLL );
