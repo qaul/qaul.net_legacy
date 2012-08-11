@@ -678,7 +678,8 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item)
 // ------------------------------------------------------------
 void Qaullib_FileCheckSockets(void)
 {
-	int i, bytes, type, filesize, chunksize, success;
+	int i, bytes, type, chunksize, success;
+
 	// check file sockets
 	for(i=0; i<MAX_FILE_CONNECTIONS; i++)
 	{
@@ -700,44 +701,26 @@ void Qaullib_FileCheckSockets(void)
 
 					if(type == 1)
 					{
-						// get file size
-						filesize = ntohl(fileconnections[i].conn.buf.filechunk.filesize);
-						if(fileconnections[i].fileinfo->size > 0 && fileconnections[i].fileinfo->downloaded > 0)
+						if(Qaullib_FileCompairFileSize(&fileconnections[i], ntohl(fileconnections[i].conn.buf.filechunk.filesize)))
 						{
-							// check if file size matches
-							if(fileconnections[i].fileinfo->size != filesize)
-							{
-								if(QAUL_DEBUG)
-									printf("Qaullib_FileCheckSockets filesizes didn't mach: %i != %i\n", fileconnections[i].fileinfo->size, filesize);
+							// get chunk size
+							fileconnections[i].chunksize = ntohl(fileconnections[i].conn.buf.filechunk.chunksize);
 
-							}
+							printf("[qaullib] file download: %s, filesize %i, chunksize %i\n", fileconnections[i].fileinfo->hashstr, fileconnections[i].fileinfo->size, fileconnections[i].chunksize);
+
+							// write chunk into file
+							fwrite(&fileconnections[i].conn.buf.buf[sizeof(struct qaul_filechunk_msg)], bytes -sizeof(struct qaul_filechunk_msg), 1, fileconnections[i].file);
+							fileconnections[i].conn.received += bytes -sizeof(struct qaul_filechunk_msg);
+							fileconnections[i].conn.bufpos = 0;
 						}
 						else
-						{
-							fileconnections[i].fileinfo->size = filesize;
-							// write file size into db
-							// todo
-						}
-
-						// get chunk size
-						fileconnections[i].chunksize = ntohl(fileconnections[i].conn.buf.filechunk.chunksize);
-
-						printf("[qaullib] file download: %s, filesize %i, chunksize %i\n", fileconnections[i].fileinfo->hashstr, fileconnections[i].fileinfo->size, fileconnections[i].chunksize);
-
-						// write chunk into file
-			        	fwrite(&fileconnections[i].conn.buf.buf[sizeof(struct qaul_filechunk_msg)], bytes -sizeof(struct qaul_filechunk_msg), 1, fileconnections[i].file);
-			        	fileconnections[i].conn.received += bytes -sizeof(struct qaul_filechunk_msg);
-			        	fileconnections[i].conn.bufpos = 0;
+							Qaullib_FileEndFailedConnection(&fileconnections[i]);
 					}
 					else
 					{
 						printf("[qaullib] file download failed: bytes %i msg-type %i %s\n", bytes, type, fileconnections[i].fileinfo->hashstr);
-						// close connection
-						Qaullib_WgetClose(&fileconnections[i].conn);
-						// delete this seeder
-
-						// reschedule file
-						Qaullib_FileUpdateStatus(fileconnections[i].fileinfo, QAUL_FILESTATUS_DISCOVERED);
+						// end download
+						Qaullib_FileEndFailedConnection(&fileconnections[i]);
 					}
 				}
 				else if(fileconnections[i].conn.received > 0)
@@ -753,7 +736,11 @@ void Qaullib_FileCheckSockets(void)
 				}
 
 				// check if chunk finished downloading
-	        	if(fileconnections[i].chunksize > 0 && fileconnections[i].chunksize <= fileconnections[i].conn.received)
+	        	if(
+	        			fileconnections[i].conn.connected &&
+	        			fileconnections[i].chunksize > 0 &&
+	        			fileconnections[i].chunksize <= fileconnections[i].conn.received
+	        			)
 	        	{
 	        		fclose(fileconnections[i].file);
 	        		Qaullib_WgetClose(&fileconnections[i].conn);
@@ -776,19 +763,55 @@ void Qaullib_FileCheckSockets(void)
 			else if(bytes == 0)
 			{
 				printf("Qaullib_FileCheckSockets success == 0\n");
-
-				// an error occurred, take measures
-				// todo: reschedule
-				// search for hosts
-				// connect to host
-
-				// mark file as download failure
-				Qaullib_FileUpdateStatus(fileconnections[i].fileinfo, QAUL_FILESTATUS_ERROR);
-		        // close file
-		        fclose(fileconnections[i].file);
+				Qaullib_FileEndFailedConnection(&fileconnections[i]);
 			}
 		}
 	}
+}
+
+// ------------------------------------------------------------
+int Qaullib_FileCompairFileSize(struct qaul_file_connection *fileconnection, int filesize)
+{
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileCompairFileSize\n");
+
+	if(fileconnection->fileinfo->size > 0 && fileconnection->fileinfo->downloaded > 0)
+	{
+		// check if file size matches
+		if(fileconnection->fileinfo->size != filesize)
+		{
+			if(QAUL_DEBUG)
+				printf("Qaullib_FileCheckSockets file sizes didn't mach: %i != %i\n", fileconnection->fileinfo->size, filesize);
+
+			return 0;
+		}
+		else
+			return 1;
+	}
+	else
+	{
+		Qaullib_FileUpdateSize(fileconnection->fileinfo, filesize);
+	}
+	return 1;
+}
+
+// ------------------------------------------------------------
+void Qaullib_FileEndFailedConnection(struct qaul_file_connection *fileconnection)
+{
+	union olsr_ip_addr ip;
+
+	if(QAUL_DEBUG)
+    	printf("Qaullib_FileEndFailedConnection\n");
+
+	// close file
+    fclose(fileconnection->file);
+	// close connection
+	Qaullib_WgetClose(&fileconnection->conn);
+	// remove this seeder from list
+	memcpy(&ip.v4, &fileconnection->conn.ip, sizeof(ip.v4));
+	Qaullib_Filediscovery_LL_DeleteSeederIp(fileconnection->fileinfo, &ip);
+	// reschedule file
+	Qaullib_FileUpdateStatus(fileconnection->fileinfo, QAUL_FILESTATUS_DISCOVERED);
 }
 
 // ------------------------------------------------------------
@@ -796,7 +819,8 @@ void Qaullib_FileCheckSockets(void)
 // ------------------------------------------------------------
 static int Qaullib_FileCopy(const char* origin, const char* destiny)
 {
-	printf("Qaullib_FileCopy %s -> %s\n", origin, destiny);
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileCopy %s -> %s\n", origin, destiny);
 
 	size_t filesize = 0;
 	size_t len = 0 ;
@@ -828,7 +852,8 @@ static int Qaullib_FileCopy(const char* origin, const char* destiny)
 // ------------------------------------------------------------
 static int Qaullib_FileGetSuffix(char *filename, char *suffix)
 {
-	printf("Qaullib_FileGetSuffix\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileGetSuffix\n");
 
 	// is there a dot?
 	char *local_suffix = strrchr(filename, '.');
@@ -848,7 +873,8 @@ static int Qaullib_FileGetSuffix(char *filename, char *suffix)
 // ------------------------------------------------------------
 static int Qaullib_FileCreateHashStr(char *filename, char *hashstr)
 {
-	printf("Qaullib_FileCreateHashStr\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileCreateHashStr\n");
 
 	unsigned char local_hash[MAX_HASH_LEN];
     // create hash
@@ -863,7 +889,9 @@ static int Qaullib_FileCreateHashStr(char *filename, char *hashstr)
 // ------------------------------------------------------------
 static int Qaullib_HashCreate(char *filename, unsigned char *hash)
 {
-	printf("Qaullib_HashCreate\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_HashCreate\n");
+
 	int ret = polarssl_sha1_file( filename, hash );
 	if(ret == 1) fprintf( stderr, "[qaullib] failed to open: %s\n", filename );;
 	if(ret == 2) fprintf( stderr, "[qaullib] failed to open: %s\n", filename );;
@@ -874,9 +902,12 @@ static int Qaullib_HashCreate(char *filename, unsigned char *hash)
 // ------------------------------------------------------------
 int Qaullib_HashToString(unsigned char *hash, char *string)
 {
-	// FIXME: big-endian / little-endian
-	printf("Qaullib_HashToString\n");
 	int i;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_HashToString\n");
+
+	// FIXME: big-endian / little-endian
 	for(i=0;i<MAX_HASH_LEN;i++)
 	{
 		sprintf(string+(i*2),"%02x",hash[i]);

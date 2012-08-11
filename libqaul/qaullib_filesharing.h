@@ -103,6 +103,19 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item);
 void Qaullib_FileCheckSockets(void);
 
 /**
+ * check if download @a filesize match the @a fileconnection
+ *
+ * @retval 1 success
+ * @retval 0 error
+ */
+int Qaullib_FileCompairFileSize(struct qaul_file_connection *fileconnection, int filesize);
+
+/**
+ * end a failed download of th @a fileconnection
+ */
+void Qaullib_FileEndFailedConnection(struct qaul_file_connection *fileconnection);
+
+/**
  * check if file @a path exists
  *
  * @retval 1 file exists
