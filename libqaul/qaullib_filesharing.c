@@ -539,8 +539,8 @@ int Qaullib_FileAvailable(char *hashstr, char *suffix, struct qaul_file_LL_item 
 
 			// check if file has finished downloading
 			if(
-				strncmp(suffix, found_file_item->suffix, sizeof(suffix)) == 0 //&&
-				//found_file_item->status >= QAUL_FILESTATUS_DOWNLOADED
+				strncmp(suffix, found_file_item->suffix, sizeof(suffix)) == 0 &&
+				found_file_item->status >= QAUL_FILESTATUS_DOWNLOADED
 				)
 			{
 				printf("QFA file found: %s\n", found_file_item->hashstr);

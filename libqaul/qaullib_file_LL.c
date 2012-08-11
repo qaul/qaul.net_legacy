@@ -283,6 +283,10 @@ void Qaullib_Filediscovery_LL_AddSeederIp (struct qaul_file_LL_item *file, union
 
 		// unlock
 		pthread_mutex_unlock( &qaullib_mutex_filediscoveryLL );
+
+		// change the status of the file
+		if(file->status == QAUL_FILESTATUS_DISCOVERING)
+			file->status = QAUL_FILESTATUS_DISCOVERED;
 	}
 }
 
