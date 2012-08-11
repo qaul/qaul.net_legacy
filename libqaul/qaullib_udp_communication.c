@@ -116,6 +116,8 @@ void Qaullib_UDP_CheckSocket(void)
 	uint8_t msgtype;
 	socklen_t socklen;
 
+	fileavailabe = (struct qaul_fileavailable_msg *)buffer;
+	exeavailabe = (struct qaul_exeavailable_msg *)buffer;
 	memset(&sourceAddr,0,sizeof(sourceAddr));
 
 	if(qaul_UDP_started)
@@ -139,7 +141,7 @@ void Qaullib_UDP_CheckSocket(void)
 					printf("UDP message received\n");
 
 				// check which message we received
-				uint16_t msgtype = htons(fileavailabe->msgtype);
+				uint16_t msgtype = ntohs(fileavailabe->msgtype);
 
 				if(msgtype == QAUL_FILEAVAILABLE_MESSAGE_TYPE && received >= sizeof(struct qaul_fileavailable_msg))
 				{
