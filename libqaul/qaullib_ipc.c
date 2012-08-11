@@ -307,24 +307,18 @@ void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg)
 		printf("Qaullib_IpcEvaluateFilediscover\n");
 
 	// todo: ipv6
-	// get hash
-	//memcpy(hash, msg->v4.message.filediscover.hash, MAX_HASH_LEN);
-
 	// check if hash exists
 	if(Qaullib_File_LL_HashSearch(msg->v4.message.filediscover.hash, &file_item))
 	{
-		// send available message
-		printf("Qaullib_IpcEvaluateFilediscover file found: %s\n", file_item->hashstr);
-		printf("Qaullib_IpcEvaluateFilediscover file suffix: %s\n", file_item->suffix);
-		printf("send file available message\n");
-
-		// todo: send file available message
 		// generate the file available message
 		fileavailable_msg.msgtype = htons(QAUL_FILEAVAILABLE_MESSAGE_TYPE);
-
 		memcpy(&fileavailable_msg.hash, file_item->hash, MAX_HASH_LEN);
 		memcpy(&fileavailable_msg.suffix, file_item->suffix, MAX_SUFFIX_LEN);
 		fileavailable_msg.filesize = htonl(file_item->size);
+
+		// set the ip address
+		// todo: ipv6
+		memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
 
 		Qaullib_UDP_SendFileavailabeMsg(&fileavailable_msg, &ip);
 	}

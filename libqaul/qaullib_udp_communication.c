@@ -76,7 +76,14 @@ void Qaullib_UDP_SendFileavailabeMsg(struct qaul_fileavailable_msg *msg, union o
 	destAddr.sin_family = AF_INET;
 	destAddr.sin_port = htons(UDP_PORT);
 	// todo: ipv6
-	destAddr.sin_addr.s_addr = htonl(ip->v4.s_addr);
+	destAddr.sin_addr.s_addr = ip->v4.s_addr;
+
+	if(QAUL_DEBUG)
+	{
+		char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
+		inet_ntop(destAddr.sin_family, &destAddr.sin_addr, (char *)&ipbuf, MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN));
+		printf("Qaullib_UDP_SendFileavailabeMsg to: %s\n", ipbuf);
+	}
 
 	status = sendto(
 					qaul_UDP_socket,
@@ -128,6 +135,9 @@ void Qaullib_UDP_CheckSocket(void)
 
 			if(received > 0)
 			{
+				if(QAUL_DEBUG)
+					printf("UDP message received\n");
+
 				// check which message we received
 				uint16_t msgtype = htons(fileavailabe->msgtype);
 
