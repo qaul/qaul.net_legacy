@@ -149,6 +149,11 @@ int  Qaullib_File_LL_NextNodePriv (struct qaul_file_LL_node *node);
 int  Qaullib_File_LL_NextNodePubBinaries (struct qaul_file_LL_node *node);
 
 /**
+ * process a file discovery @a msg and add the seeders @a ip to the LL
+ */
+void Qaullib_Filediscovery_LL_DiscoveryMsgProcessing(struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip);
+
+/**
  * Adds the @a ip as a seeder to @a file
  */
 void Qaullib_Filediscovery_LL_AddSeederIp (struct qaul_file_LL_item *file, union olsr_ip_addr *ip);

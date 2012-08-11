@@ -12,11 +12,15 @@
 // ------------------------------------------------------------
 int  Qaullib_UDP_StartServer(void)
 {
+#ifdef WIN32
+	int On = 1;
+	unsigned long Len;
+#else
+	int flags;
+#endif
+
 	struct sockaddr_in myAddr;
 	int option, option_status;
-
-	qaul_UDP_socket = -1;
-	qaul_UDP_started = 0;
 
 	// todo: ipv6
 	myAddr.sin_family = AF_INET;
@@ -26,23 +30,41 @@ int  Qaullib_UDP_StartServer(void)
 	qaul_UDP_socket = socket(PF_INET, SOCK_DGRAM, 0);
 
 	if(qaul_UDP_socket == INVALID_SOCKET)
+	{
 		printf("unable to create UDP socket\n");
+		return 0;
+	}
 
 	qaul_UDP_started = bind(qaul_UDP_socket, (struct sockaddr *)&myAddr, sizeof(myAddr));
 	if(qaul_UDP_started < 0)
+	{
+		qaul_UDP_started = 0;
 		perror("UDP socket bind error\n");
+		return 0;
+	}
 
-	// set socket options
-	// set reuse flag
-	option = 1;
-	option_status = setsockopt(qaul_UDP_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&option, sizeof(option));
-	//// bind a socket to a device name (might not work on all systems):
-	//optval2 = "eth1"; // 4 bytes long, so 4, below:
-	//setsockopt(s2, SOL_SOCKET, SO_BINDTODEVICE, optval2, 4);
+    // Setting socket non-blocking
+#ifdef WIN32
+    if (WSAIoctl(qaul_UDP_socket, FIONBIO, &On, sizeof(On), NULL, 0, &Len, NULL, NULL) < 0) {
+		fprintf(stderr, "Error while making socket non-blocking!\n");
+		exit(1);
+    }
+#else
+    if ((flags = fcntl(qaul_UDP_socket, F_GETFL, 0)) < 0) {
+		fprintf(stderr, "Error getting socket flags!\n");
+		exit(1);
+    }
+
+    if (fcntl(qaul_UDP_socket, F_SETFL, flags | O_NONBLOCK) < 0) {
+		fprintf(stderr, "Error setting socket flags!\n");
+		exit(1);
+    }
+#endif
 
 	printf("UDP server started\n");
+	qaul_UDP_started = 1;
 
-	return qaul_UDP_started;
+	return 1;
 }
 
 // ------------------------------------------------------------
@@ -81,38 +103,51 @@ void Qaullib_UDP_CheckSocket(void)
 	char buffer[1024];
 	struct qaul_fileavailable_msg *fileavailabe;
 	struct qaul_exeavailable_msg *exeavailabe;
-	struct sockaddr sourceAddr;
+	struct sockaddr_in sourceAddr;
+	union olsr_ip_addr olsrSourceAddr;
 	int received;
 	uint8_t msgtype;
 	socklen_t socklen;
 
-	socklen = sizeof(struct sockaddr_in);
-	received = 1;
-	while(received > 0)
+	memset(&sourceAddr,0,sizeof(sourceAddr));
+
+	if(qaul_UDP_started)
 	{
-		received = recvfrom(
-							qaul_UDP_socket,
-							buffer,
-							sizeof(buffer),
-							0,
-							(struct sockaddr *)&sourceAddr,
-							&socklen
-							);
-
-		if(received > 0)
+		socklen = sizeof(struct sockaddr_in);
+		received = 1;
+		while(received > 0)
 		{
-			// check which message we received
-			uint16_t msgtype = htons(fileavailabe->msgtype);
+			received = recvfrom(
+								qaul_UDP_socket,
+								buffer,
+								1024,
+								0,
+								(struct sockaddr *)&sourceAddr,
+								&socklen
+								);
 
-			if(msgtype == QAUL_FILEAVAILABLE_MESSAGE_TYPE)
+			if(received > 0)
 			{
-				// add discovery to LL
+				// check which message we received
+				uint16_t msgtype = htons(fileavailabe->msgtype);
 
-			}
-			else if(msgtype == QAUL_EXEAVAILABLE_MESSAGE_TYPE)
-			{
-				// add exe to DB & LL
+				if(msgtype == QAUL_FILEAVAILABLE_MESSAGE_TYPE && received >= sizeof(struct qaul_fileavailable_msg))
+				{
+					if(QAUL_DEBUG)
+						printf("QAUL_FILEAVAILABLE_MESSAGE_TYPE received\n");
 
+					// todo: ipv6
+					memcpy(&olsrSourceAddr.v4.s_addr, &sourceAddr, sizeof(struct in_addr));
+					// add discovery to LL
+					Qaullib_Filediscovery_LL_DiscoveryMsgProcessing(fileavailabe, &olsrSourceAddr);
+				}
+				else if(msgtype == QAUL_EXEAVAILABLE_MESSAGE_TYPE && received >= sizeof(struct qaul_exeavailable_msg))
+				{
+					if(QAUL_DEBUG)
+						printf("QAUL_EXEAVAILABLE_MESSAGE_TYPE received\n");
+
+					// add exe to DB & LL
+				}
 			}
 		}
 	}

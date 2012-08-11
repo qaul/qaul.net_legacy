@@ -246,9 +246,23 @@ static uint32_t Qaullib_File_LL_Hashing(unsigned char *filehash)
 }
 
 // ------------------------------------------------------------
+void Qaullib_Filediscovery_LL_DiscoveryMsgProcessing(struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip)
+{
+	struct qaul_file_LL_item *file;
+
+	if(Qaullib_File_LL_HashSearch(msg->hash, &file))
+	{
+		Qaullib_Filediscovery_LL_AddSeederIp (file, ip);
+	}
+}
+
+// ------------------------------------------------------------
 void Qaullib_Filediscovery_LL_AddSeederIp (struct qaul_file_LL_item *file, union olsr_ip_addr *ip)
 {
 	struct qaul_filediscovery_LL_item *new_item;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_Filediscovery_LL_AddSeederIp\n");
 
 	// check if the ip already exists
 	if(!Qaullib_Filediscovery_LL_IpExists(file, ip))
@@ -276,6 +290,10 @@ void Qaullib_Filediscovery_LL_AddSeederIp (struct qaul_file_LL_item *file, union
 void Qaullib_Filediscovery_LL_DeleteSeederIp (struct qaul_file_LL_item *file, union olsr_ip_addr *ip)
 {
 	struct qaul_filediscovery_LL_item *item;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_Filediscovery_LL_DeleteSeederIp\n");
+
 	// get entry
 	if(Qaullib_Filediscovery_LL_SearchIp(file, ip, item))
 	{
