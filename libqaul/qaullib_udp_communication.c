@@ -149,7 +149,7 @@ void Qaullib_UDP_CheckSocket(void)
 						printf("QAUL_FILEAVAILABLE_MESSAGE_TYPE received\n");
 
 					// todo: ipv6
-					memcpy(&olsrSourceAddr.v4.s_addr, &sourceAddr, sizeof(struct in_addr));
+					memcpy(&olsrSourceAddr.v4.s_addr, &sourceAddr.sin_addr.s_addr, sizeof(olsrSourceAddr.v4.s_addr));
 					// add discovery to LL
 					Qaullib_Filediscovery_LL_DiscoveryMsgProcessing(fileavailabe, &olsrSourceAddr);
 				}

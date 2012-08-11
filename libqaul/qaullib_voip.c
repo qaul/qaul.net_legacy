@@ -50,7 +50,7 @@ static void Qaullib_VoipSetNameByIp(char *ip)
 
 	printf("ip: %s\n", ip);
 
-	if(Qaullib_User_LL_IpSearch(&my_olsrip, &myuseritem) && myuseritem->type == 2)
+	if(Qaullib_User_LL_IpSearch(&my_olsrip, &myuseritem) && myuseritem->type == QAUL_USERTYPE_KNOWN)
 		strcpy(qaul_voip_call.name, myuseritem->name);
 	else
 		strcpy(qaul_voip_call.name, "Unknown");

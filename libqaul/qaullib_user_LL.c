@@ -79,8 +79,8 @@ struct qaul_user_LL_item* Qaullib_User_LL_Add (union olsr_ip_addr *ip)
 	// fill in content
 	qaul_user_LL_id++;
 	new_item->time = time(NULL);
-	new_item->type = 0;
-	new_item->changed = 0;
+	new_item->type = QAUL_USERTYPE_UNCHECKED;
+	new_item->changed = QAUL_USERCHANGED_UNCHANGED;
 	new_item->lq = 0;
 	new_item->favorite = 0;
 	memcpy((char *)&new_item->ip, ip, sizeof(union olsr_ip_addr));
@@ -106,7 +106,13 @@ struct qaul_user_LL_item* Qaullib_User_LL_Add (union olsr_ip_addr *ip)
 void Qaullib_User_LL_Delete_Item (struct qaul_user_LL_item *item)
 {
 	if(QAUL_DEBUG)
-		printf("Delete item\n");
+	{
+		printf("Qaullib_User_LL_Delete_Item ");
+
+		char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
+		inet_ntop(AF_INET, &item->ip.v4, (char *)&ipbuf, MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN));
+		printf("qaul_user_LL_count: %i, type: %i, changed: %i, ip: %s\n", qaul_user_LL_count, item->type, item->changed, ipbuf);
+	}
 
 	// lock
 	pthread_mutex_lock( &qaullib_mutex_userLL );
@@ -118,7 +124,13 @@ void Qaullib_User_LL_Delete_Item (struct qaul_user_LL_item *item)
 	// unlock
 	pthread_mutex_unlock( &qaullib_mutex_userLL );
 
+	if(QAUL_DEBUG)
+		printf("Qaullib_User_LL_Delete_Item 1");
+
 	free(item);
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_User_LL_Delete_Item 2");
 }
 
 
@@ -135,11 +147,12 @@ void Qaullib_User_LL_Clean (void)
 		{
 			// only delete if not a favorite
 			if(mynode.item->favorite == 0)
-				Qaullib_User_LL_Delete_Item (mynode.item);
+				Qaullib_User_LL_Delete_Item(mynode.item);
 		}
-		else if(mynode.item->changed == 0 && mynode.item->time +30 < time(NULL))
+		else if(mynode.item->changed == 0 && mynode.item->time +10 < time(NULL))
 		{
-			if(mynode.item->type > 0) mynode.item->changed = 2;
+			if(mynode.item->type > QAUL_USERTYPE_UNCHECKED)
+				mynode.item->changed = QAUL_USERTYPE_KNOWN;
 		}
 	}
 }

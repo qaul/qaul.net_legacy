@@ -769,9 +769,9 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 	{
 		// check if node was changed
 		if(
-				mynode.item->type == 2 &&
-				(mynode.item->changed == 1 ||
-				mynode.item->changed == 2)
+				mynode.item->type == QAUL_USERTYPE_KNOWN &&
+				(mynode.item->changed == QAUL_USERCHANGED_MODIFIED ||
+				mynode.item->changed == QAUL_USERCHANGED_DELETED)
 				)
 		{
 			printf("changable user found\n");
@@ -781,7 +781,7 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 			else
 				mg_printf(conn, ",");
 
-			if(mynode.item->changed == 1)
+			if(mynode.item->changed == QAUL_USERCHANGED_MODIFIED)
 				add = 1;
 			else
 				add = 0;
@@ -794,10 +794,10 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 					add
 					);
 
-			if(mynode.item->changed == 2)
-				mynode.item->changed = 3;
+			if(mynode.item->changed == QAUL_USERCHANGED_DELETED)
+				mynode.item->changed = QAUL_USERCHANGED_CACHED;
 			else
-				mynode.item->changed = 0;
+				mynode.item->changed = QAUL_USERCHANGED_UNCHANGED;
 		}
 	}
 	mg_printf(conn, "]}");
@@ -1104,7 +1104,7 @@ static void Qaullib_WwwPubUsers(struct mg_connection *conn, const struct mg_requ
 	Qaullib_User_LL_InitNode(&mynode);
 	while(Qaullib_User_LL_NextNode(&mynode))
 	{
-		if(mynode.item->type == 2 && mynode.item->changed < 2)
+		if(mynode.item->type == QAUL_USERTYPE_KNOWN && mynode.item->changed < QAUL_USERCHANGED_DELETED)
 		{
 			memcpy(&msg->ip, &mynode.item->ip, sizeof(union olsr_ip_addr));
 			memcpy(&msg->name, mynode.item->name, MAX_USER_LEN);

@@ -169,7 +169,7 @@ void Qaullib_Filediscovery_LL_DeleteSeederIp (struct qaul_file_LL_item *file, un
  * @retval 1 seeder found
  * @retval 0 no seeder found
  */
-int  Qaullib_Filediscovery_LL_GetBestSeeder (struct qaul_file_LL_item *file, union olsr_ip_addr *ip);
+int  Qaullib_Filediscovery_LL_GetBestSeeder (struct qaul_file_LL_item *file, union olsr_ip_addr **ip);
 
 /**
  * Searches the file discovery LL of @a file for @a ip
@@ -177,7 +177,7 @@ int  Qaullib_Filediscovery_LL_GetBestSeeder (struct qaul_file_LL_item *file, uni
  * @retval 1 ip found
  * @retval 0 ip not found
  */
-int  Qaullib_Filediscovery_LL_IpExists (struct qaul_file_LL_item *file, union olsr_ip_addr *ip);
+int  Qaullib_Filediscovery_LL_SeederExists (struct qaul_file_LL_item *file, union olsr_ip_addr *ip);
 
 /**
  * Sets link to next @a item
@@ -185,7 +185,7 @@ int  Qaullib_Filediscovery_LL_IpExists (struct qaul_file_LL_item *file, union ol
  * @retval 1 next item found
  * @retval 0 no next item
  */
-int  Qaullib_Filediscovery_LL_NextItem (struct qaul_file_LL_item *file,  struct qaul_filediscovery_LL_item *discovery_item);
+int  Qaullib_Filediscovery_LL_NextItem (struct qaul_file_LL_item *file,  struct qaul_filediscovery_LL_item **discovery_item);
 
 /**
  * Empty the file discovery LL list of @a file

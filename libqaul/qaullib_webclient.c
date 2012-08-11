@@ -31,6 +31,9 @@ int Qaullib_WgetConnect(struct qaul_wget_connection *myConn)
   int flags;
 #endif
 
+  if(QAUL_DEBUG)
+	  printf("Qaullib_WgetConnect\n");
+
   if (!myConn->socket)
   {
 	if ((myConn->socket = socket(myConn->ip.sin_family, SOCK_STREAM, 0)) == -1)

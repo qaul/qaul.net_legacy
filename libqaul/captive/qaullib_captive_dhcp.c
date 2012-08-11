@@ -337,7 +337,7 @@ void Qaullib_Captive_Dhcp_LL_Init(void)
 {
 	if(qaul_dhcp_LL_count > 0)
 	{
-		// TODO: empty
+		// TODO: empty list
 	}
 	else
 	{
@@ -354,23 +354,34 @@ void Qaullib_Dhcp_LL_Add (char *ip, char *mac)
 	struct qaul_dhcp_LL_item *new_item;
 	new_item = (struct qaul_dhcp_LL_item *)malloc(sizeof(struct qaul_dhcp_LL_item));
 
-	// create links
-	new_item->prev = &Qaul_dhcp_LL_root;
-	new_item->next = Qaul_dhcp_LL_root.next;
-	Qaul_dhcp_LL_root.next = new_item;
-	new_item->next->prev = new_item;
+	if(QAUL_DEBUG)
+		printf("Qaullib_Dhcp_LL_Add\n");
 
 	// fill in content
 	new_item->time = time(NULL);
 	memcpy((char *)&new_item->ip, ip, 4);
 	memcpy(new_item->mac, mac, 16);
 
+	// lock
+	pthread_mutex_lock( &qaullib_mutex_DhcpLL );
+
+	// create links
+	new_item->prev = &Qaul_dhcp_LL_root;
+	new_item->next = Qaul_dhcp_LL_root.next;
+	Qaul_dhcp_LL_root.next = new_item;
+	new_item->next->prev = new_item;
+
+	// unlock
+	pthread_mutex_unlock( &qaullib_mutex_DhcpLL );
+
 	qaul_dhcp_LL_count++;
 }
 
 void Qaullib_Dhcp_LL_Delete_Item (struct qaul_dhcp_LL_item *item)
 {
-	printf("Delete item\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_Dhcp_LL_Delete_Item\n");
+
 	item->prev->next = item->next;
 	item->next->prev = item->prev;
 	free(item);
