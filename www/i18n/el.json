@@ -47,6 +47,7 @@
 "You called %s":"%s Καλέσατε",
 "Incoming call from %s":"Εισερχόμενη κλήση από %s",
 
+"This field is required":"Απαιτείται",
 "Spaces are not allowed in the user name":"Το όνομα του χρήστη δεν πρέπει να περιέχει κενά",
 "User name is too long":"Το όνομα του χρήστη είναι πολύ μεγάλο",
 "Message is too long":"Το μήνυμα είναι πολύ μεγάλο",

@@ -43,6 +43,7 @@
 "You called %s":"%s wurde angerufen",
 "Incoming call from %s":"Eingehender Anruf von %s",
 
+"This field is required":"Dieses Feld muss ausgefüllt werden",
 "Spaces are not allowed in the user name":"Es sind keine Leerschläge im Benutzernamen erlaubt",
 "User name is too long":"Der Benutzername ist zu lang",
 "Message is too long":"Die Mitteilung ist zu lang",

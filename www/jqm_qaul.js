@@ -265,6 +265,17 @@ function qaul_translate(dictionary)
 	$("p.i18n").each(function(){
 		$(this).text($.i18n._($(this).text()));
 	});
+	
+	// translate validation msgs
+	jQuery.extend(jQuery.validator.messages, {
+		required: $.i18n._("This field is required"),
+		nospaces: $.i18n._("Spaces are not allowed in the user name"),
+		userlen: $.i18n._("User name is too long"),
+		chatlen: $.i18n._("Message is too long"),
+		filedesclen: $.i18n._("Description is too long")
+	});
+	// translate search
+	$("ul#users").data("filter-placeholder",$.i18n._("Filter items"));
 }
 
 function init_chat()

@@ -38,8 +38,20 @@
 					<input type="radio" name="l" id="locale_es" value="es"/>
 					<label for="locale_es">Español</label>
 
+					<input type="radio" name="l" id="locale_ar" value="ar"/>
+					<label for="locale_ar">العربية</label>
+			
+					<input type="radio" name="l" id="locale_fr" value="fr"/>
+					<label for="locale_fr">Français</label>
+
+					<input type="radio" name="l" id="locale_ja" value="ja"/>
+					<label for="locale_ja">日本語</label>
+
 					<input type="radio" name="l" id="locale_de" value="de"/>
 					<label for="locale_de">Deutsch</label>
+
+					<input type="radio" name="l" id="locale_tr" value="tr"/>
+					<label for="locale_tr">Turkish</label>
 
 					<input type="radio" name="l" id="locale_el" value="el"/>
 					<label for="locale_el">ελληνικά</label>
@@ -73,7 +85,7 @@
 		</p>
 		<div id="chat">&nbsp;</div>
 	</div>
-	<div data-role="footer" data-position="fixed" class="ui-body-d">
+	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
 		<div data-role="navbar" data-theme="c">
 			<ul>
 				<li><a href="#page_chat" data-theme="b" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
@@ -91,11 +103,11 @@
 			<li id="favorites_divider" data-role="list-divider" class="i18n">Favorites / Friends</li>
 		</ul>
 		<br/>
-		<ul data-role="listview" data-inset="true" id="users"  data-theme="d" data-filter="true">
+		<ul data-role="listview" data-inset="true" id="users" data-theme="d" data-filter="true" data-filter-placeholder="Filter items">
 			<li id="users_divider" data-role="list-divider" class="i18n">Other Users</li>
 		</ul>
 	</div>
-	<div data-role="footer" data-position="fixed" class="ui-body-d">
+	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
 		<div data-role="navbar">
 			<ul>
 				<li><a href="#page_chat" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
@@ -120,7 +132,7 @@
 			<li><a href="#page_config_name" data-transition="none" class="i18n">Change User Name</a></li>
 		</ul>
 	</div>
-	<div data-role="footer" data-position="fixed" class="ui-body-d">
+	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
 		<div data-role="navbar">
 			<ul>
 				<li><a href="#page_chat" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
@@ -137,7 +149,7 @@
 		<p><a href="javascript:show_addfile_page()" id="file_addbutton" data-role="button" data-icon="plus" class="i18n">Add File</a></p>
 		<div id="page_file_list"></div>
 	</div>
-	<div data-role="footer" data-position="fixed" class="ui-body-d">
+	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
 		<div data-role="navbar">
 			<ul>
 				<li><a href="#page_chat" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
@@ -163,7 +175,7 @@
 				<input type="text" name="m" id="file_add_msg" class="required filedesclen"/>
 				<input type="checkbox" checked="checked" name="a" value="1" id="file_add_advertise"/>
 				<label for="file_add_advertise" class="i18n">Advertise file</label>
-				<input class="submit" type="submit" value="Add File" id="file_add_submit"/>
+				<input class="submit" type="submit" value="Add File" id="file_add_submit" class="i18n"/>
 			</form>
 		</p>
 	</div>
@@ -204,7 +216,7 @@
 			<div id="page_user_files"></div>
 		</div>
 	</div>
-	<div data-role="footer" data-position="fixed" class="ui-body-d">
+	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
 		<div data-role="navbar">
 			<ul>
 				<li><a href="#page_chat" data-theme="b" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
@@ -231,7 +243,7 @@
 		</p>
 		<div id="page_tag_msgs"></div>
 	</div>
-	<div data-role="footer" data-position="fixed" class="ui-body-d">
+	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
 		<div data-role="navbar">
 			<ul>
 				<li><a href="#page_chat" data-theme="b" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
@@ -263,10 +275,9 @@
 
 <div data-role="page" id="page_dialog">
 	<div data-role="header" data-position="fixed" data-theme="d">
-		<h1 id="page_dialog_title" class="i18n">An Error Occurred</h1>
+		<h1 id="page_dialog_title" class="i18n">User not reachable</h1>
 	</div>
 	<div data-role="content" id="page_dialog_content">
-		<p class="i18n">Couldn't send message</p>
 		<p class="i18n">Please try again</p>
 	</div>
 </div>
