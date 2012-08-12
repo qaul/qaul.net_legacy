@@ -649,21 +649,25 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item)
 							return;
 						}
 						else
-							Qaullib_WgetClose(&fileconnections[i].conn);
+						{
+							if(QAUL_DEBUG)
+								printf("Qaullib_FileConnect file connection failed\n");
+
+							Qaullib_FileEndFailedConnection(&fileconnections[i]);
+						}
 					}
 					else
 					{
-						// close connection
-						Qaullib_WgetClose(&fileconnections[i].conn);
-						// remove seeder from list
-						Qaullib_Filediscovery_LL_DeleteSeederIp(file_item, ip);
+						if(QAUL_DEBUG)
+							printf("Qaullib_FileConnect sending header failed\n");
+
+						Qaullib_FileEndFailedConnection(&fileconnections[i]);
 					}
 				}
 				else
 				{
 					printf("[qaullib] connection error\n");
-					// remove seeder from list
-					Qaullib_Filediscovery_LL_DeleteSeederIp(file_item, ip);
+					Qaullib_FileEndFailedConnection(&fileconnections[i]);
 				}
 			}
 			else
@@ -804,7 +808,8 @@ void Qaullib_FileEndFailedConnection(struct qaul_file_connection *fileconnection
     	printf("Qaullib_FileEndFailedConnection\n");
 
 	// close file
-    fclose(fileconnection->file);
+	if(fileconnection->file != NULL)
+		fclose(fileconnection->file);
 	// close connection
 	Qaullib_WgetClose(&fileconnection->conn);
 	// remove this seeder from list
