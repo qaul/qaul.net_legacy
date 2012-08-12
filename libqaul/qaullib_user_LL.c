@@ -106,13 +106,7 @@ struct qaul_user_LL_item* Qaullib_User_LL_Add (union olsr_ip_addr *ip)
 void Qaullib_User_LL_Delete_Item (struct qaul_user_LL_item *item)
 {
 	if(QAUL_DEBUG)
-	{
 		printf("Qaullib_User_LL_Delete_Item ");
-
-		char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
-		inet_ntop(AF_INET, &item->ip.v4, (char *)&ipbuf, MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN));
-		printf("qaul_user_LL_count: %i, type: %i, changed: %i, ip: %s\n", qaul_user_LL_count, item->type, item->changed, ipbuf);
-	}
 
 	// lock
 	pthread_mutex_lock( &qaullib_mutex_userLL );
@@ -124,30 +118,30 @@ void Qaullib_User_LL_Delete_Item (struct qaul_user_LL_item *item)
 	// unlock
 	pthread_mutex_unlock( &qaullib_mutex_userLL );
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_User_LL_Delete_Item 1");
-
 	free(item);
-
-	if(QAUL_DEBUG)
-		printf("Qaullib_User_LL_Delete_Item 2");
 }
 
 
 // ------------------------------------------------------------
 void Qaullib_User_LL_Clean (void)
 {
-	// mark all clients older than 30 seconds as deleted
-	// remove all clients older than 5 minutes
+	int todelete;
+	struct qaul_user_LL_item *deleteitem;
 	struct qaul_user_LL_node mynode;
 	Qaullib_User_LL_InitNode(&mynode);
+
+	todelete = 0;
 	while(Qaullib_User_LL_NextNode(&mynode))
 	{
 		if(mynode.item->time +300 < time(NULL))
 		{
 			// only delete if not a favorite
 			if(mynode.item->favorite == 0)
-				Qaullib_User_LL_Delete_Item(mynode.item);
+			{
+				deleteitem = mynode.item;
+				mynode.item = mynode.item->prev;
+				Qaullib_User_LL_Delete_Item(deleteitem);
+			}
 		}
 		else if(mynode.item->changed == 0 && mynode.item->time +10 < time(NULL))
 		{

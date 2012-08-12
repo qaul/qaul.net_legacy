@@ -72,6 +72,8 @@ void Qaullib_User_LL_Delete_Item (struct qaul_user_LL_item *item);
 
 /**
  * loops through the list and deletes all expired entries
+ * mark all clients older than 30 seconds as deleted
+ * remove all clients which are older than 5 minutes
  */
 void Qaullib_User_LL_Clean (void);
 

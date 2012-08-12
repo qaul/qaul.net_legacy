@@ -361,6 +361,9 @@ struct qaul_voip_thread_LL_item* Qaullib_Voip_LL_Add ()
 	struct qaul_voip_thread_LL_item *new_item;
 	new_item = (struct qaul_voip_thread_LL_item *)malloc(sizeof(struct qaul_voip_thread_LL_item));
 
+	if(QAUL_DEBUG)
+		printf("Qaullib_Voip_LL_Add\n");
+
 	// create links
 	new_item->prev = &qaul_voip_threadlist;
 	new_item->next = qaul_voip_threadlist.next;
@@ -374,6 +377,9 @@ struct qaul_voip_thread_LL_item* Qaullib_Voip_LL_Add ()
 // todo: clean references when a call ended
 void Qaullib_Voip_LL_Delete_Item (struct qaul_voip_thread_LL_item *item)
 {
+	if(QAUL_DEBUG)
+		printf("Qaullib_Voip_LL_Delete_Item\n");
+
 	item->prev->next = item->next;
 	item->next->prev = item->prev;
 
