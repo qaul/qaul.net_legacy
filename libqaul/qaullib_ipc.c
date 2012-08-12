@@ -310,17 +310,21 @@ void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg)
 	// check if hash exists
 	if(Qaullib_File_LL_HashSearch(msg->v4.message.filediscover.hash, &file_item))
 	{
-		// generate the file available message
-		fileavailable_msg.msgtype = htons(QAUL_FILEAVAILABLE_MESSAGE_TYPE);
-		memcpy(&fileavailable_msg.hash, file_item->hash, MAX_HASH_LEN);
-		memcpy(&fileavailable_msg.suffix, file_item->suffix, MAX_SUFFIX_LEN);
-		fileavailable_msg.filesize = htonl(file_item->size);
+		// check if file is available
+		if(file_item->status >= QAUL_FILESTATUS_DOWNLOADED)
+		{
+			// generate the file available message
+			fileavailable_msg.msgtype = htons(QAUL_FILEAVAILABLE_MESSAGE_TYPE);
+			memcpy(&fileavailable_msg.hash, file_item->hash, MAX_HASH_LEN);
+			memcpy(&fileavailable_msg.suffix, file_item->suffix, MAX_SUFFIX_LEN);
+			fileavailable_msg.filesize = htonl(file_item->size);
 
-		// set the ip address
-		// todo: ipv6
-		memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
+			// set the ip address
+			// todo: ipv6
+			memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
 
-		Qaullib_UDP_SendFileavailabeMsg(&fileavailable_msg, &ip);
+			Qaullib_UDP_SendFileavailabeMsg(&fileavailable_msg, &ip);
+		}
 	}
 }
 
