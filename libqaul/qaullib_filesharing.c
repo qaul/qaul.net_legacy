@@ -589,12 +589,6 @@ int Qaullib_FileAvailable(char *hashstr, char *suffix, struct qaul_file_LL_item 
 				*file_item = found_file_item;
 				return 1;
 			}
-			else
-			{
-				if(QAUL_DEBUG)
-					printf("Qaullib_FileAvailable file not ready yet, status: %i\n", found_file_item->status);
-			}
-
 		}
 	}
 	return 0;
