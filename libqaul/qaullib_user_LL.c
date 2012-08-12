@@ -125,8 +125,6 @@ void Qaullib_User_LL_Delete_Item (struct qaul_user_LL_item *item)
 // ------------------------------------------------------------
 void Qaullib_User_LL_Clean (void)
 {
-	int todelete;
-	struct qaul_user_LL_item *deleteitem;
 	struct qaul_user_LL_node mynode;
 	Qaullib_User_LL_InitNode(&mynode);
 
@@ -138,9 +136,8 @@ void Qaullib_User_LL_Clean (void)
 			// only delete if not a favorite
 			if(mynode.item->favorite == 0)
 			{
-				deleteitem = mynode.item;
 				mynode.item = mynode.item->prev;
-				Qaullib_User_LL_Delete_Item(deleteitem);
+				Qaullib_User_LL_Delete_Item(mynode.item->next);
 			}
 		}
 		else if(mynode.item->changed == 0 && mynode.item->time +10 < time(NULL))

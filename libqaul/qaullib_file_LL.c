@@ -325,7 +325,6 @@ void Qaullib_Filediscovery_LL_DeleteSeederIp (struct qaul_file_LL_item *file, un
 	{
 		// delete ip
 		Qaullib_Filediscovery_LL_DeleteItem(item);
-
 	}
 }
 
@@ -405,8 +404,8 @@ void Qaullib_Filediscovery_LL_EmptyList (struct qaul_file_LL_item *file)
 	// loop through list
 	while(Qaullib_Filediscovery_LL_NextItem(file, &discovery_item))
 	{
-		Qaullib_Filediscovery_LL_DeleteItem(discovery_item);
-		discovery_item = &file->discoveryLL;
+		discovery_item = discovery_item->prev;
+		Qaullib_Filediscovery_LL_DeleteItem(discovery_item->next);
 	}
 }
 
