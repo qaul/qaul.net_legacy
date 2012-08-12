@@ -1271,7 +1271,8 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 	size_t len = 0 ;
     char buffer[BUFSIZ] = { '\0' } ;
 
-	printf("Qaullib_WwwPubFilechunk\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwPubFilechunk\n");
 
 	// get hash
 	get_qsvar(request_info, "h", local_hash, sizeof(local_hash));
@@ -1281,6 +1282,9 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 	get_qsvar(request_info, "c", local_chunkpos, sizeof(local_chunkpos));
 	chunkpos = atoi(local_chunkpos);
 
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwPubFilechunk request %s.%s %i\n", local_hash, local_suffix, chunkpos);
+
 	// check if file exists
 	if(Qaullib_FileAvailable(local_hash, local_suffix, &myfile))
 	{
@@ -1289,6 +1293,8 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 		// check if file is big enough
 		if(myfile->size < chunkpos)
 		{
+			printf("Qaullib_WwwPubFilechunk size smaller than chunkpos\n");
+
 			msgbuf.filechunk.type = htonl(3);
 			msgbuf.filechunk.filesize = htonl(myfile->size);
 			mg_write(conn, msgbuf.buf, sizeof(struct qaul_filechunk_msg));

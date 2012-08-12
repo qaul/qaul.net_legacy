@@ -63,7 +63,8 @@ static int Qaullib_HashCreate(char *filename, unsigned char *hash);
 // ------------------------------------------------------------
 void Qaullib_FileInit(void)
 {
-	printf("Qaullib_FileInit\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileInit\n");
 
 	Qaullib_File_LL_Init();
 
@@ -147,11 +148,15 @@ int Qaullib_FileExists(char *path)
 // ------------------------------------------------------------
 int Qaullib_FileAdd(struct qaul_file_LL_item *file_item)
 {
-	printf("Qaullib_FileAdd\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileAdd\n");
+
 	// check if file already exists
 	if(!Qaullib_File_LL_HashExists(file_item->hash))
 	{
-		printf("Hash does not exist: create file\n");
+		if(QAUL_DEBUG)
+			printf("Hash does not exist: create file\n");
+
 		// add to DB
 		Qaullib_FileAdd2DB(file_item);
 
@@ -160,7 +165,10 @@ int Qaullib_FileAdd(struct qaul_file_LL_item *file_item)
 
 		return 1;
 	}
-	printf("Hash already exists: do not create the file\n");
+
+	if(QAUL_DEBUG)
+		printf("Hash already exists: do not create the file\n");
+
 	return 0;
 }
 
@@ -212,7 +220,8 @@ int Qaullib_FileCopyNew(char *path, char *hashstr, char *suffix)
 	int size;
 	char local_destiny[MAX_PATH_LEN +1];
 
-	printf("Qaullib_FileCopyNew\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileCopyNew\n");
 
     // create hash & suffix
 	if(!Qaullib_FileCreateHashStr(path, hashstr)) return 0;
@@ -277,7 +286,8 @@ void Qaullib_FileSendDiscoveryMsg(struct qaul_file_LL_item *file_item)
 	union olsr_message *m;
 	m = (union olsr_message *)buffer;
 
-	printf("send file discovery message for: %s\n", file_item->hashstr);
+	if(QAUL_DEBUG)
+		printf("send file discovery message for: %s\n", file_item->hashstr);
 
 	// set time stamp change file status
 	file_item->discovery_timestamp = time(NULL);
@@ -299,6 +309,10 @@ void Qaullib_FileSendDiscoveryMsg(struct qaul_file_LL_item *file_item)
 void Qaullib_FileStopDownload(struct qaul_file_LL_item *file_item)
 {
 	int i;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileStopDownload\n");
+
 	for(i=0; i<MAX_FILE_CONNECTIONS; i++)
 	{
 		if(fileconnections[i].conn.connected)
@@ -309,7 +323,7 @@ void Qaullib_FileStopDownload(struct qaul_file_LL_item *file_item)
 				Qaullib_WgetClose(&fileconnections[i].conn);
 				if(fileconnections[i].conn.connected)
 				{
-					printf("[qaullib] ERROR deconnecting file\n");
+					printf("Qaullib_FileStopDownload ERROR deconnecting file\n");
 					fileconnections[i].conn.connected = 0;
 				}
 			}
@@ -337,9 +351,10 @@ int Qaullib_FileDelete(struct qaul_file_LL_item *file_item)
   	// create path
 	Qaullib_FileCreatePath(path, file_item->hashstr, file_item->suffix);
 	// delete file from HD
-	printf("[qaullib] delete file: %s\n", path);
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileDelete delete file: %s\n", path);
 	if(remove(path) == -1)
-		printf("[qaullib] ERROR file couldn't be deleted\n", path);
+		printf("Qaullib_FileDelete ERROR file couldn't be deleted\n", path);
 
 	// delete from DB
 	sprintf(stmt, sql_file_delete_hash, file_item->hashstr);
@@ -574,6 +589,12 @@ int Qaullib_FileAvailable(char *hashstr, char *suffix, struct qaul_file_LL_item 
 				*file_item = found_file_item;
 				return 1;
 			}
+			else
+			{
+				if(QAUL_DEBUG)
+					printf("Qaullib_FileAvailable file not ready yet, status: %i\n", found_file_item->status);
+			}
+
 		}
 	}
 	return 0;
@@ -666,7 +687,7 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item)
 				}
 				else
 				{
-					printf("[qaullib] connection error\n");
+					printf("Qaullib_FileConnect connection error\n");
 					Qaullib_FileEndFailedConnection(&fileconnections[i]);
 				}
 			}
@@ -722,7 +743,7 @@ void Qaullib_FileCheckSockets(void)
 					}
 					else
 					{
-						printf("[qaullib] file download failed: bytes %i msg-type %i %s\n", bytes, type, fileconnections[i].fileinfo->hashstr);
+						printf("Qaullib_FileCheckSockets file download failed: bytes %i msg-type %i %s\n", bytes, type, fileconnections[i].fileinfo->hashstr);
 						// end download
 						Qaullib_FileEndFailedConnection(&fileconnections[i]);
 					}

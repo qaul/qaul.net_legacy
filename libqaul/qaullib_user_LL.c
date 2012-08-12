@@ -128,7 +128,6 @@ void Qaullib_User_LL_Clean (void)
 	struct qaul_user_LL_node mynode;
 	Qaullib_User_LL_InitNode(&mynode);
 
-	todelete = 0;
 	while(Qaullib_User_LL_NextNode(&mynode))
 	{
 		if(mynode.item->time +300 < time(NULL))
