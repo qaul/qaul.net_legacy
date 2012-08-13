@@ -12,7 +12,7 @@ extern "C" {
 
 
 #define TIMEOUT_LASTRECEIVED 20
-#define TIMEOUT_CONNECTED    60
+#define TIMEOUT_CONNECTED   600
 
 #define MAX_SUFFIX_LEN        4
 #define MAX_DESCRIPTION_LEN  80

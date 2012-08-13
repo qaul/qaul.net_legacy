@@ -777,7 +777,7 @@ void Qaullib_FileCheckSockets(void)
 	        		if(fileconnections[i].fileinfo->downloaded >= fileconnections[i].fileinfo->size)
 	        		{
 						// todo: check if file hash matches!
-	        			printf("[qaullib] download finished! filesize %i, downloaded %i\n", fileconnections[i].fileinfo->size, fileconnections[i].fileinfo->downloaded);
+	        			printf("Qaullib_FileCheckSockets download finished! filesize %i, downloaded %i\n", fileconnections[i].fileinfo->size, fileconnections[i].fileinfo->downloaded);
 	        			Qaullib_FileUpdateStatus(fileconnections[i].fileinfo, QAUL_FILESTATUS_DOWNLOADED);
 	        		}
 	        		// todo: otherwise reschedule for next download
@@ -788,6 +788,12 @@ void Qaullib_FileCheckSockets(void)
 			{
 				printf("Qaullib_FileCheckSockets success == 0\n");
 				Qaullib_FileEndFailedConnection(&fileconnections[i]);
+			}
+			else
+			{
+				printf("Qaullib_FileCheckSockets bytes = %i\n", bytes);
+				printf("Qaullib_FileCheckSockets download failed! filesize %i, downloaded %i\n", fileconnections[i].fileinfo->size, fileconnections[i].fileinfo->downloaded);
+
 			}
 		}
 	}

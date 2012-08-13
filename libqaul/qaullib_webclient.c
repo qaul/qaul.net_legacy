@@ -134,7 +134,10 @@ int Qaullib_WgetReceive(struct qaul_wget_connection *myConn)
 		if(myConn->lastreceived_at < time(NULL) - TIMEOUT_LASTRECEIVED ||
 		   myConn->connected_at < time(NULL) - TIMEOUT_CONNECTED)
 		{
-			printf("Qaullib_WgetReceive socket received time out\n");
+			printf("Qaullib_WgetReceive socket received time out: connected %i lastreceived %i now %i\n",
+					(int)myConn->lastreceived_at,
+					(int)myConn->connected_at,
+					(int)time(NULL));
 			// close connection
 			Qaullib_WgetClose(myConn);
 			return -1;
