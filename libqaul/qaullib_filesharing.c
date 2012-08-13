@@ -242,13 +242,14 @@ void Qaullib_FileCheckScheduled(void)
 	struct qaul_file_LL_node mynode;
 	Qaullib_File_LL_InitNode(&mynode);
 
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileCheckScheduled\n");
+
 	// loop through files
 	while(Qaullib_File_LL_NextNode(&mynode))
 	{
 		if(mynode.item->status < QAUL_FILESTATUS_DOWNLOADED && mynode.item->status >= QAUL_FILESTATUS_NEW)
 		{
-			printf("Qaullib_FileCheckScheduled, %i, %s\n", mynode.item->status, mynode.item->hashstr);
-
 			if(mynode.item->status == QAUL_FILESTATUS_NEW)
 			{
 				Qaullib_FileSendDiscoveryMsg(mynode.item);
@@ -259,7 +260,7 @@ void Qaullib_FileCheckScheduled(void)
 				if(mynode.item->discovery_timestamp < time(NULL) -QAUL_FILEDISCOVERY_TIMEOUT)
 				{
 					if(QAUL_DEBUG)
-						printf("file discovery timout, resend discovery msg \n");
+						printf("file discovery timeout, resend discovery msg \n");
 
 					Qaullib_FileSendDiscoveryMsg(mynode.item);
 				}
@@ -271,7 +272,7 @@ void Qaullib_FileCheckScheduled(void)
 			}
 			else if(mynode.item->status == QAUL_FILESTATUS_DOWNLOADING)
 			{
-				// check if timeout expired
+				// todo: check if timeout expired
 
 			}
 		}
