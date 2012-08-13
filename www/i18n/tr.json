@@ -43,7 +43,7 @@
 "You called %s":"%s arandı",
 "Incoming call from %s":"%s sizi arıyor",
 
-"This field is required":"Bir şey doldurun",
+"This field is required":"Bu alanı boş bırakamazsınız",
 "Spaces are not allowed in the user name":"Kullanıcı isminde boşluk kullanmayınız",
 "User name is too long":"Kullanıcı ismi çok uzun",
 "Message is too long":"Mesaj çok uzun",
