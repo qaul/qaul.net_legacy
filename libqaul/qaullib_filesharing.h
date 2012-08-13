@@ -56,13 +56,13 @@ void Qaullib_FilePopulate(void);
 int Qaullib_FileAdd(struct qaul_file_LL_item *file_item);
 
 /**
- * add file from @a path to filesharing and analyzes the file.
- * It creates the @a hashstr and fills in the @a suffix
+ * add file from @a path to file sharing and analyzes the file.
+ * It creates the hashstr, the hash and suffix and fills the values into @a file_item
  *
  * @retval 0 on error
  * @retval filesize in Bytes on success
  */
-int Qaullib_FileCopyNew(char *path, char *hashstr, char *suffix);
+int Qaullib_FileCopyNew(char *path, struct qaul_file_LL_item *file);
 
 /**
  * check if any file needs to be downloaded

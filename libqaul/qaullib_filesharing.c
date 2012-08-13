@@ -215,7 +215,7 @@ int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 }
 
 // ------------------------------------------------------------
-int Qaullib_FileCopyNew(char *path, char *hashstr, char *suffix)
+int Qaullib_FileCopyNew(char *path, struct qaul_file_LL_item *file)
 {
 	int size;
 	char local_destiny[MAX_PATH_LEN +1];
@@ -224,10 +224,14 @@ int Qaullib_FileCopyNew(char *path, char *hashstr, char *suffix)
 		printf("Qaullib_FileCopyNew\n");
 
     // create hash & suffix
-	if(!Qaullib_FileCreateHashStr(path, hashstr)) return 0;
-    Qaullib_FileGetSuffix(path, suffix);
+	if(!Qaullib_FileCreateHashStr(path, file->hashstr))
+		return 0;
+    // create hash from hashstr
+	Qaullib_StringToHash(file->hashstr, file->hash);
+	// extract the suffix
+    Qaullib_FileGetSuffix(path, file->suffix);
     // create destination filename
-    Qaullib_FileCreatePath(local_destiny, hashstr, suffix);
+    Qaullib_FileCreatePath(local_destiny, file->hashstr, file->suffix);
 
 	// copy file
     size = Qaullib_FileCopy(path, local_destiny);

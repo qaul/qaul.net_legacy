@@ -864,17 +864,21 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 	advertise = atoi(local_advertise);
 
 	// copy file into directory & make hash
-	file_item.size = Qaullib_FileCopyNew(local_path, file_item.hashstr, file_item.suffix);
-	printf("file size: %i\n", file_item.size);
+	file_item.size = Qaullib_FileCopyNew(local_path, &file_item);
+	printf("Qaullib_WwwFileAdd size: %i\n", file_item.size);
 
 	if(file_item.size > 0)
 	{
+		printf("Qaullib_WwwFileAdd hashstr: %s \n", file_item.hashstr);
+
 		// add file
 		file_item.type = QAUL_FILETYPE_FILE;
 		file_item.status = QAUL_FILESTATUS_MYFILE;
 		sprintf(file_item.adv_name, "");
 		memset(&file_item.adv_ip, 0, sizeof(file_item.adv_ip));
 		file_item.adv_validip = 0;
+		file_item.downloaded = 0;
+		sprintf(file_item.created_at,"0000-00-00 00:00:00");
 
 		Qaullib_FileAdd(&file_item);
 
