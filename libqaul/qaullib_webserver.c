@@ -1201,6 +1201,7 @@ static void Qaullib_WwwPubInfo(struct mg_connection *conn, const struct mg_reque
 	mg_printf(conn, "abc({");
 	mg_printf(conn, "\"name\":\"%s\",",qaul_username);
 
+	mg_printf(conn, "\"files\":[");
 	// loop through files
 	firstitem = 1;
 	while(Qaullib_File_LL_NextNodePub(&mynode))
@@ -1212,7 +1213,7 @@ static void Qaullib_WwwPubInfo(struct mg_connection *conn, const struct mg_reque
 
 		Qaullib_WwwFile2Json(conn, mynode.item);
 	}
-
+	mg_printf(conn, "]");
 	mg_printf(conn, "})");
 }
 
