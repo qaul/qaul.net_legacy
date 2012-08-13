@@ -463,7 +463,7 @@ function call_start()
 	var name = $("#user_chat_name").val();
 	var ip = $("#user_chat_ip").val();
 	// change page
-	$("#call_info").text("searching");
+	$("#call_info").text($.i18n._("Connecting"));
 	call_show_page(name);
 	call_setButtonEnd();
 	// start call
@@ -520,7 +520,8 @@ function call_show_page(name)
 function call_schedule_end(reason)
 {
 	// remove buttons
-	$("#call_buttons").empty();
+	var mybutton = $("#call_buttons").empty().append('<a href="javascript:call_goback();" data-icon="arrow-l" data-inline="true" data-role="button">' +$.i18n._("Back") +'</a>');
+	mybutton.trigger('create');
 	// set text
 	$("#call_info").text(reason);
 	// set time before going back
@@ -546,25 +547,25 @@ function call_goback()
 
 function call_setRinging()
 {
-	$("#call_info").text($.i18n._("ringing"));
+	$("#call_info").text($.i18n._("Ringing"));
 	call_setButtonEnd();
 }
 
 function call_setCalling()
 {
-	$("#call_info").text($.i18n._("calling"));
+	$("#call_info").text($.i18n._("Is calling"));
 	call_setButtonsIncoming();
 }
 
 function call_setConnecting()
 {
-	$("#call_info").text($.i18n._("connecting"));
+	$("#call_info").text($.i18n._("Establishing connection"));
 	call_setButtonEnd();
 }
 
 function call_setConnected()
 {
-	$("#call_info").text($.i18n._("connected"));
+	$("#call_info").text($.i18n._("Connected"));
 	call_setButtonEnd();
 }
 
@@ -572,11 +573,11 @@ function call_setEnded(code)
 {
 	var reason;
 	if(code == 486)
-		reason = $.i18n._("busy");
+		reason = $.i18n._("Is busy");
 	else if(code == 487)
-		reason = $.i18n._("call ended");
+		reason = $.i18n._("Call ended");
 	else
-		reason = $.i18n._("not reachable");
+		reason = $.i18n._("Not reachable");
 		
 	call_schedule_end(reason);
 }
@@ -676,12 +677,12 @@ function format_msg_voip(item)
 	if(item.type == 3)
 	{
 		button = '<div class="msg_voip"><img src="images/i_call_in_64.png" /></div>';
-		msg = $.i18n._("incoming call from %s", [format_msg_userlink(item.name, item.ip, item.id)]);
+		msg = $.i18n._("Incoming call from %s", [format_msg_userlink(item.name, item.ip, item.id)]);
 	}
 	else
 	{
 		button = '<div class="msg_voip"><img src="images/i_call_out_64.png" /></div>';
-		msg = $.i18n._("you called %s", [format_msg_userlink(item.name, item.ip, item.id)]);
+		msg = $.i18n._("You called %s", [format_msg_userlink(item.name, item.ip, item.id)]);
 	}
 		
 	return {"msg":msg,"button":button};
@@ -941,8 +942,7 @@ function send_file_add()
 			},
 			dataType:"json"
 	}).error(function(){
-			// show alert
-			$.mobile.changePage($("#page_dialog"),{role:"dialog"});
+			show_page_file();
 	});
 }
 
@@ -967,9 +967,6 @@ function open_filepicker()
 			// set timer to check if a file was picked
 			setTimeout(function(){filepickertimer();},1000);
 		} 
-	}).error(function(){
-		// show alert
-		$.mobile.changePage($("#page_dialog"),{role:"dialog"});
 	});
 }
 
@@ -984,9 +981,6 @@ function open_file(filename)
 		success: function(data) {
 			// success
 		} 
-	}).error(function(){
-		// show alert
-		$.mobile.changePage($("#page_dialog"),{role:"dialog"});
 	});
 }
 
@@ -1002,9 +996,6 @@ function file_delete(hash)
 			// reload files
 			file_update();
 		} 
-	}).error(function(){
-		// show alert
-		$.mobile.changePage($("#page_dialog"),{role:"dialog"});
 	});
 }
 
