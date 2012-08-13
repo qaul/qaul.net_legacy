@@ -5,13 +5,13 @@
 <body>
 <form action="http://localhost:8081/file_add.json" method="post" id="file_add_form">
 <p>
-	<label for="file_add_path" class="i18n">absolute file path (/home/username/somefile.jpg) max length: MAX_PATH | PATH_MAX</label>
+	<label for="file_add_path" class="i18n">absolute file path (/home/username/somefile.jpg) max length: MAX_PATH | PATH_MAX</label><br/>
 	<input type="text" name="p" id="file_add_path" value=""/>
 </p><p>
-	<label for="file_add_msg" class="i18n">file message (max length: 80 Chars = 80 Bytes)</label>
+	<label for="file_add_msg" class="i18n">file message (max length: 80 Chars = 80 Bytes)</label><br/>
 	<input type="text" name="m" id="file_add_msg" class="required filedesclen"/>
 </p><p>
-	<label for="file_add_advertise" class="i18n">advertise file</label>
+	<label for="file_add_advertise" class="i18n">advertise file</label><br/>
 	<input type="checkbox" checked="checked" name="a" value="1" id="file_add_advertise"/>
 </p><p>
 	<input type="hidden" name="e" id="file_add_path" value="1"/>
