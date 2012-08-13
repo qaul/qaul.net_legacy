@@ -339,15 +339,23 @@ function show_user(name, ip)
 	$("#user_chat_ip").val(ip);
 	$("#page_user_msgs").empty();
 	$("#page_user_files").empty();
+	
 	// load messages
 	get_user_msgs();
     // get info from remote user
+    load_remote_userinfo(name, ip);
+}
+
+function load_remote_userinfo(name, ip)
+{
+	$("#page_user_files").empty().append("<p class=\"user-file_loading\"><img src=\"images/ajax-loader.gif\"/></p>");
 	var path = "http://" +ip +":8081/pub_info.json";
     $.jsonp({
       url: path,
       callback: "abc",
       data: {},
       success: function(data) {
+			$("#page_user_files").empty();
 			var nofiles = true;
 			$.each(data.files, function(i,item)
 			{
@@ -365,13 +373,16 @@ function show_user(name, ip)
 			
 			if(nofiles)
 			{
-				$("#page_user_files").append("<h2>" +$.i18n._("%s has no shared files", [name]) +"</h2>");
+				$("#page_user_files").empty().append("<p class=\"user-file_info\">" +$.i18n._("%s has no shared files", [name]) +"</p>");
 			}
       },
       error: function(d,msg) {
-          // todo: show error info
-		  // create dialog
-		  $.mobile.changePage($("#page_dialog"),{role:"dialog"});
+          if($("#user_chat_ip").val() == ip)
+          {
+			  // show info
+			  var myfile = $("#page_user_files").empty().append("<p class=\"user-file_info\">" +$.i18n._("User not reachable") +" " +"<a onclick=\"javascript:load_remote_userinfo('" +name +"', '" +ip +"')\" data-role=\"button\" data-iconpos=\"notext\" data-icon=\"refresh\">&nbsp;</a>" +"</p>");
+			  myfile.trigger('create');
+          }
       }
     });
 }

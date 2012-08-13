@@ -265,6 +265,15 @@ span.suffix {
     text-transform:uppercase;
 }
 
+.user-file_info {
+	text-align:center;
+	margin-top:50px;
+}
+.user-file_loading {
+	text-align:center;
+	margin-top:100px;
+}
+
 /* -- call -- */
 #page_call_title {
 	margin:0;
