@@ -1335,7 +1335,9 @@ function send_name()
 			'setname',
 			{"n": $("#name_name").val(), "e":1},
 			function(data){
-				// forward to chat
+				// update username
+				user_name = $("#name_name").val();
+				// forward to loading
 				$.mobile.changePage($("#page_loading"));
 				// set timer to check which page to load
 				setTimeout(function(){loadingtimer();},1000);
