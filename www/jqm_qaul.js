@@ -1275,7 +1275,7 @@ function file_schedule(hash, suffix, description, size, ip, name)
 		} 
 	}).error(function(){
 		// show alert
-		$.mobile.changePage($("#page_dialog"),{role:"dialog"});
+		alert("error scheduling file");
 	});
 	
 }
@@ -1605,6 +1605,6 @@ function removeIFrame()
 
 //-----------------------------------------------------
 
-alert('survived');
+//alert('survived');
 //$(document).ready(my_init());
 $(init_start);
