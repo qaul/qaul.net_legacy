@@ -87,7 +87,7 @@ void Qaullib_UDP_SendFileavailabeMsg(struct qaul_fileavailable_msg *msg, union o
 
 	status = sendto(
 					qaul_UDP_socket,
-					msg,
+					(char *)msg,
 					sizeof(struct qaul_fileavailable_msg),
 					0,
 					(struct sockaddr *)&destAddr,
