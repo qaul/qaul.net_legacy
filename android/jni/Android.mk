@@ -43,8 +43,10 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := libqaul
 LOCAL_SRC_FILES := net_qaul_qaul_NativeQaul.c \
 	../../libqaul/qaullib.c ../../libqaul/qaullib_ipc.c ../../libqaul/qaullib_webserver.c ../../libqaul/qaullib_voip.c \
-	../../libqaul/qaullib_webclient.c ../../libqaul/qaullib_filesharing.c ../../libqaul/qaullib_threads.c \
+	../../libqaul/qaullib_webclient.c ../../libqaul/qaullib_threads.c \
 	../../libqaul/qaullib_user.c ../../libqaul/qaullib_user_LL.c \
+	../../libqaul/qaullib_filesharing.c ../../libqaul/qaullib_file_LL.c \
+	../../libqaul/qaullib_udp_communication.c \
 	../../libqaul/captive/qaullib_captive.c ../../libqaul/captive/qaullib_captive_dhcp.c ../../libqaul/captive/qaullib_captive_dns.c \
 	../../libqaul/mongoose/mongoose.c ../../libqaul/sqlite/sqlite3.c \
 	../../libqaul/urlcode/urlcode.c ../../libqaul/bstrlib/bstrlib.c ../../libqaul/polarssl/sha1.c \

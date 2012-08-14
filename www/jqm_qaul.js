@@ -128,39 +128,45 @@ function init_start()
 		$("#chat_form input").keypress(function(e){
 			if(e.which == 13)
 			{
-				send_msg();
+				if($("#chat_form").valid())
+					send_msg();
 				e.preventDefault();
 				return false;
 			}
 		});
 		$("#chat_submit").click(function(){
-			send_msg();
+			if($("#chat_form").valid())
+				send_msg();
 			return false;
 		});
 		
 		$("#tag_chat_form input").keypress(function(e){
 			if(e.which == 13)
 			{
-				send_tag_msg();
+				if($("#tag_chat_form").valid())
+					send_tag_msg();
 				e.preventDefault();
 				return false;
 			}
 		});
 		$("#tag_chat_submit").click(function(){
-			send_tag_msg();
+			if($("#tag_chat_form").valid())
+				send_tag_msg();
 			return false;
 		});
 		
 		$("#user_chat_form input").keypress(function(e){
 			if(e.which == 13)
 			{
-				send_direct_msg();
+				if($("#user_chat_form").valid())
+					send_direct_msg();
 				e.preventDefault();
 				return false;
 			}
 		});
 		$("#user_chat_submit").click(function(){
-			send_direct_msg();
+			if($("#user_chat_form").valid())
+				send_direct_msg();
 			return false;
 		});
 		
@@ -168,13 +174,15 @@ function init_start()
 		$("#name_form input").keypress(function(e){
 			if(e.which == 13)
 			{
-				send_name();
+				if($("#name_form").valid())
+					send_name();
 				e.preventDefault();
 				return false;
 			}
 		});
 		$("#name_submit").click(function(){
-			send_name();
+			if($("#name_form").valid())
+				send_name();
 			return false;
 		});
 		
@@ -182,13 +190,15 @@ function init_start()
 		$("#file_add_form input").keypress(function(e){
 			if(e.which == 13)
 			{
-				send_file_add();
+				if($("#file_add_form").valid())
+					send_file_add();
 				e.preventDefault();
 				return false;
 			}
 		});
 		$("#file_add_submit").click(function(){
-			send_file_add();
+			if($("#file_add_form").valid())
+				send_file_add();
 			return false;
 		});
 	}
@@ -1275,7 +1285,7 @@ function file_schedule(hash, suffix, description, size, ip, name)
 		} 
 	}).error(function(){
 		// show alert
-		$.mobile.changePage($("#page_dialog"),{role:"dialog"});
+		alert("error scheduling file");
 	});
 	
 }
@@ -1605,6 +1615,6 @@ function removeIFrame()
 
 //-----------------------------------------------------
 
-alert('survived');
+//alert('survived');
 //$(document).ready(my_init());
 $(init_start);

@@ -842,6 +842,7 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 	char *error_exec=NULL;
 	int length, advertise, size;
 	struct qaul_file_LL_item file_item;
+	struct qaul_file_LL_item *existing_file;
 	char local_advertise[2];
 	char local_path[MAX_PATH_LEN +1];
 	char local_msg[MAX_MESSAGE_LEN +1];
@@ -880,7 +881,22 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 		file_item.downloaded = 0;
 		sprintf(file_item.created_at,"0000-00-00 00:00:00");
 
-		Qaullib_FileAdd(&file_item);
+		// check if file already exists
+		if(Qaullib_File_LL_HashSearch(file_item.hash, &existing_file))
+		{
+			if(existing_file->status == QAUL_FILESTATUS_DELETED)
+			{
+				//memcpy(existing_file, &file_item, sizeof(struct qaul_file_LL_item));
+				existing_file->type = QAUL_FILETYPE_FILE;
+				existing_file->status = QAUL_FILESTATUS_MYFILE;
+				// show it in GUI
+				existing_file->gui_notify = 1;
+			}
+		}
+		else
+		{
+			Qaullib_FileAdd(&file_item);
+		}
 
 		// FIXME: make ipv6 compatible
 		// pack chat into olsr message

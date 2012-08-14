@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "qaul.net"
-#define MyAppVersion "public alpha 31. July 2012"
+#define MyAppVersion "public alpha 14. Augst 2012"
 #define MyAppPublisher "qaul.net"
 #define MyAppURL "http://www.qaul.net/"
 #define MyAppExeName "qaul.exe"
