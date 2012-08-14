@@ -29,7 +29,6 @@ struct qaul_wget_connection
 	union qaul_inbuf buf;
 };
 
-
 /**
  * connect the @a myConn info
  *

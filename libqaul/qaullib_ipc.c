@@ -270,7 +270,8 @@ void Qaullib_IpcEvaluateTopo(union olsr_message *msg)
 	// check if user has our ip
 	//inet_ntop(AF_INET, &msg->v4.message.node.ip.v4, &ipbuf, sizeof(ipbuf));
 	//if(strcmp(qaul_ip_str, ipbuf)==0) return;
-	if(memcmp(&qaul_ip_addr.v4, &msg->v4.message.node.ip.v4, 4) == 0) return;
+	if(memcmp(&qaul_ip_addr.v4, &msg->v4.message.node.ip.v4, sizeof(msg->v4.message.node.ip.v4)) == 0)
+		return;
 
 	// check if user exists, create it if not
 	Qaullib_UserTouchIp(&msg->v4.message.node.ip);
@@ -279,7 +280,8 @@ void Qaullib_IpcEvaluateTopo(union olsr_message *msg)
 // ------------------------------------------------------------
 void Qaullib_IpcEvaluateUserhello(union olsr_message *msg)
 {
-	printf("Qaullib_IpcEvaluateUserhello()\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_IpcEvaluateUserhello()\n");
 	// todo: ipv6
 	union olsr_ip_addr ip;
 	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
@@ -293,56 +295,44 @@ void Qaullib_IpcEvaluateUserhello(union olsr_message *msg)
 // ------------------------------------------------------------
 void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg)
 {
-/*
-	char buffer[10240];
+	char buffer[1024];
 	char* stmt = buffer;
 	char *error_exec = NULL;
-	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
-	char chat_msg[MAX_MESSAGE_LEN +1];
-	char chat_user[MAX_USER_LEN +1];
-
-	//printf("IpcEvaluateChat\n");
-	//printf("type: %i, name: %s\n", msg->v4.olsr_msgtype, msg->v4.message.chat.name);
-
-	// get chat & username
-	memcpy(&chat_user, msg->v4.message.chat.name, MAX_USER_LEN);
-	memcpy(&chat_user[MAX_USER_LEN], "\0", 1);
-	memcpy(&chat_msg, msg->v4.message.chat.msg, MAX_MESSAGE_LEN);
-	memcpy(&chat_msg[MAX_MESSAGE_LEN], "\0", 1);
-
-	// TODO: ipv6
-	sprintf(stmt, sql_msg_set_received,
-			1,
-			chat_user,
-			chat_msg,
-			inet_ntop(AF_INET, &msg->v4.originator, (char *)&ipbuf, sizeof(ipbuf)),
-			4,
-			(int)msg->v4.hopcnt,
-			(int)msg->v4.ttl,
-			(int)ntohs(msg->v4.seqno),
-			me_to_reltime(msg->v4.olsr_vtime)
-			);
-	//printf("statement: %s\n", stmt);
-	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
-	{
-		printf("SQLite error: %s\n",error_exec);
-		sqlite3_free(error_exec);
-		error_exec=NULL;
-	}
-
-	// remember username
+	char hash[MAX_HASH_LEN];
+	struct qaul_file_LL_item *file_item;
+	struct qaul_fileavailable_msg fileavailable_msg;
 	union olsr_ip_addr ip;
-	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
-	Qaullib_UserCheckUser(&ip, chat_user);
 
-	qaul_new_msg++;
-*/
+	if(QAUL_DEBUG)
+		printf("Qaullib_IpcEvaluateFilediscover\n");
+
+	// todo: ipv6
+	// check if hash exists
+	if(Qaullib_File_LL_HashSearch(msg->v4.message.filediscover.hash, &file_item))
+	{
+		// check if file is available
+		if(file_item->status >= QAUL_FILESTATUS_DOWNLOADED)
+		{
+			// generate the file available message
+			fileavailable_msg.msgtype = htons(QAUL_FILEAVAILABLE_MESSAGE_TYPE);
+			memcpy(&fileavailable_msg.hash, file_item->hash, MAX_HASH_LEN);
+			memcpy(&fileavailable_msg.suffix, file_item->suffix, MAX_SUFFIX_LEN);
+			fileavailable_msg.filesize = htonl(file_item->size);
+
+			// set the ip address
+			// todo: ipv6
+			memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
+
+			Qaullib_UDP_SendFileavailabeMsg(&fileavailable_msg, &ip);
+		}
+	}
 }
 
 // ------------------------------------------------------------
 void Qaullib_IpcEvaluateExediscover(union olsr_message *msg)
 {
-/*
+	printf("Qaullib_IpcEvaluateExediscover\n");
+	/*
 	char buffer[10240];
 	char* stmt = buffer;
 	char *error_exec = NULL;
@@ -414,7 +404,8 @@ void Qaullib_IpcSend(union olsr_message *msg)
 	int size;
 	size = (int) ntohs(msg->v4.olsr_msgsize);
 
-	if (send(ipc_socket,(const char *)msg, size, MSG_NOSIGNAL) < 0) {
+	if (send(ipc_socket,(const char *)msg, size, MSG_NOSIGNAL) < 0)
+	{
 		printf("[qaullib] IPC connection lost!\n");
 		CLOSE(ipc_socket);
 		ipc_connected = 0;

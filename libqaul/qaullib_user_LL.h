@@ -18,30 +18,40 @@ extern "C" {
  */
 
 struct qaul_user_LL_item {
-	struct qaul_user_LL_item *next;           // next node
-	struct qaul_user_LL_item *prev;           // previous node
-	union olsr_ip_addr ip;                    // ip address
-	time_t             time;                  // time when last seen
-	float              lq;                    // link quality
-	char               name[MAX_USER_LEN +1]; // user name
-	char               icon[MAX_FILENAME_LEN +1]; // icon name
-	int                type;                  // type of user:
-	                                          // 0: unchecked
-	                                          // -1: error / infrastructure node
-                                              // 1: downloading
-	                                          // 2: known user
-	int                changed;               // this entry was changed:
-	                                          // 0: unchanged / online
-	                                          // 1: added or modified
-	                                          // 2: deleted
-											  // 3: cache (not online anymore, delete it after cache period expired)
-	int				   favorite;			  // user is favorite (don't delete it)
+	struct qaul_user_LL_item *next;           /// next node
+	struct qaul_user_LL_item *prev;           /// previous node
+	union olsr_ip_addr ip;                    /// ip address
+	time_t             time;                  /// time when last seen
+	float              lq;                    /// link quality
+	char               name[MAX_USER_LEN +1]; /// user name
+	char               icon[MAX_FILENAME_LEN +1]; /// icon name
+	int                type;                  /// type of user: see user types
+	int                changed;               /// changes for GUI notifications: see user changed
+	int				   favorite;			  /// user is favorite (don't delete it)
 };
 
 struct qaul_user_LL_node {
-	struct qaul_user_LL_item *item;           // this node
-	uint32_t                  index;          // where it is
+	struct qaul_user_LL_item *item;           /// link to the LL item
+	uint32_t                  index;          /// array index of the node
 };
+
+/**
+ * user types
+ * this definitions indicate the type and status of a user
+ */
+#define QAUL_USERTYPE_UNCHECKED   0 /// this user is unknown yet
+#define QAUL_USERTYPE_ERROR      -1 /// ERROR downloading, might be infrastructure node
+#define QAUL_USERTYPE_DOWNLOADING 1 /// trying to download the user name from this user
+#define QAUL_USERTYPE_KNOWN       2 /// known user
+
+/**
+ * user changed
+ * this definitions show wheter a update needs to be sent to the GUI
+ */
+#define QAUL_USERCHANGED_UNCHANGED 0 /// user is online and unchanged
+#define QAUL_USERCHANGED_MODIFIED  1 /// user was added or modified
+#define QAUL_USERCHANGED_DELETED   2 /// user unreachable (offline), needs to be deleted form GUI
+#define QAUL_USERCHANGED_CACHED    3 /// user is offline but user name is stored for a while
 
 /**
  * to be called once at startup to create linked list
@@ -62,6 +72,8 @@ void Qaullib_User_LL_Delete_Item (struct qaul_user_LL_item *item);
 
 /**
  * loops through the list and deletes all expired entries
+ * mark all clients older than 30 seconds as deleted
+ * remove all clients which are older than 5 minutes
  */
 void Qaullib_User_LL_Clean (void);
 
@@ -83,9 +95,14 @@ int  Qaullib_User_LL_IpExists (union olsr_ip_addr *ip);
 int  Qaullib_User_LL_IpSearch (union olsr_ip_addr *ip, struct qaul_user_LL_item **item);
 
 /**
- * creates initializes a @a node with the first entry of the user table
+ * initializes a @a node with the first entry of the user table
  */
 void Qaullib_User_LL_InitNode (struct qaul_user_LL_node *node);
+
+/**
+ * initializes a @a node of the user table according to the @a ip
+ */
+void Qaullib_User_LL_InitNodeWithIP(struct qaul_user_LL_node *node, union olsr_ip_addr *ip);
 
 /**
  * checks if there is a next item in the user table

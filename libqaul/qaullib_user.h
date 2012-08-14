@@ -34,7 +34,7 @@ struct qaul_user_connection
 struct qaul_user_connection userconnections[MAX_USER_CONNECTIONS];
 
 /**
- * initialize user tables
+ * initialize user table
  * called once in qaullib_init
  */
 void Qaullib_UserInit(void);

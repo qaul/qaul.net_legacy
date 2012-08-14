@@ -35,18 +35,20 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 	if(Qaullib_User_LL_IpSearch (ip, &user))
 	{
 		// if user exists: update lastseen_at
-		if(user->type < 2)
+		if(user->type < QAUL_USERTYPE_KNOWN)
 		{
 			// set user name
 			strncpy(user->name, name, MAX_USER_LEN);
 			memcpy(&user->name[MAX_USER_LEN], "\0", 1);
-			user->type = 2;
-			user->changed = 1;
+			user->type = QAUL_USERTYPE_KNOWN;
+			user->changed = QAUL_USERCHANGED_MODIFIED;
 		}
-		else if(user->changed >= 2)
+		else if(user->changed >= QAUL_USERCHANGED_DELETED)
 		{
-			if(user->changed == 2) user->changed = 0;
-			else user->changed = 1;
+			if(user->changed == QAUL_USERCHANGED_DELETED)
+				user->changed = QAUL_USERCHANGED_UNCHANGED;
+			else
+				user->changed = QAUL_USERCHANGED_MODIFIED;
 		}
 
 		user->time = time(NULL);
@@ -59,8 +61,8 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 		// set user name
 		strncpy(user->name, name, MAX_USER_LEN);
 		memcpy(&user->name[MAX_USER_LEN], "\0", 1);
-		user->type = 2;
-		user->changed = 1;
+		user->type = QAUL_USERTYPE_KNOWN;
+		user->changed = QAUL_USERCHANGED_MODIFIED;
 	}
 	return user_found;
 }
@@ -68,27 +70,32 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 // ------------------------------------------------------------
 void Qaullib_UserTouchIp(union olsr_ip_addr *ip)
 {
-	printf("Qaullib_UserTouchIp \n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_UserTouchIp \n");
 
 	struct qaul_user_LL_item *user;
 
 	// check if user exists in LL
 	if(Qaullib_User_LL_IpSearch (ip, &user))
 	{
-		printf("user exists \n");
+		if(QAUL_DEBUG)
+			printf("user exists \n");
 
 		// if user exists: update lastseen_at
-		if(user->changed >= 2)
+		if(user->changed >= QAUL_USERCHANGED_DELETED)
 		{
-			if(user->type == 2) user->changed = 1;
-			else user->changed = 0;
+			if(user->type == QAUL_USERTYPE_KNOWN)
+				user->changed = QAUL_USERCHANGED_MODIFIED;
+			else
+				user->changed = QAUL_USERCHANGED_UNCHANGED;
 		}
 
 		user->time = time(NULL);
 	}
 	else
 	{
-		printf("user does not exist, create it \n");
+		if(QAUL_DEBUG)
+			printf("user does not exist, create it \n");
 
 		// if user does not exist: create user
 		user = Qaullib_User_LL_Add (ip);
@@ -105,7 +112,7 @@ void Qaullib_UserCheckNonames(void)
 	Qaullib_User_LL_InitNode(&mynode);
 	while(Qaullib_User_LL_NextNode(&mynode))
 	{
-		if(mynode.item->type == 0)
+		if(mynode.item->type == QAUL_USERTYPE_UNCHECKED)
 			Qaullib_UserGetInfo(mynode.item);
 	}
 }
@@ -134,15 +141,15 @@ void Qaullib_UserGetInfo(struct qaul_user_LL_item *user)
 			{
 				if(Qaullib_WgetSendHeader(&userconnections[i].conn, "GET /pub_users HTTP/1.1\r\n\r\n"))
 				{
-					user->type = 1;
+					user->type = QAUL_USERTYPE_DOWNLOADING;
 				}
 				else
-					user->type = -1;
+					user->type = QAUL_USERTYPE_ERROR;
 			}
 			else
 			{
 				printf("[qaullib] connection error %i\n", success);
-				user->type = -1;
+				user->type = QAUL_USERTYPE_ERROR;
 			}
 
 			break;
@@ -165,8 +172,8 @@ void Qaullib_UserCheckSockets(void)
 			{
 				printf("[qaullib] user connection error\n");
 				// mark user as node
-				if(userconnections[i].user->type == 1)
-					userconnections[i].user->type = -1;
+				if(userconnections[i].user->type == QAUL_USERTYPE_DOWNLOADING)
+					userconnections[i].user->type = QAUL_USERTYPE_ERROR;
 			}
 			else if(bytes >= sizeof(struct qaul_userinfo_msg))
 			{
@@ -175,12 +182,12 @@ void Qaullib_UserCheckSockets(void)
 				if(memcmp(&userconnections[i].user->ip, &userconnections[i].conn.buf.userinfo.ip, sizeof(union olsr_ip_addr)) == 0)
 				{
 					printf("Qaullib_UserCheckSockets first is asked client\n");
-					if(userconnections[i].user->type == 1)
+					if(userconnections[i].user->type == QAUL_USERTYPE_DOWNLOADING)
 					{
 						strncpy(userconnections[i].user->name, userconnections[i].conn.buf.userinfo.name, MAX_USER_LEN);
 						memcpy(&userconnections[i].user->name[MAX_USER_LEN], "\0", 1);
-						userconnections[i].user->type = 2;
-						userconnections[i].user->changed = 1;
+						userconnections[i].user->type = QAUL_USERTYPE_KNOWN;
+						userconnections[i].user->changed = QAUL_USERCHANGED_MODIFIED;
 					}
 				}
 				else
@@ -225,12 +232,12 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 		printf("Qaullib_UserAddInfo user found in LL\n");
 
 		// check if it is already known
-		if(myuseritem->type < 2)
+		if(myuseritem->type < QAUL_USERTYPE_KNOWN)
 		{
 			printf("Qaullib_UserAddInfo name not known yet\n");
-			myuseritem->type = 2;
-			if(myuseritem->changed == 0)
-				myuseritem->changed = 1;
+			myuseritem->type = QAUL_USERTYPE_KNOWN;
+			if(myuseritem->changed == QAUL_USERCHANGED_UNCHANGED)
+				myuseritem->changed = QAUL_USERCHANGED_MODIFIED;
 		}
 		else
 			return;
@@ -241,9 +248,9 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 		// create the user if it doesn't exist
 		myuseritem = Qaullib_User_LL_Add (ip);
 		// set user to cache
-		myuseritem->changed = 3;
+		myuseritem->changed = QAUL_USERCHANGED_CACHED;
 	}
-	myuseritem->type = 2;
+	myuseritem->type = QAUL_USERTYPE_KNOWN;
 	// fill in name
 	strncpy(myuseritem->name, name, MAX_USER_LEN);
 	memcpy(&myuseritem->name[MAX_USER_LEN], "\0", 1);
@@ -348,9 +355,9 @@ void Qaullib_UserFavoritesDB2LL(void)
 	  }
 
 	  myitem = Qaullib_User_LL_Add(&myip);
-	  myitem->type = 2;
+	  myitem->type = QAUL_USERTYPE_KNOWN;
 	  myitem->favorite = 1;
-	  myitem->changed = 3;
+	  myitem->changed = QAUL_USERCHANGED_CACHED;
 
 	  // fill in rest
 	  for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)

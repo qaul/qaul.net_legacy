@@ -46,9 +46,11 @@ extern "C" {
 #include "sqlite/sqlite3.h"
 #include "qaullib_sql.h"
 #include "bstrlib/bstrlib.h"
+#include "qaullib_file_LL.h"
 #include "qaullib_filesharing.h"
 #include "qaullib_ipc.h"
 #include "qaullib_voip.h"
+#include "qaullib_udp_communication.h"
 
 #ifndef WIN32
 #include <unistd.h>             // close()

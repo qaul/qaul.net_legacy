@@ -39,18 +39,18 @@ static int Qaullib_FileCreateHashStr(char *filename, char *hashstr);
  * update file @a status for DB id @a dbid
  * @see qaullib_sql.h
  */
-static void Qaullib_FileUpdateStatus(int dbid, int status);
+static void Qaullib_FileUpdateStatus(struct qaul_file_LL_item *file_item, int status);
 
 /**
  * update file @a downloaded property for DB id @dbid
  * @see qaullib_sql.h
  */
-static void Qaullib_FileUpdateDownloaded(int dbid, int downloaded);
+static void Qaullib_FileUpdateDownloaded(struct qaul_file_LL_item *file_item, int downloaded);
 
 /**
  * update file @a size in Bytes for file with DB id @dbid
  */
-static void Qaullib_FileUpdateSize(int dbid, int size);
+static void Qaullib_FileUpdateSize(struct qaul_file_LL_item *file_item, int size);
 
 /**
  * create @a hash of @a filename
@@ -60,19 +60,34 @@ static void Qaullib_FileUpdateSize(int dbid, int size);
  */
 static int Qaullib_HashCreate(char *filename, unsigned char *hash);
 
-/**
- * create @a string from @a hash
- *
- * @retval 1 on success
- * @retval 0 on error
- */
-static int Qaullib_HashToString(unsigned char *hash, char *string);
+// ------------------------------------------------------------
+void Qaullib_FileInit(void)
+{
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileInit\n");
 
+	Qaullib_File_LL_Init();
+
+	// initialize the connection array
+	int i;
+	for(i=0; i<MAX_FILE_CONNECTIONS; i++)
+	{
+		fileconnections[i].conn.connected = 0;
+
+		// fill in socket defaults
+		// FIXME: ipv6
+		fileconnections[i].conn.ip.sin_family = AF_INET;
+		fileconnections[i].conn.ip.sin_port = htons(WEB_PORT);
+	}
+
+	// get the files from DB
+	Qaullib_FileDB2LL();
+}
 
 // ------------------------------------------------------------
 void Qaullib_FilePopulate(void)
 {
-	char buffer[10240];
+	char buffer[1024];
 	char *stmt = buffer;
 	char *error_exec=NULL;
 	int status, i;
@@ -83,18 +98,20 @@ void Qaullib_FilePopulate(void)
 	{
 		// check if the file exists
 		Qaullib_FileCreatePath(local_destiny, qaul_populate_file[i].hash, qaul_populate_file[i].suffix);
-		if(Qaullib_FileExists(local_destiny) == 0) status = 0;
-		else status = 2;
+		if(Qaullib_FileExists(local_destiny) == 0) status = QAUL_FILESTATUS_NEW;
+		else status = QAUL_FILESTATUS_MYFILE;
 
 		// write entry into DB
 		sprintf(stmt,
-				sql_file_set_all,
+				sql_file_add,
 				qaul_populate_file[i].hash,
 				qaul_populate_file[i].suffix,
 				qaul_populate_file[i].description,
 				qaul_populate_file[i].size,
 				status,
-				qaul_populate_file[i].type
+				qaul_populate_file[i].type,
+				"",
+				""
 				);
 		if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 		{
@@ -129,18 +146,92 @@ int Qaullib_FileExists(char *path)
 }
 
 // ------------------------------------------------------------
-int Qaullib_FileAdd(char *path, char *hashstr, char *suffix)
+int Qaullib_FileAdd(struct qaul_file_LL_item *file_item)
+{
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileAdd\n");
+
+	// check if file already exists
+	if(!Qaullib_File_LL_HashExists(file_item->hash))
+	{
+		if(QAUL_DEBUG)
+			printf("Hash does not exist: create file\n");
+
+		// add to DB
+		Qaullib_FileAdd2DB(file_item);
+
+		// add to LL
+		Qaullib_File_LL_Add(file_item);
+
+		return 1;
+	}
+
+	if(QAUL_DEBUG)
+		printf("Hash already exists: do not create the file\n");
+
+	return 0;
+}
+
+// ------------------------------------------------------------
+int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
+{
+	char buffer[1024];
+	char *stmt = buffer;
+	char *error_exec=NULL;
+	char myip[MAX_IP_LEN +1];
+
+	// create IP str
+	if(file_item->adv_validip)
+	{
+		// todo: ipv6
+		if(!inet_pton(AF_INET, myip, &file_item->adv_ip.v4))
+		{
+			sprintf(myip,"");
+		}
+	}
+	else
+		sprintf(myip,"");
+
+	// write into DB
+	sprintf(stmt,
+			sql_file_add,
+			file_item->hashstr,
+			file_item->suffix,
+			file_item->description,
+			file_item->size,
+			file_item->status,
+			file_item->type,
+			file_item->adv_name,
+			myip
+			);
+	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+	{
+		printf("SQLite error: %s\n",error_exec);
+		sqlite3_free(error_exec);
+		error_exec=NULL;
+	}
+
+	return 1;
+}
+
+// ------------------------------------------------------------
+int Qaullib_FileCopyNew(char *path, struct qaul_file_LL_item *file)
 {
 	int size;
 	char local_destiny[MAX_PATH_LEN +1];
 
-	printf("Qaullib_FileAdd\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileCopyNew\n");
 
     // create hash & suffix
-	if(!Qaullib_FileCreateHashStr(path, hashstr)) return 0;
-    Qaullib_FileGetSuffix(path, suffix);
+	if(!Qaullib_FileCreateHashStr(path, file->hashstr))
+		return 0;
+    // create hash from hashstr
+	Qaullib_StringToHash(file->hashstr, file->hash);
+	// extract the suffix
+    Qaullib_FileGetSuffix(path, file->suffix);
     // create destination filename
-    Qaullib_FileCreatePath(local_destiny, hashstr, suffix);
+    Qaullib_FileCreatePath(local_destiny, file->hashstr, file->suffix);
 
 	// copy file
     size = Qaullib_FileCopy(path, local_destiny);
@@ -152,93 +243,101 @@ int Qaullib_FileAdd(char *path, char *hashstr, char *suffix)
 // ------------------------------------------------------------
 void Qaullib_FileCheckScheduled(void)
 {
-	sqlite3_stmt *ppStmt;
-	int freesocket;
-	char *error_exec=NULL;
+	struct qaul_file_LL_node mynode;
+	Qaullib_File_LL_InitNode(&mynode);
 
-	printf("Qaullib_FileCheckScheduled ...\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileCheckScheduled\n");
 
-	// get scheduled files from database
-	if( sqlite3_prepare_v2(db, sql_file_get_scheduled, -1, &ppStmt, NULL) != SQLITE_OK )
+	// loop through files
+	while(Qaullib_File_LL_NextNode(&mynode))
 	{
-		printf("SQLite error [file scheduled]: %s\n",sqlite3_errmsg(db));
-	}
-	else
-	{
-		printf("loop through results\n");
-
-		while (sqlite3_step(ppStmt) == SQLITE_ROW)
+		if(mynode.item->status < QAUL_FILESTATUS_DOWNLOADED && mynode.item->status >= QAUL_FILESTATUS_NEW)
 		{
-			int jj, local_id, local_size, local_downloaded, ipv, validaddr;
-			char local_hash[MAX_HASHSTR_LEN +1];
-			char local_suffix[MAX_SUFFIX_LEN +1];
-			char local_ip[MAX_IP_LEN +1];
-			struct sockaddr_in saddr;
-			validaddr = 0;
-
-			printf("something found\n");
-
-			for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
+			if(mynode.item->status == QAUL_FILESTATUS_NEW)
 			{
-				if(strcmp(sqlite3_column_name(ppStmt, jj),"id") == 0)
+				Qaullib_FileSendDiscoveryMsg(mynode.item);
+			}
+			else if(mynode.item->status == QAUL_FILESTATUS_DISCOVERING)
+			{
+				// check if timeout expired
+				if(mynode.item->discovery_timestamp < time(NULL) -QAUL_FILEDISCOVERY_TIMEOUT)
 				{
-					local_id = sqlite3_column_int(ppStmt, jj);
-				}
-				else if(strcmp(sqlite3_column_name(ppStmt, jj),"adv_ip") == 0)
-				{
-					// check if ip is set
-					if(strlen((char *)sqlite3_column_text(ppStmt, jj)) > 4)
-					{
-						printf("adv_ip: %s \n", sqlite3_column_text(ppStmt, jj));
+					if(QAUL_DEBUG)
+						printf("file discovery timeout, resend discovery msg \n");
 
-						// TODO: ipv6
-						if(ipv == 6)
-						{
-							if ( inet_pton(AF_INET6, (char *)sqlite3_column_text(ppStmt, jj), &saddr.sin_addr) == 0 )
-								printf("inet_pton() ipv6 failed");
-							else validaddr = 1;
-							saddr.sin_family = AF_INET6;
-						}
-						else
-						{
-							if ( inet_pton(AF_INET, (char *)sqlite3_column_text(ppStmt, jj), &saddr.sin_addr) == 0 )
-								printf("inet_pton() ipv4 failed");
-							else validaddr = 1;
-							saddr.sin_family = AF_INET;
-						}
-					}
-				}
-				else if(strcmp(sqlite3_column_name(ppStmt, jj),"hash") == 0)
-				{
-					sprintf(local_hash, "%s", sqlite3_column_text(ppStmt, jj));
-				}
-				else if(strcmp(sqlite3_column_name(ppStmt, jj),"suffix") == 0)
-				{
-					sprintf(local_suffix, "%s", sqlite3_column_text(ppStmt, jj));
-				}
-				else if(strcmp(sqlite3_column_name(ppStmt, jj),"size") == 0)
-				{
-					local_size = sqlite3_column_int(ppStmt, jj);
-				}
-				else if(strcmp(sqlite3_column_name(ppStmt, jj),"downloaded") == 0)
-				{
-					local_downloaded = sqlite3_column_int(ppStmt, jj);
+					Qaullib_FileSendDiscoveryMsg(mynode.item);
 				}
 			}
-
-			if(validaddr > 0)
+			else if(mynode.item->status == QAUL_FILESTATUS_DISCOVERED)
 			{
-				printf("valid addr\n");
-				Qaullib_FileConnect(local_id, local_hash, local_suffix, local_size, local_downloaded, &saddr);
+				// connect it
+				Qaullib_FileConnect(mynode.item);
 			}
-			else printf("no valid addr\n");
+			else if(mynode.item->status == QAUL_FILESTATUS_DOWNLOADING)
+			{
+				// todo: check if timeout expired
+
+			}
 		}
-		sqlite3_finalize(ppStmt);
 	}
 }
 
 // ------------------------------------------------------------
-int Qaullib_FileDeleteById(int id)
+void Qaullib_FileSendDiscoveryMsg(struct qaul_file_LL_item *file_item)
+{
+	char buffer[1024];
+	int size;
+	union olsr_message *m;
+	m = (union olsr_message *)buffer;
+
+	if(QAUL_DEBUG)
+		printf("send file discovery message for: %s\n", file_item->hashstr);
+
+	// set time stamp change file status
+	file_item->discovery_timestamp = time(NULL);
+	file_item->status = QAUL_FILESTATUS_DISCOVERING;
+
+	// todo: ipv6
+	m->v4.olsr_msgtype = QAUL_FILEDISCOVER_MESSAGE_TYPE;
+	memcpy(&m->v4.message.filediscover.hash, &file_item->hash, MAX_HASH_LEN);
+
+	size  = sizeof(struct qaul_filediscover_msg);
+	size += sizeof(struct olsrmsg);
+	m->v4.olsr_msgsize = htons(size);
+
+	// send package
+	Qaullib_IpcSend(m);
+}
+
+// ------------------------------------------------------------
+void Qaullib_FileStopDownload(struct qaul_file_LL_item *file_item)
+{
+	int i;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileStopDownload\n");
+
+	for(i=0; i<MAX_FILE_CONNECTIONS; i++)
+	{
+		if(fileconnections[i].conn.connected)
+		{
+			if(fileconnections[i].fileinfo == file_item)
+			{
+				// deconnect
+				Qaullib_WgetClose(&fileconnections[i].conn);
+				if(fileconnections[i].conn.connected)
+				{
+					printf("Qaullib_FileStopDownload ERROR deconnecting file\n");
+					fileconnections[i].conn.connected = 0;
+				}
+			}
+		}
+	}
+}
+
+// ------------------------------------------------------------
+int Qaullib_FileDelete(struct qaul_file_LL_item *file_item)
 {
 	sqlite3_stmt *ppStmt;
 	char buffer[1024];
@@ -246,78 +345,181 @@ int Qaullib_FileDeleteById(int id)
 	char *error_exec=NULL;
 	int success = 0;
 	char path[MAX_PATH_LEN +1];
-	char myhash[MAX_HASHSTR_LEN +1];
-	char mysuffix[MAX_SUFFIX_LEN +1];
 
-	printf("Qaullib_FileDeleteById %i\n", id);
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileDelete\n");
 
-	// get file from DB
-	sprintf(stmt, sql_file_get_id, id);
-	if( sqlite3_prepare_v2(db, stmt, -1, &ppStmt, NULL) != SQLITE_OK )
-	{
-		printf("SQLite error: %s\n",sqlite3_errmsg(db));
-		return 0;
-	}
-	while (sqlite3_step(ppStmt) == SQLITE_ROW)
-	{
-		// For each collumn
-		int jj;
-		for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
-		{
-			if(strcmp(sqlite3_column_name(ppStmt,jj), "hash") == 0)
-			{
-				sprintf(myhash,"%s",sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "suffix") == 0)
-			{
-				sprintf(mysuffix,"%s",sqlite3_column_text(ppStmt, jj));
-			}
-		}
-	  	// create path
-		strcpy(path, webPath);
-		strcat(path, PATH_SEPARATOR);
-		strcat(path, "files");
-		strcat(path, PATH_SEPARATOR);
-		strcat(path, myhash);
-		if(strlen(mysuffix) > 0)
-		{
-			strcat(path, ".");
-			strcat(path, mysuffix);
-		}
-	}
-	sqlite3_finalize(ppStmt);
+	// FIXME: check if file is scheduled
+	// unschedule the file
+	Qaullib_FileStopDownload(file_item);
 
-	// mark file in DB as deleted
-	sprintf(stmt, sql_file_update_status, -2, id);
+  	// create path
+	Qaullib_FileCreatePath(path, file_item->hashstr, file_item->suffix);
+	// delete file from HD
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileDelete delete file: %s\n", path);
+	if(remove(path) == -1)
+		printf("Qaullib_FileDelete ERROR file couldn't be deleted\n", path);
+
+	// delete from DB
+	sprintf(stmt, sql_file_delete_hash, file_item->hashstr);
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		// execution failed
 		printf("SQLite error: %s\n",error_exec);
 		sqlite3_free(error_exec);
 		error_exec=NULL;
-		return 0;
 	}
 
-	// delete file
-	printf("[qaullib] delete file: %s\n", path);
-	if(remove(path) == -1) success = 0;
-	else success = 1;
+	// empty the discovery entries
+	Qaullib_Filediscovery_LL_EmptyList(file_item);
+
+	// mark file in LL as deleted
+	file_item->status = QAUL_FILESTATUS_DELETED;
+	file_item->gui_notify = 1;
 
 	return success;
+}
+
+// ------------------------------------------------------------
+void Qaullib_FileDB2LL(void)
+{
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileDB2LL\n");
+
+	sqlite3_stmt *ppStmt;
+	char *error_exec=NULL;
+	struct qaul_file_LL_item myitem;
+	char myhashstr[MAX_HASHSTR_LEN +1];
+
+	// Select rows from database
+	if( sqlite3_prepare_v2(db, sql_file_get_everything, -1, &ppStmt, NULL) != SQLITE_OK )
+	{
+		printf("SQLite error: %s\n",sqlite3_errmsg(db));
+		return;
+	}
+
+	while (sqlite3_step(ppStmt) == SQLITE_ROW)
+	{
+		myitem.adv_validip = 0;
+
+		// For each column
+		int jj;
+		for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
+		{
+		    if(strcmp(sqlite3_column_name(ppStmt,jj), "id") == 0)
+			{
+		    	myitem.id = sqlite3_column_int(ppStmt, jj);
+			}
+		    if(strcmp(sqlite3_column_name(ppStmt,jj), "type") == 0)
+			{
+		    	myitem.type = sqlite3_column_int(ppStmt, jj);
+			}
+			else if(strcmp(sqlite3_column_name(ppStmt,jj), "hash") == 0)
+			{
+				sprintf(myitem.hashstr, "%s", sqlite3_column_text(ppStmt, jj));
+				if(!Qaullib_StringToHash(myitem.hashstr, myitem.hash))
+					printf("ERROR: Qaullib_StringToHash conversion failed! \n");
+			}
+			else if(strcmp(sqlite3_column_name(ppStmt,jj), "size") == 0)
+			{
+		    	myitem.size = sqlite3_column_int(ppStmt, jj);
+			}
+			else if(strcmp(sqlite3_column_name(ppStmt,jj), "suffix") == 0)
+			{
+				sprintf(myitem.suffix, "%s", sqlite3_column_text(ppStmt, jj));
+			}
+			else if(strcmp(sqlite3_column_name(ppStmt,jj), "description") == 0)
+			{
+				sprintf(myitem.description, "%s", sqlite3_column_text(ppStmt, jj));
+			}
+			else if(strcmp(sqlite3_column_name(ppStmt,jj), "created_at") == 0)
+			{
+		    	sprintf(myitem.created_at, "%s", sqlite3_column_text(ppStmt, jj));
+			}
+			else if(strcmp(sqlite3_column_name(ppStmt,jj), "status") == 0)
+			{
+		    	myitem.status = sqlite3_column_int(ppStmt, jj);
+			}
+			else if(strcmp(sqlite3_column_name(ppStmt,jj), "downloaded") == 0)
+			{
+		    	myitem.downloaded = sqlite3_column_int(ppStmt, jj);
+			}
+
+		    // todo: to be removed
+			else if(strcmp(sqlite3_column_name(ppStmt,jj), "adv_name") == 0)
+			{
+				sprintf(myitem.adv_name, "%s", sqlite3_column_text(ppStmt, jj));
+			}
+			else if(strcmp(sqlite3_column_name(ppStmt,jj), "adv_ip") == 0)
+			{
+				memset(&myitem.adv_ip, 0, sizeof(myitem.adv_ip));
+				// check if ip is set
+				if(strlen((char *)sqlite3_column_text(ppStmt, jj)) > 4)
+				{
+					// TODO: ipv6
+					if ( inet_pton(AF_INET, (char *)sqlite3_column_text(ppStmt, jj), &myitem.adv_ip.v4) == 0 )
+						printf("inet_pton() ipv4 failed");
+					else
+						myitem.adv_validip = 1;
+				}
+			}
+		}
+
+		// add it to LL
+		Qaullib_File_LL_Add(&myitem);
+	}
+	sqlite3_finalize(ppStmt);
 }
 
 
 // ------------------------------------------------------------
 // helper functions
 // ------------------------------------------------------------
-static void Qaullib_FileUpdateStatus(int dbid, int status)
+static void Qaullib_FileUpdateStatus(struct qaul_file_LL_item *file_item, int status)
 {
-	char buffer[10240];
+	char buffer[1024];
 	char *stmt = buffer;
 	char *error_exec=NULL;
 
-	// set username
-	sprintf(stmt, sql_file_update_status, status, dbid);
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileUpdateStatus\n");
+
+	file_item->status = status;
+	file_item->gui_notify = 1;
+
+	if(
+		status == QAUL_FILESTATUS_DOWNLOADED ||
+		status == QAUL_FILESTATUS_ERROR
+		)
+	{
+		sprintf(stmt, sql_file_update_status, status, file_item->hashstr);
+
+		if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+		{
+			printf("SQLite error: %s\n",error_exec);
+			sqlite3_free(error_exec);
+			error_exec=NULL;
+		}
+	}
+
+	printf("Qaullib_FileUpdateStatus finished\n");
+}
+
+// ------------------------------------------------------------
+static void Qaullib_FileUpdateDownloaded(struct qaul_file_LL_item *file_item, int downloaded)
+{
+	char buffer[1024];
+	char *stmt = buffer;
+	char *error_exec=NULL;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileUpdateDownloaded\n");
+
+	file_item->downloaded = downloaded;
+	file_item->gui_notify = 1;
+
+	sprintf(stmt, sql_file_update_downloaded, downloaded, file_item->hashstr);
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		printf("SQLite error: %s\n",error_exec);
@@ -327,31 +529,19 @@ static void Qaullib_FileUpdateStatus(int dbid, int status)
 }
 
 // ------------------------------------------------------------
-static void Qaullib_FileUpdateDownloaded(int dbid, int downloaded)
+static void Qaullib_FileUpdateSize(struct qaul_file_LL_item *file_item, int size)
 {
-	char buffer[10240];
+	char buffer[1024];
 	char *stmt = buffer;
 	char *error_exec=NULL;
 
-	// set username
-	sprintf(stmt, sql_file_update_downloaded, downloaded, dbid);
-	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
-	{
-		printf("SQLite error: %s\n",error_exec);
-		sqlite3_free(error_exec);
-		error_exec=NULL;
-	}
-}
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileUpdateSize\n");
 
-// ------------------------------------------------------------
-static void Qaullib_FileUpdateSize(int dbid, int size)
-{
-	char buffer[10240];
-	char *stmt = buffer;
-	char *error_exec=NULL;
+	file_item->size = size;
+	file_item->gui_notify = 1;
 
-	// set username
-	sprintf(stmt, sql_file_update_size, size, dbid);
+	sprintf(stmt, sql_file_update_size, size, file_item->hashstr);
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		printf("SQLite error: %s\n",error_exec);
@@ -376,152 +566,134 @@ void Qaullib_FileCreatePath(char *filepath, char *hash, char *suffix)
 }
 
 // ------------------------------------------------------------
-int Qaullib_FileAvailable(char *hash, char *suffix, int startbyte, struct qaul_file *file)
+int Qaullib_FileAvailable(char *hashstr, char *suffix, struct qaul_file_LL_item **file_item)
 {
-	// TODO: loop through file list
-	// for now get everything from DB
-	sqlite3_stmt *ppStmt;
-	char buffer[1024];
-	char* stmt = buffer;
-	char *error_exec=NULL;
-	int success = 0;
+	unsigned char hash[MAX_HASH_LEN];
+	struct qaul_file_LL_item *found_file_item;
 
-	printf("Qaullib_FileAvailable? hash %s\n", hash);
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileAvailable\n");
 
-	// Select row from database
-	sprintf(stmt, sql_file_get_hash, hash);
-	if( sqlite3_prepare_v2(db, stmt, -1, &ppStmt, NULL) != SQLITE_OK )
+	// convert hashstr to hash
+	if(Qaullib_StringToHash(hashstr, hash))
 	{
-		printf("SQLite error: %s\n",sqlite3_errmsg(db));
-	}
+		// loop through file list
+		if(Qaullib_File_LL_HashSearch(hash, &found_file_item))
+		{
+			printf("Qaullib_FileAvailable 2\n");
 
-	// there should only be one row
-	while (sqlite3_step(ppStmt) == SQLITE_ROW)
-	{
-	  // For each column
-	  int jj;
-	  for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
-	  {
-		    if(strcmp(sqlite3_column_name(ppStmt,jj), "id") == 0)
+			// check if file has finished downloading
+			if(
+				strncmp(suffix, found_file_item->suffix, sizeof(suffix)) == 0 &&
+				found_file_item->status >= QAUL_FILESTATUS_DOWNLOADED
+				)
 			{
-		    	file->id = sqlite3_column_int(ppStmt, jj);
+				printf("QFA file found: %s\n", found_file_item->hashstr);
+				printf("QFA file suffix: %s\n", found_file_item->suffix);
+
+				*file_item = found_file_item;
+				return 1;
 			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "hash") == 0)
-			{
-		    	//strcpy(file->hash, sqlite3_column_text(ppStmt, jj));
-		    	sprintf(file->hash,"%s",sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "suffix") == 0)
-			{
-				//strcpy(file->suffix, sqlite3_column_text(ppStmt, jj));
-				sprintf(file->suffix,"%s",sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "description") == 0)
-			{
-				//strcpy(file->description, sqlite3_column_text(ppStmt, jj));
-				sprintf(file->description,"%s",sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "size") == 0)
-			{
-		    	file->size = sqlite3_column_int(ppStmt, jj);
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "status") == 0)
-			{
-				file->status = sqlite3_column_int(ppStmt, jj);
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "created_at") == 0)
-			{
-		    	file->created_at = sqlite3_column_int(ppStmt, jj);
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "adv_ip") == 0)
-			{
-		    	// convert to ip
-				// todo: make ipv6
-				file->adv_ip.sin_family = AF_INET;
-				file->adv_ip.sin_port = htons(WEB_PORT);
-				if(file->status == 4 || file->status < 0)
-					inet_pton(AF_INET, "127.0.0.1", &file->adv_ip.sin_addr); // numeric IP only
-				else
-					inet_pton(AF_INET, (char *)sqlite3_column_text(ppStmt, jj), &file->adv_ip.sin_addr); // numeric IP only
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "downloaded") == 0)
-			{
-		    	file->downloaded = sqlite3_column_int(ppStmt, jj);
-			}
-	  }
-	  success = 1;
-	  printf("[qaullib] file found in db\n");
+		}
 	}
-	sqlite3_finalize(ppStmt);
-	return success;
+	return 0;
 }
 
 // ------------------------------------------------------------
-void Qaullib_FileConnect(int dbid, char *hash, char *suffix, int filesize, int downloaded, struct sockaddr_in *saddr)
+void Qaullib_FileConnect(struct qaul_file_LL_item *file_item)
 {
 	int i, success;
-	printf("[qaullib] Qaullib_FileConnect %s\n", hash);
+	struct sockaddr_in saddr;
+	union olsr_ip_addr *ip;
+	char buffer[1024];
+	char *header;
+	header = buffer;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileConnect %s\n", file_item->hashstr);
 
 	// check for file if there is a free connection
 	for(i=0; i<MAX_FILE_CONNECTIONS; i++)
 	{
 		if(fileconnections[i].conn.connected == 0)
 		{
-			printf("[qaullib] i %i to connect\n", i);
+			if(QAUL_DEBUG)
+				printf("Qaullib_FileConnect connection %i\n", i);
 
-			// fill in connection info
-			fileconnections[i].conn.bufpos = 0;
-			fileconnections[i].id = dbid;
-			fileconnections[i].filesize = filesize;
-			fileconnections[i].downloaded = downloaded;
-
-			// fill in address
-			saddr->sin_port = htons(WEB_PORT);
-			memcpy(&fileconnections[i].conn.ip, saddr, sizeof(struct sockaddr_in));
-
-			// fill in additional info
-			memcpy(&fileconnections[i].hash, hash, MAX_HASHSTR_LEN);
-			memcpy(&fileconnections[i].hash[MAX_HASHSTR_LEN], "\0", 1);
-			memcpy(&fileconnections[i].suffix, suffix, MAX_SUFFIX_LEN);
-			memcpy(&fileconnections[i].suffix[MAX_SUFFIX_LEN], "\0", 1);
-
-			// TODO: search better connection
-			// connect
-			success = Qaullib_WgetConnect(&fileconnections[i].conn);
-
-			// send http header
-			if(success == 1)
+			// get best seeder
+			if(Qaullib_Filediscovery_LL_GetBestSeeder(file_item, &ip))
 			{
-				char buffer[1024];
-				char *header = buffer;
-				sprintf(header, "GET /pub_filechunk?h=%s&s=%s&c=%i&e=1 HTTP/1.1\r\n\r\n", hash, suffix, downloaded);
-				success = Qaullib_WgetSendHeader(&fileconnections[i].conn, header);
-				if(success)
+				printf("Qaullib_FileConnect 1\n", i);
+
+				if(QAUL_DEBUG)
 				{
-					Qaullib_FileUpdateStatus(dbid, 1);
-
-					// open file for writing
-					char local_filepath[MAX_PATH_LEN +1];
-					Qaullib_FileCreatePath(local_filepath, hash, suffix);
-					fileconnections[i].file = fopen(local_filepath, "wb");
-					if(fileconnections[i].file == NULL)
-						success = 0;
-					else
-						fseek(fileconnections[i].file, downloaded, SEEK_SET);
+					char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
+					inet_ntop(AF_INET, &ip->v4, (char *)&ipbuf, MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN));
+					printf("Qaullib_FileConnect seeder found %s\n", ipbuf);
 				}
-			}
 
-			if(success == 0)
-			{
-				printf("[qaullib] connection error %i\n", success);
-				Qaullib_WgetClose(&fileconnections[i].conn);
-				Qaullib_FileUpdateStatus(dbid, -1);
+				// link file
+				fileconnections[i].fileinfo = file_item;
+				// fill in connection info
+				fileconnections[i].conn.bufpos = 0;
+
+				// fill in address
+				// todo: ipv6
+				saddr.sin_family = AF_INET;
+				memcpy(&saddr.sin_addr, &ip->v4, sizeof(ip->v4));
+				saddr.sin_port = htons(WEB_PORT);
+				memcpy(&fileconnections[i].conn.ip, &saddr, sizeof(struct sockaddr_in));
+
+				// connect
+				if(Qaullib_WgetConnect(&fileconnections[i].conn))
+				{
+					// send http header
+					sprintf(
+							header,
+							"GET /pub_filechunk?h=%s&s=%s&c=%i&e=1 HTTP/1.1\r\n\r\n",
+							fileconnections[i].fileinfo->hashstr,
+							fileconnections[i].fileinfo->suffix,
+							fileconnections[i].fileinfo->downloaded);
+
+					if(Qaullib_WgetSendHeader(&fileconnections[i].conn, header))
+					{
+						// open file for writing
+						char local_filepath[MAX_PATH_LEN +1];
+						Qaullib_FileCreatePath(local_filepath, fileconnections[i].fileinfo->hashstr, fileconnections[i].fileinfo->suffix);
+						fileconnections[i].file = fopen(local_filepath, "wb");
+
+						if(fileconnections[i].file != NULL)
+						{
+							fseek(fileconnections[i].file, fileconnections[i].fileinfo->downloaded, SEEK_SET);
+							Qaullib_FileUpdateStatus(fileconnections[i].fileinfo, QAUL_FILESTATUS_DOWNLOADING);
+							return;
+						}
+						else
+						{
+							if(QAUL_DEBUG)
+								printf("Qaullib_FileConnect file connection failed\n");
+
+							Qaullib_FileEndFailedConnection(&fileconnections[i]);
+						}
+					}
+					else
+					{
+						if(QAUL_DEBUG)
+							printf("Qaullib_FileConnect sending header failed\n");
+
+						Qaullib_FileEndFailedConnection(&fileconnections[i]);
+					}
+				}
+				else
+				{
+					printf("Qaullib_FileConnect connection error\n");
+					Qaullib_FileEndFailedConnection(&fileconnections[i]);
+				}
 			}
 			else
 			{
-				printf("successfully connected to download %s\n", hash);
+				Qaullib_FileUpdateStatus(fileconnections[i].fileinfo, QAUL_FILESTATUS_NEW);
 			}
-
 			break;
 		}
 	}
@@ -530,7 +702,8 @@ void Qaullib_FileConnect(int dbid, char *hash, char *suffix, int filesize, int d
 // ------------------------------------------------------------
 void Qaullib_FileCheckSockets(void)
 {
-	int i, bytes, type, filesize, chunksize, success;
+	int i, bytes, type, chunksize, success;
+
 	// check file sockets
 	for(i=0; i<MAX_FILE_CONNECTIONS; i++)
 	{
@@ -542,45 +715,36 @@ void Qaullib_FileCheckSockets(void)
 
 			if(bytes > 0)
 			{
-				printf("[qaullib] check sockets: bytes %i\n", bytes);
+				printf("Qaullib_FileCheckSockets %i: bytes %i\n", i, bytes);
 
 				if(fileconnections[i].conn.received == 0 && bytes >= sizeof(struct qaul_filechunk_msg))
 				{
 					// get file message type
 					type = ntohl(fileconnections[i].conn.buf.filechunk.type);
-					printf("[qaullib] type %i\n", type);
+					printf("Qaullib_FileCheckSockets type %i\n", type);
 
 					if(type == 1)
 					{
-						// get file size
-						filesize = ntohl(fileconnections[i].conn.buf.filechunk.filesize);
-						if(fileconnections[i].filesize > 0 && fileconnections[i].downloaded > 0)
+						if(Qaullib_FileCompairFileSize(&fileconnections[i], ntohl(fileconnections[i].conn.buf.filechunk.filesize)))
 						{
-							// check if file size matches
-							if(fileconnections[i].filesize != filesize) success = 0;
+							// get chunk size
+							fileconnections[i].chunksize = ntohl(fileconnections[i].conn.buf.filechunk.chunksize);
+
+							printf("[qaullib] file download: %s, filesize %i, chunksize %i\n", fileconnections[i].fileinfo->hashstr, fileconnections[i].fileinfo->size, fileconnections[i].chunksize);
+
+							// write chunk into file
+							fwrite(&fileconnections[i].conn.buf.buf[sizeof(struct qaul_filechunk_msg)], bytes -sizeof(struct qaul_filechunk_msg), 1, fileconnections[i].file);
+							fileconnections[i].conn.received += bytes -sizeof(struct qaul_filechunk_msg);
+							fileconnections[i].conn.bufpos = 0;
 						}
 						else
-						{
-							// write file size into db
-							fileconnections[i].filesize = filesize;
-						}
-
-						// get chunk size
-						fileconnections[i].chunksize = ntohl(fileconnections[i].conn.buf.filechunk.chunksize);
-
-						printf("[qaullib] file download: id %i, filesize %i, chunksize %i\n", fileconnections[i].id, fileconnections[i].filesize, fileconnections[i].chunksize);
-
-						// write chunk into file
-			        	fwrite(&fileconnections[i].conn.buf.buf[sizeof(struct qaul_filechunk_msg)], bytes -sizeof(struct qaul_filechunk_msg), 1, fileconnections[i].file);
-			        	fileconnections[i].conn.received += bytes -sizeof(struct qaul_filechunk_msg);
-			        	fileconnections[i].conn.bufpos = 0;
+							Qaullib_FileEndFailedConnection(&fileconnections[i]);
 					}
 					else
 					{
-						// was unsuccessful
-						// todo: reschedule file
-						printf("[qaullib] file download failed: bytes %i msg-type %i id %i\n", bytes, type, fileconnections[i].id);
-						success = 0;
+						printf("Qaullib_FileCheckSockets file download failed: bytes %i msg-type %i %s\n", bytes, type, fileconnections[i].fileinfo->hashstr);
+						// end download
+						Qaullib_FileEndFailedConnection(&fileconnections[i]);
 					}
 				}
 				else if(fileconnections[i].conn.received > 0)
@@ -596,44 +760,89 @@ void Qaullib_FileCheckSockets(void)
 				}
 
 				// check if chunk finished downloading
-	        	if(fileconnections[i].chunksize > 0 && fileconnections[i].chunksize <= fileconnections[i].conn.received)
+	        	if(
+	        			fileconnections[i].conn.connected &&
+	        			fileconnections[i].chunksize > 0 &&
+	        			fileconnections[i].chunksize <= fileconnections[i].conn.received
+	        			)
 	        	{
 	        		fclose(fileconnections[i].file);
 	        		Qaullib_WgetClose(&fileconnections[i].conn);
 
 	        		// update downloaded
-	        		fileconnections[i].downloaded += fileconnections[i].chunksize;
-	        		Qaullib_FileUpdateDownloaded(fileconnections[i].id, fileconnections[i].downloaded);
-
+	        		fileconnections[i].fileinfo->downloaded += fileconnections[i].chunksize;
+	        		Qaullib_FileUpdateDownloaded(fileconnections[i].fileinfo, fileconnections[i].fileinfo->downloaded);
 
 	        		// mark as successfully downloaded
-	        		if(fileconnections[i].downloaded >= fileconnections[i].filesize)
+	        		if(fileconnections[i].fileinfo->downloaded >= fileconnections[i].fileinfo->size)
 	        		{
-						printf("[qaullib] download finished! filesize %i, downloaded %i\n", fileconnections[i].filesize, fileconnections[i].downloaded);
-	        			Qaullib_FileUpdateStatus(fileconnections[i].id, 2);
+						// todo: check if file hash matches!
+	        			printf("Qaullib_FileCheckSockets download finished! filesize %i, downloaded %i\n", fileconnections[i].fileinfo->size, fileconnections[i].fileinfo->downloaded);
+	        			Qaullib_FileUpdateStatus(fileconnections[i].fileinfo, QAUL_FILESTATUS_DOWNLOADED);
 	        		}
 	        		// todo: otherwise reschedule for next download
 	        	}
 
 			}
-			else if(bytes == 0) success = 0;
-
-			if(success == 0)
+			else if(bytes == 0)
 			{
 				printf("Qaullib_FileCheckSockets success == 0\n");
+				Qaullib_FileEndFailedConnection(&fileconnections[i]);
+			}
+			else
+			{
+				printf("Qaullib_FileCheckSockets bytes = %i\n", bytes);
+				printf("Qaullib_FileCheckSockets download failed! filesize %i, downloaded %i\n", fileconnections[i].fileinfo->size, fileconnections[i].fileinfo->downloaded);
 
-				// an error occurred, take measures
-				// todo: reschedule
-				// search for hosts
-				// connect to host
-
-				// mark file as download failure
-				Qaullib_FileUpdateStatus(fileconnections[i].id, -1);
-		        // close file
-		        fclose(fileconnections[i].file);
 			}
 		}
 	}
+}
+
+// ------------------------------------------------------------
+int Qaullib_FileCompairFileSize(struct qaul_file_connection *fileconnection, int filesize)
+{
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileCompairFileSize\n");
+
+	if(fileconnection->fileinfo->size > 0 && fileconnection->fileinfo->downloaded > 0)
+	{
+		// check if file size matches
+		if(fileconnection->fileinfo->size != filesize)
+		{
+			if(QAUL_DEBUG)
+				printf("Qaullib_FileCheckSockets file sizes didn't mach: %i != %i\n", fileconnection->fileinfo->size, filesize);
+
+			return 0;
+		}
+		else
+			return 1;
+	}
+	else
+	{
+		Qaullib_FileUpdateSize(fileconnection->fileinfo, filesize);
+	}
+	return 1;
+}
+
+// ------------------------------------------------------------
+void Qaullib_FileEndFailedConnection(struct qaul_file_connection *fileconnection)
+{
+	union olsr_ip_addr ip;
+
+	if(QAUL_DEBUG)
+    	printf("Qaullib_FileEndFailedConnection\n");
+
+	// close file
+	if(fileconnection->file != NULL)
+		fclose(fileconnection->file);
+	// close connection
+	Qaullib_WgetClose(&fileconnection->conn);
+	// remove this seeder from list
+	memcpy(&ip.v4, &fileconnection->conn.ip, sizeof(ip.v4));
+	Qaullib_Filediscovery_LL_DeleteSeederIp(fileconnection->fileinfo, &ip);
+	// reschedule file
+	Qaullib_FileUpdateStatus(fileconnection->fileinfo, QAUL_FILESTATUS_DISCOVERED);
 }
 
 // ------------------------------------------------------------
@@ -641,7 +850,8 @@ void Qaullib_FileCheckSockets(void)
 // ------------------------------------------------------------
 static int Qaullib_FileCopy(const char* origin, const char* destiny)
 {
-	printf("Qaullib_FileCopy %s -> %s\n", origin, destiny);
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileCopy %s -> %s\n", origin, destiny);
 
 	size_t filesize = 0;
 	size_t len = 0 ;
@@ -673,7 +883,8 @@ static int Qaullib_FileCopy(const char* origin, const char* destiny)
 // ------------------------------------------------------------
 static int Qaullib_FileGetSuffix(char *filename, char *suffix)
 {
-	printf("Qaullib_FileGetSuffix\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileGetSuffix\n");
 
 	// is there a dot?
 	char *local_suffix = strrchr(filename, '.');
@@ -693,15 +904,14 @@ static int Qaullib_FileGetSuffix(char *filename, char *suffix)
 // ------------------------------------------------------------
 static int Qaullib_FileCreateHashStr(char *filename, char *hashstr)
 {
-	printf("Qaullib_FileCreateHashStr\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileCreateHashStr\n");
 
 	unsigned char local_hash[MAX_HASH_LEN];
     // create hash
     if(!Qaullib_HashCreate(filename, local_hash)) return 0;
-    printf("hashcreation survived\n");
     // convert binary to hex encoding
     if(!Qaullib_HashToString(local_hash, hashstr)) return 0;
-    printf("hashtostring survived\n");
     return 1;
 }
 
@@ -710,7 +920,9 @@ static int Qaullib_FileCreateHashStr(char *filename, char *hashstr)
 // ------------------------------------------------------------
 static int Qaullib_HashCreate(char *filename, unsigned char *hash)
 {
-	printf("Qaullib_HashCreate\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_HashCreate\n");
+
 	int ret = polarssl_sha1_file( filename, hash );
 	if(ret == 1) fprintf( stderr, "[qaullib] failed to open: %s\n", filename );;
 	if(ret == 2) fprintf( stderr, "[qaullib] failed to open: %s\n", filename );;
@@ -719,13 +931,76 @@ static int Qaullib_HashCreate(char *filename, unsigned char *hash)
 }
 
 // ------------------------------------------------------------
-static int Qaullib_HashToString(unsigned char *hash, char *string)
+int Qaullib_HashToString(unsigned char *hash, char *string)
 {
-	printf("Qaullib_HashToString\n");
 	int i;
-	for(i=0;i<20;i++)
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_HashToString\n");
+
+	// FIXME: big-endian / little-endian
+	for(i=0;i<MAX_HASH_LEN;i++)
 	{
 		sprintf(string+(i*2),"%02x",hash[i]);
+	}
+	return 1;
+}
+
+// ------------------------------------------------------------
+int Qaullib_StringToHash(char *string, unsigned char *hash)
+{
+	int i, j;
+	uint8_t mybyte;
+
+	// fill hash with zeros
+	memset(hash, 0, MAX_HASH_LEN);
+
+	for(i=0;i<MAX_HASH_LEN;i++)
+	{
+		mybyte = 0;
+
+		for(j=0;j<2;j++)
+		{
+			if(strncmp(string+i*2+j,"0",1)==0)
+				mybyte |= 0;
+			else if(strncmp(string+i*2+j,"1",1)==0)
+				mybyte |= 1;
+			else if(strncmp(string+i*2+j,"2",1)==0)
+				mybyte |= 2;
+			else if(strncmp(string+i*2+j,"3",1)==0)
+				mybyte |= 3;
+			else if(strncmp(string+i*2+j,"4",1)==0)
+				mybyte |= 4;
+			else if(strncmp(string+i*2+j,"5",1)==0)
+				mybyte |= 5;
+			else if(strncmp(string+i*2+j,"6",1)==0)
+				mybyte |= 6;
+			else if(strncmp(string+i*2+j,"7",1)==0)
+				mybyte |= 7;
+			else if(strncmp(string+i*2+j,"8",1)==0)
+				mybyte |= 8;
+			else if(strncmp(string+i*2+j,"9",1)==0)
+				mybyte |= 9;
+			else if(strncmp(string+i*2+j,"a",1)==0 || strncmp(string+i*2+j,"A",1)==0)
+				mybyte |= 10;
+			else if(strncmp(string+i*2+j,"b",1)==0 || strncmp(string+i*2+j,"B",1)==0)
+				mybyte |= 11;
+			else if(strncmp(string+i*2+j,"c",1)==0 || strncmp(string+i*2+j,"C",1)==0)
+				mybyte |= 12;
+			else if(strncmp(string+i*2+j,"d",1)==0 || strncmp(string+i*2+j,"D",1)==0)
+				mybyte |= 13;
+			else if(strncmp(string+i*2+j,"e",1)==0 || strncmp(string+i*2+j,"E",1)==0)
+				mybyte |= 14;
+			else if(strncmp(string+i*2+j,"f",1)==0 || strncmp(string+i*2+j,"F",1)==0)
+				mybyte |= 15;
+			else
+				return 0;
+
+			if(j==0)
+				mybyte = mybyte << 4;
+			else
+				memcpy(hash+i, &mybyte, 1);
+		}
 	}
 	return 1;
 }

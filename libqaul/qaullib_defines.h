@@ -12,7 +12,7 @@ extern "C" {
 
 
 #define TIMEOUT_LASTRECEIVED 20
-#define TIMEOUT_CONNECTED    60
+#define TIMEOUT_CONNECTED   600
 
 #define MAX_SUFFIX_LEN        4
 #define MAX_DESCRIPTION_LEN  80
@@ -23,6 +23,7 @@ extern "C" {
 #define MAX_LOCALE_LEN        6
 #define MAX_VARCHAR_LEN     255
 #define MAX_URL_LEN         512
+#define MAX_TIME_LEN         20
 
 #define FLAG_EXE_WIN7      0x01
 #define FLAG_EXE_OSX105    0x02
@@ -51,8 +52,11 @@ extern "C" {
 #define CHAT_PORT          "8081"
 #define WEB_PORT             8081
 #define VOIP_PORT            8060
+#define UDP_PORT             8083
 #define MAX_USER_CONNECTIONS    3
 #define MAX_FILE_CONNECTIONS    5
+
+#define QAUL_FILEDISCOVERY_TIMEOUT 60
 
 
 struct qaul_userinfo_msg
@@ -65,14 +69,16 @@ struct qaul_userinfo_msg
 
 struct qaul_fileavailable_msg
 {
-	char     hash[MAX_HASH_LEN];
-	char     suffix[MAX_SUFFIX_LEN];
-	uint32_t filesize;
+	uint16_t  msgtype;
+	char      hash[MAX_HASH_LEN];
+	char      suffix[MAX_SUFFIX_LEN];
+	uint32_t  filesize;
 };
 
 // todo: cluster exeavailable messages
 struct qaul_exeavailable_msg
 {
+	uint16_t msgtype;
 	uint32_t platform;
 	char     hash[MAX_HASH_LEN];
 	char     suffix[MAX_SUFFIX_LEN];
@@ -103,6 +109,7 @@ struct qaul_exeavailable_msg
 #define QAUL_EXEDISCOVER_PARSER_TYPE    QAUL_EXEDISCOVER_MESSAGE_TYPE
 #define QAUL_EXEAVAILABLE_MESSAGE_TYPE  229
 #define QAUL_EXEAVAILABLE_PARSER_TYPE   QAUL_EXEAVAILABLE_MESSAGE_TYPE
+
 
 struct qaul_chat_msg
 {

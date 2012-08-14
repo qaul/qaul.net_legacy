@@ -21,12 +21,8 @@ int qaul_chunksize;
 struct qaul_file_connection
 {
 	struct qaul_wget_connection conn;
-	int id; // sqlite id
-	char hash[MAX_HASHSTR_LEN +1];
-	char suffix[MAX_SUFFIX_LEN +1];
-	unsigned int filesize;
+	struct qaul_file_LL_item *fileinfo;
 	unsigned int chunksize;
-	unsigned int downloaded;
 	FILE *file;
 };
 
@@ -36,25 +32,10 @@ struct qaul_file_connection
 struct qaul_file_connection fileconnections[MAX_FILE_CONNECTIONS];
 
 /**
- * file table
+ * Initialize file table and read files from data base.
+ * Called once in qaullib_init.
  */
-struct qaul_file
-{
-    int id;
-    int type;
-    char hash[MAX_HASH_LEN +1];
-    char suffix[MAX_SUFFIX_LEN +1];
-    char description[MAX_DESCRIPTION_LEN +1];
-    int created_at;
-    int status;
-    int size;
-    int downloaded;
-	struct sockaddr_in adv_ip;
-
-    int event_nr;
-
-    // connection status
-};
+void Qaullib_FileInit(void);
 
 /**
  * add existing files to DB
@@ -67,18 +48,36 @@ struct qaul_file
 void Qaullib_FilePopulate(void);
 
 /**
- * add file from @a path to filesharing and analyzes the file.
- * It creates the @a hashstr and fills in the @a suffix
+ * add a new file to data base and LL
+ *
+ * @retval 0 on error
+ * @retval 1 on success
+ */
+int Qaullib_FileAdd(struct qaul_file_LL_item *file_item);
+
+/**
+ * add file from @a path to file sharing and analyzes the file.
+ * It creates the hashstr, the hash and suffix and fills the values into @a file_item
  *
  * @retval 0 on error
  * @retval filesize in Bytes on success
  */
-int Qaullib_FileAdd(char *path, char *hashstr, char *suffix);
+int Qaullib_FileCopyNew(char *path, struct qaul_file_LL_item *file);
 
 /**
  * check if any file needs to be downloaded
  */
 void Qaullib_FileCheckScheduled(void);
+
+/**
+ * flood discovery message via IPC over olsr
+ */
+void Qaullib_FileSendDiscoveryMsg(struct qaul_file_LL_item *file_item);
+
+/**
+ * check if file is downloading, unschedule it
+ */
+void Qaullib_FileStopDownload(struct qaul_file_LL_item *file_item);
 
 /**
  * create the @a filepath out of the @a hash string and the @a suffix
@@ -91,17 +90,30 @@ void Qaullib_FileCreatePath(char *filepath, char *hash, char *suffix);
  * @retval 1 file is available
  * @retval 0 file is not available from this position
  */
-int Qaullib_FileAvailable(char *hash, char *suffix, int startbyte, struct qaul_file *file);
+int Qaullib_FileAvailable(char *hashstr, char *suffix, struct qaul_file_LL_item **file_item);
 
 /**
  * try to download a file
  */
-void Qaullib_FileConnect(int dbid, char *hash, char *suffix, int filesize, int downloaded, struct sockaddr_in *saddr);
+void Qaullib_FileConnect(struct qaul_file_LL_item *file_item);
 
 /**
  * check file sockets for incoming traffic
  */
 void Qaullib_FileCheckSockets(void);
+
+/**
+ * check if download @a filesize match the @a fileconnection
+ *
+ * @retval 1 success
+ * @retval 0 error
+ */
+int Qaullib_FileCompairFileSize(struct qaul_file_connection *fileconnection, int filesize);
+
+/**
+ * end a failed download of th @a fileconnection
+ */
+void Qaullib_FileEndFailedConnection(struct qaul_file_connection *fileconnection);
 
 /**
  * check if file @a path exists
@@ -117,7 +129,29 @@ int Qaullib_FileExists(char *path);
  * @retval 1 success
  * @retval 0 error
  */
-int Qaullib_FileDeleteById(int id);
+int Qaullib_FileDelete(struct qaul_file_LL_item *file_item);
+
+/**
+ * fill files from DB into LL
+ */
+void Qaullib_FileDB2LL(void);
+
+/**
+ * create @a string from @a hash
+ *
+ * @retval 1 on success
+ * @retval 0 on error
+ */
+int Qaullib_HashToString(unsigned char *hash, char *string);
+
+/**
+ * reconverts a hashstring @a string to the @a hash
+ *
+ * @retval 1 on success
+ * @retval 0 on error
+ */
+int Qaullib_StringToHash(char *string, unsigned char *hash);
+
 
 #ifdef __cplusplus
 }

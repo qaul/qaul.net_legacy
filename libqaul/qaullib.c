@@ -27,6 +27,8 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_conf_debug = 0;
 	qaul_conf_voip = 0;
 	qaul_web_localip_set = 0;
+	qaul_UDP_socket = -1;
+	qaul_UDP_started = 0;
 	sprintf(qaullib_AppEventOpenURL, "http://%s:%s/", IPC_ADDR, CHAT_PORT);
 
 	// -------------------------------------------------
@@ -88,8 +90,9 @@ void Qaullib_Init(const char* resourcePath)
 		Qaullib_DbPopulateConfig();
 	}
 
-	// initialize linked list
-	Qaullib_UserInit ();
+	// initialize linked lists
+	Qaullib_UserInit();
+	Qaullib_FileInit();
 
 #ifdef WIN32
 	// needs to be called before socket()
@@ -177,6 +180,8 @@ void Qaullib_TimedSocketReceive(void)
 	// check user & file sockets
 	Qaullib_UserCheckSockets();
 	Qaullib_FileCheckSockets();
+	// check UDP sockets
+	Qaullib_UDP_CheckSocket();
 }
 
 int Qaullib_TimedCheckAppEvent(void)

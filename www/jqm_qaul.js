@@ -22,7 +22,6 @@ var node_count = 0;
 var user_count = 0;
 
 var qaulfiles = [];
-var qaulfileevent = 0;
 var qaulusers = [];
 var qauluserevent = 0;
 var qaulmessageevent = 0;
@@ -31,6 +30,15 @@ var chat_initialized = false;
 var is_chrome = false;
 var call_page_origin = "page_chat";
 var user_page_origin = "pager_users";
+
+var QAUL_FILESTATUS_DELETED     = -2;
+var QAUL_FILESTATUS_ERROR       = -1;
+var QAUL_FILESTATUS_NEW         =  0;
+var QAUL_FILESTATUS_DISCOVERING =  1;
+var QAUL_FILESTATUS_DISCOVERED  =  2;
+var QAUL_FILESTATUS_DOWNLOADING =  3;
+var QAUL_FILESTATUS_DOWNLOADED  =  4;
+var QAUL_FILESTATUS_MYFILE      =  5;
 
 // ======================================================
 // initialize
@@ -257,6 +265,17 @@ function qaul_translate(dictionary)
 	$("p.i18n").each(function(){
 		$(this).text($.i18n._($(this).text()));
 	});
+	
+	// translate validation msgs
+	jQuery.extend(jQuery.validator.messages, {
+		required: $.i18n._("This field is required"),
+		nospaces: $.i18n._("Spaces are not allowed in the user name"),
+		userlen: $.i18n._("User name is too long"),
+		chatlen: $.i18n._("Message is too long"),
+		filedesclen: $.i18n._("Description is too long")
+	});
+	// translate search
+	$("ul#users").data("filter-placeholder",$.i18n._("Filter items"));
 }
 
 function init_chat()
@@ -320,15 +339,25 @@ function show_user(name, ip)
 	$("#user_chat_ip").val(ip);
 	$("#page_user_msgs").empty();
 	$("#page_user_files").empty();
+	$("#page_user_queue").empty();
+	$("#user_chat_msg").val("");
+	
 	// load messages
 	get_user_msgs();
     // get info from remote user
+    load_remote_userinfo(name, ip);
+}
+
+function load_remote_userinfo(name, ip)
+{
+	$("#page_user_files").empty().append("<p class=\"user-file_loading\"><img src=\"images/ajax-loader.gif\"/></p>");
 	var path = "http://" +ip +":8081/pub_info.json";
     $.jsonp({
       url: path,
       callback: "abc",
       data: {},
       success: function(data) {
+			$("#page_user_files").empty();
 			var nofiles = true;
 			$.each(data.files, function(i,item)
 			{
@@ -346,13 +375,16 @@ function show_user(name, ip)
 			
 			if(nofiles)
 			{
-				$("#page_user_files").append("<h2>" +$.i18n._("%s has no shared files", [name]) +"</h2>");
+				$("#page_user_files").empty().append("<p class=\"user-file_info\">" +$.i18n._("%s has no shared files", [name]) +"</p>");
 			}
       },
       error: function(d,msg) {
-          // todo: show error info
-		  // create dialog
-		  $.mobile.changePage($("#page_dialog"),{role:"dialog"});
+          if($("#user_chat_ip").val() == ip)
+          {
+			  // show info
+			  var myfile = $("#page_user_files").empty().append("<p class=\"user-file_info\">" +$.i18n._("User not reachable") +" " +"<a onclick=\"javascript:load_remote_userinfo('" +name +"', '" +ip +"')\" data-role=\"button\" data-iconpos=\"notext\" data-icon=\"refresh\">&nbsp;</a>" +"</p>");
+			  myfile.trigger('create');
+          }
       }
     });
 }
@@ -444,7 +476,7 @@ function call_start()
 	var name = $("#user_chat_name").val();
 	var ip = $("#user_chat_ip").val();
 	// change page
-	$("#call_info").text("searching");
+	$("#call_info").text($.i18n._("Connecting"));
 	call_show_page(name);
 	call_setButtonEnd();
 	// start call
@@ -501,7 +533,8 @@ function call_show_page(name)
 function call_schedule_end(reason)
 {
 	// remove buttons
-	$("#call_buttons").empty();
+	var mybutton = $("#call_buttons").empty().append('<a href="javascript:call_goback();" data-icon="arrow-l" data-inline="true" data-role="button">' +$.i18n._("Back") +'</a>');
+	mybutton.trigger('create');
 	// set text
 	$("#call_info").text(reason);
 	// set time before going back
@@ -527,25 +560,25 @@ function call_goback()
 
 function call_setRinging()
 {
-	$("#call_info").text($.i18n._("ringing"));
+	$("#call_info").text($.i18n._("Ringing"));
 	call_setButtonEnd();
 }
 
 function call_setCalling()
 {
-	$("#call_info").text($.i18n._("calling"));
+	$("#call_info").text($.i18n._("Is calling"));
 	call_setButtonsIncoming();
 }
 
 function call_setConnecting()
 {
-	$("#call_info").text($.i18n._("connecting"));
+	$("#call_info").text($.i18n._("Establishing connection"));
 	call_setButtonEnd();
 }
 
 function call_setConnected()
 {
-	$("#call_info").text($.i18n._("connected"));
+	$("#call_info").text($.i18n._("Connected"));
 	call_setButtonEnd();
 }
 
@@ -553,11 +586,11 @@ function call_setEnded(code)
 {
 	var reason;
 	if(code == 486)
-		reason = $.i18n._("busy");
+		reason = $.i18n._("Is busy");
 	else if(code == 487)
-		reason = $.i18n._("call ended");
+		reason = $.i18n._("Call ended");
 	else
-		reason = $.i18n._("not reachable");
+		reason = $.i18n._("Not reachable");
 		
 	call_schedule_end(reason);
 }
@@ -657,12 +690,12 @@ function format_msg_voip(item)
 	if(item.type == 3)
 	{
 		button = '<div class="msg_voip"><img src="images/i_call_in_64.png" /></div>';
-		msg = $.i18n._("incoming call from %s", [format_msg_userlink(item.name, item.ip, item.id)]);
+		msg = $.i18n._("Incoming call from %s", [format_msg_userlink(item.name, item.ip, item.id)]);
 	}
 	else
 	{
 		button = '<div class="msg_voip"><img src="images/i_call_out_64.png" /></div>';
-		msg = $.i18n._("you called %s", [format_msg_userlink(item.name, item.ip, item.id)]);
+		msg = $.i18n._("You called %s", [format_msg_userlink(item.name, item.ip, item.id)]);
 	}
 		
 	return {"msg":msg,"button":button};
@@ -752,6 +785,7 @@ function send_direct_msg()
 {
     // set loading info
     //$.mobile.pageLoading();
+    $("#page_user_queue").empty().append("<p class=\"user_msg_loading\"><img src=\"images/ajax-loader.gif\"/></p>");
 
     // send data to remote user
     $.jsonp({
@@ -764,7 +798,7 @@ function send_direct_msg()
       },
       success: function(userProfile) {
           	// clear loading info
-          	//$.mobile.pageLoading(true);
+          	$("#page_user_queue").empty();
           	
           	// send message to db
 			$.post(
@@ -778,12 +812,7 @@ function send_direct_msg()
             $("#user_chat_msg").val('');
       },
       error: function(d,msg) {
-          // clear loading info
-          //$.mobile.pageLoading(true);
-          
-          // put error info
-		  // create dialog
-		  $.mobile.changePage($("#page_dialog"),{role:"dialog"});
+      		$("#page_user_queue").empty().append("<p class=\"user_msg_failed\">" +$.i18n._("User not reachable") +"</p>");
       }
     });
 }
@@ -842,6 +871,12 @@ function get_tag_msgs()
 function time2str(timestr)
 {
 	return timestr.substr(11,5);
+}
+
+function timestamp2str(timestamp)
+{
+	var date = new Date(timestamp *1000);
+	return date.getHours() +":" +date.getMinutes();
 }
 
 var updatetimer=function()
@@ -916,8 +951,7 @@ function send_file_add()
 			},
 			dataType:"json"
 	}).error(function(){
-			// show alert
-			$.mobile.changePage($("#page_dialog"),{role:"dialog"});
+			show_page_file();
 	});
 }
 
@@ -942,9 +976,6 @@ function open_filepicker()
 			// set timer to check if a file was picked
 			setTimeout(function(){filepickertimer();},1000);
 		} 
-	}).error(function(){
-		// show alert
-		$.mobile.changePage($("#page_dialog"),{role:"dialog"});
 	});
 }
 
@@ -959,16 +990,13 @@ function open_file(filename)
 		success: function(data) {
 			// success
 		} 
-	}).error(function(){
-		// show alert
-		$.mobile.changePage($("#page_dialog"),{role:"dialog"});
 	});
 }
 
-function file_delete(id)
+function file_delete(hash)
 {
 	// delete file by id
-	var path = "file_delete.json?id=" +id;
+	var path = "file_delete.json?hash=" +hash;
 	$.ajax({
 		url:   path,
 		cache: false, // needed for IE
@@ -977,9 +1005,6 @@ function file_delete(id)
 			// reload files
 			file_update();
 		} 
-	}).error(function(){
-		// show alert
-		$.mobile.changePage($("#page_dialog"),{role:"dialog"});
 	});
 }
 
@@ -1046,22 +1071,19 @@ function file_check(hash, suffix)
 
 function file_update()
 {
-	var path = "file_list.json?fe=" +qaulfileevent +"&e=1";
+	var path = "file_list.json";
 	var files = $("#page_file_list");
 	$.ajax({
 		url:   path,
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
-			var old_event = qaulfileevent;
 			$.each(data.files, function(i,item){
 				file_update_check(item);
-				if(item.event > qaulfileevent) qaulfileevent = item.event;
 			});
 		} 
 	}).error(function(){
-		// show alert
-		$.mobile.changePage($("#page_dialog"),{role:"dialog"});
+		// fail silently
 	});
 }
 
@@ -1072,44 +1094,44 @@ function file_update_check(item)
 	var i;
 	for(i=0; i < qaulfiles.length; i++)
 	{
-		if(qaulfiles[i].id == item.id)
+		if(qaulfiles[i].hash == item.hash)
 		{
 			// update entry
 			exists = true;
 			// delete entry
-			if(item.status == -2) 
+			if(item.status == QAUL_FILESTATUS_DELETED) 
 			{
-				$("#file_" +item.id).remove();
+				$("#file_" +item.hash).remove();
 				//qaulfiles.splice(i,1);
 				//break;
 			}
 			// download failed
-			else if(item.status == -1)
+			else if(item.status == QAUL_FILESTATUS_ERROR)
 			{
-				$("#file_" +item.id).removeClass("scheduled downloading").addClass("failed");
-				$("#file_" +item.id +" .fileicon64").attr("src","images/f_failed_64.png");
-				$("#file_bar_" +item.id).remove();
+				$("#file_" +item.hash).removeClass("scheduled downloading").addClass("failed");
+				$("#file_" +item.hash +" .fileicon64").attr("src","images/f_failed_64.png");
+				$("#file_bar_" +item.hash).remove();
 			}
 			// update progress bar
-			else if(item.status == 1)
+			else if(item.status == QAUL_FILESTATUS_DOWNLOADING)
 			{
-				$("#file_bar_" +item.id).progressBar(item.downloaded);
+				$("#file_bar_" +item.hash).progressBar(item.downloaded);
 			}
 			// file sucessfully downloaded
-			else if(item.status == 2)
+			else if(item.status == QAUL_FILESTATUS_DOWNLOADED)
 			{
-				if(qaulfiles[i].status <= 1)
+				if(qaulfiles[i].status <= QAUL_FILESTATUS_DOWNLOADING)
 				{
-					$("#file_" +item.id).removeClass("scheduled downloading");
-					$("#file_bar_" +item.id).progressBar(100);
+					$("#file_" +item.hash).removeClass("scheduled downloading");
+					$("#file_bar_" +item.hash).progressBar(100);
 					// add open file link
 					var filename = item.hash;
 					if(item.suffix != "") filename += "." +item.suffix;
-					$("#file_" +item.id +" img.fileicon64").wrap("<a href=\"#\" onClick=\"javascript:open_file('" +filename +"')\"></a>");
+					$("#file_" +item.hash +" img.fileicon64").wrap("<a href=\"#\" onClick=\"javascript:open_file('" +filename +"')\"></a>");
 					// add readvertise button
 					var button = "<a href=\"#\" onClick=\"javascript:file_advertise('" +item.hash +"','" +item.suffix +"','" +item.size +"','" +item.description +"')\" class=\"filebutton\"><img src=\"images/b_advertise.png\" alt=\"advertise\" /></a>";
-					$("#file_" +item.id +" a.filebutton").after(button);
-					//$("#file_" +item.id).trigger('create');
+					$("#file_" +item.hash +" a.filebutton").after(button);
+					//$("#file_" +item.hash).trigger('create');
 				}
 			}
 			qaulfiles[i] = item;
@@ -1125,8 +1147,8 @@ function file_update_check(item)
 		myitem.trigger('create');
 		//htmlitem.slideDown().fadeIn('slow');
 		var percent = 0;
-		if(item.status == 1) percent = item.downloaded;
-		myitem.find("#file_bar_" +item.id).progressBar(percent,{barImage:'images/progressbg_black.gif'});
+		if(item.status == QAUL_FILESTATUS_DOWNLOADING) percent = item.downloaded;
+		myitem.find("#file_bar_" +item.hash).progressBar(percent,{barImage:'images/progressbg_black.gif'});
 		
 		// deactivate schedule buttons
 		file_button_deactivate(item.hash, item.suffix);
@@ -1136,29 +1158,29 @@ function file_update_check(item)
 function file_create_html(item)
 {
 	var filename = item.hash;
-	if(item.suffix.length > 0) filename += "." +item.suffix;
+	if(item.suffix.length > QAUL_FILESTATUS_NEW) filename += "." +item.suffix;
 	var fileclass = "";
-	if(item.status == 0) fileclass = "scheduled";
-	else if(item.status == 1) fileclass = "downloading";
-	else if(item.status < 0) fileclass = "failed";
+	if(item.status >= QAUL_FILESTATUS_NEW && item.status >= QAUL_FILESTATUS_DISCOVERED) fileclass = "scheduled";
+	else if(item.status == QAUL_FILESTATUS_DOWNLOADING) fileclass = "downloading";
+	else if(item.status < QAUL_FILESTATUS_NEW) fileclass = "failed";
 	var percent = 0;
-	if(item.status == 1) percent = item.downloaded;
-	var file = "<div class=\"file " +fileclass +"\" id=\"file_" +item.id +"\">";
-	if(item.status >= 2) 
+	if(item.status == QAUL_FILESTATUS_DOWNLOADING) percent = item.downloaded;
+	var file = "<div class=\"file " +fileclass +"\" id=\"file_" +item.hash +"\">";
+	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) 
 		file += "<a href=\"#\" onClick=\"javascript:open_file('" +filename +"')\">";
-	if(item.status < 0) 
+	if(item.status <= QAUL_FILESTATUS_ERROR) 
 		file += "<img src=\"images/f_failed_64.png\" class=\"fileicon64\">";
 	else
 		file += file_suffix2icon(item.suffix);
-	if(item.status >= 2) file += "</a>";
-	file     += "<a href=\"#\" onClick=\"javascript:file_delete('" +item.id +"')\" class=\"filebutton\"><img src=\"images/b_delete.png\" alt=\"delete\" /></a>";
-	if(item.status >= 2) 
+	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) file += "</a>";
+	file     += "<a href=\"#\" onClick=\"javascript:file_delete('" +item.hash +"')\" class=\"filebutton\"><img src=\"images/b_delete.png\" alt=\"delete\" /></a>";
+	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) 
 		file += "<a href=\"#\" onClick=\"javascript:file_advertise('" +item.hash +"','" +item.suffix +"','" +item.size +"','" +item.description +"')\" class=\"filebutton\"><img src=\"images/b_advertise.png\" alt=\"advertise\" /></a>";
 	file     += "<div class=\"filename\">" +format_msg_txt(item.description) +"</div>";
-	if(item.status == 0 || item.status == 1)
-		file += "<div class=\"fileprogress\"><span class=\"progressBar\" id=\"file_bar_" +item.id +"\">" +percent +"%</span></div>";
+	if(item.status >= QAUL_FILESTATUS_NEW && item.status <= QAUL_FILESTATUS_DOWNLOADING)
+		file += "<div class=\"fileprogress\"><span class=\"progressBar\" id=\"file_bar_" +item.hash +"\">" +percent +"%</span></div>";
 	file     += "<div class=\"filemeta\"><span class=\"suffix\">" +item.suffix +"</span> " +file_filesize(item.size) +" " ;
-	file     += '<abbr class="timeago" id="abbr_msg_' +item.id +'" title="' +item.time +'">' +time2str(item.time) +'</abbr>';
+	file     += '<abbr class="timeago" id="abbr_msg_' +item.hash +'" title="' +item.time +'">' +time2str(item.time) +'</abbr>';
 	file     += "</div>";
 	file     += "</div>";
 	return file;
@@ -1310,7 +1332,9 @@ function send_name()
 			'setname',
 			{"n": $("#name_name").val(), "e":1},
 			function(data){
-				// forward to chat
+				// update username
+				user_name = $("#name_name").val();
+				// forward to loading
 				$.mobile.changePage($("#page_loading"));
 				// set timer to check which page to load
 				setTimeout(function(){loadingtimer();},1000);

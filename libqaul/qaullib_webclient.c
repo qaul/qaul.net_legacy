@@ -31,6 +31,9 @@ int Qaullib_WgetConnect(struct qaul_wget_connection *myConn)
   int flags;
 #endif
 
+  if(QAUL_DEBUG)
+	  printf("Qaullib_WgetConnect\n");
+
   if (!myConn->socket)
   {
 	if ((myConn->socket = socket(myConn->ip.sin_family, SOCK_STREAM, 0)) == -1)
@@ -87,7 +90,8 @@ int Qaullib_WgetConnect(struct qaul_wget_connection *myConn)
 // ------------------------------------------------------------
 int Qaullib_WgetClose(struct qaul_wget_connection *myConn)
 {
-	printf("Qaullib_WgetClose\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_WgetClose\n");
 
 	int success;
 	myConn->connected = 0;
@@ -97,7 +101,7 @@ int Qaullib_WgetClose(struct qaul_wget_connection *myConn)
 	myConn->socket = 0;
 	if (success > 0)
 	{
-	  printf("[qaullib] connection closing error: %i", success);
+	  printf("Qaullib_WgetClose connection closing error: %i", success);
 	  return 0;
 	}
 	return 1;
@@ -111,7 +115,7 @@ int Qaullib_WgetSendHeader(struct qaul_wget_connection *myConn, const char *head
 	size = (int) strlen(header);
 	if (send(myConn->socket, header, size, MSG_NOSIGNAL) < 0)
 	{
-		printf("[qaullib] tcp header error: connection lost!\n");
+		printf("Qaullib_WgetSendHeader tcp header error: connection lost!\n");
 		Qaullib_WgetClose(myConn);
 		return 0;
 	}
@@ -130,7 +134,10 @@ int Qaullib_WgetReceive(struct qaul_wget_connection *myConn)
 		if(myConn->lastreceived_at < time(NULL) - TIMEOUT_LASTRECEIVED ||
 		   myConn->connected_at < time(NULL) - TIMEOUT_CONNECTED)
 		{
-			printf("[qaullib] socket received time out\n");
+			printf("Qaullib_WgetReceive socket received time out: connected %i lastreceived %i now %i\n",
+					(int)myConn->lastreceived_at,
+					(int)myConn->connected_at,
+					(int)time(NULL));
 			// close connection
 			Qaullib_WgetClose(myConn);
 			return -1;
@@ -141,7 +148,7 @@ int Qaullib_WgetReceive(struct qaul_wget_connection *myConn)
 		// connection was closed
 		if (bytes == 0)
 		{
-			printf("[qaullib] bytes == 0: close connection\n");
+			printf("Qaullib_WgetReceive bytes == 0: close connection\n");
 			Qaullib_WgetClose(myConn);
 			return 0;
 		}
@@ -153,6 +160,3 @@ int Qaullib_WgetReceive(struct qaul_wget_connection *myConn)
 	}
 	return bytes;
 }
-
-
-
