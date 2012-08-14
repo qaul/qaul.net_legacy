@@ -339,6 +339,8 @@ function show_user(name, ip)
 	$("#user_chat_ip").val(ip);
 	$("#page_user_msgs").empty();
 	$("#page_user_files").empty();
+	$("#page_user_queue").empty();
+	$("#user_chat_msg").val("");
 	
 	// load messages
 	get_user_msgs();
@@ -783,6 +785,7 @@ function send_direct_msg()
 {
     // set loading info
     //$.mobile.pageLoading();
+    $("#page_user_queue").empty().append("<p class=\"user_msg_loading\"><img src=\"images/ajax-loader.gif\"/></p>");
 
     // send data to remote user
     $.jsonp({
@@ -795,7 +798,7 @@ function send_direct_msg()
       },
       success: function(userProfile) {
           	// clear loading info
-          	//$.mobile.pageLoading(true);
+          	$("#page_user_queue").empty();
           	
           	// send message to db
 			$.post(
@@ -809,12 +812,7 @@ function send_direct_msg()
             $("#user_chat_msg").val('');
       },
       error: function(d,msg) {
-          // clear loading info
-          //$.mobile.pageLoading(true);
-          
-          // put error info
-		  // create dialog
-		  $.mobile.changePage($("#page_dialog"),{role:"dialog"});
+      		$("#page_user_queue").empty().append("<p class=\"user_msg_failed\">" +$.i18n._("User not reachable") +"</p>");
       }
     });
 }
@@ -1085,8 +1083,7 @@ function file_update()
 			});
 		} 
 	}).error(function(){
-		// show alert
-		$.mobile.changePage($("#page_dialog"),{role:"dialog"});
+		// fail silently
 	});
 }
 
