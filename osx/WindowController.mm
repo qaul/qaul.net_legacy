@@ -98,26 +98,36 @@
 	// TODO: stop timers
 	
 	// check for Authorization
-	if([mysudo testAuthorization:authorizationRef]) NSLog(@"Authorization tested success");
-	else NSLog(@"Authorization tested error");
+	if([mysudo testAuthorization:authorizationRef]) 
+		NSLog(@"Authorization tested success");
+	else 
+		NSLog(@"Authorization tested error");
 	
 	// stop library
 	Qaullib_Exit();
 	
 	// stop olsrd 
-	if(![mysudo stopOlsrd:authorizationRef]) NSLog(@"olsrd not killed");
+	if(![mysudo stopOlsrd:authorizationRef]) 
+		NSLog(@"olsrd not killed");
 	// stop portforwarding 
-	if(![mysudo stopPortForwarding:authorizationRef]) NSLog(@"portforwarding not removed");
+	if(![mysudo stopPortForwarding:authorizationRef]) 
+		NSLog(@"portforwarding not removed");
 	
 	// FIXME: somehow the routing table gets messed up
 	// idea: unjoin the network fist ...
 	// 
-	usleep(50000);
+//	usleep(50000);
 	// set dhcp for wifi
-	if(![mysudo setDhcp:authorizationRef service:qaulServiceId interface:qaulWifiInterface]) NSLog(@"dhcp not set");
+//	if(![mysudo setDhcp:authorizationRef service:qaulServiceId interface:qaulWifiInterface]) 
+//		NSLog(@"dhcp not set");
 	usleep(50000);
 	// stop wifi
-	if(![mysudo stopAirport:authorizationRef interface:qaulWifiInterface]) NSLog(@"airport not stopped");
+	if(![mysudo stopAirport:authorizationRef interface:qaulWifiInterface]) 
+		NSLog(@"airport not stopped");
+	
+	// change location
+	[mysudo deleteNetworkProfile:authorizationRef];
+	usleep(50000);
 	
 	return TRUE;
 }
@@ -169,18 +179,32 @@
 		// authorization
 		NSLog(@"authorize");
 		status = AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &authorizationRef);	
-		if (status == errAuthorizationSuccess) NSLog(@"Authorization success");
-		else NSLog(@"Authorization failed");
+		if (status == errAuthorizationSuccess) 
+			NSLog(@"Authorization success");
+		else 
+			NSLog(@"Authorization failed");
 		
 		// use the authorization
-		if([mysudo testAuthorization:authorizationRef]) NSLog(@"Authorization tested success");
-		else NSLog(@"Authorization tested error");
+		if([mysudo testAuthorization:authorizationRef]) 
+			NSLog(@"Authorization tested success");
+		else 
+			NSLog(@"Authorization tested error");
 		
 		qaulStarted = 20;
 	}
+
+	// create new network profile
+	// we need to create a new network profile that we can 
+	// trash afterwards, because the routing table gets messed up
+	// otherwise.
+	if(qaulStarted == 20)
+	{
+		success = [mysudo createNetworkProfile:authorizationRef];		
+		qaulStarted = 21;
+	}
 	
 	// search Wifi interface
-	if(qaulStarted == 20)
+	if(qaulStarted == 21)
 	{
 		NSLog(@"loop through interfaces");
 		// -----------------------------------
@@ -250,11 +274,11 @@
 		
 		//if(qaulServiceFound) ;
 		//else 
-		qaulStarted = 21;
+		qaulStarted = 22;
 	}
 	
 	// enable Service
-	if(qaulStarted == 21)
+	if(qaulStarted == 22)
 	{
 		
 		// check if the Service is enabled
@@ -271,54 +295,71 @@
 			
 		}
 		
-		qaulStarted = 22;
+		qaulStarted = 23;
 	}
 	
 	// switch airport on
-	if(qaulStarted == 22)
+	if(qaulStarted == 23)
 	{
 		NSLog(@"switch airport on");
 		// switch on airport via cli 
 		success = [mysudo startAirport:authorizationRef interface:qaulWifiInterface];
-		if(success) NSLog(@"startAirport success!!");
-		else NSLog(@"startAirport no success");
+		if(success) 
+			NSLog(@"startAirport success!!");
+		else 
+			NSLog(@"startAirport no success");
 		
+		// configure Address taken away from this place...
+		
+		qaulStarted = 24;
+	}
+	
+	// set IP
+	if(qaulStarted == 24)
+	{
 		// set IP
 		NSString *myip = [NSString stringWithFormat:@"%s",Qaullib_GetIP()];
 		success = [mysudo setAddress:authorizationRef address:myip service:qaulServiceId];
 		//success = [mysudo setAddress:authorizationRef address:@"10.202.0.40" service:qaulServiceId];
-		if(success) NSLog(@"setAddress success!!");
-		else NSLog(@"setAddress no success");
+		if(success) 
+			NSLog(@"setAddress success!!");
+		else 
+			NSLog(@"setAddress no success");		
 		
-		qaulStarted = 23;
+		qaulStarted = 25;
 	}
 	
-	//23 usleep(1000000);
-	if (qaulStarted == 23)
+	if (qaulStarted == 25)
 	{
-		if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5)  [self startDelay: 15.0f];
-		else [self startDelay: 3.0f];
+		if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5)  
+			[self startDelay: 15.0f];
+		else 
+			[self startDelay: 3.0f];
 	}
 	
 	// configure airport
-	if(qaulStarted == 24)
+	if(qaulStarted == 26)
 	{
 		success = [mysudo connect2network:authorizationRef name:@"qaul.net" channel:11 interface:qaulWifiInterface];
-		if(success) NSLog(@"connect2network success!!");
-		else NSLog(@"connect2network no success");
+		if(success) 
+			NSLog(@"connect2network success!!");
+		else 
+			NSLog(@"connect2network no success");
 		
 		qaulStarted = 29;
 	}
-		
+	
 	//39 usleep(7000000);
-	if(qaulStarted == 29) [self startDelay: 3.0f];
+	if(qaulStarted == 29) 
+		[self startDelay: 3.0f];
 
 	// check username
 	if(qaulStarted == 30)
 	{
 		// wait until username is set
 		NSLog(@"check Username");
-		if(Qaullib_ExistsUsername()) qaulStarted = 40;
+		if(Qaullib_ExistsUsername()) 
+			qaulStarted = 40;
 		else 
 		{
 			qaulStarted = 29;
@@ -330,14 +371,16 @@
 	if(qaulStarted == 40)
 	{
 		success = [mysudo startOlsrd:authorizationRef interface:qaulWifiInterface];
-		if(success) NSLog(@"olsrd start success!!");
-		else NSLog(@"olsrd start no success");
+		if(success) 
+			NSLog(@"olsrd start success!!");
+		else 
+			NSLog(@"olsrd start no success");
 		
 		qaulStarted = 44;
 	}	
 		
-	//if(qaulStarted == 49) usleep(2000000);
-	if(qaulStarted == 44) [self startDelay: 2.0f];
+	if(qaulStarted == 44) 
+		[self startDelay: 2.0f];
 	
 	// connect ipc
 	if(qaulStarted == 45)

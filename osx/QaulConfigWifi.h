@@ -19,6 +19,7 @@
 	NSString* resourcePath;
 	NSString* networksetupPath; 
 	NSString* airportPath;
+	NSString* networkProfile;
 }
 
 - (void)setPaths;
@@ -33,5 +34,8 @@
 - (BOOL)stopOlsrd:(AuthorizationRef)authRef;
 - (BOOL)startPortForwarding:(AuthorizationRef)authRef interface:(SCNetworkInterfaceRef)interface;
 - (BOOL)stopPortForwarding:(AuthorizationRef)authRef;
+- (BOOL)runTask:(NSString*)path arguments:(NSArray*)arguments;
+- (BOOL)createNetworkProfile:(AuthorizationRef)authRef;
+- (BOOL)deleteNetworkProfile:(AuthorizationRef)authRef;
 
 @end
