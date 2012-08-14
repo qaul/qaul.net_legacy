@@ -72,6 +72,7 @@ JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_captiveStart
   (JNIEnv *env, jobject obj)
 {
 	Qaullib_SetConfVoIP();
+	Qaullib_UDP_StartServer();
 	return (jint) Qaullib_CaptiveStart();
 }
 
