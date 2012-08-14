@@ -195,6 +195,9 @@ void formStart::QaulStarting(void)
 		Debug::WriteLine(L"start: 50");
 		// start VoIP
 		Qaullib_SetConfVoIP();
+
+		if(!Qaullib_UDP_StartServer())
+			Debug::WriteLine(L"error starting UDP server");
 		// start captive portal
 		if(!Qaullib_CaptiveStart()) 
 			Debug::WriteLine(L"error starting captive portal");
