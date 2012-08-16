@@ -221,17 +221,19 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 			{
 				Qaullib_WwwPubFilechunk(conn, request_info);
 			}
-			// external access without qaul : qaul download & info pages (ext = external)
-			else if (strcmp(request_info->uri, "/ext_binaries.json") == 0)
-			{
-				Qaullib_WwwExtBinaries(conn, request_info);
-			}
 			else
 			{
 				// No suitable handler found, mark as not processed. Mongoose will
 				// try to serve the request.
 				processed = NULL;
 			}
+		}
+
+		// external access without qaul : qaul download & info pages (ext = external)
+		if (strcmp(request_info->uri, "/ext_binaries.json") == 0)
+		{
+			Qaullib_WwwExtBinaries(conn, request_info);
+			processed = "yes";
 		}
 	}
 	else
@@ -1421,6 +1423,7 @@ static void Qaullib_WwwExtBinaries(struct mg_connection *conn, const struct mg_r
 	mg_printf(conn, "\"name\":\"%s\",",qaul_username);
 
 	// loop through files
+	mg_printf(conn, "\"files\":[");
 	firstitem = 1;
 	while(Qaullib_File_LL_NextNodePubBinaries(&mynode))
 	{
@@ -1431,7 +1434,7 @@ static void Qaullib_WwwExtBinaries(struct mg_connection *conn, const struct mg_r
 
 		Qaullib_WwwFile2Json(conn, mynode.item);
 	}
-
+	mg_printf(conn, "]");
 	mg_printf(conn, "}");
 }
 
