@@ -195,7 +195,8 @@ struct qaul_populate_file_struct
 
 static struct qaul_populate_file_struct qaul_populate_file[MAX_POPULATE_FILE] = {
 	{4, 8433817, "575844dfcaa7d6ba6e378b44ab2bf9f36c1e26c2", "gz", "ubuntu & debian 32 Bit"},
-	{4, 2068596, "76345f347edd7b8741d284db650ae9f290850d81", "zip", "OSX 10.6"},
+	{4, 2068596, "0000000000000000000000000000000000000000", "zip", "OSX 10.5"},
+	{4, 2068596, "a560db563b4f958737ea5052d18a0513c112b55a", "zip", "OSX 10.6"},
 	{4, 4151214, "834a9eeafc62f9a8d6fc6614d5156a812d424cf6", "exe", "Windows 7"},
 	{4, 2085071, "dc6705752b242d6147d522418971e420de86abdb", "apk", "Android"}
 };
