@@ -375,7 +375,7 @@ function load_remote_userinfo(name, ip)
 				var file = "<div class=\"file\">";
 				file    += file_button_schedule(item.hash, item.suffix, item.size, item.description, name, ip);
 				file    += "<div class=\"filename\">" +format_msg_txt(item.description) +"</div>";
-				file    += "<div class=\"filemeta\"><span class=\"suffix\">" +item.suffix +"</span> " +file_filesize(item.size) +" ";
+				file    += "<div class=\"filemeta\"><span class=\"suffix\">" +item.suffix +"</span> <span class=\"size\">" +file_filesize(item.size) +"</span> ";
 				file    += '<abbr class="timeago" title="' +item.time +'">' +time2str(item.time) +'</abbr>';
 				file    += "</div>";
 				file    += "</div>";
@@ -688,7 +688,7 @@ function format_msg_file(msg, desc, name, ip)
 	var button = "";
 	msg = msg.replace(/(^|\s)([a-zA-Z0-9]{40})\.([a-zA-Z0-9]{1,5})/g, function(a,b,c,d){
 				button = file_button_schedule( c, d, 0, desc, name, ip);
-				return "<span class=\"suffix\">" +d +"</span> " +b;
+				return "<span class=\"suffix\">" +d +"</span> <span class=\"size\">" +b +"</span>";
 		});
 	return {"msg":msg,"button":button};
 }
@@ -1074,7 +1074,8 @@ function file_check(hash, suffix)
 	var i;
 	for(i=0; i < qaulfiles.length; i++)
 	{
-		if(qaulfiles[i].status > -2 && qaulfiles[i].suffix == suffix && qaulfiles[i].hash == hash) return true;
+		if(qaulfiles[i].status > -2 && qaulfiles[i].suffix == suffix && qaulfiles[i].hash == hash) 
+			return true;
 	}
 	return false;
 }
@@ -1126,6 +1127,7 @@ function file_update_check(item)
 			else if(item.status == QAUL_FILESTATUS_DOWNLOADING)
 			{
 				$("#file_bar_" +item.hash).progressBar(item.downloaded);
+				$("#file_" +item.hash +" span.size").text(file_filesize(item.size));
 			}
 			// file sucessfully downloaded
 			else if(item.status == QAUL_FILESTATUS_DOWNLOADED)
@@ -1170,9 +1172,8 @@ function file_create_html(item)
 	var filename = item.hash;
 	if(item.suffix.length > QAUL_FILESTATUS_NEW) filename += "." +item.suffix;
 	var fileclass = "";
-	if(item.status >= QAUL_FILESTATUS_NEW && item.status >= QAUL_FILESTATUS_DISCOVERED) fileclass = "scheduled";
-	else if(item.status == QAUL_FILESTATUS_DOWNLOADING) fileclass = "downloading";
-	else if(item.status < QAUL_FILESTATUS_NEW) fileclass = "failed";
+	if(item.status == QAUL_FILESTATUS_MYFILE) fileclass = "file_myfile";
+	else if(item.status < QAUL_FILESTATUS_NEW) fileclass = "file_failed";
 	var percent = 0;
 	if(item.status == QAUL_FILESTATUS_DOWNLOADING) percent = item.downloaded;
 	var file = "<div class=\"file " +fileclass +"\" id=\"file_" +item.hash +"\">";
@@ -1189,7 +1190,7 @@ function file_create_html(item)
 	file     += "<div class=\"filename\">" +format_msg_txt(item.description) +"</div>";
 	if(item.status >= QAUL_FILESTATUS_NEW && item.status <= QAUL_FILESTATUS_DOWNLOADING)
 		file += "<div class=\"fileprogress\"><span class=\"progressBar\" id=\"file_bar_" +item.hash +"\">" +percent +"%</span></div>";
-	file     += "<div class=\"filemeta\"><span class=\"suffix\">" +item.suffix +"</span> " +file_filesize(item.size) +" " ;
+	file     += "<div class=\"filemeta\"><span class=\"suffix\">" +item.suffix +"</span> <span class=\"size\">" +file_filesize(item.size) +"</span> " ;
 	file     += '<abbr class="timeago" id="abbr_msg_' +item.hash +'" title="' +item.time +'">' +time2str(item.time) +'</abbr>';
 	file     += "</div>";
 	file     += "</div>";
