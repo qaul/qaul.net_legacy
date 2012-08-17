@@ -535,7 +535,7 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 	int post_set = 0;
 	int length = 0;
 
-	//printf("[qaullib] Qaullib_WwwGetMsgs\n");
+	//printf("Qaullib_WwwGetMsgs\n");
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{\"name\":\"%s\",\"messages\":[", qaul_username);
@@ -662,7 +662,8 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 	// free memory
 	if(post_set)
 	{
-		printf("free(post)\n");
+		if(QAUL_DEBUG)
+			printf("free(post)\n");
 		free(post);
 	}
 }
@@ -682,7 +683,8 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 	union olsr_message *m = (union olsr_message *)buffer;
 	int size;
 
-	printf("Qaullib_WwwSendMsg\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwSendMsg\n");
 
 	// Fetch Message
 	//get_qsvar(request_info, "m", qaul_msg, sizeof(qaul_msg));
@@ -747,17 +749,26 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 	// free memory
 	free(post);
 
-	printf("Qaullib_WwwSendMsg end\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwSendMsg end\n");
 }
 
 
 // ------------------------------------------------------------
 static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
-	printf("Qaullib_WwwGetUsers\n");
-	int add;
-	int first = 0;
+	int add, request_type, first;
+	char request_type_char[MAX_INTSTR_LEN +1];
 	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
+	first = 0;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwGetUsers\n");
+
+	// get variable r (0=just updates, 1=all, 2=all and don't update gui_notify)
+	request_type = 0;
+	get_qsvar(request_info, "r", request_type_char, sizeof(request_type_char));
+	request_type = atoi(request_type_char);
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 
@@ -773,10 +784,11 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 		if(
 				mynode.item->type == QAUL_USERTYPE_KNOWN &&
 				(mynode.item->changed == QAUL_USERCHANGED_MODIFIED ||
-				mynode.item->changed == QAUL_USERCHANGED_DELETED)
+				mynode.item->changed == QAUL_USERCHANGED_DELETED ||
+				request_type > 0)
 				)
 		{
-			printf("changable user found\n");
+			printf("changeable user found\n");
 
 			if(!first)
 				first = 1;
@@ -797,9 +809,15 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 					);
 
 			if(mynode.item->changed == QAUL_USERCHANGED_DELETED)
-				mynode.item->changed = QAUL_USERCHANGED_CACHED;
+			{
+				if(request_type != 2)
+					mynode.item->changed = QAUL_USERCHANGED_CACHED;
+			}
 			else
-				mynode.item->changed = QAUL_USERCHANGED_UNCHANGED;
+			{
+				if(request_type != 2)
+					mynode.item->changed = QAUL_USERCHANGED_UNCHANGED;
+			}
 		}
 	}
 	mg_printf(conn, "]}");
@@ -808,11 +826,17 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 // ------------------------------------------------------------
 static void Qaullib_WwwFileList(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
-	int firstitem;
+	int firstitem, request_type;
+	char request_type_char[MAX_INTSTR_LEN +1];
 	struct qaul_file_LL_node mynode;
 	Qaullib_File_LL_InitNode(&mynode);
 
 	printf("Qaullib_WwwFileList\n");
+
+	// get variable r (0=just updates, 1=all, 2=all and don't update gui_notify)
+	request_type = 0;
+	get_qsvar(request_info, "r", request_type_char, sizeof(request_type_char));
+	request_type = atoi(request_type_char);
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{");
@@ -820,16 +844,36 @@ static void Qaullib_WwwFileList(struct mg_connection *conn, const struct mg_requ
 
 	// loop through files
 	firstitem = 1;
-	while(Qaullib_File_LL_NextNodeGuiPriv(&mynode))
+	if(request_type > 0)
 	{
-		if(firstitem)
-			firstitem = 0;
-		else
-			mg_printf(conn, ",");
+		// default behaviour (all nodes)
+		while(Qaullib_File_LL_NextNode(&mynode))
+		{
+			if(firstitem)
+				firstitem = 0;
+			else
+				mg_printf(conn, ",");
 
-		Qaullib_WwwFile2Json(conn, mynode.item);
-		mynode.item->gui_notify = 0;
+			Qaullib_WwwFile2Json(conn, mynode.item);
+			if(request_type == 1)
+				mynode.item->gui_notify = 0;
+		}
 	}
+	else
+	{
+		// default behaviour (only updated nodes)
+		while(Qaullib_File_LL_NextNodeGuiPriv(&mynode))
+		{
+			if(firstitem)
+				firstitem = 0;
+			else
+				mg_printf(conn, ",");
+
+			Qaullib_WwwFile2Json(conn, mynode.item);
+			mynode.item->gui_notify = 0;
+		}
+	}
+
 
 	mg_printf(conn, "]");
 	mg_printf(conn, "}");
