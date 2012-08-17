@@ -332,6 +332,20 @@ function set_username(name)
 	$("#page_pref_name").text(user_name);
 }
 
+function set_wifiset()
+{
+	var path = "set_wifiset.json";
+	$.ajax({
+		url:   path,
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			$.mobile.changePage($("#page_loading"));
+			setTimeout(function(){loadingtimer();},1000);
+		} 
+	});		
+}
+
 // ======================================================
 // change views
 // ------------------------------------------------------

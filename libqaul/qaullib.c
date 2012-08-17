@@ -26,6 +26,8 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_conf_quit = 0;
 	qaul_conf_debug = 0;
 	qaul_conf_voip = 0;
+	qaul_conf_ios = 0;
+	qaul_conf_wifi_set = 0;
 	qaul_web_localip_set = 0;
 	qaul_UDP_socket = -1;
 	qaul_UDP_started = 0;
@@ -130,9 +132,26 @@ void Qaullib_ConfigStart(void)
 	qaul_loading_wait = 0;
 }
 
+// deprecated use Qaullib_SetConf() instead
 void Qaullib_SetConfQuit(void)
 {
 	qaul_conf_quit = 1;
+}
+
+void Qaullib_SetConf(int conf)
+{
+	if(conf == QAUL_CONF_QUIT)
+		qaul_conf_quit = 1;
+	else if(conf == QAUL_CONF_IOS)
+		qaul_conf_ios = 1;
+}
+
+int Qaullib_CheckConf(int conf)
+{
+	if(conf == QAUL_CHECK_WIFI_SET)
+		return qaul_conf_wifi_set;
+
+	return 0;
 }
 
 void Qaullib_SetConfVoIP(void)

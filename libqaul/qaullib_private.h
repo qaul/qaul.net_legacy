@@ -81,6 +81,8 @@ int qaul_loading_wait;
 int qaul_conf_quit;
 int qaul_conf_debug;
 int qaul_conf_voip;
+int qaul_conf_ios;
+int qaul_conf_wifi_set;
 int qaul_web_localip_set;
 char qaullib_AppEventOpenURL[MAX_URL_LEN];
 

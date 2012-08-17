@@ -34,6 +34,7 @@ static void Qaullib_WwwFavoriteAdd(struct mg_connection *conn, const struct mg_r
 static void Qaullib_WwwFavoriteDelete(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwSetPageName(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwSetOpenUrl(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwSetWifiSet(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwGetConfig(struct mg_connection *conn, const struct mg_request_info *request_info);
 
 /**
@@ -186,6 +187,10 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 			{
 				Qaullib_WwwSetOpenUrl(conn, request_info);
 			}
+			else if (strcmp(request_info->uri, "/set_wifiset.json") == 0)
+			{
+				Qaullib_WwwSetWifiSet(conn, request_info);
+			}
 			else if (strcmp(request_info->uri, "/quit") == 0)
 			{
 				Qaullib_WwwQuit(conn, request_info);
@@ -323,6 +328,19 @@ static void Qaullib_WwwSetOpenUrl(struct mg_connection *conn, const struct mg_re
 
 	free(post);
 }
+
+// ------------------------------------------------------------
+static void Qaullib_WwwSetWifiSet(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwSetWifiSet\n");
+
+	qaul_conf_wifi_set = 1;
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
+}
+
 // ------------------------------------------------------------
 static void Qaullib_WwwQuit(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
@@ -1298,6 +1316,11 @@ static void Qaullib_WwwLoading(struct mg_connection *conn, const struct mg_reque
 	{
 		// show set user name
 		mg_printf(conn, "\"change\":1,\"page\":\"#page_config_locale\"");
+	}
+	else if(qaul_conf_ios && qaul_conf_wifi_set == 0)
+	{
+		// show open wifi page
+		mg_printf(conn, "\"change\":1,\"page\":\"#page_iphone\"");
 	}
 	else if(Qaullib_ExistsUsername() == 0)
 	{
