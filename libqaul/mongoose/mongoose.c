@@ -748,7 +748,13 @@ static void send_http_error(struct mg_connection *conn, int status,
 
   conn->request_info.status_code = status;
 
-  if (call_user(conn, MG_HTTP_ERROR) == NULL) {
+  // redirect all wrong addresses to download.qaul.net 
+  if(status == 404 && strcmp(conn->request_info.uri, "/") != 0 && strcmp(conn->request_info.uri, "") != 0)
+  {
+    mg_printf(conn, "HTTP/1.1 301 Moved Permanently\r\n");
+    mg_printf(conn, "Location: http://download.qaul.net/\r\n\r\n");
+  }
+  else if (call_user(conn, MG_HTTP_ERROR) == NULL) {
     buf[0] = '\0';
     len = 0;
 
