@@ -217,7 +217,9 @@ void Qaullib_TimedDownload(void)
 {
 	// download user names
 	Qaullib_UserCheckNonames();
-	// dowload scheduled files
+	// discover executables for download
+	Qaullib_ExeScheduleDiscovery();
+	// discover and dowload scheduled files
 	Qaullib_FileCheckScheduled();
 	// delete users
 	Qaullib_User_LL_Clean();
