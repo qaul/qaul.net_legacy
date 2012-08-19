@@ -85,6 +85,7 @@ int qaul_conf_voip;
 int qaul_conf_ios;
 int qaul_conf_wifi_set;
 int qaul_web_localip_set;
+int qaul_exe_available;
 char qaullib_AppEventOpenURL[MAX_URL_LEN];
 
 union olsr_message *qaul_in_msg;

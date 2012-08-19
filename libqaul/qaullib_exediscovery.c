@@ -15,7 +15,10 @@ void Qaullib_ExeInit(void)
 {
 	int i;
 	char buffer[1024];
-	char *key  = buffer;
+	char *key;
+
+	key = buffer;
+	qaul_exe_available = 1;
 
 	if(QAUL_DEBUG)
 		printf("Qaullib_ExeInit\n");
@@ -50,6 +53,7 @@ void Qaullib_ExeInit(void)
 		}
 		else
 		{
+			qaul_exe_available = 0;
 			qaul_exe_array[i].discovered = 0;
 			memset(&qaul_exe_array[i].discovery_timestamp, 0, sizeof(time_t));
 		}

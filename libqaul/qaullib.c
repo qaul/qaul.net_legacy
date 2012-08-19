@@ -31,6 +31,7 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_web_localip_set = 0;
 	qaul_UDP_socket = -1;
 	qaul_UDP_started = 0;
+	qaul_exe_available = 0;
 	sprintf(qaullib_AppEventOpenURL, "http://%s:%s/", IPC_ADDR, CHAT_PORT);
 
 	// -------------------------------------------------
