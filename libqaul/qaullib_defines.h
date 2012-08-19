@@ -75,11 +75,11 @@ struct qaul_fileavailable_msg
 	uint32_t  filesize;
 };
 
-// todo: cluster exeavailable messages
+// todo: cluster exe available messages
 struct qaul_exeavailable_msg
 {
 	uint16_t msgtype;
-	uint32_t platform;
+	uint32_t OS_flag;
 	char     hash[MAX_HASH_LEN];
 	char     suffix[MAX_SUFFIX_LEN];
 	uint32_t filesize;
@@ -166,7 +166,7 @@ struct qaul_filediscover_msg
 
 struct qaul_exediscover_msg
 {
-	uint32_t platform;
+	uint32_t OS_flag;
 };
 
 /**
@@ -265,22 +265,6 @@ struct olsrmsg {
 	olsr_u16_t seqno;
 
 	union olsr_msg_union message;
-/*
-  union {
-    struct hellomsg hello;
-    struct olsr_tcmsg tc;
-    struct hnamsg hna;
-    struct midmsg mid;
-
-    // my messages
-    struct qaul_chat_msg         chat;
-    struct qaul_ipc_msg          ipc;
-    struct qaul_node_msg         node;
-    struct qaul_userhello_msg    userhello;
-    struct qaul_filediscover_msg filediscover;
-    struct qaul_exediscover_msg  exediscover;
-  } message;
-*/
 };
 
 /*
@@ -296,20 +280,7 @@ struct olsrmsg6 {
   olsr_u8_t hopcnt;
   olsr_u16_t seqno;
 
-  union {
-    struct hellomsg6 hello;
-    struct olsr_tcmsg6 tc;
-    struct hnamsg6 hna;
-    struct midmsg6 mid;
-
-    // my messages
-    struct qaul_chat_msg         chat;
-    struct qaul_ipc_msg          ipc;
-    struct qaul_node_msg         node;
-    struct qaul_userhello_msg    userhello;
-    struct qaul_filediscover_msg filediscover;
-    struct qaul_exediscover_msg  exediscover;
-  } message;
+  union olsr_msg_union message;
 };
 
 union qaul_inbuf

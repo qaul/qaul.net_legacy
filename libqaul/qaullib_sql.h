@@ -100,18 +100,6 @@ static const char* sql_user_delete_ipv4 = "DELETE FROM 'user' WHERE ipv4 = %i;";
 
 /**
  * file table
- *
- * file types
- * 1: File
- * 2: Profile image
- * 4: qaul.net executable
- *
- * status
- * -1: download error
- * 0: not downloaded yet
- * 1: downloading
- * 2: successfully downloaded
- * 4: my own file
  */
 #define QAUL_FILETYPE_FILE           1
 #define QAUL_FILETYPE_PROFILEIMAGE   2
@@ -171,34 +159,38 @@ struct qaul_populate_config_struct
 };
 
 static struct qaul_populate_config_struct qaul_populate_config[MAX_POPULATE_CONFIG] = {
-	{"net.protocol",  CONFIG_TYPE_INT,"",4},
-	{"net.mask",      CONFIG_TYPE_INT,"",8},
-	{"net.gateway",   CONFIG_TYPE_STR,"0.0.0.0",0},
-	{"net.channel",   CONFIG_TYPE_INT,"",11},
-	{"net.bssid_set", CONFIG_TYPE_INT,"",0},
-	{"net.bssid",     CONFIG_TYPE_STR,"B6:B5:B3:F5:AB:E4",0},
-	{"net.ibss",      CONFIG_TYPE_STR,"qaul.net",0}
+	{"net.protocol",  CONFIG_TYPE_INT, "",                  4},
+	{"net.mask",      CONFIG_TYPE_INT, "",                  8},
+	{"net.gateway",   CONFIG_TYPE_STR, "0.0.0.0",           0},
+	{"net.channel",   CONFIG_TYPE_INT, "",                  11},
+	{"net.bssid_set", CONFIG_TYPE_INT, "",                  0},
+	{"net.bssid",     CONFIG_TYPE_STR, "B6:B5:B3:F5:AB:E4", 0},
+	{"net.ibss",      CONFIG_TYPE_STR, "qaul.net",          0}
 };
 
 /********************************************//**
  * populate file sharing
  ***********************************************/
-#define MAX_POPULATE_FILE 5
 struct qaul_populate_file_struct
 {
-	int type;
-	int size;
-    char hash[MAX_HASHSTR_LEN +1];
+	uint32_t  OS_flag;
+	int  type;
+	int  size;
+    char hashstr[MAX_HASHSTR_LEN +1];
     char suffix[MAX_SUFFIX_LEN +1];
     char description[MAX_DESCRIPTION_LEN +1];
+    int  max_size;
 };
 
+#define FAT_CLIENT        1
+#define MAX_POPULATE_FILE 4
+
 static struct qaul_populate_file_struct qaul_populate_file[MAX_POPULATE_FILE] = {
-	{4, 8433817, "575844dfcaa7d6ba6e378b44ab2bf9f36c1e26c2", "gz", "ubuntu & debian 32 Bit"},
-	{4, 2068596, "0000000000000000000000000000000000000000", "zip", "OSX 10.5"},
-	{4, 2068596, "a560db563b4f958737ea5052d18a0513c112b55a", "zip", "OSX 10.6"},
-	{4, 4151214, "834a9eeafc62f9a8d6fc6614d5156a812d424cf6", "exe", "Windows 7"},
-	{4, 2085071, "dc6705752b242d6147d522418971e420de86abdb", "apk", "Android"}
+	{1,  4, 8433817, "575844dfcaa7d6ba6e378b44ab2bf9f36c1e26c2", "gz",  "ubuntu & debian 32 Bit", 9000000},
+//	{2,  4, 2068596, "0000000000000000000000000000000000000000", "zip", "OSX 10.5",               3000000},
+	{4,  4, 2068596, "a560db563b4f958737ea5052d18a0513c112b55a", "zip", "OSX 10.6",               3000000},
+	{8,  4, 4151214, "834a9eeafc62f9a8d6fc6614d5156a812d424cf6", "exe", "Windows 7",              5000000},
+	{16, 4, 2085071, "dc6705752b242d6147d522418971e420de86abdb", "apk", "Android",                3000000}
 };
 
 

@@ -323,7 +323,7 @@ void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg)
 			// todo: ipv6
 			memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
 
-			Qaullib_UDP_SendFileavailabeMsg(&fileavailable_msg, &ip);
+			Qaullib_UDP_SendFileavailableMsg(&fileavailable_msg, &ip);
 		}
 	}
 }
@@ -331,51 +331,40 @@ void Qaullib_IpcEvaluateFilediscover(union olsr_message *msg)
 // ------------------------------------------------------------
 void Qaullib_IpcEvaluateExediscover(union olsr_message *msg)
 {
-	printf("Qaullib_IpcEvaluateExediscover\n");
-	/*
-	char buffer[10240];
-	char* stmt = buffer;
-	char *error_exec = NULL;
-	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
-	char chat_msg[MAX_MESSAGE_LEN +1];
-	char chat_user[MAX_USER_LEN +1];
-
-	//printf("IpcEvaluateChat\n");
-	//printf("type: %i, name: %s\n", msg->v4.olsr_msgtype, msg->v4.message.chat.name);
-
-	// get chat & username
-	memcpy(&chat_user, msg->v4.message.chat.name, MAX_USER_LEN);
-	memcpy(&chat_user[MAX_USER_LEN], "\0", 1);
-	memcpy(&chat_msg, msg->v4.message.chat.msg, MAX_MESSAGE_LEN);
-	memcpy(&chat_msg[MAX_MESSAGE_LEN], "\0", 1);
-
-	// TODO: ipv6
-	sprintf(stmt, sql_msg_set_received,
-			1,
-			chat_user,
-			chat_msg,
-			inet_ntop(AF_INET, &msg->v4.originator, (char *)&ipbuf, sizeof(ipbuf)),
-			4,
-			(int)msg->v4.hopcnt,
-			(int)msg->v4.ttl,
-			(int)ntohs(msg->v4.seqno),
-			me_to_reltime(msg->v4.olsr_vtime)
-			);
-	//printf("statement: %s\n", stmt);
-	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
-	{
-		printf("SQLite error: %s\n",error_exec);
-		sqlite3_free(error_exec);
-		error_exec=NULL;
-	}
-
-	// remember username
+	struct qaul_exeavailable_msg exeavailable_msg;
+	int  OS_flags, i;
 	union olsr_ip_addr ip;
-	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
-	Qaullib_UserCheckUser(&ip, chat_user);
 
-	qaul_new_msg++;
-*/
+	if(QAUL_DEBUG)
+		printf("Qaullib_IpcEvaluateExediscover\n");
+
+	OS_flags = ntohl(msg->v4.message.exediscover.OS_flag);
+
+	// todo: ipv6
+	// check if OS flag exists
+	for(i=0; i<MAX_POPULATE_FILE; i++)
+	{
+		if(
+			qaul_exe_array[i].OS_flag & OS_flags > 0 &&
+			qaul_exe_array[i].discovered > 0
+			)
+		{
+			// check if file is available
+			if(Qaullib_File_LL_FileAvailable(qaul_exe_array[i].hash))
+			{
+				// send exe available message
+				exeavailable_msg.msgtype = QAUL_EXEAVAILABLE_MESSAGE_TYPE;
+				exeavailable_msg.OS_flag = htonl(qaul_exe_array[i].OS_flag);
+				memcpy(exeavailable_msg.hash, qaul_exe_array[i].hash, MAX_HASH_LEN);
+				memcpy(exeavailable_msg.suffix, qaul_exe_array[i].suffix, MAX_SUFFIX_LEN);
+				exeavailable_msg.filesize = htonl(qaul_exe_array[i].size);
+
+				memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
+
+				Qaullib_UDP_SendExeavailableMsg(&exeavailable_msg, &ip);
+			}
+		}
+	}
 }
 
 // ------------------------------------------------------------

@@ -19,14 +19,14 @@ int qaul_UDP_socket;
 int qaul_UDP_started;
 
 /**
- * Send the message to the
+ * Send the message to the requester
  */
-void Qaullib_UDP_SendFileavailabeMsg(struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip);
+void Qaullib_UDP_SendFileavailableMsg(struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip);
 
 /**
- * Send the message to the
+ * Send the message to the requester
  */
-void Qaullib_UDP_SendExeavailabeMsg(struct qaul_exeavailable_msg *msg, union olsr_ip_addr *ip);
+void Qaullib_UDP_SendExeavailableMsg(struct qaul_exeavailable_msg *msg, union olsr_ip_addr *ip);
 
 /**
  * Check for incoming messages

@@ -68,7 +68,7 @@ int  Qaullib_UDP_StartServer(void)
 }
 
 // ------------------------------------------------------------
-void Qaullib_UDP_SendFileavailabeMsg(struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip)
+void Qaullib_UDP_SendFileavailableMsg(struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip)
 {
 	struct sockaddr_in destAddr;
 	int status;
@@ -82,7 +82,7 @@ void Qaullib_UDP_SendFileavailabeMsg(struct qaul_fileavailable_msg *msg, union o
 	{
 		char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
 		inet_ntop(destAddr.sin_family, &destAddr.sin_addr, (char *)&ipbuf, MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN));
-		printf("Qaullib_UDP_SendFileavailabeMsg to: %s\n", ipbuf);
+		printf("Qaullib_UDP_SendFileavailableMsg to: %s\n", ipbuf);
 	}
 
 	status = sendto(
@@ -95,29 +95,50 @@ void Qaullib_UDP_SendFileavailabeMsg(struct qaul_fileavailable_msg *msg, union o
 					);
 
 	if(status < 0)
-		printf("Qaullib_UDP_SendFileavailabeMsg Error sending file available message: %i\n", status);
+		printf("Qaullib_UDP_SendFileavailableMsg Error sending file available message: %i\n", status);
 }
 
 // ------------------------------------------------------------
-void Qaullib_UDP_SendExeavailabeMsg(struct qaul_exeavailable_msg *msg, union olsr_ip_addr *ip)
+void Qaullib_UDP_SendExeavailableMsg(struct qaul_exeavailable_msg *msg, union olsr_ip_addr *ip)
 {
-	printf("Qaullib_UDP_SendExeavailabeMsg \n");
+	struct sockaddr_in destAddr;
+	int status;
+
+	destAddr.sin_family = AF_INET;
+	destAddr.sin_port = htons(UDP_PORT);
+	// todo: ipv6
+	destAddr.sin_addr.s_addr = ip->v4.s_addr;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_UDP_SendExeavailableMsg \n");
+
+	status = sendto(
+					qaul_UDP_socket,
+					(char *)msg,
+					sizeof(struct qaul_exeavailable_msg),
+					0,
+					(struct sockaddr *)&destAddr,
+					sizeof(destAddr)
+					);
+
+	if(status < 0)
+		printf("Qaullib_UDP_SendExeavailableMsg Error sending file available message: %i\n", status);
 }
 
 // ------------------------------------------------------------
 void Qaullib_UDP_CheckSocket(void)
 {
 	char buffer[1024];
-	struct qaul_fileavailable_msg *fileavailabe;
-	struct qaul_exeavailable_msg *exeavailabe;
+	struct qaul_fileavailable_msg *fileavailable;
+	struct qaul_exeavailable_msg *exeavailable;
 	struct sockaddr_in sourceAddr;
 	union olsr_ip_addr olsrSourceAddr;
-	int received;
+	int received, i;
 	uint8_t msgtype;
 	socklen_t socklen;
 
-	fileavailabe = (struct qaul_fileavailable_msg *)buffer;
-	exeavailabe = (struct qaul_exeavailable_msg *)buffer;
+	fileavailable = (struct qaul_fileavailable_msg *)buffer;
+	exeavailable = (struct qaul_exeavailable_msg *)buffer;
 	memset(&sourceAddr,0,sizeof(sourceAddr));
 
 	if(qaul_UDP_started)
@@ -141,7 +162,7 @@ void Qaullib_UDP_CheckSocket(void)
 					printf("UDP message received\n");
 
 				// check which message we received
-				uint16_t msgtype = ntohs(fileavailabe->msgtype);
+				uint16_t msgtype = ntohs(fileavailable->msgtype);
 
 				if(msgtype == QAUL_FILEAVAILABLE_MESSAGE_TYPE && received >= sizeof(struct qaul_fileavailable_msg))
 				{
@@ -151,14 +172,14 @@ void Qaullib_UDP_CheckSocket(void)
 					// todo: ipv6
 					memcpy(&olsrSourceAddr.v4.s_addr, &sourceAddr.sin_addr.s_addr, sizeof(olsrSourceAddr.v4.s_addr));
 					// add discovery to LL
-					Qaullib_Filediscovery_LL_DiscoveryMsgProcessing(fileavailabe, &olsrSourceAddr);
+					Qaullib_Filediscovery_LL_DiscoveryMsgProcessing(fileavailable, &olsrSourceAddr);
 				}
 				else if(msgtype == QAUL_EXEAVAILABLE_MESSAGE_TYPE && received >= sizeof(struct qaul_exeavailable_msg))
 				{
 					if(QAUL_DEBUG)
 						printf("QAUL_EXEAVAILABLE_MESSAGE_TYPE received\n");
 
-					// add exe to DB & LL
+					Qaullib_ExeProcessAvailableMsg(exeavailable);
 				}
 			}
 		}

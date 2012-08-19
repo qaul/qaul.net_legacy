@@ -88,13 +88,16 @@ void Qaullib_Init(const char* resourcePath)
 	// insert filesharing
 	if(dbExists == 0)
 	{
-		Qaullib_FilePopulate();
 		Qaullib_DbPopulateConfig();
+		Qaullib_FilePopulate();
 	}
 
 	// initialize linked lists
 	Qaullib_UserInit();
 	Qaullib_FileInit();
+
+	// initialize exe discovery
+	Qaullib_ExeInit();
 
 #ifdef WIN32
 	// needs to be called before socket()
@@ -336,10 +339,10 @@ void Qaullib_DbSetConfigValue(const char* key, const char* value)
 	}
 
 	// insert new IP
-	sprintf(stmt, sql_config_set,key,value);
+	sprintf(stmt, sql_config_set, key, value);
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
-		printf("SQLite error: %s\n",error_exec);
+		printf("SQLite error: %s\n", error_exec);
 		sqlite3_free(error_exec);
 		error_exec=NULL;
 	}

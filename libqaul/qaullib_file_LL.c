@@ -242,7 +242,25 @@ int Qaullib_File_LL_HashExists (char *filehash)
 }
 
 // ------------------------------------------------------------
-static uint32_t Qaullib_File_LL_Hashing(unsigned char *filehash)
+int Qaullib_File_LL_FileAvailable (char *filehash)
+{
+	struct qaul_file_LL_node mynode;
+	Qaullib_File_LL_InitNodeWithHash(&mynode, filehash);
+	while(Qaullib_File_LL_NextItem(&mynode))
+	{
+		if(memcmp(&mynode.item->hash, filehash, MAX_HASH_LEN) == 0)
+		{
+			if(mynode.item->status >= QAUL_FILESTATUS_DOWNLOADED)
+				return 1;
+			else
+				return 0;
+		}
+	}
+	return 0;
+}
+
+// ------------------------------------------------------------
+static uint32_t Qaullib_File_LL_Hashing (unsigned char *filehash)
 {
 	uint32_t hash;
 	hash = jenkins_hash((const uint8_t *)filehash, MAX_HASH_LEN);
@@ -251,7 +269,7 @@ static uint32_t Qaullib_File_LL_Hashing(unsigned char *filehash)
 }
 
 // ------------------------------------------------------------
-void Qaullib_Filediscovery_LL_DiscoveryMsgProcessing(struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip)
+void Qaullib_Filediscovery_LL_DiscoveryMsgProcessing (struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip)
 {
 	struct qaul_file_LL_item *file;
 

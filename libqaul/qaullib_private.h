@@ -48,6 +48,7 @@ extern "C" {
 #include "bstrlib/bstrlib.h"
 #include "qaullib_file_LL.h"
 #include "qaullib_filesharing.h"
+#include "qaullib_exediscovery.h"
 #include "qaullib_ipc.h"
 #include "qaullib_voip.h"
 #include "qaullib_udp_communication.h"
@@ -88,27 +89,6 @@ char qaullib_AppEventOpenURL[MAX_URL_LEN];
 
 union olsr_message *qaul_in_msg;
 
-// todo: delete because not used anymore
-/*
-struct q_message_result
-{
-	int id;
-	int type;
-	char name[MAX_USER_LEN +1];
-	char msg[MAX_MESSAGE_LEN +1];
-	char ip[MAX_IP_LEN +1];
-	int time;
-};
-
-struct q_user
-{
-	int id;
-	char name[MAX_USER_LEN +1];
-	char ip[MAX_IP_LEN +1];
-	float lq;
-	int time;
-};
-*/
 
 /********************************************//**
  * configuration variables
