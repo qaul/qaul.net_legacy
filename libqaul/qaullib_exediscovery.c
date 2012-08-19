@@ -89,7 +89,7 @@ void Qaullib_ExeScheduleDiscovery(void)
 			{
 				if(qaul_exe_array[i].discovered == 0)
 				{
-					OS_flag += htonl(qaul_exe_array[i].OS_flag);
+					OS_flag += qaul_exe_array[i].OS_flag;
 					qaul_exe_array[i].discovery_timestamp = time(NULL);
 				}
 			}
@@ -146,7 +146,7 @@ void Qaullib_ExeProcessAvailableMsg(struct qaul_exeavailable_msg *msg)
 				memcpy(&file_item.suffix[MAX_SUFFIX_LEN], "\0", 1);
 
 				memcpy(file_item.hash, msg->hash, MAX_HASH_LEN);
-				Qaullib_HashToString(msg->hash, file_item.hash);
+				Qaullib_HashToString(msg->hash, file_item.hashstr);
 
 				// add exe to DB & LL
 				if(Qaullib_FileAdd(&file_item))
