@@ -341,29 +341,23 @@ void Qaullib_IpcEvaluateExediscover(union olsr_message *msg)
 
 	OS_flags = ntohl(msg->v4.message.exediscover.OS_flag);
 
-	if(QAUL_DEBUG)
-	{
-		printf("Qaullib_IpcEvaluateExediscover number: %i \n", OS_flags);
-	}
-
 	// todo: ipv6
 	// check if OS flag exists
 	for(i=0; i<MAX_POPULATE_FILE; i++)
 	{
-		if(QAUL_DEBUG)
-			printf("flag set: %i, discovered = %i\n", qaul_exe_array[i].OS_flag, qaul_exe_array[i].discovered);
-
 		if(
-			qaul_exe_array[i].OS_flag & OS_flags > 0 &&
+			(qaul_exe_array[i].OS_flag & OS_flags) &&
 			qaul_exe_array[i].discovered > 0
 			)
 		{
-			printf("flag found \n");
+			if(QAUL_DEBUG)
+				printf("flag found %i\n", qaul_exe_array[i].OS_flag);
 
 			// check if file is available
 			if(Qaullib_File_LL_FileAvailable(qaul_exe_array[i].hash))
 			{
-				printf("file available: %s\n", qaul_exe_array[i].hashstr);
+				if(QAUL_DEBUG)
+					printf("file available: %s\n", qaul_exe_array[i].hashstr);
 
 				// send exe available message
 				exeavailable_msg.msgtype = htons(QAUL_EXEAVAILABLE_MESSAGE_TYPE);
