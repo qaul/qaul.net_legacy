@@ -14,6 +14,8 @@
 void Qaullib_ExeInit(void)
 {
 	int i;
+	char buffer[1024];
+	char *key  = buffer;
 
 	if(QAUL_DEBUG)
 		printf("Qaullib_ExeInit\n");
@@ -30,7 +32,7 @@ void Qaullib_ExeInit(void)
 		memcpy(&qaul_exe_array[i].suffix[MAX_DESCRIPTION_LEN], "\0", 1);
 
 		// create key
-		qaul_populate_file ;
+		sprintf(key, "exe.%i", qaul_populate_file[i].OS_flag);
 
 		// check if this file has been discovered
 		if(Qaullib_DbGetConfigValue(key, qaul_exe_array[i].hashstr))
@@ -112,7 +114,7 @@ void Qaullib_ExeProcessAvailableMsg(struct qaul_exeavailable_msg *msg)
 		printf("Qaullib_ExeProcessAvailableMsg\n");
 
 	OS_flag = ntohl(msg->OS_flag);
-	size = ntohl(msg->size);
+	size = ntohl(msg->filesize);
 
 	// check if we still need it
 	for(i=0; i<MAX_POPULATE_FILE; i++)
@@ -126,13 +128,13 @@ void Qaullib_ExeProcessAvailableMsg(struct qaul_exeavailable_msg *msg)
 				)
 			{
 				// create file entry
-				file_item.type = QAUL_FILETYPE_EXE;
+				file_item.type = QAUL_FILETYPE_EXECUTABLE;
 				file_item.status = QAUL_FILESTATUS_NEW;
 				file_item.size = size;
 				file_item.downloaded = 0;
 
 				strncpy(file_item.description, qaul_exe_array[i].description, MAX_DESCRIPTION_LEN);
-				memcpy(file_item.description[MAX_DESCRIPTION_LEN], "\0", 1);
+				memcpy(&file_item.description[MAX_DESCRIPTION_LEN], "\0", 1);
 
 				strncpy(file_item.suffix, msg->suffix, MAX_SUFFIX_LEN);
 				memcpy(&file_item.suffix[MAX_SUFFIX_LEN], "\0", 1);
