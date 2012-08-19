@@ -125,7 +125,7 @@ void Qaullib_ExeProcessAvailableMsg(struct qaul_exeavailable_msg *msg)
 	// check if we still need it
 	for(i=0; i<MAX_POPULATE_FILE; i++)
 	{
-		if(qaul_exe_array[i].OS_flag & OS_flag > 0)
+		if(qaul_exe_array[i].OS_flag & OS_flag)
 		{
 			if(
 				qaul_exe_array[i].discovered == 0 &&
