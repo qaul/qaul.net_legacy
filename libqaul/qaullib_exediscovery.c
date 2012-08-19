@@ -88,11 +88,17 @@ void Qaullib_ExeScheduleDiscovery(void)
 			for(; i<MAX_POPULATE_FILE; i++)
 			{
 				if(qaul_exe_array[i].discovered == 0)
+				{
 					OS_flag += htonl(qaul_exe_array[i].OS_flag);
+					qaul_exe_array[i].discovery_timestamp = time(NULL);
+				}
 			}
 
 			// fill in exe discovery message
 			// todo: ipv6
+			size  = sizeof(struct qaul_exediscover_msg);
+			size += sizeof(struct olsrmsg);
+			m->v4.olsr_msgsize = htons(size);
 			m->v4.olsr_msgtype = QAUL_EXEDISCOVER_MESSAGE_TYPE;
 			m->v4.message.exediscover.OS_flag = htonl(OS_flag);
 
