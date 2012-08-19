@@ -51,7 +51,7 @@ void Qaullib_ExeInit(void)
 		else
 		{
 			qaul_exe_array[i].discovered = 0;
-			qaul_exe_array[i].discovery_timestamp = time(0);
+			memset(&qaul_exe_array[i].discovery_timestamp, 0, sizeof(time_t));
 		}
 	}
 }

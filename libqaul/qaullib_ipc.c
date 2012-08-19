@@ -353,7 +353,7 @@ void Qaullib_IpcEvaluateExediscover(union olsr_message *msg)
 			if(Qaullib_File_LL_FileAvailable(qaul_exe_array[i].hash))
 			{
 				// send exe available message
-				exeavailable_msg.msgtype = QAUL_EXEAVAILABLE_MESSAGE_TYPE;
+				exeavailable_msg.msgtype = htons(QAUL_EXEAVAILABLE_MESSAGE_TYPE);
 				exeavailable_msg.OS_flag = htonl(qaul_exe_array[i].OS_flag);
 				memcpy(exeavailable_msg.hash, qaul_exe_array[i].hash, MAX_HASH_LEN);
 				memcpy(exeavailable_msg.suffix, qaul_exe_array[i].suffix, MAX_SUFFIX_LEN);

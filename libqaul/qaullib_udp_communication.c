@@ -159,7 +159,7 @@ void Qaullib_UDP_CheckSocket(void)
 			if(received > 0)
 			{
 				if(QAUL_DEBUG)
-					printf("UDP message received\n");
+					printf("Qaullib_UDP_CheckSocket message received\n");
 
 				// check which message we received
 				uint16_t msgtype = ntohs(fileavailable->msgtype);
@@ -180,6 +180,11 @@ void Qaullib_UDP_CheckSocket(void)
 						printf("QAUL_EXEAVAILABLE_MESSAGE_TYPE received\n");
 
 					Qaullib_ExeProcessAvailableMsg(exeavailable);
+				}
+				else
+				{
+					if(QAUL_DEBUG)
+						printf("Qaullib_UDP_CheckSocket unknown message type: %i\n", msgtype);
 				}
 			}
 		}
