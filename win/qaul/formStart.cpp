@@ -36,6 +36,9 @@ void formStart::InitializeQaul(void)
     qaulStartCounter = 0;
 	qaulTestError = false;
 
+	// configure firewall
+	ConfigureFirewall();
+
 	// initialize qaullib
 	Qaullib_Init((char*)(void*)Marshal::StringToHGlobalAnsi(qaulResourcePath));
 	Debug::WriteLine(L"Qaullib_Init initialized");
@@ -70,6 +73,8 @@ void formStart::ExitQaul(void)
 	StopPortforward();
 	// kill olsrd
 	StopOlsr();
+	// remove added firewall configuration
+	UnconfigureFirewall();
 }
 
 void formStart::QaulStarting(void)
@@ -460,7 +465,7 @@ bool formStart::WifiSetIp(void)
 }
 
 /**
- * control olsr
+ * start olsr
  */
 bool formStart::StartOlsr(void)
 {
@@ -496,8 +501,9 @@ bool formStart::StartOlsr(void)
 	return true;
 }
 
-// --------------------------------------------------
-// stop olsr
+/**
+ * stop Olsr
+ */
 bool formStart::StopOlsr(void)
 {
 	// kill all running olsrd instances
@@ -599,6 +605,159 @@ bool formStart::StopPortforward(void)
 		CloseHandle( pi.hThread );
 	}
 	Debug::WriteLine(L"port forward killed");
+
+	return true;
+}
+
+/**
+ * configure the windows firewall
+ */
+bool formStart::ConfigureFirewall(void)
+{
+	Debug::WriteLine(L"configure firewall");
+
+	STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+
+	TCHAR cCmdBuf[5000];
+	pin_ptr<const TCHAR> tcResourcePath = PtrToStringChars(qaulResourcePath);
+
+	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=in action=allow enable=yes program=\"%s\\qaul.exe\""),tcResourcePath);
+	System::String^ strCmd5 = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd5));
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
+	}
+	else
+	{
+		Debug::WriteLine(L"wait for process");
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, 1000 );
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );	
+	}
+
+	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=out action=allow enable=yes program=\"%s\\qaul.exe\""),tcResourcePath);
+	System::String^ strCmd6 = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd6));
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
+	}
+	else
+	{
+		Debug::WriteLine(L"wait for process");
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, 1000 );
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );	
+	}
+
+	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=in action=allow enable=yes program=\"%s\\socat.exe\""),tcResourcePath);
+	System::String^ strCmd = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd));
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
+	}
+	else
+	{
+		Debug::WriteLine(L"wait for process");
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, 1000 );
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );	
+	}
+
+	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=out action=allow enable=yes program=\"%s\\socat.exe\""),tcResourcePath);
+	System::String^ strCmd2 = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd2));
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
+	}
+	else
+	{
+		Debug::WriteLine(L"wait for process");
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, 1000 );
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );	
+	}
+
+	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=in action=allow enable=yes program=\"%s\\olsrd.exe\""),tcResourcePath);
+	System::String^ strCmd3 = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd3));
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
+	}
+	else
+	{
+		Debug::WriteLine(L"wait for process");
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, 1000 );
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );	
+	}
+
+	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=out action=allow enable=yes program=\"%s\\olsrd.exe\""),tcResourcePath);
+	System::String^ strCmd4 = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd4));
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
+	}
+	else
+	{
+		Debug::WriteLine(L"wait for process");
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, 1000 );
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );	
+	}
+
+	return true;
+}
+
+/**
+ * remove the formerly set rules
+ */
+bool formStart::UnconfigureFirewall(void)
+{
+	Debug::WriteLine(L"remove firewall configuration");
+
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+
+	TCHAR cCmdBuf[5000];
+	pin_ptr<const TCHAR> tcResourcePath = PtrToStringChars(qaulResourcePath);
+	_stprintf(cCmdBuf,_T("netsh advfirewall firewall delete rule name=\"qaul\""));
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		Debug::WriteLine(System::String::Format("Error firewall unconfiguration: {0}",GetLastError()));
+		return false;
+	}
+	else
+	{
+		Debug::WriteLine(L"wait for process");
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, INFINITE );
+
+		Debug::WriteLine(L"close handle");
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );
+	}
+	Debug::WriteLine(L"firewall unconfigured");
 
 	return true;
 }

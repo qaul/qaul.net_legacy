@@ -63,6 +63,8 @@ namespace qaul {
 		bool StopOlsr(void);
 		bool StartPortforward(void);
 		bool StopPortforward(void);
+		bool ConfigureFirewall(void);
+		bool UnconfigureFirewall(void);
 
 		// Timers
 		static System::Windows::Forms::Timer^ ipcTimer = gcnew System::Windows::Forms::Timer;
@@ -135,7 +137,6 @@ namespace qaul {
 	private: System::Windows::Forms::WebBrowser^  webBrowser1;
 
 	// error view
-	private: System::Windows::Forms::Button^  btnRetry;
 	private: System::Windows::Forms::Label^  lblError;
 
 	
@@ -277,7 +278,6 @@ private: System::Void formStart_FormClosing(System::Object^  sender, System::Win
 		void ErrorInitialize(void)
 		{
 			this->lblError = (gcnew System::Windows::Forms::Label());
-			this->btnRetry = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// lblError
@@ -291,20 +291,8 @@ private: System::Void formStart_FormClosing(System::Object^  sender, System::Win
 			this->lblError->Text = L"Error";
 			this->lblError->TextAlign = System::Drawing::ContentAlignment::TopCenter;
 			// 
-			// btnRetry
-			// 
-			this->btnRetry->ForeColor = System::Drawing::Color::Black;
-			this->btnRetry->Location = System::Drawing::Point(156, 138);
-			this->btnRetry->Name = L"btnRetry";
-			this->btnRetry->Size = System::Drawing::Size(86, 23);
-			this->btnRetry->TabIndex = 8;
-			this->btnRetry->Text = L"&retry";
-			this->btnRetry->UseVisualStyleBackColor = true;
-			this->btnRetry->Click += gcnew System::EventHandler(this, &formStart::btnRetry_Click);
-			// 
 			// formError
 			// 
-			this->Controls->Add(this->btnRetry);
 			this->Controls->Add(this->lblError);
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -319,7 +307,6 @@ private: System::Void formStart_FormClosing(System::Object^  sender, System::Win
 			if(!errorFormInitialized) ErrorInitialize();
 			else if(!errorFormActive)
 			{
-				this->Controls->Add(this->btnRetry);
 				this->Controls->Add(this->lblError);
 			}
 
@@ -333,16 +320,9 @@ private: System::Void formStart_FormClosing(System::Object^  sender, System::Win
 		{
 			if(errorFormActive)
 			{
-				this->Controls->Remove(this->btnRetry);
 				this->Controls->Remove(this->lblError);
 			}
 			errorFormActive = false;
-		}
-
-
-private: System::Void btnRetry_Click(System::Object^ sender, System::EventArgs^ e) {
-			ErrorHide();
-			StartShow();
 		}
 
 		// ----------------------------------------------
