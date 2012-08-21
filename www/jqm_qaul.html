@@ -62,6 +62,7 @@
 				<input class="submit" type="submit" value="OK" id="locale_submit" data-icon="arrow-r" data-iconpos="right"/>
 			</form>
 		</p>
+		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
 	</div>
 </div>
 
@@ -74,6 +75,7 @@
 				<input class="submit i18n" type="submit" value="Save" id="name_submit"/>
 			</form>
 		</p>
+		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
 	</div>
 </div>
 
@@ -125,14 +127,17 @@
 <div data-role="page" id="page_pref" data-theme="d">
 	<div data-role="content" >
 		<p class="c_quit"><a href="javascript:quit_qaul()" data-role="button" class="i18n">Quit qaul.net</a></p>
+		<h2 id="page_pref_name">User</h2>
+		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider" class="i18n">Configuration</li>
+			<li><a href="#page_config_locale" data-transition="none" class="i18n">Change Language</a></li>
+			<li><a href="#page_config_name" data-transition="none" class="i18n">Change User Name</a></li>
+		</ul>
 		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider" class="i18n">Information</li>
 			<li data-icon="info"><a href="javascript:qaul_openurl('info/about.html')" data-transition="none" class="i18n">About qaul.net</a></li>
 			<li data-icon="info"><a href="javascript:qaul_openurl('info/howto.html')" data-transition="none" class="i18n">How To's</a></li>
 			<li data-icon="info"><a href="javascript:qaul_openurl('info/license.html')" data-transition="none" class="i18n">License</a></li>
-			<li data-role="list-divider" class="i18n">Configuration</li>
-			<li><a href="#page_config_locale" data-transition="none" class="i18n">Change Language</a></li>
-			<li><a href="#page_config_name" data-transition="none" class="i18n">Change User Name</a></li>
 		</ul>
 	</div>
 	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
@@ -178,7 +183,7 @@
 				<input type="text" name="m" id="file_add_msg" class="required filedesclen"/>
 				<input type="checkbox" checked="checked" name="a" value="1" id="file_add_advertise"/>
 				<label for="file_add_advertise" class="i18n">Advertise file</label>
-				<input class="submit" type="submit" value="Add File" id="file_add_submit" class="i18n"/>
+				<input type="submit" value="Add File" id="file_add_submit" class="i18n submit"/>
 			</form>
 		</p>
 	</div>
@@ -186,8 +191,11 @@
 
 <div data-role="page" id="page_user" data-theme="d">
 	<div data-role="header" data-position="fixed" data-theme="d">
-		<h1 id="page_user_name" user_id="">username</h1>
-		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a>
+		<div class="qaul_header">
+			<a href="javascript:user_goback()" data-role="button" data-icon="arrow-l" data-inline="true" data-direction="reverse" class="i18n" style="float:left;">Back</a>
+			<img src="images/i_conn0_30.png" style="float:right;"/>
+			<h1 id="page_user_name" user_id="" style="text-align:center;">username</h1>
+		</div>
 	</div>
 	<div data-role="content" id="page_user_content">
 		<div id="page_user_tab_chat">
@@ -223,8 +231,8 @@
 	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-theme="b" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
-				<li><a href="#page_users" onclick="javascript:get_users();" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
+				<li><a href="#page_users" onclick="javascript:get_users();" data-theme="b" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>
 			</ul>
@@ -271,9 +279,25 @@
 	</div>
 </div>
 
+<div data-role="page" id="page_iphone" data-theme="d">
+	<div data-role="content">
+		<p class="i18n">Please turn on your wifi account and select the network: <strong>qaul.net</strong></p>
+		<p class="i18n">Then click <strong>next</strong></p>
+		<p><a href="#page_loading" data-role="button" data-icon="arrow-r" data-iconpos="right" class="i18n">Next</a></p>
+	</div>
+</div>
+
+<div data-role="page" id="page_restart" data-theme="d">
+	<div data-role="content">
+		<h2 class="i18n qaul_center">This configuration requires a restart</h2>
+		<h2 class="i18n qaul_center">Please restart qaul.net</h2>
+		<p class="c_quit"><a href="javascript:quit_qaul()" data-role="button" class="i18n">Quit qaul.net</a></p>
+	</div>
+</div>
+
 <div data-role="page" id="page_goodbye" data-theme="d">
 	<div data-role="content">
-		<h1 class="i18n" class="i18n">Goodbye</h1>
+		<h1 class="i18n">Goodbye</h1>
 	</div>
 </div>
 

@@ -26,36 +26,22 @@ struct qaul_filediscovery_LL_item {
  * The file entries are added to a linked list in the array according
  * to the file hash.
  * (The hash is created from the last byte of the file hash.)
- *
- * @var qaul_file_LL_item::type
- * type of the file
- * 1: File
- * 2: Profile image
- * 4: qaul.net executable
- *
- * @var qaul_file_LL_item::status
- * status of the file
- * -1: download error
- * 0: not downloaded yet
- * 1: downloading
- * 2: successfully downloaded
- * 4: my own file
- *
  */
 struct qaul_file_LL_item {
 	struct qaul_file_LL_item *next;           /// next node
 	struct qaul_file_LL_item *prev;           /// previous node
 
-    int id;                                   /// data base ID of the file entry
-    int type;
+    int  id;                                  /// data base ID of the file entry
+    int  type;                                /// type of the file, see QAUL_FILETYPE_XXX
     char hash[MAX_HASH_LEN];                  /// file hash
     char hashstr[MAX_HASHSTR_LEN +1];         /// file hash string
     char suffix[MAX_SUFFIX_LEN +1];           /// file suffix
     char description[MAX_DESCRIPTION_LEN +1]; /// file description
-    char created_at[MAX_TIME_LEN +1];         /// when this file entry was created (not the date of the file!)
-    int status;
-    int size;                                 /// file size in bytes
-    int downloaded;                           /// number of downloaded bytes
+    int  created_at;                          /// when this file entry was created (not the date of the file!)
+    int  status;                              /// status of the file, see QAUL_FILESTATUS_XXX
+    int  size;                                /// file size in bytes
+    int  downloaded;                          /// number of downloaded bytes, that are concluded
+    int  downloaded_chunk;                    /// number of downloaded bytes, of the current chunk downloading (these bytes can be lost)
 
     time_t discovery_timestamp;               /// time stamp when discovery started
     int discovery_count;                      /// how many seeders were discovered
@@ -106,6 +92,14 @@ int  Qaullib_File_LL_HashSearch (char *hash, struct qaul_file_LL_item **item);
  * @retval 0 entry does not exist
  */
 int  Qaullib_File_LL_HashExists (char *hash);
+
+/**
+ * Checks if a file with @a hash exists and if it hash finished downloading.
+ *
+ * @retval 1 file finished downloading
+ * @retval 0 file has not finished downloading
+ */
+int Qaullib_File_LL_FileAvailable (char *filehash);
 
 /**
  * initializes a @a node with the first entry of the file table

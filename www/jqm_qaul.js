@@ -225,8 +225,10 @@ function qaul_configure(data)
 	qaul_config = data;
 	
 	// set up everything
-	if(qaul_config.c_quit) $(".c_quit").show();
-	if(qaul_config.c_debug) $(".c_debug").show();
+	if(qaul_config.c_quit) 
+		$(".c_quit").show();
+	if(qaul_config.c_debug) 
+		$(".c_debug").show();
 	
 	if(qaul_config.locale)
 	{
@@ -267,7 +269,7 @@ function qaul_translate(dictionary)
 		$(this).text($.i18n._($(this).text()));
 	});
 	$("input.i18n").each(function(){
-		$(this).prop('value',$.i18n._($(this).prop('value')));
+		$(this).val($.i18n._($(this).val()));
 	});
 	$("h1.i18n").each(function(){
 		$(this).text($.i18n._($(this).text()));
@@ -292,14 +294,16 @@ function init_chat()
 {
 	chat_initialized = true;
 	
+	// show back buttons
+	$(".c_init").show();
+	
 	// todo: put all those timers into one timer
 	// set timer
 	updatetimer();
 	
 	// set name
 	$.post('getname',function(data){
-		user_name = decodeURIComponent(data);
-		$('#chat_name').val(user_name);
+		set_username(decodeURIComponent(data));
 	});
 
 	// load files
@@ -322,6 +326,27 @@ function init_favorites()
 	}).error(function(){
 			// todo: show error page
 	});	
+}
+
+function set_username(name)
+{
+	user_name = name;
+	$("#chat_name").val(user_name);
+	$("#page_pref_name").text(user_name);
+}
+
+function set_wifiset()
+{
+	var path = "set_wifiset.json";
+	$.ajax({
+		url:   path,
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			$.mobile.changePage($("#page_loading"));
+			setTimeout(function(){loadingtimer();},1000);
+		} 
+	});		
 }
 
 // ======================================================
@@ -656,7 +681,7 @@ var callchecktimer = function()
 function format_msg_txt(msg)
 {
 	// @user
-	msg = msg.replace(/(^|\s)(@[^\s]+)/g,"$1<a href=\"\" class=\"user\">$2</a>");
+	msg = msg.replace(/(^|\s)(@[^\s]+)/g,"$1<span class=\"user\">$2</span>");
 	// #tags
 	msg = msg.replace(/(^|\s)(#[^\s]+)/g,"$1<a href=\"#page_tag\" onClick=\"javascript:show_tag('$2');\" class=\"tag\">$2</a>");
 	// files
@@ -1049,13 +1074,6 @@ function file_button_schedule(hash, suffix, size, description, name, ip)
 	if(file_check(hash, suffix)) button += "<div class=\"msg_filebutton " +hash +suffix +" " +file_suffix2filetype(suffix) +"\"><a href=\"#page_file\" class=\"" +file_suffix2filetype(suffix) +"\"><img src=\"images/f_success_64.png\"/></a></div>";
 	else button += "<div class=\"msg_filebutton " +hash +suffix +"\"><a href=\"#\" onClick=\"javascript:file_schedule('" +hash +"','" +suffix +"','" +description +"','" +size +"','" +ip +"','" +name +"')\" class=\"" +file_suffix2filetype(suffix) +"\"><img src=\"images/f_add_64.png\"/></a></div>";
 	return button;
-/*
-	// current solution
-	var button = "";
-	if(file_check(hash, suffix)) button += "<div class=\"filebutton " +hash +suffix +"\"><a href=\"#page_file\" data-role=\"button\" data-icon=\"check\" data-iconpos=\"notext\" class=\"filebutton\">file scheduled</a></div>";
-	else button += "<div class=\"filebutton " +hash +suffix +"\"><a href=\"#\" onClick=\"javascript:file_schedule('" +hash +"','" +suffix +"','" +description +"','" +size +"','" +ip +"','" +name +"')\" data-role=\"button\" data-icon=\"plus\" data-iconpos=\"notext\" class=\"filebutton\">download</a></div>";
-	return button;
-*/
 }
 
 function file_button_deactivate(hash, suffix)
@@ -1082,7 +1100,7 @@ function file_check(hash, suffix)
 
 function file_update()
 {
-	var path = "file_list.json";
+	var path = "file_list.json?r=0&e=1";
 	var files = $("#page_file_list");
 	$.ajax({
 		url:   path,
@@ -1113,8 +1131,7 @@ function file_update_check(item)
 			if(item.status == QAUL_FILESTATUS_DELETED) 
 			{
 				$("#file_" +item.hash).remove();
-				//qaulfiles.splice(i,1);
-				//break;
+				qaulfiles.splice(i,1);
 			}
 			// download failed
 			else if(item.status == QAUL_FILESTATUS_ERROR)
@@ -1122,12 +1139,14 @@ function file_update_check(item)
 				$("#file_" +item.hash).removeClass("scheduled downloading").addClass("failed");
 				$("#file_" +item.hash +" .fileicon64").attr("src","images/f_failed_64.png");
 				$("#file_bar_" +item.hash).remove();
+				qaulfiles[i] = item;
 			}
 			// update progress bar
 			else if(item.status == QAUL_FILESTATUS_DOWNLOADING)
 			{
 				$("#file_bar_" +item.hash).progressBar(item.downloaded);
 				$("#file_" +item.hash +" span.size").text(file_filesize(item.size));
+				qaulfiles[i] = item;
 			}
 			// file sucessfully downloaded
 			else if(item.status == QAUL_FILESTATUS_DOWNLOADED)
@@ -1143,15 +1162,26 @@ function file_update_check(item)
 					// add readvertise button
 					var button = "<a href=\"#\" onClick=\"javascript:file_advertise('" +item.hash +"','" +item.suffix +"','" +item.size +"','" +item.description +"')\" class=\"filebutton\"><img src=\"images/b_advertise.png\" alt=\"advertise\" /></a>";
 					$("#file_" +item.hash +" a.filebutton").after(button);
-					//$("#file_" +item.hash).trigger('create');
 				}
+				qaulfiles[i] = item;
 			}
-			qaulfiles[i] = item;
+			else if(item.status == QAUL_FILESTATUS_NEW)
+			{
+				if(item.status != qaulfiles[i].status)
+				{
+					$("#file_" +item.hash).remove();
+					qaulfiles.splice(i,1);
+					exists = false;
+				}
+				else
+					qaulfiles[i] = item;
+			}
+			break;
 		}
 	}
 	
 	// add file if not existing
-	if(!exists)
+	if(!exists && item.status != QAUL_FILESTATUS_DELETED)
 	{
 		qaulfiles.push(item);
 		var htmlitem = file_create_html(item);
@@ -1300,7 +1330,7 @@ function file_filesize(size)
 	else if(size > 1000000) str += (Math.round(size/100000)/10) +"MB";
 	else if(size > 10000) str += (Math.round(size/1000)) +"KB";
 	else if(size > 1000) str += (Math.round(size/100)/10) +"KB";
-	else str += "1KB";
+	else if(size > 0) str += "1KB";
 	return str;
 }
 
@@ -1327,12 +1357,19 @@ function send_locale()
 			'setlocale',
 			{"l": $("input[name='l']:checked").val(), "e":1},
 			function(data){
-				// forward to loading
-				$.mobile.changePage($("#page_loading"));
-				// set timer to check which page to load
-				setTimeout(function(){loadingtimer();},1000);
-				// update configuration
-				init_config();
+				if(chat_initialized)
+				{
+					$.mobile.changePage($("#page_restart"));
+				}
+				else
+				{
+					// forward to loading
+					$.mobile.changePage($("#page_loading"));
+					// set timer to check which page to load
+					setTimeout(function(){loadingtimer();},1000);
+					// update configuration
+					init_config();
+				}
 		});
 };
 
@@ -1344,7 +1381,7 @@ function send_name()
 			{"n": $("#name_name").val(), "e":1},
 			function(data){
 				// update username
-				user_name = $("#name_name").val();
+				set_username($("#name_name").val());
 				// forward to loading
 				$.mobile.changePage($("#page_loading"));
 				// set timer to check which page to load
@@ -1400,7 +1437,7 @@ var eventstimer=function()
 
 function get_users()
 {
-	var path = "getusers.json";
+	var path = "getusers.json?r=0&e=1";
 	$.ajax({
 		url:   path,
 		cache: false, // needed for IE
@@ -1417,7 +1454,7 @@ function users_append(data)
 	$.each(data.users, function(i,item){
 		if(item.add == 1) 
 			user_append(item.name, item.ip);
-		else
+		else if(item.add >= 2)
 			user_remove(item.name, item.ip);
 	});
 	$("#users").listview("refresh"); // This line now updates the listview
@@ -1435,16 +1472,24 @@ function user_append(name, ip)
 	}
 	else
 	{
-		$("<li></li>")
-			.prop('id',id)
-			.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
-				+'\')">' +name +'</a>'
-				+'<a href="javascript:favorite_add(\'' +name +'\',\'' +ip +'\');" data-icon="plus">add</a>'
-				)
-			//.text(item.name)
-			.insertAfter($("#users_divider"));
-			//.prependTo(users);
-		users.listview("refresh");
+		if($("#users #" +id).length)
+		{
+			// update user connection strength
+			// update incoming and queued messages
+		}
+		else
+		{
+			$("<li></li>")
+				.prop('id',id)
+				.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
+					+'\')">' +'<img src="images/i_conn0_20.png" class="ui-li-icon ui-corner-none"/>' +name +'<span class="ui-li-count msg_in">↑4 ↓3</span>' +'</a>'
+					+'<a href="javascript:favorite_add(\'' +name +'\',\'' +ip +'\');" data-icon="plus">add</a>'
+					)
+				//.text(item.name)
+				.insertAfter($("#users_divider"));
+				//.prependTo(users);
+			users.listview("refresh");
+		}
     }
 }
 
@@ -1461,7 +1506,7 @@ function user_remove(name, ip)
 			});
 	}
 	// remove from list
-	else
+	if($("#users #" +id).length)
 	{
 		$("#users #" +id).remove();
 	}
@@ -1518,7 +1563,7 @@ function favorite_append(name, ip, online)
 	$("<li></li>")
 		.prop('id',ip2id(ip))
 		.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
-					+'\')" ' +attr +'>' +name +'</a>'
+					+'\')" ' +attr +'>' +'<img src="images/i_conn0_20.png" class="ui-li-icon ui-corner-none"/>' +name +'<span class="ui-li-count msg_in">↑4 ↓3</span>' +'</a>'
 					+'<a href="javascript:favorite_del(\'' +name +'\',\'' +ip 
 					+'\');" data-icon="minus">remove</a>'
 					)
@@ -1616,6 +1661,6 @@ function removeIFrame()
 
 //-----------------------------------------------------
 
-//alert('survived');
+alert('survived');
 //$(document).ready(my_init());
 $(init_start);

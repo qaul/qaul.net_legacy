@@ -64,9 +64,13 @@ static void Qaullib_VoipLogCall(void)
 	printf("Qaullib_VoipLogCall()\n");
 
 	char buffer[1024];
-	char* stmt = buffer;
+	char* stmt;
 	int mytype;
-	char *error_exec=NULL;
+	char *error_exec;
+	time_t timestamp;
+
+	stmt = buffer;
+	error_exec = NULL;
 
 	if(qaul_voip_call.call_logged == 0)
 	{
@@ -77,13 +81,16 @@ static void Qaullib_VoipLogCall(void)
 		else
 			mytype = 3;
 
-		sprintf(stmt, sql_msg_set_voip,
-			mytype,
-			qaul_voip_call.name,
-			"{}",
-			qaul_voip_call.ip,
-			4
-		);
+		time(&timestamp);
+		sprintf(stmt,
+				sql_msg_set_voip,
+				mytype,
+				qaul_voip_call.name,
+				"{}",
+				qaul_voip_call.ip,
+				4,
+				(int)timestamp
+				);
 		if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 		{
 			// execution failed

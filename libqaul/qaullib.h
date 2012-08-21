@@ -19,6 +19,11 @@ extern "C" {
 #define QAUL_ERROR_NOWIFI       1
 #define QAUL_ERROR_NOROOT       2
 
+#define QAUL_CONF_QUIT          1
+#define QAUL_CONF_IOS           2
+
+#define QAUL_CHECK_WIFI_SET     1
+
 /**
  * configuration procedure in the qaul
  *
@@ -26,7 +31,7 @@ extern "C" {
  *   @see Qaullib_Init()
  *
  *   platform specific initializations
- *   @see Qaullib_SetConfQuit();
+ *   @see Qaullib_SetConf()
  *
  * invoke configuration functions
  *
@@ -92,8 +97,23 @@ void Qaullib_Init(const char* resourcePath);
  * configure qaullib
  * enable Quit button in GUI
  * this is only used if the window has no exit button e.g. in android
+ *
+ * THIS FUNCTION IS DEPRECATED, USE @see Qaullib_SetConf() instead
  */
 void Qaullib_SetConfQuit(void);
+
+/**
+ * platform specific configurations
+ * QAUL_CONF_QUIT for a quit button
+ * QAUL_CONF_IOS for the net configure screen on iOS
+ */
+void Qaullib_SetConf(int conf);
+
+/**
+ * platform specific checker
+ * QAUL_CHECK_WIFISET
+ */
+int Qaullib_CheckConf(int conf);
 
 /**
  * configure qaullib

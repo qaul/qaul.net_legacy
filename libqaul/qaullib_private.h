@@ -45,9 +45,9 @@ extern "C" {
 #include "qaullib_webserver.h"
 #include "sqlite/sqlite3.h"
 #include "qaullib_sql.h"
-#include "bstrlib/bstrlib.h"
 #include "qaullib_file_LL.h"
 #include "qaullib_filesharing.h"
+#include "qaullib_exediscovery.h"
 #include "qaullib_ipc.h"
 #include "qaullib_voip.h"
 #include "qaullib_udp_communication.h"
@@ -81,32 +81,14 @@ int qaul_loading_wait;
 int qaul_conf_quit;
 int qaul_conf_debug;
 int qaul_conf_voip;
+int qaul_conf_ios;
+int qaul_conf_wifi_set;
 int qaul_web_localip_set;
+int qaul_exe_available;
 char qaullib_AppEventOpenURL[MAX_URL_LEN];
 
 union olsr_message *qaul_in_msg;
 
-// todo: delete because not used anymore
-/*
-struct q_message_result
-{
-	int id;
-	int type;
-	char name[MAX_USER_LEN +1];
-	char msg[MAX_MESSAGE_LEN +1];
-	char ip[MAX_IP_LEN +1];
-	int time;
-};
-
-struct q_user
-{
-	int id;
-	char name[MAX_USER_LEN +1];
-	char ip[MAX_IP_LEN +1];
-	float lq;
-	int time;
-};
-*/
 
 /********************************************//**
  * configuration variables
@@ -136,20 +118,48 @@ int qaul_configured;
 char pickFilePath[MAX_PATH_LEN +1];
 int pickFileCheck;
 
+/**
+ * create a save file name from the file @a description the @a hashstr of the file and
+ * the @a suffix
+ *
+ * @retval returns the string size of the file name
+ */
+int Qaullib_StringDescription2Filename(char *filename, char *description, char *suffix, char *hashstr, int buffer_size);
 
 /**
- * protect input string @a unprotected_string to insert it into the DB
+ * checks and protects a message string
  *
- * @retval protected string
+ * @retval protected string size
  */
-const char* Qaullib_ProtectString(const char* unprotected_string);
+int Qaullib_StringMsgProtect(char *protected_string, char *unprotected_string, int buffer_size);
 
 /**
- * unprotect protected string @a protected_string
+ * checks and protects a user name string
  *
- * @retval unprotected string
+ * @retval protected string size
  */
-const char* Qaullib_UnprotectString(const char* protected_string);
+int Qaullib_StringNameProtect(char *protected_string, char *unprotected_string, int buffer_size);
+
+/**
+ * protects a string for that it is save to send it via Json
+ *
+ * @retval the size of the protected string
+ */
+int Qaullib_StringJsonProtect(char *protected_string, char *unprotected_string, int buffer_size);
+
+/**
+ * protects a string to be ready to write it to the data base
+ *
+ * @retval the size of the protected string
+ */
+int Qaullib_StringDbProtect(char *protected_string, char *unprotected_string, int buffer_size);
+
+/**
+ * removes the protection characters from a protected data base string
+ *
+ * @retval the size of the unprotected string
+ */
+int Qaullib_StringDbUnprotect(char *unprotected_string, char *protected_string, int buffer_size);
 
 /**
  * set IP @a protocol version (4 | 6)
@@ -205,6 +215,14 @@ const char* Qaullib_GetLocale(void);
  * set @a locale UI language
  */
 void Qaullib_SetLocale(const char* locale);
+
+/**
+ * convert a unix time stamp into an local ISO date format
+ *
+ * @retval 1 success
+ * @retval 0 error
+ */
+int Qaullib_Timestamp2Isostr(char *isostr, int timestamp, int buffer_size);
 
 
 #ifdef __cplusplus

@@ -128,9 +128,6 @@ struct qaul_file_LL_item* Qaullib_File_LL_Add (struct qaul_file_LL_item *item)
 	struct qaul_file_LL_item *new_item;
 	new_item = (struct qaul_file_LL_item *)malloc(sizeof(struct qaul_file_LL_item));
 
-//	// create file hash from hash string
-//	Qaullib_StringToHash(filehashstr, new_item->hash);
-
 	printf("Qaullib_File_LL_Add hash: %s\n", item->hashstr);
 
 	// get index
@@ -144,14 +141,14 @@ struct qaul_file_LL_item* Qaullib_File_LL_Add (struct qaul_file_LL_item *item)
 	memcpy(&new_item->suffix[MAX_SUFFIX_LEN], "\0", 1);
 	strncpy(new_item->description, item->description, MAX_DESCRIPTION_LEN);
 	memcpy(&new_item->description[MAX_DESCRIPTION_LEN], "\0", 1);
-	strncpy(new_item->created_at, item->created_at, MAX_TIME_LEN);
-	memcpy(&new_item->created_at[MAX_TIME_LEN], "\0", 1);
+	new_item->created_at = item->created_at;
 
 	new_item->id = item->id;
 	new_item->type = item->type;
 	new_item->status = item->status;
 	new_item->size = item->size;
 	new_item->downloaded = item->downloaded;
+	new_item->downloaded_chunk = 0;
 
 	strncpy(new_item->adv_name, item->adv_name, MAX_USER_LEN);
 	memcpy(&new_item->adv_name[MAX_USER_LEN], "\0", 1);
@@ -178,10 +175,13 @@ struct qaul_file_LL_item* Qaullib_File_LL_Add (struct qaul_file_LL_item *item)
 	pthread_mutex_unlock( &qaullib_mutex_fileLL );
 
 	// check if file exists
-	if(Qaullib_File_LL_HashExists(new_item->hash))
-		printf("file found in LL\n");
-	else
-		printf("file not found in LL\n");
+	if(QAUL_DEBUG)
+	{
+		if(Qaullib_File_LL_HashExists(new_item->hash))
+			printf("file found in LL\n");
+		else
+			printf("file not found in LL\n");
+	}
 
 	return new_item;
 }
@@ -192,6 +192,9 @@ void Qaullib_File_LL_Delete_Item (struct qaul_file_LL_item *item)
 {
 	if(QAUL_DEBUG)
 		printf("Qaullib_File_LL_Delete_Item\n");
+
+	// empty discovery list
+	Qaullib_Filediscovery_LL_EmptyList(item);
 
 	// lock
 	pthread_mutex_lock( &qaullib_mutex_fileLL );
@@ -242,7 +245,25 @@ int Qaullib_File_LL_HashExists (char *filehash)
 }
 
 // ------------------------------------------------------------
-static uint32_t Qaullib_File_LL_Hashing(unsigned char *filehash)
+int Qaullib_File_LL_FileAvailable (char *filehash)
+{
+	struct qaul_file_LL_node mynode;
+	Qaullib_File_LL_InitNodeWithHash(&mynode, filehash);
+	while(Qaullib_File_LL_NextItem(&mynode))
+	{
+		if(memcmp(&mynode.item->hash, filehash, MAX_HASH_LEN) == 0)
+		{
+			if(mynode.item->status >= QAUL_FILESTATUS_DOWNLOADED)
+				return 1;
+			else
+				return 0;
+		}
+	}
+	return 0;
+}
+
+// ------------------------------------------------------------
+static uint32_t Qaullib_File_LL_Hashing (unsigned char *filehash)
 {
 	uint32_t hash;
 	hash = jenkins_hash((const uint8_t *)filehash, MAX_HASH_LEN);
@@ -251,7 +272,7 @@ static uint32_t Qaullib_File_LL_Hashing(unsigned char *filehash)
 }
 
 // ------------------------------------------------------------
-void Qaullib_Filediscovery_LL_DiscoveryMsgProcessing(struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip)
+void Qaullib_Filediscovery_LL_DiscoveryMsgProcessing (struct qaul_fileavailable_msg *msg, union olsr_ip_addr *ip)
 {
 	struct qaul_file_LL_item *file;
 

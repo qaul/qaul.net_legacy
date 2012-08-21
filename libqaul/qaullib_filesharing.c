@@ -87,37 +87,54 @@ void Qaullib_FileInit(void)
 // ------------------------------------------------------------
 void Qaullib_FilePopulate(void)
 {
-	char buffer[1024];
-	char *stmt = buffer;
-	char *error_exec=NULL;
-	int status, i;
+	char buffer[2048];
+	char *stmt;
+	char *key;
+	char *error_exec;
+	int  status, i;
 	char local_destiny[MAX_PATH_LEN +1];
+	time_t timestamp;
 
-	// loop trough entries
-	for(i=0; i<MAX_POPULATE_FILE; i++)
+	stmt = buffer;
+	key  = buffer;
+	error_exec = NULL;
+
+	if(FAT_CLIENT)
 	{
-		// check if the file exists
-		Qaullib_FileCreatePath(local_destiny, qaul_populate_file[i].hash, qaul_populate_file[i].suffix);
-		if(Qaullib_FileExists(local_destiny) == 0) status = QAUL_FILESTATUS_NEW;
-		else status = QAUL_FILESTATUS_MYFILE;
-
-		// write entry into DB
-		sprintf(stmt,
-				sql_file_add,
-				qaul_populate_file[i].hash,
-				qaul_populate_file[i].suffix,
-				qaul_populate_file[i].description,
-				qaul_populate_file[i].size,
-				status,
-				qaul_populate_file[i].type,
-				"",
-				""
-				);
-		if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+		// loop trough entries
+		for(i=0; i<MAX_POPULATE_FILE; i++)
 		{
-			printf("SQLite error: %s\n",error_exec);
-			sqlite3_free(error_exec);
-			error_exec=NULL;
+			// check if the file exists
+			Qaullib_FileCreatePath(local_destiny, qaul_populate_file[i].hashstr, qaul_populate_file[i].suffix);
+			if(Qaullib_FileExists(local_destiny))
+			{
+				status = QAUL_FILESTATUS_MYFILE;
+
+				time(&timestamp);
+				// write entry into DB
+				sprintf(stmt,
+						sql_file_add,
+						qaul_populate_file[i].hashstr,
+						qaul_populate_file[i].suffix,
+						qaul_populate_file[i].description,
+						qaul_populate_file[i].size,
+						status,
+						qaul_populate_file[i].type,
+						"",
+						"",
+						(int)timestamp
+						);
+				if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+				{
+					printf("SQLite error: %s\n",error_exec);
+					sqlite3_free(error_exec);
+					error_exec=NULL;
+				}
+
+				// write into config table
+				sprintf(key, "exe.%i", qaul_populate_file[i].OS_flag);
+				Qaullib_DbSetConfigValue(key, qaul_populate_file[i].hashstr);
+			}
 		}
 	}
 }
@@ -176,9 +193,15 @@ int Qaullib_FileAdd(struct qaul_file_LL_item *file_item)
 int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 {
 	char buffer[1024];
-	char *stmt = buffer;
-	char *error_exec=NULL;
+	char *stmt;
+	char *error_exec;
 	char myip[MAX_IP_LEN +1];
+	char description_dbprotected[2*MAX_DESCRIPTION_LEN +1];
+	char adv_name_dbprotected[2*MAX_USER_LEN +1];
+	time_t timestamp;
+
+	stmt = buffer;
+	error_exec = NULL;
 
 	// create IP str
 	if(file_item->adv_validip)
@@ -192,18 +215,25 @@ int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 	else
 		sprintf(myip,"");
 
+	// protect values for db
+	Qaullib_StringDbProtect(description_dbprotected, file_item->description, sizeof(description_dbprotected));
+	Qaullib_StringDbProtect(adv_name_dbprotected, file_item->adv_name, sizeof(adv_name_dbprotected));
+
+	time(&timestamp);
 	// write into DB
 	sprintf(stmt,
 			sql_file_add,
 			file_item->hashstr,
 			file_item->suffix,
-			file_item->description,
+			description_dbprotected,
 			file_item->size,
 			file_item->status,
 			file_item->type,
-			file_item->adv_name,
-			myip
+			adv_name_dbprotected,
+			myip,
+			(int)timestamp
 			);
+
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		printf("SQLite error: %s\n",error_exec);
@@ -384,13 +414,13 @@ int Qaullib_FileDelete(struct qaul_file_LL_item *file_item)
 // ------------------------------------------------------------
 void Qaullib_FileDB2LL(void)
 {
-	if(QAUL_DEBUG)
-		printf("Qaullib_FileDB2LL\n");
-
 	sqlite3_stmt *ppStmt;
 	char *error_exec=NULL;
 	struct qaul_file_LL_item myitem;
 	char myhashstr[MAX_HASHSTR_LEN +1];
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileDB2LL\n");
 
 	// Select rows from database
 	if( sqlite3_prepare_v2(db, sql_file_get_everything, -1, &ppStmt, NULL) != SQLITE_OK )
@@ -435,7 +465,7 @@ void Qaullib_FileDB2LL(void)
 			}
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "created_at") == 0)
 			{
-		    	sprintf(myitem.created_at, "%s", sqlite3_column_text(ppStmt, jj));
+		    	myitem.created_at = sqlite3_column_int(ppStmt, jj);
 			}
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "status") == 0)
 			{
@@ -707,6 +737,8 @@ void Qaullib_FileCheckSockets(void)
 	// check file sockets
 	for(i=0; i<MAX_FILE_CONNECTIONS; i++)
 	{
+		// todo: check if this file is still valid. stop download if not...
+
 		// receive bytes if connected
 		if(fileconnections[i].conn.connected)
 		{
@@ -730,7 +762,8 @@ void Qaullib_FileCheckSockets(void)
 							// get chunk size
 							fileconnections[i].chunksize = ntohl(fileconnections[i].conn.buf.filechunk.chunksize);
 
-							printf("[qaullib] file download: %s, filesize %i, chunksize %i\n", fileconnections[i].fileinfo->hashstr, fileconnections[i].fileinfo->size, fileconnections[i].chunksize);
+							if(QAUL_DEBUG)
+								printf("[qaullib] file download: %s, filesize %i, chunksize %i\n", fileconnections[i].fileinfo->hashstr, fileconnections[i].fileinfo->size, fileconnections[i].chunksize);
 
 							// write chunk into file
 							fwrite(&fileconnections[i].conn.buf.buf[sizeof(struct qaul_filechunk_msg)], bytes -sizeof(struct qaul_filechunk_msg), 1, fileconnections[i].file);
@@ -753,6 +786,10 @@ void Qaullib_FileCheckSockets(void)
 		        	fwrite(fileconnections[i].conn.buf.buf, bytes, 1, fileconnections[i].file);
 		        	fileconnections[i].conn.bufpos = 0;
 		        	fileconnections[i].conn.received += bytes;
+
+					// update GUI
+		        	fileconnections[i].fileinfo->downloaded_chunk = fileconnections[i].conn.received;
+		        	fileconnections[i].fileinfo->gui_notify = 1;
 				}
 				else
 				{

@@ -38,10 +38,11 @@ SRC= qaullib.c qaullib_ipc.c qaullib_webserver.c qaullib_voip.c \
      qaullib_webclient.c qaullib_threads.c \
      qaullib_user.c qaullib_user_LL.c \
      qaullib_filesharing.c qaullib_file_LL.c \
+     qaullib_exediscovery.c \
      qaullib_udp_communication.c \
      captive/qaullib_captive.c captive/qaullib_captive_dhcp.c captive/qaullib_captive_dns.c \
      mongoose/mongoose.c sqlite/sqlite3.c \
-     urlcode/urlcode.c bstrlib/bstrlib.c polarssl/sha1.c \
+     urlcode/urlcode.c polarssl/sha1.c \
      olsrd/mantissa.c olsrd/hashing.c \
      $(SRC_WIN)
 

@@ -18,7 +18,7 @@
 #define DHCPACK                         5
 
 #define DHCP_MAX_LL                   300
-#define DHCP_LEASE_TIME               300
+#define DHCP_LEASE_TIME              1200
 
 #ifdef WIN32
 #define DHCP_PORT                      67
