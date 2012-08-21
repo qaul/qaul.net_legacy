@@ -1131,8 +1131,7 @@ function file_update_check(item)
 			if(item.status == QAUL_FILESTATUS_DELETED) 
 			{
 				$("#file_" +item.hash).remove();
-				//qaulfiles.splice(i,1);
-				//break;
+				qaulfiles.splice(i,1);
 			}
 			// download failed
 			else if(item.status == QAUL_FILESTATUS_ERROR)
@@ -1140,12 +1139,14 @@ function file_update_check(item)
 				$("#file_" +item.hash).removeClass("scheduled downloading").addClass("failed");
 				$("#file_" +item.hash +" .fileicon64").attr("src","images/f_failed_64.png");
 				$("#file_bar_" +item.hash).remove();
+				qaulfiles[i] = item;
 			}
 			// update progress bar
 			else if(item.status == QAUL_FILESTATUS_DOWNLOADING)
 			{
 				$("#file_bar_" +item.hash).progressBar(item.downloaded);
 				$("#file_" +item.hash +" span.size").text(file_filesize(item.size));
+				qaulfiles[i] = item;
 			}
 			// file sucessfully downloaded
 			else if(item.status == QAUL_FILESTATUS_DOWNLOADED)
@@ -1161,15 +1162,26 @@ function file_update_check(item)
 					// add readvertise button
 					var button = "<a href=\"#\" onClick=\"javascript:file_advertise('" +item.hash +"','" +item.suffix +"','" +item.size +"','" +item.description +"')\" class=\"filebutton\"><img src=\"images/b_advertise.png\" alt=\"advertise\" /></a>";
 					$("#file_" +item.hash +" a.filebutton").after(button);
-					//$("#file_" +item.hash).trigger('create');
 				}
+				qaulfiles[i] = item;
 			}
-			qaulfiles[i] = item;
+			else if(item.status == QAUL_FILESTATUS_NEW)
+			{
+				if(item.status != qaulfiles[i].status)
+				{
+					$("#file_" +item.hash).remove();
+					qaulfiles.splice(i,1);
+					exists = false;
+				}
+				else
+					qaulfiles[i] = item;
+			}
+			break;
 		}
 	}
 	
 	// add file if not existing
-	if(!exists)
+	if(!exists && item.status != QAUL_FILESTATUS_DELETED)
 	{
 		qaulfiles.push(item);
 		var htmlitem = file_create_html(item);

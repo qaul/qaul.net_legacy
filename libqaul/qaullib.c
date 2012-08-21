@@ -521,15 +521,10 @@ int Qaullib_StringDbProtect(char *protected_string, char *unprotected_string, in
 		{
 			break;
 		}
-		else if(memcmp(unprotected_string +i, "'", 1)==0)
+		else if(memcmp(unprotected_string +i, "\"", 1)==0)
 		{
-			if(j < buffer_size -2)
-			{
-				memcpy(protected_string +j, "\\'", 2);
-				j+=2;
-			}
-			else
-				break;
+			memcpy(protected_string +j, "'", 1);
+			j+=2;
 		}
 		else if(memcmp(unprotected_string +i, "\\", 1)==0)
 		{

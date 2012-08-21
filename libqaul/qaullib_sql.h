@@ -31,18 +31,18 @@ static const char* sql_msg_index = "CREATE INDEX IF NOT EXISTS 'myindex' ON 'msg
 
 // get messages
 static const char* sql_msg_get_new   = "SELECT * FROM 'msg' WHERE read = 0 ORDER BY id ASC;";
-static const char* sql_msg_get_user0 = "SELECT * FROM 'msg' WHERE name = '%s' OR msg LIKE '%s@%s%s' ORDER BY id DESC LIMIT 40;";
-static const char* sql_msg_get_user  = "SELECT * FROM 'msg' WHERE id > %i AND ( name = '%s' OR  msg LIKE '%s@%s%s' ) ORDER BY id ASC;";
-static const char* sql_msg_get_tag0 = "SELECT * FROM 'msg' WHERE msg LIKE '%s%s%s' ORDER BY id DESC LIMIT 40;";
-static const char* sql_msg_get_tag  = "SELECT * FROM 'msg' WHERE id > %i AND msg LIKE '%s%s%s' ORDER BY id ASC;";
+static const char* sql_msg_get_user0 = "SELECT * FROM 'msg' WHERE name = \"%s\" OR msg LIKE \"%s@%s%s\" ORDER BY id DESC LIMIT 40;";
+static const char* sql_msg_get_user  = "SELECT * FROM 'msg' WHERE id > %i AND ( name = \"%s\" OR  msg LIKE \"%s@%s%s\" ) ORDER BY id ASC;";
+static const char* sql_msg_get_tag0 = "SELECT * FROM 'msg' WHERE msg LIKE \"%s%s%s\" ORDER BY id DESC LIMIT 40;";
+static const char* sql_msg_get_tag  = "SELECT * FROM 'msg' WHERE id > %i AND msg LIKE \"%s%s%s\" ORDER BY id ASC;";
 
 // update
 static const char* sql_msg_update_read = "UPDATE 'msg' SET read = 1 WHERE id = %i ;";
 
 // insert message
-static const char* sql_msg_set_received = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','hops','ttl','seqnr','olsrtime') VALUES (%i,'%s','%s','%s',%i,%i,%i,%i,%i);";
-static const char* sql_msg_set_my = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','read') VALUES (%i,'%s','%s','%s',%i,1);";
-static const char* sql_msg_set_voip = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','read') VALUES (%i,'%s','%s','%s',%i,0);";
+static const char* sql_msg_set_received = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','hops','ttl','seqnr','olsrtime') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,%i,%i,%i,%i);";
+static const char* sql_msg_set_my = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','read') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,1);";
+static const char* sql_msg_set_voip = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','read') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,0);";
 
 
 /**
@@ -53,18 +53,18 @@ static const char* sql_msg_set_voip = "INSERT INTO 'msg' ('type','name','msg','i
 static const char* sql_config_table = "CREATE TABLE IF NOT EXISTS 'config' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL, 'key' TEXT, 'type' INTEGER, 'value' TEXT, 'value_int' INTEGER, 'time' INTEGER DEFAULT CURRENT_TIMESTAMP);";
 
 // get value
-static const char* sql_config_get = "SELECT * FROM 'config' WHERE key = '%s';";
+static const char* sql_config_get = "SELECT * FROM 'config' WHERE key = \"%s\";";
 
 // update
 static const char* sql_config_update = "UPDATE 'config' SET read = 1 WHERE id = %i ;";
 
 // insert message
-static const char* sql_config_set = "INSERT INTO 'config' ('key','type','value') VALUES ('%s',1,'%s');";
-static const char* sql_config_set_int = "INSERT INTO 'config' ('key','type','value_int') VALUES ('%s',0,%i);";
-static const char* sql_config_set_all = "INSERT INTO 'config' ('key','type','value','value_int') VALUES ('%s',%i,'%s',%i);";
+static const char* sql_config_set = "INSERT INTO 'config' ('key','type','value') VALUES (\"%s\",1,\"%s\");";
+static const char* sql_config_set_int = "INSERT INTO 'config' ('key','type','value_int') VALUES (\"%s\",0,%i);";
+static const char* sql_config_set_all = "INSERT INTO 'config' ('key','type','value','value_int') VALUES (\"%s\",%i,\"%s\",%i);";
 
 // delete values for key
-static const char* sql_config_delete = "DELETE FROM 'config' WHERE key = '%s';";
+static const char* sql_config_delete = "DELETE FROM 'config' WHERE key = \"%s\";";
 
 
 /**
@@ -81,17 +81,17 @@ static const char* sql_user_get_all = "SELECT * FROM 'user' ORDER BY name ASC;";
 
 // check if user exists
 static const char* sql_user_check_ipv4 = "SELECT id FROM 'user' WHERE ipv = 4 AND ipv4 = %i;";
-static const char* sql_user_check_ipv6 = "SELECT id FROM 'user' WHERE ipv = 6 AND ipv6 = %s;";
+static const char* sql_user_check_ipv6 = "SELECT id FROM 'user' WHERE ipv = 6 AND ipv6 = \"%s\";";
 
 // update user
 static const char* sql_user_update_lastseen = "UPDATE 'user' SET lastseen_at = DATETIME('now') WHERE id = %i ;";
-static const char* sql_user_update_nameicon = "UPDATE 'user' SET  lastseen_at = DATETIME('now'), name = '%s', icon = '%s', online = %i WHERE id = %i ;";
-static const char* sql_user_update_name = "UPDATE 'user' SET lastseen_at = DATETIME('now'), name = '%s', online = %i WHERE id = %i ;";
+static const char* sql_user_update_nameicon = "UPDATE 'user' SET  lastseen_at = DATETIME('now'), name = \"%s\", icon = \"%s\", online = %i WHERE id = %i ;";
+static const char* sql_user_update_name = "UPDATE 'user' SET lastseen_at = DATETIME('now'), name = \"%s\", online = %i WHERE id = %i ;";
 
 // insert user
-static const char* sql_user_set_ip = "INSERT INTO 'user' ('name','icon','ipv','ipv4','ipv6') VALUES ('%s','%s',%i,%i,'%s');";
-static const char* sql_user_set_ipv4 = "INSERT INTO 'user' ('name','icon','ipv','ipv4') VALUES ('%s','%s',4,%i);";
-static const char* sql_user_set_ipv6 = "INSERT INTO 'user' ('name','icon','ipv','ipv6') VALUES ('%s','%s',6,%s);";
+static const char* sql_user_set_ip = "INSERT INTO 'user' ('name','icon','ipv','ipv4','ipv6') VALUES (\"%s\",\"%s\",%i,%i,\"%s\");";
+static const char* sql_user_set_ipv4 = "INSERT INTO 'user' ('name','icon','ipv','ipv4') VALUES (\"%s\",\"%s\",4,%i);";
+static const char* sql_user_set_ipv6 = "INSERT INTO 'user' ('name','icon','ipv','ipv6') VALUES (\"%s\",\"%s\",6,\"%s\");";
 
 // delete users
 static const char* sql_user_delete_id = "DELETE FROM 'user' WHERE id = %i;";
@@ -123,24 +123,24 @@ static const char* sql_file_index = "CREATE INDEX IF NOT EXISTS 'file_hash' ON '
 
 // get files
 static const char* sql_file_get_everything = "SELECT * FROM 'file' ORDER BY status ASC, id DESC;";
-static const char* sql_file_get_hash = "SELECT * FROM 'file' WHERE hash = '%s' LIMIT 1;";
+static const char* sql_file_get_hash = "SELECT * FROM 'file' WHERE hash = \"%s\" LIMIT 1;";
 static const char* sql_file_get_id = "SELECT * FROM 'file' WHERE id = %i LIMIT 1;";
 
 // update file
-static const char* sql_file_update_status = "UPDATE 'file' SET status = %i WHERE hash = '%s' ;";
-static const char* sql_file_update_downloaded = "UPDATE 'file' SET downloaded = %i WHERE hash = '%s' ;";
-static const char* sql_file_update_size = "UPDATE 'file' SET size = %i WHERE hash = '%s' ;";
-static const char* sql_file_update_favorite = "UPDATE 'file' SET favorite = %i WHERE hash = '%s' ;";
+static const char* sql_file_update_status = "UPDATE 'file' SET status = %i WHERE hash = \"%s\" ;";
+static const char* sql_file_update_downloaded = "UPDATE 'file' SET downloaded = %i WHERE hash = \"%s\" ;";
+static const char* sql_file_update_size = "UPDATE 'file' SET size = %i WHERE hash = \"%s\" ;";
+static const char* sql_file_update_favorite = "UPDATE 'file' SET favorite = %i WHERE hash = \"%s\" ;";
 
 // insert file
-static const char* sql_file_add = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES ('%s','%s','%s',%i,%i,%i,'%s','%s');";
+static const char* sql_file_add = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES (\"%s\",\"%s\",\"%s\",%i,%i,%i,\"%s\",\"%s\");";
 
 // todo: remove this
-static const char* sql_file_set = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES ('%s','%s','%s',%i,5,1,'','');";
-static const char* sql_file_schedule = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES ('%s','%s','%s',%i,0,1,'%s','%s');";
+static const char* sql_file_set = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES (\"%s\",\"%s\",\"%s\",%i,5,1,'','');";
+static const char* sql_file_schedule = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES (\"%s\",\"%s\",\"%s\",%i,0,1,\"%s\",\"%s\");";
 
 // delete files
-static const char* sql_file_delete_hash = "DELETE FROM 'file' WHERE hash = '%s';";
+static const char* sql_file_delete_hash = "DELETE FROM 'file' WHERE hash = \"%s\";";
 
 
 /********************************************//**

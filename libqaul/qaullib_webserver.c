@@ -701,6 +701,11 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 	char *error_exec=NULL;
 	char local_msg[MAX_MESSAGE_LEN +1];
 	char local_name[MAX_USER_LEN +1];
+	char msg_protected[MAX_MESSAGE_LEN +1];
+	char name_protected[MAX_USER_LEN +1];
+	char msg_dbprotected[2*MAX_MESSAGE_LEN +1];
+	char name_dbprotected[2*MAX_USER_LEN +1];
+
 	char local_type[3];
 	int type;
 	union olsr_message *m = (union olsr_message *)buffer;
@@ -721,24 +726,32 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 	printf("[qaullib] msg-type: %i\n",type);
 	// get msg
 	mg_get_var(post, strlen(post == NULL ? "" : post), "m", local_msg, sizeof(local_msg));
+	Qaullib_StringMsgProtect(msg_protected, local_msg, sizeof(msg_protected));
+	Qaullib_StringDbProtect(msg_dbprotected, msg_protected, sizeof(msg_dbprotected));
+
 	// get name
 	if(type == 12)
 	{
 		mg_get_var(post, strlen(post == NULL ? "" : post), "n", local_name, sizeof(local_name));
+		Qaullib_StringNameProtect(name_protected, local_name, sizeof(name_protected));
+		Qaullib_StringDbProtect(name_dbprotected, name_protected, sizeof(name_dbprotected));
 	}
 	else memcpy(&local_name[0], "\0", 1);
 
 	// todo: ipv6
   	// save Message to database
-	sprintf(stmt, sql_msg_set_my,
-		type,
-		local_name,
-		local_msg,
-		"",
-		4
+	sprintf(stmt,
+			sql_msg_set_my,
+			type,
+			name_dbprotected,
+			msg_dbprotected,
+			"",
+			4
 	);
 
-	//printf("statement: %s\n", stmt);
+	if(QAUL_DEBUG)
+		printf("statement: %s\n", stmt);
+
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		// execution failed
@@ -755,8 +768,8 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 		//m.v4.ttl = MAX_TTL;
 		//m.v4.hopcnt = 0;
 		memcpy(&m->v4.message.chat.name, qaul_username, MAX_USER_LEN);
-		memcpy(&m->v4.message.chat.msg, local_msg, MAX_MESSAGE_LEN);
-		size = sizeof( struct qaul_chat_msg);
+		memcpy(&m->v4.message.chat.msg, msg_protected, MAX_MESSAGE_LEN);
+		size = sizeof(struct qaul_chat_msg);
 		size = size + sizeof(struct olsrmsg);
 		m->v4.olsr_msgsize = htons(size);
 
@@ -764,7 +777,7 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 		Qaullib_IpcSend(m);
 	}
 
-	// todo: check wether sending was successful...
+	// todo: check whether sending was successful...
 	// everything went fine
 	//mg_printf(conn, "%s message: %s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n", qaul_msg);
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
@@ -1233,6 +1246,10 @@ static void Qaullib_WwwPubMsg(struct mg_connection *conn, const struct mg_reques
 	char encoded_name[3*MAX_USER_LEN +1];
 	char *local_msg;
 	char *local_name;
+	char msg_protected[MAX_MESSAGE_LEN +1];
+	char name_protected[MAX_USER_LEN +1];
+	char msg_dbprotected[2*MAX_MESSAGE_LEN +1];
+	char name_dbprotected[2*MAX_USER_LEN +1];
 	uint32_t ipv4;
 	char ip[MAX_IP_LEN +1];
 
@@ -1246,19 +1263,25 @@ static void Qaullib_WwwPubMsg(struct mg_connection *conn, const struct mg_reques
 	mg_get_var(post, strlen(post == NULL ? "" : post), "m", encoded_msg, sizeof(encoded_msg));
 	mg_get_var(post, strlen(post == NULL ? "" : post), "n", encoded_name, sizeof(encoded_name));
 */
+	// fixme: memory leak at Qaullib_UrlDecode()?
 	// get msg
 	get_qsvar(request_info, "m", encoded_msg, sizeof(encoded_msg));
 	local_msg = Qaullib_UrlDecode(encoded_msg);
+	Qaullib_StringMsgProtect(msg_protected, local_msg, MAX_MESSAGE_LEN +1);
+	Qaullib_StringDbProtect(msg_dbprotected, name_protected, sizeof(msg_dbprotected));
+
 	// get name
 	get_qsvar(request_info, "n", encoded_name, sizeof(encoded_name));
 	local_name = Qaullib_UrlDecode(encoded_name);
+	Qaullib_StringNameProtect(name_protected, local_name, MAX_USER_LEN +1);
+	Qaullib_StringDbProtect(name_dbprotected, name_protected, sizeof(name_dbprotected));
 
   	// save Message to database
 	// todo: ipv6
 	sprintf(stmt, sql_msg_set_received,
 		2,
-		local_name,
-		local_msg,
+		name_dbprotected,
+		msg_dbprotected,
 		inet_ntoa(conn->client.rsa.u.sin.sin_addr),
 		4,
 		0,
@@ -1300,12 +1323,15 @@ static void Qaullib_WwwPubInfo(struct mg_connection *conn, const struct mg_reque
 {
 	int firstitem;
 	struct qaul_file_LL_node mynode;
+	char qaul_username_json[2* MAX_USER_LEN +1];
+
+	Qaullib_StringJsonProtect(qaul_username_json, qaul_username, sizeof(qaul_username_json));
 	Qaullib_File_LL_InitNode(&mynode);
 
 	printf("Qaullib_WwwGetFiles\n");
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "abc({");
-	mg_printf(conn, "\"name\":\"%s\",",qaul_username);
+	mg_printf(conn, "\"name\":\"%s\",", qaul_username_json);
 
 	mg_printf(conn, "\"files\":[");
 	// loop through files
@@ -1525,8 +1551,8 @@ static void Qaullib_WwwExtBinaries(struct mg_connection *conn, const struct mg_r
 
 		Qaullib_WwwFile2Json(conn, mynode.item);
 	}
-	mg_printf(conn, "]");
-	mg_printf(conn, "}");
+	mg_printf(conn, "\n]");
+	mg_printf(conn, "\n}");
 }
 
 

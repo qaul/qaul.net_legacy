@@ -394,13 +394,13 @@ int Qaullib_FileDelete(struct qaul_file_LL_item *file_item)
 // ------------------------------------------------------------
 void Qaullib_FileDB2LL(void)
 {
-	if(QAUL_DEBUG)
-		printf("Qaullib_FileDB2LL\n");
-
 	sqlite3_stmt *ppStmt;
 	char *error_exec=NULL;
 	struct qaul_file_LL_item myitem;
 	char myhashstr[MAX_HASHSTR_LEN +1];
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileDB2LL\n");
 
 	// Select rows from database
 	if( sqlite3_prepare_v2(db, sql_file_get_everything, -1, &ppStmt, NULL) != SQLITE_OK )

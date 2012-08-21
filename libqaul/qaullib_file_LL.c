@@ -149,6 +149,7 @@ struct qaul_file_LL_item* Qaullib_File_LL_Add (struct qaul_file_LL_item *item)
 	new_item->status = item->status;
 	new_item->size = item->size;
 	new_item->downloaded = item->downloaded;
+	new_item->downloaded_chunk = 0;
 
 	strncpy(new_item->adv_name, item->adv_name, MAX_USER_LEN);
 	memcpy(&new_item->adv_name[MAX_USER_LEN], "\0", 1);
