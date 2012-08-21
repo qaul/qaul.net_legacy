@@ -216,6 +216,14 @@ const char* Qaullib_GetLocale(void);
  */
 void Qaullib_SetLocale(const char* locale);
 
+/**
+ * convert a unix time stamp into an local ISO date format
+ *
+ * @retval 1 success
+ * @retval 0 error
+ */
+int Qaullib_Timestamp2Isostr(char *isostr, int timestamp, int buffer_size);
+
 
 #ifdef __cplusplus
 }

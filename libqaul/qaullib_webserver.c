@@ -552,7 +552,8 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 	char local_id[MAX_INTSTR_LEN +1];
 	char local_tag[MAX_FILENAME_LEN +1];
 	char local_name[MAX_USER_LEN +1];
-	int type, id;
+	char timestr[MAX_TIME_LEN];
+	int  timestamp, id, type;
 	char *content_length;
 	char *post;
 	int post_set = 0;
@@ -659,7 +660,10 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 				else if(strcmp(sqlite3_column_name(ppStmt,jj), "time") == 0)
 				{
 			    	if(jj>0) mg_printf(conn, ",");
-			    	mg_printf(conn, "\"time\":\"%s\"",sqlite3_column_text(ppStmt, jj));
+
+			    	timestamp = sqlite3_column_int(ppStmt, jj);
+			    	Qaullib_Timestamp2Isostr(timestr, timestamp, MAX_TIME_LEN);
+			    	mg_printf(conn, "\"time\":\"%s\"", timestr);
 				}
 		  }
 			mg_printf(conn, "}");
@@ -697,8 +701,8 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 	char *content_length;
 	int length;
 	char buffer[1024];
-	char* stmt = buffer;
-	char *error_exec=NULL;
+	char *stmt;
+	char *error_exec;
 	char local_msg[MAX_MESSAGE_LEN +1];
 	char local_name[MAX_USER_LEN +1];
 	char msg_protected[MAX_MESSAGE_LEN +1];
@@ -708,8 +712,13 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 
 	char local_type[3];
 	int type;
-	union olsr_message *m = (union olsr_message *)buffer;
+	union olsr_message *m;
 	int size;
+	time_t timestamp;
+
+	error_exec = NULL;
+	stmt = buffer;
+	m = (union olsr_message *)buffer;
 
 	if(QAUL_DEBUG)
 		printf("Qaullib_WwwSendMsg\n");
@@ -738,6 +747,7 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 	}
 	else memcpy(&local_name[0], "\0", 1);
 
+	time(&timestamp);
 	// todo: ipv6
   	// save Message to database
 	sprintf(stmt,
@@ -746,7 +756,8 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 			name_dbprotected,
 			msg_dbprotected,
 			"",
-			4
+			4,
+			(int)timestamp
 	);
 
 	if(QAUL_DEBUG)
@@ -1240,8 +1251,8 @@ static void Qaullib_WwwPubMsg(struct mg_connection *conn, const struct mg_reques
 {
 	//int length;
 	char buffer[1024];
-	char* stmt = buffer;
-	char *error_exec = NULL;
+	char *stmt;
+	char *error_exec;
 	char encoded_msg[3*MAX_MESSAGE_LEN +1];
 	char encoded_name[3*MAX_USER_LEN +1];
 	char *local_msg;
@@ -1252,6 +1263,10 @@ static void Qaullib_WwwPubMsg(struct mg_connection *conn, const struct mg_reques
 	char name_dbprotected[2*MAX_USER_LEN +1];
 	uint32_t ipv4;
 	char ip[MAX_IP_LEN +1];
+	time_t timestamp;
+
+	stmt = buffer;
+	error_exec = NULL;
 
 	// Fetch Message
 /*
@@ -1276,6 +1291,7 @@ static void Qaullib_WwwPubMsg(struct mg_connection *conn, const struct mg_reques
 	Qaullib_StringNameProtect(name_protected, local_name, MAX_USER_LEN +1);
 	Qaullib_StringDbProtect(name_dbprotected, name_protected, sizeof(name_dbprotected));
 
+	time(&timestamp);
   	// save Message to database
 	// todo: ipv6
 	sprintf(stmt, sql_msg_set_received,
@@ -1284,6 +1300,7 @@ static void Qaullib_WwwPubMsg(struct mg_connection *conn, const struct mg_reques
 		msg_dbprotected,
 		inet_ntoa(conn->client.rsa.u.sin.sin_addr),
 		4,
+		(int)timestamp,
 		0,
 		0,
 		0,

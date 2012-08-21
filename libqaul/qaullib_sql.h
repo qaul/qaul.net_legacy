@@ -24,7 +24,7 @@ extern "C" {
  * 12: private message sent by me
  * 13: voip outgoing call
  */
-static const char* sql_msg_table = "CREATE TABLE IF NOT EXISTS 'msg' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 'type' INTEGER DEFAULT 1 NOT NULL, 'name' TEXT, 'msg' TEXT, 'ip' TEXT, 'ipv' INTEGER DEFAULT 4, 'ipv4' INTEGER, 'ipv6' CHAR(16), 'time' INTEGER DEFAULT CURRENT_TIMESTAMP, 'hops' INTEGER, 'ttl' INTEGER, 'seqnr' INTEGER, 'olsrtime' INTEGER, 'read' INTEGER DEFAULT 0);";
+static const char* sql_msg_table = "CREATE TABLE IF NOT EXISTS 'msg' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 'type' INTEGER DEFAULT 1 NOT NULL, 'name' TEXT, 'msg' TEXT, 'ip' TEXT, 'ipv' INTEGER DEFAULT 4, 'ipv4' INTEGER, 'ipv6' CHAR(16), 'time' INTEGER DEFAULT 0, 'hops' INTEGER, 'ttl' INTEGER, 'seqnr' INTEGER, 'olsrtime' INTEGER, 'read' INTEGER DEFAULT 0);";
 
 // set indexes
 static const char* sql_msg_index = "CREATE INDEX IF NOT EXISTS 'myindex' ON 'msg' ('id' DESC); CREATE INDEX IF NOT EXISTS 'msg_read' ON 'msg' ('read' ASC);";
@@ -40,9 +40,9 @@ static const char* sql_msg_get_tag  = "SELECT * FROM 'msg' WHERE id > %i AND msg
 static const char* sql_msg_update_read = "UPDATE 'msg' SET read = 1 WHERE id = %i ;";
 
 // insert message
-static const char* sql_msg_set_received = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','hops','ttl','seqnr','olsrtime') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,%i,%i,%i,%i);";
-static const char* sql_msg_set_my = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','read') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,1);";
-static const char* sql_msg_set_voip = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','read') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,0);";
+static const char* sql_msg_set_received = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','time','hops','ttl','seqnr','olsrtime') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,%i,%i,%i,%i,%i);";
+static const char* sql_msg_set_my = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','time','read') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,%i,1);";
+static const char* sql_msg_set_voip = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','time','read') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,%i,0);";
 
 
 /**
@@ -84,9 +84,9 @@ static const char* sql_user_check_ipv4 = "SELECT id FROM 'user' WHERE ipv = 4 AN
 static const char* sql_user_check_ipv6 = "SELECT id FROM 'user' WHERE ipv = 6 AND ipv6 = \"%s\";";
 
 // update user
-static const char* sql_user_update_lastseen = "UPDATE 'user' SET lastseen_at = DATETIME('now') WHERE id = %i ;";
-static const char* sql_user_update_nameicon = "UPDATE 'user' SET  lastseen_at = DATETIME('now'), name = \"%s\", icon = \"%s\", online = %i WHERE id = %i ;";
-static const char* sql_user_update_name = "UPDATE 'user' SET lastseen_at = DATETIME('now'), name = \"%s\", online = %i WHERE id = %i ;";
+static const char* sql_user_update_lastseen = "UPDATE 'user' SET lastseen_at = DATETIME('now', 'localtime') WHERE id = %i ;";
+static const char* sql_user_update_nameicon = "UPDATE 'user' SET  lastseen_at = DATETIME('now', 'localtime'), name = \"%s\", icon = \"%s\", online = %i WHERE id = %i ;";
+static const char* sql_user_update_name = "UPDATE 'user' SET lastseen_at = DATETIME('now', 'localtime'), name = \"%s\", online = %i WHERE id = %i ;";
 
 // insert user
 static const char* sql_user_set_ip = "INSERT INTO 'user' ('name','icon','ipv','ipv4','ipv6') VALUES (\"%s\",\"%s\",%i,%i,\"%s\");";
