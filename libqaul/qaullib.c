@@ -307,21 +307,287 @@ int Qaullib_DbInit(void)
 }
 
 // ------------------------------------------------------------
-// protect functionality
-const char* Qaullib_ProtectString(const char* unprotected_string)
+// string protection functionality
+
+int Qaullib_StringDescription2Filename(char *filename, char *description, char *suffix, char *hashstr, int buffer_size)
 {
-	bstring b = bfromcstr(unprotected_string);
-	int i = bfindreplace(b, bfromcstr("\\"), bfromcstr("\\\\"), 0);
-	i = bfindreplace(b, bfromcstr("'"), bfromcstr("\'"), 0);
-	return bdata(b);
+	int i, j;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_StringDescription2Filename\n");
+
+	j=0;
+	// convert description to file name
+	for(i=0; i<strlen(description); i++)
+	{
+		if(j >= buffer_size -1)
+			break;
+
+		if(memcmp(description +i, "\0", 1))
+		{
+			break;
+		}
+		else if(
+				memcmp(description +i, "\"", 1)==0 ||
+				memcmp(description +i, "'", 1)==0 ||
+				memcmp(description +i, " ", 1)==0 ||
+				memcmp(description +i, "<", 1)==0 ||
+				memcmp(description +i, ">", 1)==0 ||
+				memcmp(description +i, "\\", 1)==0 ||
+				memcmp(description +i, "/", 1)==0 ||
+				memcmp(description +i, ":", 1)==0 ||
+				memcmp(description +i, "|", 1)==0 ||
+				memcmp(description +i, "?", 1)==0 ||
+				memcmp(description +i, "*", 1)==0 ||
+				memcmp(description +i, ".", 1)==0 ||
+				memcmp(description +i, "~", 1)==0 ||
+				memcmp(description +i, "$", 1)==0 ||
+				memcmp(description +i, "^", 1)==0
+				)
+		{
+			memcpy(filename +j, "_", 1);
+			j++;
+		}
+		else
+		{
+			memcpy(filename +j, description +i, 1);
+			j++;
+		}
+	}
+
+	if(j < buffer_size -1)
+	{
+		memcpy(filename +j, "_", 1);
+		j++;
+	}
+
+	// add short hash part
+	for(i=0; i<5; i++)
+	{
+		if(j >= buffer_size -1)
+			break;
+
+		memcpy(filename +j, hashstr +i, 1);
+		j++;
+	}
+
+	// add suffix
+	if(j < buffer_size -1)
+	{
+		memcpy(filename +j, ".", 1);
+		j++;
+	}
+	for(i=0; i<strlen(suffix); i++)
+	{
+		if(j >= buffer_size -1)
+			break;
+
+		memcpy(filename +j, suffix +i, 1);
+		j++;
+	}
+
+	memcpy(filename +j, "\0", 1);
+	return j;
 }
 
-const char* Qaullib_UnprotectString(const char* protected_string)
+int Qaullib_StringMsgProtect(char *protected_string, char *unprotected_string, int buffer_size)
 {
-	bstring b = bfromcstr(protected_string);
-	int i = bfindreplace(b, bfromcstr("\'"), bfromcstr("'"), 0);
-	i = bfindreplace(b, bfromcstr("\\\\"), bfromcstr("\\"), 0);
-	return bdata(b);
+	int i, j;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_StringMsgControl\n");
+
+	j=0;
+	for(i=0; i<strlen(unprotected_string); i++)
+	{
+		if(j >= buffer_size -1)
+			break;
+
+		if(memcmp(unprotected_string +i, "\0", 1)==0)
+		{
+			break;
+		}
+		else if(memcmp(unprotected_string +i, "\"", 1)==0)
+		{
+			memcpy(protected_string +j, "'", 1);
+			j++;
+		}
+		else
+		{
+			memcpy(protected_string +j, unprotected_string +i, 1);
+			j++;
+		}
+	}
+
+	memcpy(protected_string +j, "\0", 1);
+	return j;
+}
+
+int Qaullib_StringNameProtect(char *protected_string, char *unprotected_string, int buffer_size)
+{
+	int i, j;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_StringNameControl\n");
+
+	j=0;
+	for(i=0; i<strlen(unprotected_string); i++)
+	{
+		if(j >= buffer_size -1)
+			break;
+
+		if(memcmp(unprotected_string +i, "\0", 1)==0)
+		{
+			break;
+		}
+		else if(memcmp(unprotected_string +i, "\"", 1)==0)
+		{
+			memcpy(protected_string +j, "'", 1);
+			j++;
+		}
+		else if(memcmp(unprotected_string +i, " ", 1)==0)
+		{
+			memcpy(protected_string +j, "_", 1);
+			j++;
+		}
+		else
+		{
+			memcpy(protected_string +j, unprotected_string +i, 1);
+			j++;
+		}
+	}
+
+	memcpy(protected_string +j, "\0", 1);
+	return j;
+}
+
+int Qaullib_StringJsonProtect(char *protected_string, char *unprotected_string, int buffer_size)
+{
+	int i, j;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_StringJsonProtect\n");
+
+	j=0;
+	for(i=0; i<strlen(unprotected_string); i++)
+	{
+		if(j >= buffer_size -1)
+			break;
+
+		if(memcmp(unprotected_string +i, "\0", 1)==0)
+		{
+			break;
+		}
+		else if(memcmp(unprotected_string +i, "\"", 1)==0)
+		{
+			memcpy(protected_string +j, "'", 1);
+			j++;
+		}
+		else if(memcmp(unprotected_string +i, "\\", 1)==0)
+		{
+			if(j < buffer_size -2)
+			{
+				memcpy(protected_string +j, "\\", 1);
+				j++;
+				memcpy(protected_string +j, "\\", 1);
+				j++;
+			}
+		}
+		else
+		{
+			memcpy(protected_string +j, unprotected_string +i, 1);
+			j++;
+		}
+	}
+
+	memcpy(protected_string +j, "\0", 1);
+	return j;
+}
+
+int Qaullib_StringDbProtect(char *protected_string, char *unprotected_string, int buffer_size)
+{
+	int i, j;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_StringDbProtect\n");
+
+	j=0;
+	for(i=0; i<strlen(unprotected_string); i++)
+	{
+		if(j >= buffer_size -1)
+			break;
+
+		if(memcmp(unprotected_string +i, "\0", 1)==0)
+		{
+			break;
+		}
+		else if(memcmp(unprotected_string +i, "'", 1)==0)
+		{
+			if(j < buffer_size -2)
+			{
+				memcpy(protected_string +j, "\\'", 2);
+				j+=2;
+			}
+			else
+				break;
+		}
+		else if(memcmp(unprotected_string +i, "\\", 1)==0)
+		{
+			if(j < buffer_size -2)
+			{
+				memcpy(protected_string +j, "\\\\", 2);
+				j+=2;
+			}
+			else
+				break;
+		}
+		else
+		{
+			memcpy(protected_string +j, unprotected_string +i, 1);
+			j++;
+		}
+	}
+
+	memcpy(protected_string +j, "\0", 1);
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_StringDbProtect protected string: %s\n", protected_string);
+
+	return j;
+}
+
+int Qaullib_StringDbUnprotect(char *unprotected_string, char *protected_string, int buffer_size)
+{
+	int i, j;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_StringDbUnprotect\n");
+
+	j=0;
+	for(i=0; i<strlen(protected_string); i++)
+	{
+		if(j >= buffer_size -1)
+			break;
+
+		if(memcmp(protected_string +i, "\0", 1)==0)
+		{
+			break;
+		}
+		else if(memcmp(protected_string +i, "\\", 1)==0)
+		{
+			i++;
+			memcpy(unprotected_string +j, protected_string +i, 1);
+			j++;
+		}
+		else
+		{
+			memcpy(unprotected_string +j, protected_string +i, 1);
+			j++;
+		}
+	}
+
+	memcpy(unprotected_string +j, "\0", 1);
+	return j;
 }
 
 // ------------------------------------------------------------
@@ -332,6 +598,9 @@ void Qaullib_DbSetConfigValue(const char* key, const char* value)
 	char *stmt = buffer;
 	char *error_exec=NULL;
 
+	if(QAUL_DEBUG)
+		printf("Qaullib_DbSetConfigValue\n");
+
 	// delete old entries (if exist)
 	sprintf(stmt, sql_config_delete, key);
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
@@ -341,8 +610,12 @@ void Qaullib_DbSetConfigValue(const char* key, const char* value)
 		error_exec=NULL;
 	}
 
-	// insert new IP
+	// insert new value
 	sprintf(stmt, sql_config_set, key, value);
+
+	if(QAUL_DEBUG)
+		printf("stmt: %s\n", stmt);
+
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		printf("SQLite error: %s\n", error_exec);
@@ -450,7 +723,7 @@ void Qaullib_DbPopulateConfig(void)
 
 // ------------------------------------------------------------
 // configure user name
-const char* Qaullib_GetUsername(void)
+char* Qaullib_GetUsername(void)
 {
 	// if username is set return it
 	if (qaul_username_set) return qaul_username;
@@ -472,10 +745,15 @@ int Qaullib_ExistsUsername(void)
 	return qaul_username_set;
 }
 
-int Qaullib_SetUsername(const char* name)
+int Qaullib_SetUsername(char* name)
 {
+	int size;
+	char namebuf[128];
+
+	Qaullib_StringDbProtect(namebuf, name, sizeof(namebuf));
 	Qaullib_DbSetConfigValue("username", name);
-	strcpy(qaul_username,name);
+	strncpy(qaul_username, name, MAX_USER_LEN);
+	memcpy(&qaul_username[MAX_USER_LEN], "\0", 1);
 	qaul_username_set = 1;
 	return 1;
 }
@@ -484,7 +762,7 @@ int Qaullib_SetUsername(const char* name)
 void Qaullib_FilePicked(int check, const char* path)
 {
 	strncpy(pickFilePath, path, MAX_PATH_LEN);
-	memcpy(&pickFilePath[MAX_PATH_LEN],"\0",1);
+	memcpy(&pickFilePath[MAX_PATH_LEN], "\0", 1);
 	pickFileCheck = check;
 }
 

@@ -42,12 +42,12 @@ void Qaullib_UserInit(void);
 /**
  * get user name from DB
  */
-const char* Qaullib_GetUsername(void);
+char* Qaullib_GetUsername(void);
 
 /**
  * set user name
  */
-int Qaullib_SetUsername(const char* name);
+int Qaullib_SetUsername(char* name);
 
 /**
  * check if Name for that ip exists

@@ -10,6 +10,10 @@
 extern "C" {
 #endif // __cplusplus
 
+#ifdef WIN32
+#else
+#include <limits.h>  // for PATH_MAX
+#endif
 
 #define TIMEOUT_LASTRECEIVED 20
 #define TIMEOUT_CONNECTED   600

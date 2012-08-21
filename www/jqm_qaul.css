@@ -84,6 +84,10 @@ abbr.timeago {
 	background-color:#d5e4f2 !important;
 }
 
+.qaul_center {
+	text-align:center;
+}
+
 /* --- icons & buttons --- */
 .i_chat {
 	background-image: url('images/i_chat_64.png');

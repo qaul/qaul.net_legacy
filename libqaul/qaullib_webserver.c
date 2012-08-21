@@ -254,20 +254,25 @@ static void Qaullib_WwwSetName(struct mg_connection *conn, const struct mg_reque
 {
 	char *content_length;
 	int length;
+	char username[1024];
+	char protected_username[MAX_USER_LEN +1];
 
 	// Fetch user name
-	//get_qsvar(request_info, "n", qaul_username, sizeof(qaul_username));
 	content_length = (char *)mg_get_header(conn, "Content-Length");
 	length = atoi(content_length);
 	char *post = (char *)malloc(length+length/8+1);
 	mg_read(conn, post, length); //read post data
 	// extract variable
-	mg_get_var(post, strlen(post == NULL ? "" : post), "n", qaul_username, sizeof(qaul_username));
+	mg_get_var(post, strlen(post == NULL ? "" : post), "n", username, 1024);
+	printf("user name len: %i\n", (int)strlen(username));
+	memcpy(&username[MAX_USER_LEN], "\0", 1);
 
-	printf("save username: ");
-	printf("%s  \n", qaul_username);
-	Qaullib_SetUsername(qaul_username);
-	printf("username saved  \n", qaul_username);
+	if(Qaullib_StringNameProtect(protected_username, username, MAX_USER_LEN +1) > 0)
+	{
+		printf("save user name len %i: ", (int)strlen(protected_username));
+		printf("%s  \n", protected_username);
+		Qaullib_SetUsername(protected_username);
+	}
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
 
@@ -943,6 +948,7 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 		memset(&file_item.adv_ip, 0, sizeof(file_item.adv_ip));
 		file_item.adv_validip = 0;
 		file_item.downloaded = 0;
+		file_item.downloaded_chunk = 0;
 		sprintf(file_item.created_at,"0000-00-00 00:00:00");
 
 		// check if file already exists
@@ -950,17 +956,15 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 		{
 			if(existing_file->status == QAUL_FILESTATUS_DELETED)
 			{
-				//memcpy(existing_file, &file_item, sizeof(struct qaul_file_LL_item));
-				existing_file->type = QAUL_FILETYPE_FILE;
-				existing_file->status = QAUL_FILESTATUS_MYFILE;
-				// show it in GUI
-				existing_file->gui_notify = 1;
+				// delete from LL
+				Qaullib_File_LL_Delete_Item(existing_file);
+
+				// add the file again
+				Qaullib_FileAdd(&file_item);
 			}
 		}
 		else
-		{
 			Qaullib_FileAdd(&file_item);
-		}
 
 		// FIXME: make ipv6 compatible
 		// pack chat into olsr message
@@ -1119,12 +1123,16 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 {
 	char *content_length;
 	char buffer[1024];
-	char* stmt = buffer;
-	char *error_exec=NULL;
+	char *stmt;
+	char *error_exec;
 	int length;
 	struct qaul_file_LL_item file_item;
+	struct qaul_file_LL_item *existing_file;
 	char local_size[MAX_INTSTR_LEN +1];
 	char local_ip[MAX_IP_LEN +1];
+
+	stmt = buffer;
+	error_exec = NULL;
 
 	printf("Qaullib_WwwFileSchedule\n");
 
@@ -1153,7 +1161,21 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	// add file
 	file_item.type = QAUL_FILETYPE_FILE;
 	file_item.status = QAUL_FILESTATUS_NEW;
-	Qaullib_FileAdd(&file_item);
+
+	// check if file already exists
+	if(Qaullib_File_LL_HashSearch(file_item.hash, &existing_file))
+	{
+		if(existing_file->status == QAUL_FILESTATUS_DELETED)
+		{
+			// delete from LL
+			Qaullib_File_LL_Delete_Item(existing_file);
+
+			// add the file again
+			Qaullib_FileAdd(&file_item);
+		}
+	}
+	else
+		Qaullib_FileAdd(&file_item);
 
 	// send answer
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
@@ -1464,15 +1486,17 @@ static void Qaullib_WwwFile2Json(struct mg_connection *conn, struct qaul_file_LL
 {
 	printf("Qaullib_WwwFile2Json\n");
 
-	mg_printf(conn, "{");
-	//mg_printf(conn, "\"id\":%i,", file->id);
+	mg_printf(conn, "\n{");
 	mg_printf(conn, "\"hash\":\"%s\",", file->hashstr);
 	mg_printf(conn, "\"size\":%i,", file->size);
 	mg_printf(conn, "\"suffix\":\"%s\",", file->suffix);
 	mg_printf(conn, "\"description\":\"%s\",", file->description);
 	mg_printf(conn, "\"time\":\"%s\",", file->created_at);
 	mg_printf(conn, "\"status\":%i,", file->status);
-	mg_printf(conn, "\"downloaded\":%i", file->downloaded);
+	if(file->size > 0)
+		mg_printf(conn, "\"downloaded\":%i", ((file->downloaded +file->downloaded_chunk)*100/file->size));
+	else
+		mg_printf(conn, "\"downloaded\":0");
 	mg_printf(conn, "}");
 }
 
@@ -1487,7 +1511,7 @@ static void Qaullib_WwwExtBinaries(struct mg_connection *conn, const struct mg_r
 	printf("Qaullib_WwwGetFiles\n");
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{");
-	mg_printf(conn, "\"name\":\"%s\",",qaul_username);
+	mg_printf(conn, "\"name\":\"%s\",", qaul_username);
 
 	// loop through files
 	mg_printf(conn, "\"files\":[");

@@ -128,9 +128,6 @@ struct qaul_file_LL_item* Qaullib_File_LL_Add (struct qaul_file_LL_item *item)
 	struct qaul_file_LL_item *new_item;
 	new_item = (struct qaul_file_LL_item *)malloc(sizeof(struct qaul_file_LL_item));
 
-//	// create file hash from hash string
-//	Qaullib_StringToHash(filehashstr, new_item->hash);
-
 	printf("Qaullib_File_LL_Add hash: %s\n", item->hashstr);
 
 	// get index
@@ -178,10 +175,13 @@ struct qaul_file_LL_item* Qaullib_File_LL_Add (struct qaul_file_LL_item *item)
 	pthread_mutex_unlock( &qaullib_mutex_fileLL );
 
 	// check if file exists
-	if(Qaullib_File_LL_HashExists(new_item->hash))
-		printf("file found in LL\n");
-	else
-		printf("file not found in LL\n");
+	if(QAUL_DEBUG)
+	{
+		if(Qaullib_File_LL_HashExists(new_item->hash))
+			printf("file found in LL\n");
+		else
+			printf("file not found in LL\n");
+	}
 
 	return new_item;
 }
@@ -192,6 +192,9 @@ void Qaullib_File_LL_Delete_Item (struct qaul_file_LL_item *item)
 {
 	if(QAUL_DEBUG)
 		printf("Qaullib_File_LL_Delete_Item\n");
+
+	// empty discovery list
+	Qaullib_Filediscovery_LL_EmptyList(item);
 
 	// lock
 	pthread_mutex_lock( &qaullib_mutex_fileLL );

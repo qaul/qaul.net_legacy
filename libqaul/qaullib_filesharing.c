@@ -717,6 +717,8 @@ void Qaullib_FileCheckSockets(void)
 	// check file sockets
 	for(i=0; i<MAX_FILE_CONNECTIONS; i++)
 	{
+		// todo: check if this file is still valid. stop download if not...
+
 		// receive bytes if connected
 		if(fileconnections[i].conn.connected)
 		{
@@ -740,7 +742,8 @@ void Qaullib_FileCheckSockets(void)
 							// get chunk size
 							fileconnections[i].chunksize = ntohl(fileconnections[i].conn.buf.filechunk.chunksize);
 
-							printf("[qaullib] file download: %s, filesize %i, chunksize %i\n", fileconnections[i].fileinfo->hashstr, fileconnections[i].fileinfo->size, fileconnections[i].chunksize);
+							if(QAUL_DEBUG)
+								printf("[qaullib] file download: %s, filesize %i, chunksize %i\n", fileconnections[i].fileinfo->hashstr, fileconnections[i].fileinfo->size, fileconnections[i].chunksize);
 
 							// write chunk into file
 							fwrite(&fileconnections[i].conn.buf.buf[sizeof(struct qaul_filechunk_msg)], bytes -sizeof(struct qaul_filechunk_msg), 1, fileconnections[i].file);
@@ -763,6 +766,10 @@ void Qaullib_FileCheckSockets(void)
 		        	fwrite(fileconnections[i].conn.buf.buf, bytes, 1, fileconnections[i].file);
 		        	fileconnections[i].conn.bufpos = 0;
 		        	fileconnections[i].conn.received += bytes;
+
+					// update GUI
+		        	fileconnections[i].fileinfo->downloaded_chunk = fileconnections[i].conn.received;
+		        	fileconnections[i].fileinfo->gui_notify = 1;
 				}
 				else
 				{

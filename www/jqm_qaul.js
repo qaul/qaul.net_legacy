@@ -294,6 +294,9 @@ function init_chat()
 {
 	chat_initialized = true;
 	
+	// show back buttons
+	$(".c_init").show();
+	
 	// todo: put all those timers into one timer
 	// set timer
 	updatetimer();

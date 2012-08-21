@@ -40,7 +40,8 @@ struct qaul_file_LL_item {
     char created_at[MAX_TIME_LEN +1];         /// when this file entry was created (not the date of the file!)
     int status;                               /// status of the file, see QAUL_FILESTATUS_XXX
     int size;                                 /// file size in bytes
-    int downloaded;                           /// number of downloaded bytes
+    int downloaded;                           /// number of downloaded bytes, that are concluded
+    int downloaded_chunk;                     /// number of downloaded bytes, of the current chunk downloading (these bytes can be lost)
 
     time_t discovery_timestamp;               /// time stamp when discovery started
     int discovery_count;                      /// how many seeders were discovered

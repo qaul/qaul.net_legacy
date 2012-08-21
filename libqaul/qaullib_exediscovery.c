@@ -142,6 +142,7 @@ void Qaullib_ExeProcessAvailableMsg(struct qaul_exeavailable_msg *msg)
 				file_item.status = QAUL_FILESTATUS_NEW;
 				file_item.size = size;
 				file_item.downloaded = 0;
+				file_item.downloaded_chunk = 0;
 
 				strncpy(file_item.description, qaul_exe_array[i].description, MAX_DESCRIPTION_LEN);
 				memcpy(&file_item.description[MAX_DESCRIPTION_LEN], "\0", 1);
