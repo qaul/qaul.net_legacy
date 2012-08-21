@@ -196,6 +196,8 @@ int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 	char *stmt;
 	char *error_exec;
 	char myip[MAX_IP_LEN +1];
+	char description_dbprotected[2*MAX_DESCRIPTION_LEN +1];
+	char adv_name_dbprotected[2*MAX_USER_LEN +1];
 	time_t timestamp;
 
 	stmt = buffer;
@@ -213,20 +215,25 @@ int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 	else
 		sprintf(myip,"");
 
+	// protect values for db
+	Qaullib_StringDbProtect(description_dbprotected, file_item->description, sizeof(description_dbprotected));
+	Qaullib_StringDbProtect(adv_name_dbprotected, file_item->adv_name, sizeof(adv_name_dbprotected));
+
 	time(&timestamp);
 	// write into DB
 	sprintf(stmt,
 			sql_file_add,
 			file_item->hashstr,
 			file_item->suffix,
-			file_item->description,
+			description_dbprotected,
 			file_item->size,
 			file_item->status,
 			file_item->type,
-			file_item->adv_name,
+			adv_name_dbprotected,
 			myip,
 			(int)timestamp
 			);
+
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		printf("SQLite error: %s\n",error_exec);

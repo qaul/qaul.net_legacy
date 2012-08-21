@@ -133,11 +133,11 @@ static const char* sql_file_update_size = "UPDATE 'file' SET size = %i WHERE has
 static const char* sql_file_update_favorite = "UPDATE 'file' SET favorite = %i WHERE hash = \"%s\" ;";
 
 // insert file
-static const char* sql_file_add = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip','time') VALUES (\"%s\",\"%s\",\"%s\",%i,%i,%i,\"%s\",\"%s\",%i);";
+static const char* sql_file_add = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip','created_at') VALUES (\"%s\",\"%s\",\"%s\",%i,%i,%i,\"%s\",\"%s\",%i);";
 
 // todo: remove this
-static const char* sql_file_set = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip','time') VALUES (\"%s\",\"%s\",\"%s\",%i,5,1,'','',%i);";
-static const char* sql_file_schedule = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip','time') VALUES (\"%s\",\"%s\",\"%s\",%i,0,1,\"%s\",\"%s\",%i);";
+static const char* sql_file_set = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip','created_at') VALUES (\"%s\",\"%s\",\"%s\",%i,5,1,'','',%i);";
+static const char* sql_file_schedule = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip','created_at') VALUES (\"%s\",\"%s\",\"%s\",%i,0,1,\"%s\",\"%s\",%i);";
 
 // delete files
 static const char* sql_file_delete_hash = "DELETE FROM 'file' WHERE hash = \"%s\";";

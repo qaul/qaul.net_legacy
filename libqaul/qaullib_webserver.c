@@ -952,7 +952,8 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 	// get path
 	mg_get_var(post, strlen(post == NULL ? "" : post), "p", local_path, sizeof(local_path));
 	// get msg
-	mg_get_var(post, strlen(post == NULL ? "" : post), "m", file_item.description, sizeof(file_item.description));
+	mg_get_var(post, strlen(post == NULL ? "" : post), "m", local_msg, sizeof(local_msg));
+	Qaullib_StringMsgProtect(file_item.description, local_msg, sizeof(file_item.description));
 	// get advertise
 	mg_get_var(post, strlen(post == NULL ? "" : post), "a", local_advertise, sizeof(local_advertise));
 	advertise = atoi(local_advertise);
@@ -1154,6 +1155,8 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	struct qaul_file_LL_item *existing_file;
 	char local_size[MAX_INTSTR_LEN +1];
 	char local_ip[MAX_IP_LEN +1];
+	char local_description[MAX_DESCRIPTION_LEN +1];
+	char local_adv_name[MAX_USER_LEN +1];
 
 	stmt = buffer;
 	error_exec = NULL;
@@ -1172,7 +1175,8 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	// get suffix
 	mg_get_var(post, strlen(post == NULL ? "" : post), "suffix", file_item.suffix, MAX_SUFFIX_LEN +1);
 	// get description
-	mg_get_var(post, strlen(post == NULL ? "" : post), "description", file_item.description, MAX_DESCRIPTION_LEN +1);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "description", local_description, MAX_DESCRIPTION_LEN +1);
+	Qaullib_StringMsgProtect(file_item.description, local_description, sizeof(file_item.description));
 	// get size
 	mg_get_var(post, strlen(post == NULL ? "" : post), "size", local_size, MAX_INTSTR_LEN +1);
 	file_item.size = atoi(local_size);
@@ -1180,7 +1184,8 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	mg_get_var(post, strlen(post == NULL ? "" : post), "ip", local_ip, MAX_IP_LEN +1);
 
 
-	mg_get_var(post, strlen(post == NULL ? "" : post), "name", file_item.adv_name, MAX_USER_LEN +1);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "name", local_adv_name, MAX_USER_LEN +1);
+	Qaullib_StringNameProtect(file_item.adv_name, local_adv_name, sizeof(file_item.adv_name));
 
 	// add file
 	file_item.type = QAUL_FILETYPE_FILE;
