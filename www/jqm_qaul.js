@@ -269,7 +269,7 @@ function qaul_translate(dictionary)
 		$(this).text($.i18n._($(this).text()));
 	});
 	$("input.i18n").each(function(){
-		$(this).prop('value',$.i18n._($(this).prop('value')));
+		$(this).val($.i18n._($(this).val()));
 	});
 	$("h1.i18n").each(function(){
 		$(this).text($.i18n._($(this).text()));

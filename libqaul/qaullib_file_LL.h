@@ -31,17 +31,17 @@ struct qaul_file_LL_item {
 	struct qaul_file_LL_item *next;           /// next node
 	struct qaul_file_LL_item *prev;           /// previous node
 
-    int id;                                   /// data base ID of the file entry
-    int type;                                 /// type of the file, see QAUL_FILETYPE_XXX
+    int  id;                                  /// data base ID of the file entry
+    int  type;                                /// type of the file, see QAUL_FILETYPE_XXX
     char hash[MAX_HASH_LEN];                  /// file hash
     char hashstr[MAX_HASHSTR_LEN +1];         /// file hash string
     char suffix[MAX_SUFFIX_LEN +1];           /// file suffix
     char description[MAX_DESCRIPTION_LEN +1]; /// file description
-    char created_at[MAX_TIME_LEN +1];         /// when this file entry was created (not the date of the file!)
-    int status;                               /// status of the file, see QAUL_FILESTATUS_XXX
-    int size;                                 /// file size in bytes
-    int downloaded;                           /// number of downloaded bytes, that are concluded
-    int downloaded_chunk;                     /// number of downloaded bytes, of the current chunk downloading (these bytes can be lost)
+    int  created_at;                          /// when this file entry was created (not the date of the file!)
+    int  status;                              /// status of the file, see QAUL_FILESTATUS_XXX
+    int  size;                                /// file size in bytes
+    int  downloaded;                          /// number of downloaded bytes, that are concluded
+    int  downloaded_chunk;                    /// number of downloaded bytes, of the current chunk downloading (these bytes can be lost)
 
     time_t discovery_timestamp;               /// time stamp when discovery started
     int discovery_count;                      /// how many seeders were discovered

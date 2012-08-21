@@ -116,7 +116,7 @@ static const char* sql_user_delete_ipv4 = "DELETE FROM 'user' WHERE ipv4 = %i;";
 
 
 
-static const char* sql_file_table = "CREATE TABLE IF NOT EXISTS 'file' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'type' INTEGER NOT NULL DEFAULT 1, 'hash' TEXT, 'suffix' CHAR(5), 'description' TEXT, 'size' INTEGER, 'status' INTEGER DEFAULT 0, 'favorite' INTEGER DEFAULT 0, 'created_at' INTEGER DEFAULT CURRENT_TIMESTAMP, 'adv_name' TEXT, 'adv_ip' TEXT, 'geolon' REAL, 'geolat' REAL, 'requests' INTEGER DEFAULT 0, 'downloaded' FLOAT DEFAULT 0);";
+static const char* sql_file_table = "CREATE TABLE IF NOT EXISTS 'file' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'type' INTEGER NOT NULL DEFAULT 1, 'hash' TEXT, 'suffix' CHAR(5), 'description' TEXT, 'size' INTEGER, 'status' INTEGER DEFAULT 0, 'favorite' INTEGER DEFAULT 0, 'created_at' INTEGER DEFAULT 0, 'adv_name' TEXT, 'adv_ip' TEXT, 'geolon' REAL, 'geolat' REAL, 'requests' INTEGER DEFAULT 0, 'downloaded' FLOAT DEFAULT 0);";
 
 // set indexes
 static const char* sql_file_index = "CREATE INDEX IF NOT EXISTS 'file_hash' ON 'file' ('hash' DESC); CREATE INDEX IF NOT EXISTS 'file_suffix' ON 'file' ('suffix' DESC);";
@@ -133,11 +133,11 @@ static const char* sql_file_update_size = "UPDATE 'file' SET size = %i WHERE has
 static const char* sql_file_update_favorite = "UPDATE 'file' SET favorite = %i WHERE hash = \"%s\" ;";
 
 // insert file
-static const char* sql_file_add = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES (\"%s\",\"%s\",\"%s\",%i,%i,%i,\"%s\",\"%s\");";
+static const char* sql_file_add = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip','time') VALUES (\"%s\",\"%s\",\"%s\",%i,%i,%i,\"%s\",\"%s\",%i);";
 
 // todo: remove this
-static const char* sql_file_set = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES (\"%s\",\"%s\",\"%s\",%i,5,1,'','');";
-static const char* sql_file_schedule = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip') VALUES (\"%s\",\"%s\",\"%s\",%i,0,1,\"%s\",\"%s\");";
+static const char* sql_file_set = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip','time') VALUES (\"%s\",\"%s\",\"%s\",%i,5,1,'','',%i);";
+static const char* sql_file_schedule = "INSERT INTO 'file' ('hash','suffix','description','size','status','type','adv_name','adv_ip','time') VALUES (\"%s\",\"%s\",\"%s\",%i,0,1,\"%s\",\"%s\",%i);";
 
 // delete files
 static const char* sql_file_delete_hash = "DELETE FROM 'file' WHERE hash = \"%s\";";

@@ -141,8 +141,7 @@ struct qaul_file_LL_item* Qaullib_File_LL_Add (struct qaul_file_LL_item *item)
 	memcpy(&new_item->suffix[MAX_SUFFIX_LEN], "\0", 1);
 	strncpy(new_item->description, item->description, MAX_DESCRIPTION_LEN);
 	memcpy(&new_item->description[MAX_DESCRIPTION_LEN], "\0", 1);
-	strncpy(new_item->created_at, item->created_at, MAX_TIME_LEN);
-	memcpy(&new_item->created_at[MAX_TIME_LEN], "\0", 1);
+	new_item->created_at = item->created_at;
 
 	new_item->id = item->id;
 	new_item->type = item->type;

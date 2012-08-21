@@ -973,7 +973,7 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 		file_item.adv_validip = 0;
 		file_item.downloaded = 0;
 		file_item.downloaded_chunk = 0;
-		sprintf(file_item.created_at,"0000-00-00 00:00:00");
+		time((time_t *)&file_item.created_at);
 
 		// check if file already exists
 		if(Qaullib_File_LL_HashSearch(file_item.hash, &existing_file))
@@ -1185,6 +1185,7 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	// add file
 	file_item.type = QAUL_FILETYPE_FILE;
 	file_item.status = QAUL_FILESTATUS_NEW;
+	time((time_t *)&file_item.created_at);
 
 	// check if file already exists
 	if(Qaullib_File_LL_HashSearch(file_item.hash, &existing_file))
@@ -1527,6 +1528,8 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 // ------------------------------------------------------------
 static void Qaullib_WwwFile2Json(struct mg_connection *conn, struct qaul_file_LL_item *file)
 {
+	char timestr[MAX_TIME_LEN];
+
 	printf("Qaullib_WwwFile2Json\n");
 
 	mg_printf(conn, "\n{");
@@ -1534,7 +1537,9 @@ static void Qaullib_WwwFile2Json(struct mg_connection *conn, struct qaul_file_LL
 	mg_printf(conn, "\"size\":%i,", file->size);
 	mg_printf(conn, "\"suffix\":\"%s\",", file->suffix);
 	mg_printf(conn, "\"description\":\"%s\",", file->description);
-	mg_printf(conn, "\"time\":\"%s\",", file->created_at);
+
+	Qaullib_Timestamp2Isostr(timestr, file->created_at, MAX_TIME_LEN);
+	mg_printf(conn, "\"time\":\"%s\",", timestr);
 	mg_printf(conn, "\"status\":%i,", file->status);
 	if(file->size > 0)
 		mg_printf(conn, "\"downloaded\":%i", ((file->downloaded +file->downloaded_chunk)*100/file->size));

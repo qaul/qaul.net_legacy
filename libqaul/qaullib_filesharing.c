@@ -87,12 +87,17 @@ void Qaullib_FileInit(void)
 // ------------------------------------------------------------
 void Qaullib_FilePopulate(void)
 {
-	char buffer[1024];
-	char *stmt = buffer;
-	char *key  = buffer;
-	char *error_exec=NULL;
-	int status, i;
+	char buffer[2048];
+	char *stmt;
+	char *key;
+	char *error_exec;
+	int  status, i;
 	char local_destiny[MAX_PATH_LEN +1];
+	time_t timestamp;
+
+	stmt = buffer;
+	key  = buffer;
+	error_exec = NULL;
 
 	if(FAT_CLIENT)
 	{
@@ -105,6 +110,7 @@ void Qaullib_FilePopulate(void)
 			{
 				status = QAUL_FILESTATUS_MYFILE;
 
+				time(&timestamp);
 				// write entry into DB
 				sprintf(stmt,
 						sql_file_add,
@@ -115,7 +121,8 @@ void Qaullib_FilePopulate(void)
 						status,
 						qaul_populate_file[i].type,
 						"",
-						""
+						"",
+						(int)timestamp
 						);
 				if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 				{
@@ -186,9 +193,13 @@ int Qaullib_FileAdd(struct qaul_file_LL_item *file_item)
 int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 {
 	char buffer[1024];
-	char *stmt = buffer;
-	char *error_exec=NULL;
+	char *stmt;
+	char *error_exec;
 	char myip[MAX_IP_LEN +1];
+	time_t timestamp;
+
+	stmt = buffer;
+	error_exec = NULL;
 
 	// create IP str
 	if(file_item->adv_validip)
@@ -202,6 +213,7 @@ int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 	else
 		sprintf(myip,"");
 
+	time(&timestamp);
 	// write into DB
 	sprintf(stmt,
 			sql_file_add,
@@ -212,7 +224,8 @@ int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 			file_item->status,
 			file_item->type,
 			file_item->adv_name,
-			myip
+			myip,
+			(int)timestamp
 			);
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
@@ -445,7 +458,7 @@ void Qaullib_FileDB2LL(void)
 			}
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "created_at") == 0)
 			{
-		    	sprintf(myitem.created_at, "%s", sqlite3_column_text(ppStmt, jj));
+		    	myitem.created_at = sqlite3_column_int(ppStmt, jj);
 			}
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "status") == 0)
 			{
