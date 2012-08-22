@@ -145,6 +145,9 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 	qaul_voip_call.call_logged = 0;
 
 	Qaullib_VoipSetNameByIp(rdata->pkt_info.src_name);
+
+	// send ring
+	app_event = QAUL_EVENT_RING;
 }
 
 /**

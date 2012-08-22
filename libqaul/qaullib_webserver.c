@@ -363,6 +363,13 @@ static void Qaullib_WwwCallEvent(struct mg_connection *conn, const struct mg_req
 	if(qaul_voip_event == 5)
 		mg_printf(conn, ",\"code\":%i", qaul_voip_event_code);
 	mg_printf(conn, "}");
+
+	// set ring
+	if(qaul_voip_event == 2)
+	{
+		app_event = QAUL_EVENT_RING;
+	}
+
 	qaul_voip_event = 0;
 }
 

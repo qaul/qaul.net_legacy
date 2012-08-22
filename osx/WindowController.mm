@@ -520,6 +520,10 @@
 			// open url
 			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", Qaullib_GetAppEventOpenURL()]]];
 		}
+		else if(appEvent == QAUL_EVENT_NOTIFY || appEvent == QAUL_EVENT_RING)
+		{
+			NSBeep();
+		}
 	}
 }
 

@@ -15,6 +15,8 @@ extern "C" {
 #define QAUL_EVENT_CHOOSEFILE 100
 #define QAUL_EVENT_OPENFILE   101
 #define QAUL_EVENT_OPENURL    102
+#define QAUL_EVENT_NOTIFY     103
+#define QAUL_EVENT_RING       104
 
 #define QAUL_ERROR_NOWIFI       1
 #define QAUL_ERROR_NOROOT       2
