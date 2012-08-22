@@ -1382,6 +1382,11 @@ static void Qaullib_WwwPubInfo(struct mg_connection *conn, const struct mg_reque
 // ------------------------------------------------------------
 static void Qaullib_WwwLoading(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
+#ifdef ARS_EDITION
+	time_t timestamp;
+	time(&timestamp);
+#endif // ARS_EDITION
+
 	printf("Qaullib_WwwLoading\n");
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{");
@@ -1392,8 +1397,8 @@ static void Qaullib_WwwLoading(struct mg_connection *conn, const struct mg_reque
 	}
 #ifdef ARS_EDITION
 	else if(
-			(timestamp > ARS_AUS1 && timestamp < ARS_EIN1) ||
-			(timestamp > ARS_AUS2 && timestamp < ARS_EIN2)
+			(timestamp > ARS_AUS_1 && timestamp < ARS_EIN_1) ||
+			(timestamp > ARS_AUS_2 && timestamp < ARS_EIN_2)
 		)
 	{
 		// show Klangwolke info screen

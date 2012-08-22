@@ -213,11 +213,11 @@ int Qaullib_TimedCheckAppEvent(void)
 	time_t timestamp;
 	time(&timestamp);
 
-	if(timestamp > ARS_AUS1 && timestamp < ARS_EIN1)
+	if(timestamp > ARS_AUS_1 && timestamp < ARS_EIN_1)
 	{
 		return QAUL_EVENT_QUIT;
 	}
-	else if(timestamp > ARS_AUS2 && timestamp < ARS_EIN2)
+	else if(timestamp > ARS_AUS_2 && timestamp < ARS_EIN_2)
 	{
 		return QAUL_EVENT_QUIT;
 	}
