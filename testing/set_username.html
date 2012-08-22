@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title>qaul.net test file add</title>
+</head>
+<body>
+
+<form action="http://localhost:8081/setname" method="post" id="name_form">
+<p>
+	<label for="name_name">Choose a user name (max length: 20 Chars = 20 Bytes)</label><br/>
+	<input type="text" name="n" id="name_name" class="required nospaces userlen"/>
+</p><p>
+	<input class="submit i18n" type="submit" value="Save" id="name_submit"/>
+</p><p>
+This info is sent to http://localhost:8081/setname<br/>
+Check the response under: http://localhost:8081/getconfig.json
+</p>
+
+</form>
+</body>
+</html>
