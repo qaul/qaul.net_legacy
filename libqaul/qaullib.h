@@ -10,6 +10,9 @@
 extern "C" {
 #endif // __cplusplus
 
+// special edition for Ars Electronica Festival
+// this will be completely removed after the festival
+#define ARS_EDITION             1
 
 #define QAUL_EVENT_QUIT        99
 #define QAUL_EVENT_CHOOSEFILE 100

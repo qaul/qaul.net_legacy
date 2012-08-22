@@ -170,7 +170,15 @@
 		
 		qaulStarted = 10;
 	}
-	
+
+#ifdef ARS_EDITION
+	// wait for Klangwolke
+	if(qaulStarted == 10)
+	{
+		if(Qaullib_TimedCheckAppEvent() == QAUL_EVENT_QUIT)
+			qaulStarted = 9;
+	}
+#endif
 	
 	// check authorization 
 	if(qaulStarted == 10)
@@ -519,6 +527,10 @@
 		{
 			// open url
 			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", Qaullib_GetAppEventOpenURL()]]];
+		}
+		else if(appEvent == QAUL_EVENT_QUIT)
+		{
+			[NSApp terminate:nil];
 		}
 		else if(appEvent == QAUL_EVENT_NOTIFY || appEvent == QAUL_EVENT_RING)
 		{

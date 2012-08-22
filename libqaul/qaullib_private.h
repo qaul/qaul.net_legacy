@@ -72,8 +72,6 @@ extern "C" {
  * UTC:        1. September 2012 18:00 Ð 18:00
  * UTC time stamp: 1346522400 - 1346529600
  */
-#define ARS_EDITION          1
-
 #define ARS_AUS_1   1346346000
 #define ARS_EIN_1   1346353200
 #define ARS_AUS_2   1346522400
