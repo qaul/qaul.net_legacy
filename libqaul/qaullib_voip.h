@@ -49,6 +49,14 @@ struct qaul_voip_stats_struct qaul_voip_call;
 int qaul_voip_event;
 
 /**
+ * indicates that the state is ringing
+ *
+ * 0 = not ringing
+ * 1 = ringing
+ */
+int qaul_voip_ringing;
+
+/**
  * sip code of call endings
  *
  * 486 = callee is busy

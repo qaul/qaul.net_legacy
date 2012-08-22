@@ -522,6 +522,7 @@
 		}
 		else if(appEvent == QAUL_EVENT_NOTIFY || appEvent == QAUL_EVENT_RING)
 		{
+			NSLog(@"QAUL_EVENT_NOTIFY or QAUL_EVENT_RING received\n");
 			NSBeep();
 		}
 	}

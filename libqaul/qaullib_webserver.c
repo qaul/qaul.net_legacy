@@ -365,7 +365,7 @@ static void Qaullib_WwwCallEvent(struct mg_connection *conn, const struct mg_req
 	mg_printf(conn, "}");
 
 	// set ring
-	if(qaul_voip_event == 2)
+	if(qaul_voip_ringing > 0)
 	{
 		app_event = QAUL_EVENT_RING;
 	}

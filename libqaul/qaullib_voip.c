@@ -147,6 +147,7 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 	Qaullib_VoipSetNameByIp(rdata->pkt_info.src_name);
 
 	// send ring
+	qaul_voip_ringing = 1;
 	app_event = QAUL_EVENT_RING;
 }
 
@@ -172,8 +173,12 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
     	if(qaul_voip_call.outgoing)
     	{
     		qaul_voip_event = 1;
+    		qaul_voip_ringing = 1;
     	}
     }
+    else
+    	qaul_voip_ringing = 0;
+
     if(ci.state == PJSIP_INV_STATE_CONNECTING)
     {
     	qaul_voip_event = 3;
