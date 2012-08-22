@@ -75,7 +75,7 @@ void Qaullib_Init(const char* resourcePath)
 	dbExists = Qaullib_FileExists(dbPath);
 
 	// configure sqlite
-	// make sure sqlite is in fullmutex mode for multithreading
+	// make sure sqlite is in full mutex mode for multi threading
 	if(sqlite3_config(SQLITE_CONFIG_SERIALIZED) != SQLITE_OK) printf("SQLITE_CONFIG_SERIALIZED error\n");
 	// open database
 	rc = sqlite3_open(dbPath, &db);
@@ -209,6 +209,20 @@ void Qaullib_TimedSocketReceive(void)
 
 int Qaullib_TimedCheckAppEvent(void)
 {
+#ifdef ARS_EDITION
+	time_t timestamp;
+	time(&timestamp);
+
+	if(timestamp > ARS_AUS1 && timestamp < ARS_EIN1)
+	{
+		return QAUL_EVENT_QUIT;
+	}
+	else if(timestamp > ARS_AUS2 && timestamp < ARS_EIN2)
+	{
+		return QAUL_EVENT_QUIT;
+	}
+#endif // ARS_EDITION
+
 	int tmp_event = app_event;
 	app_event = 0;
 	return tmp_event;
@@ -220,7 +234,7 @@ void Qaullib_TimedDownload(void)
 	Qaullib_UserCheckNonames();
 	// discover executables for download
 	Qaullib_ExeScheduleDiscovery();
-	// discover and dowload scheduled files
+	// discover and download scheduled files
 	Qaullib_FileCheckScheduled();
 	// delete users
 	Qaullib_User_LL_Clean();

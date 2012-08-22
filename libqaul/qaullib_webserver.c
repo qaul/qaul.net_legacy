@@ -1383,6 +1383,16 @@ static void Qaullib_WwwLoading(struct mg_connection *conn, const struct mg_reque
 		// wait
 		mg_printf(conn, "\"change\":0");
 	}
+#ifdef ARS_EDITION
+	else if(
+			(timestamp > ARS_AUS1 && timestamp < ARS_EIN1) ||
+			(timestamp > ARS_AUS2 && timestamp < ARS_EIN2)
+		)
+	{
+		// show Klangwolke info screen
+		mg_printf(conn, "\"change\":1,\"page\":\"#page_klangwolke\"");
+	}
+#endif // ARS_EDITION
 	else if(Qaullib_ExistsLocale() == 0)
 	{
 		// show set user name
