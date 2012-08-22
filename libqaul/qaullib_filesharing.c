@@ -12,14 +12,6 @@
 #include "polarssl/polarssl/sha1.h"
 
 /**
- * copy a file from its @a origin file path to @a destiny
- *
- * @retval file size in Bytes
- * @retval 0 error
- */
-static int Qaullib_FileCopy(const char* origin, const char* destiny);
-
-/**
  * writes the suffix of the @a filename into @a suffix
  *
  * @retval 1 success
@@ -268,6 +260,31 @@ int Qaullib_FileCopyNew(char *path, struct qaul_file_LL_item *file)
     if(!size) return 0;
 
     return size;
+}
+
+// ------------------------------------------------------------
+int Qaullib_FileCopyToDownloadFolder(struct qaul_file_LL_item *file)
+{
+	char new_path[MAX_PATH_LEN +1];
+	char old_path[MAX_PATH_LEN +1];
+
+	if(qaul_conf_filedownloadfolder_set)
+	{
+		// create new file path
+		Qaullib_FileCreatePathToDownloadFolder(new_path, file);
+
+		if(Qaullib_FileExists(new_path))
+		{
+			// create existing path
+			Qaullib_FileCreatePath(old_path, file->hashstr, file->suffix);
+
+			// copy file
+			if(Qaullib_FileCopy(old_path, new_path))
+				return 1;
+		}
+	}
+
+	return 0;
 }
 
 // ------------------------------------------------------------
@@ -596,6 +613,23 @@ void Qaullib_FileCreatePath(char *filepath, char *hash, char *suffix)
 }
 
 // ------------------------------------------------------------
+void Qaullib_FileCreatePathToDownloadFolder(char *filepath, struct qaul_file_LL_item *file_item)
+{
+	char new_filename[MAX_PATH_LEN +1];
+
+	// create new file name
+	Qaullib_StringDescription2Filename(new_filename, file_item, sizeof(new_filename));
+
+	// create the new path
+	if(strlen(new_filename) +strlen(qaullib_FileDownloadFolderPath) <= MAX_PATH_LEN)
+	{
+		strcpy(filepath, webPath);
+		strcat(filepath, PATH_SEPARATOR);
+		strcat(filepath, new_filename);
+	}
+}
+
+// ------------------------------------------------------------
 int Qaullib_FileAvailable(char *hashstr, char *suffix, struct qaul_file_LL_item **file_item)
 {
 	unsigned char hash[MAX_HASH_LEN];
@@ -816,6 +850,10 @@ void Qaullib_FileCheckSockets(void)
 						// todo: check if file hash matches!
 	        			printf("Qaullib_FileCheckSockets download finished! filesize %i, downloaded %i\n", fileconnections[i].fileinfo->size, fileconnections[i].fileinfo->downloaded);
 	        			Qaullib_FileUpdateStatus(fileconnections[i].fileinfo, QAUL_FILESTATUS_DOWNLOADED);
+
+	        			// copy file to download folder
+	        			if(qaul_conf_filedownloadfolder_set)
+	        				Qaullib_FileCopyToDownloadFolder(fileconnections[i].fileinfo);
 	        		}
 	        		// todo: otherwise reschedule for next download
 	        	}
@@ -885,7 +923,7 @@ void Qaullib_FileEndFailedConnection(struct qaul_file_connection *fileconnection
 // ------------------------------------------------------------
 // file manipulation
 // ------------------------------------------------------------
-static int Qaullib_FileCopy(const char* origin, const char* destiny)
+int Qaullib_FileCopy(const char* origin, const char* destiny)
 {
 	if(QAUL_DEBUG)
 		printf("Qaullib_FileCopy %s -> %s\n", origin, destiny);

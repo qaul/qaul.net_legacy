@@ -1014,10 +1014,10 @@ function open_filepicker()
 	});
 }
 
-function open_file(filename)
+function open_file(hash)
 {
 	// send message / open socket to show filepicker
-	var path = "file_open.json?f=" +filename;
+	var path = "file_open.json?f=" +hash;
 	$.ajax({
 		url:   path,
 		cache: false, // needed for IE
@@ -1156,9 +1156,7 @@ function file_update_check(item)
 					$("#file_" +item.hash).removeClass("scheduled downloading");
 					$("#file_bar_" +item.hash).progressBar(100);
 					// add open file link
-					var filename = item.hash;
-					if(item.suffix != "") filename += "." +item.suffix;
-					$("#file_" +item.hash +" img.fileicon64").wrap("<a href=\"#\" onClick=\"javascript:open_file('" +filename +"')\"></a>");
+					$("#file_" +item.hash +" img.fileicon64").wrap("<a href=\"#\" onClick=\"javascript:open_file('" +item.hash +"')\"></a>");
 					// add readvertise button
 					var button = "<a href=\"#\" onClick=\"javascript:file_advertise('" +item.hash +"','" +item.suffix +"','" +item.size +"','" +item.description +"')\" class=\"filebutton\"><img src=\"images/b_advertise.png\" alt=\"advertise\" /></a>";
 					$("#file_" +item.hash +" a.filebutton").after(button);
@@ -1199,8 +1197,6 @@ function file_update_check(item)
 
 function file_create_html(item)
 {
-	var filename = item.hash;
-	if(item.suffix.length > QAUL_FILESTATUS_NEW) filename += "." +item.suffix;
 	var fileclass = "";
 	if(item.status == QAUL_FILESTATUS_MYFILE) fileclass = "file_myfile";
 	else if(item.status < QAUL_FILESTATUS_NEW) fileclass = "file_failed";
@@ -1208,7 +1204,7 @@ function file_create_html(item)
 	if(item.status == QAUL_FILESTATUS_DOWNLOADING) percent = item.downloaded;
 	var file = "<div class=\"file " +fileclass +"\" id=\"file_" +item.hash +"\">";
 	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) 
-		file += "<a href=\"#\" onClick=\"javascript:open_file('" +filename +"')\">";
+		file += "<a href=\"#\" onClick=\"javascript:open_file('" +item.hash +"')\">";
 	if(item.status <= QAUL_FILESTATUS_ERROR) 
 		file += "<img src=\"images/f_failed_64.png\" class=\"fileicon64\">";
 	else

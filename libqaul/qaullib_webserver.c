@@ -1101,22 +1101,56 @@ static void Qaullib_WwwFilePickCheck(struct mg_connection *conn, const struct mg
 // ------------------------------------------------------------
 static void Qaullib_WwwFileOpen(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
-	char local_filename[MAX_FILENAME_LEN +1];
+	char hashstr[MAX_HASHSTR_LEN +1];
+	char hash[MAX_HASH_LEN];
+	char old_path[MAX_PATH_LEN +1];
+	struct qaul_file_LL_item *file_item;
 
 	printf("Qaullib_WwwFileOpen\n");
 
 	// get file variable
-	get_qsvar(request_info, "f", local_filename, MAX_FILENAME_LEN);
-	memcpy(&local_filename[MAX_FILENAME_LEN], "\0", 1);
-	// create path
-    strcpy(qaullib_AppEventOpenPath, webPath);
-    strcat(qaullib_AppEventOpenPath, PATH_SEPARATOR);
-    strcat(qaullib_AppEventOpenPath, "files");
-    strcat(qaullib_AppEventOpenPath, PATH_SEPARATOR);
-    strcat(qaullib_AppEventOpenPath, local_filename);
+	get_qsvar(request_info, "f", hashstr, sizeof(hashstr));
+	memcpy(&hashstr[MAX_HASHSTR_LEN], "\0", 1);
 
-	// open file
-	app_event = QAUL_EVENT_OPENFILE;
+	// get file
+	if(Qaullib_StringToHash(hashstr, hash))
+	{
+		// check if file is in file sharing
+		if(
+			Qaullib_File_LL_HashSearch(hash, &file_item) &&
+			file_item->status >= QAUL_FILESTATUS_DOWNLOADED
+			)
+		{
+			if(qaul_conf_filedownloadfolder_set)
+			{
+				// get path
+				Qaullib_FileCreatePathToDownloadFolder(qaullib_AppEventOpenPath, file_item);
+
+				// check if file exists
+				if(Qaullib_FileExists(qaullib_AppEventOpenPath))
+				{
+					// open file
+					app_event = QAUL_EVENT_OPENFILE;
+				}
+				else
+				{
+					Qaullib_FileCreatePath(old_path, file_item->hashstr, file_item->suffix);
+
+					if(Qaullib_FileCopy(old_path, qaullib_AppEventOpenPath))
+					{
+						// open file
+						app_event = QAUL_EVENT_OPENFILE;
+					}
+				}
+			}
+			else
+			{
+				Qaullib_FileCreatePath(qaullib_AppEventOpenPath, file_item->hashstr, file_item->suffix);
+				// open file
+				app_event = QAUL_EVENT_OPENFILE;
+			}
+		}
+	}
 
 	// deliver answer
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");

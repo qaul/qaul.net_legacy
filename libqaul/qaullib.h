@@ -127,6 +127,12 @@ int Qaullib_CheckConf(int conf);
 void Qaullib_SetConfVoIP(void);
 
 /**
+ * set the download folder
+ * all downloaded files will be copied into this folder after download.
+ */
+void Qaullib_SetConfDownloadFolder(char *path);
+
+/**
  * start web server
  *
  * @retval 1 web server started successfully

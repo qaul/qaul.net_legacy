@@ -106,7 +106,10 @@ int qaul_conf_ios;
 int qaul_conf_wifi_set;
 int qaul_web_localip_set;
 int qaul_exe_available;
-char qaullib_AppEventOpenURL[MAX_URL_LEN];
+char qaullib_AppEventOpenURL[MAX_URL_LEN +1];
+
+char qaullib_FileDownloadFolderPath[MAX_PATH_LEN +1];
+int  qaul_conf_filedownloadfolder_set;
 
 union olsr_message *qaul_in_msg;
 
@@ -145,7 +148,7 @@ int pickFileCheck;
  *
  * @retval returns the string size of the file name
  */
-int Qaullib_StringDescription2Filename(char *filename, char *description, char *suffix, char *hashstr, int buffer_size);
+int Qaullib_StringDescription2Filename(char *filename, struct qaul_file_LL_item *file, int buffer_size);
 
 /**
  * checks and protects a message string

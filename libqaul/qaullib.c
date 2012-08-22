@@ -32,6 +32,7 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_UDP_socket = -1;
 	qaul_UDP_started = 0;
 	qaul_exe_available = 0;
+	qaul_conf_filedownloadfolder_set = 0;
 	sprintf(qaullib_AppEventOpenURL, "http://%s:%s/", IPC_ADDR, CHAT_PORT);
 
 	// -------------------------------------------------
@@ -164,25 +165,35 @@ void Qaullib_SetConfVoIP(void)
 		qaul_conf_voip = 1;
 }
 
+void Qaullib_SetConfDownloadFolder(char *path)
+{
+	if(strlen(path) <= MAX_PATH_LEN +1)
+	{
+		strncpy(qaullib_FileDownloadFolderPath, path, MAX_PATH_LEN);
+		memcpy(&qaullib_FileDownloadFolderPath[MAX_PATH_LEN], "\0", 1);
+		qaul_conf_filedownloadfolder_set = 1;
+	}
+}
+
 int Qaullib_ExistsLocale(void)
 {
-	// if username is set return it
+	// if user name is set return it
 	if (qaul_locale_set) return qaul_locale_set;
 
-	// check if username is in Database
+	// check if user name is in Database
 	qaul_locale_set = Qaullib_DbGetConfigValue("locale", qaul_locale);
 	return qaul_locale_set;
 }
 
 const char* Qaullib_GetLocale(void)
 {
-	// if username is set return it
+	// if user name is set return it
 	if (qaul_locale_set) return qaul_locale;
 
-	// check if username is in Database
+	// check if user name is in Database
 	if (Qaullib_DbGetConfigValue("locale", qaul_locale)) return qaul_locale;
 
-	// no username found
+	// no user name found
 	return "";
 }
 
@@ -323,7 +334,7 @@ int Qaullib_DbInit(void)
 // ------------------------------------------------------------
 // string protection functionality
 
-int Qaullib_StringDescription2Filename(char *filename, char *description, char *suffix, char *hashstr, int buffer_size)
+int Qaullib_StringDescription2Filename(char *filename, struct qaul_file_LL_item *file, int buffer_size)
 {
 	int i, j;
 
@@ -332,31 +343,31 @@ int Qaullib_StringDescription2Filename(char *filename, char *description, char *
 
 	j=0;
 	// convert description to file name
-	for(i=0; i<strlen(description); i++)
+	for(i=0; i<strlen(file->description); i++)
 	{
 		if(j >= buffer_size -1)
 			break;
 
-		if(memcmp(description +i, "\0", 1))
+		if(memcmp(file->description +i, "\0", 1))
 		{
 			break;
 		}
 		else if(
-				memcmp(description +i, "\"", 1)==0 ||
-				memcmp(description +i, "'", 1)==0 ||
-				memcmp(description +i, " ", 1)==0 ||
-				memcmp(description +i, "<", 1)==0 ||
-				memcmp(description +i, ">", 1)==0 ||
-				memcmp(description +i, "\\", 1)==0 ||
-				memcmp(description +i, "/", 1)==0 ||
-				memcmp(description +i, ":", 1)==0 ||
-				memcmp(description +i, "|", 1)==0 ||
-				memcmp(description +i, "?", 1)==0 ||
-				memcmp(description +i, "*", 1)==0 ||
-				memcmp(description +i, ".", 1)==0 ||
-				memcmp(description +i, "~", 1)==0 ||
-				memcmp(description +i, "$", 1)==0 ||
-				memcmp(description +i, "^", 1)==0
+				memcmp(file->description +i, "\"", 1)==0 ||
+				memcmp(file->description +i, "'", 1)==0 ||
+				memcmp(file->description +i, " ", 1)==0 ||
+				memcmp(file->description +i, "<", 1)==0 ||
+				memcmp(file->description +i, ">", 1)==0 ||
+				memcmp(file->description +i, "\\", 1)==0 ||
+				memcmp(file->description +i, "/", 1)==0 ||
+				memcmp(file->description +i, ":", 1)==0 ||
+				memcmp(file->description +i, "|", 1)==0 ||
+				memcmp(file->description +i, "?", 1)==0 ||
+				memcmp(file->description +i, "*", 1)==0 ||
+				memcmp(file->description +i, ".", 1)==0 ||
+				memcmp(file->description +i, "~", 1)==0 ||
+				memcmp(file->description +i, "$", 1)==0 ||
+				memcmp(file->description +i, "^", 1)==0
 				)
 		{
 			memcpy(filename +j, "_", 1);
@@ -364,7 +375,7 @@ int Qaullib_StringDescription2Filename(char *filename, char *description, char *
 		}
 		else
 		{
-			memcpy(filename +j, description +i, 1);
+			memcpy(filename +j, file->description +i, 1);
 			j++;
 		}
 	}
@@ -381,7 +392,7 @@ int Qaullib_StringDescription2Filename(char *filename, char *description, char *
 		if(j >= buffer_size -1)
 			break;
 
-		memcpy(filename +j, hashstr +i, 1);
+		memcpy(filename +j, file->hashstr +i, 1);
 		j++;
 	}
 
@@ -391,12 +402,12 @@ int Qaullib_StringDescription2Filename(char *filename, char *description, char *
 		memcpy(filename +j, ".", 1);
 		j++;
 	}
-	for(i=0; i<strlen(suffix); i++)
+	for(i=0; i<strlen(file->suffix); i++)
 	{
 		if(j >= buffer_size -1)
 			break;
 
-		memcpy(filename +j, suffix +i, 1);
+		memcpy(filename +j, file->suffix +i, 1);
 		j++;
 	}
 

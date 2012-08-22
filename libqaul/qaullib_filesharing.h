@@ -56,6 +56,14 @@ void Qaullib_FilePopulate(void);
 int Qaullib_FileAdd(struct qaul_file_LL_item *file_item);
 
 /**
+ * copy a file from its @a origin file path to @a destiny
+ *
+ * @retval file size in Bytes
+ * @retval 0 error
+ */
+int Qaullib_FileCopy(const char* origin, const char* destiny);
+
+/**
  * add file from @a path to file sharing and analyzes the file.
  * It creates the hashstr, the hash and suffix and fills the values into @a file_item
  *
@@ -63,6 +71,11 @@ int Qaullib_FileAdd(struct qaul_file_LL_item *file_item);
  * @retval filesize in Bytes on success
  */
 int Qaullib_FileCopyNew(char *path, struct qaul_file_LL_item *file);
+
+/**
+ * copies the file to the download folder if it was set
+ */
+int Qaullib_FileCopyToDownloadFolder(struct qaul_file_LL_item *file);
 
 /**
  * check if any file needs to be downloaded
@@ -83,6 +96,12 @@ void Qaullib_FileStopDownload(struct qaul_file_LL_item *file_item);
  * create the @a filepath out of the @a hash string and the @a suffix
  */
 void Qaullib_FileCreatePath(char *filepath, char *hash, char *suffix);
+
+/**
+ * create the @a filepath to the dowload folder for the @a file_item
+ * files are copied there after downloading
+ */
+void Qaullib_FileCreatePathToDownloadFolder(char *filepath, struct qaul_file_LL_item *file_item);
 
 /**
  * checks if file with @a hash is available from the bytes position @a startbyte

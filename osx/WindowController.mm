@@ -140,7 +140,7 @@
 	NSLog(@"initialize app");
 	BOOL success;
 
-	// check if was initialized
+	// check if it was initialized
 	if(qaulStarted == 0)
 	{
 		[qaulTabView selectTabViewItemWithIdentifier:@"start"];		
@@ -148,7 +148,11 @@
 		// init qaullib
 		NSLog(@"initialize app");		
 		qaulResourcePath = [[NSBundle mainBundle] resourcePath];
-		Qaullib_Init([qaulResourcePath UTF8String]);		
+		Qaullib_Init([qaulResourcePath UTF8String]);
+		
+		// set Download path
+		NSString *downloadPath = [NSHomeDirectory() stringByAppendingPathComponent:@"/Downloads"];
+		Qaullib_SetConfDownloadFolder([downloadPath UTF8String]);
 		
 		qaulStarted = 1;
 	}
