@@ -340,7 +340,7 @@
 	// configure airport
 	if(qaulStarted == 26)
 	{
-		success = [mysudo connect2network:authorizationRef name:@"qaul.net" channel:11 interface:qaulWifiInterface];
+		success = [mysudo connect2network:authorizationRef name:@"qaul.net" channel:1 interface:qaulWifiInterface]; // channel selection is buggy on many devices, channel 1 usually works
 		if(success) 
 			NSLog(@"connect2network success!!");
 		else 
