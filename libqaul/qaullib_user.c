@@ -40,8 +40,17 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 			// set user name
 			strncpy(user->name, name, MAX_USER_LEN);
 			memcpy(&user->name[MAX_USER_LEN], "\0", 1);
-			user->type = QAUL_USERTYPE_KNOWN;
-			user->changed = QAUL_USERCHANGED_MODIFIED;
+
+			// hide empty users
+			if(strlen(user->name) > 0)
+			{
+				user->type = QAUL_USERTYPE_KNOWN;
+				user->changed = QAUL_USERCHANGED_MODIFIED;
+			}
+			else
+			{
+				user->type = QAUL_USERTYPE_HIDDEN;
+			}
 		}
 		else if(user->changed >= QAUL_USERCHANGED_DELETED)
 		{
@@ -61,8 +70,17 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 		// set user name
 		strncpy(user->name, name, MAX_USER_LEN);
 		memcpy(&user->name[MAX_USER_LEN], "\0", 1);
-		user->type = QAUL_USERTYPE_KNOWN;
-		user->changed = QAUL_USERCHANGED_MODIFIED;
+
+		// hide empty users
+		if(strlen(user->name) > 0)
+		{
+			user->type = QAUL_USERTYPE_KNOWN;
+			user->changed = QAUL_USERCHANGED_MODIFIED;
+		}
+		else
+		{
+			user->type = QAUL_USERTYPE_HIDDEN;
+		}
 	}
 	return user_found;
 }
@@ -186,8 +204,17 @@ void Qaullib_UserCheckSockets(void)
 					{
 						strncpy(userconnections[i].user->name, userconnections[i].conn.buf.userinfo.name, MAX_USER_LEN);
 						memcpy(&userconnections[i].user->name[MAX_USER_LEN], "\0", 1);
-						userconnections[i].user->type = QAUL_USERTYPE_KNOWN;
-						userconnections[i].user->changed = QAUL_USERCHANGED_MODIFIED;
+
+						// hide empty users
+						if(strlen(userconnections[i].user->name) > 0)
+						{
+							userconnections[i].user->type = QAUL_USERTYPE_KNOWN;
+							userconnections[i].user->changed = QAUL_USERCHANGED_MODIFIED;
+						}
+						else
+						{
+							userconnections[i].user->type = QAUL_USERTYPE_HIDDEN;
+						}
 					}
 				}
 				else
@@ -250,13 +277,19 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 		// set user to cache
 		myuseritem->changed = QAUL_USERCHANGED_CACHED;
 	}
-	myuseritem->type = QAUL_USERTYPE_KNOWN;
+
 	// fill in name
 	strncpy(myuseritem->name, name, MAX_USER_LEN);
 	memcpy(&myuseritem->name[MAX_USER_LEN], "\0", 1);
 	// todo: add icon info
 	memcpy(&myuseritem->icon[0], "\0", 1);
 	printf("Qaullib_User survived\n");
+
+	if(strlen(myuseritem->name) > 0)
+		myuseritem->type = QAUL_USERTYPE_KNOWN;
+	else
+		myuseritem->type = QAUL_USERTYPE_HIDDEN;
+
 }
 
 // ------------------------------------------------------------
