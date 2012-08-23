@@ -1340,15 +1340,29 @@ static void Qaullib_WwwPubMsg(struct mg_connection *conn, const struct mg_reques
 	// fixme: memory leak at Qaullib_UrlDecode()?
 	// get msg
 	get_qsvar(request_info, "m", encoded_msg, sizeof(encoded_msg));
+	printf("encoded_msg %s\n", encoded_msg);
+
 	local_msg = Qaullib_UrlDecode(encoded_msg);
+	printf("local_msg %s\n", local_msg);
+
 	Qaullib_StringMsgProtect(msg_protected, local_msg, MAX_MESSAGE_LEN +1);
-	Qaullib_StringDbProtect(msg_dbprotected, name_protected, sizeof(msg_dbprotected));
+	printf("msg_protected %s\n", msg_protected);
+
+	Qaullib_StringDbProtect(msg_dbprotected, local_msg, sizeof(msg_dbprotected));
+	printf("msg_dbprotected %s\n", msg_dbprotected);
 
 	// get name
 	get_qsvar(request_info, "n", encoded_name, sizeof(encoded_name));
+	printf("encoded_name %s\n", encoded_name);
+
 	local_name = Qaullib_UrlDecode(encoded_name);
+	printf("encoded_name %s\n", encoded_name);
+
 	Qaullib_StringNameProtect(name_protected, local_name, MAX_USER_LEN +1);
+	printf("name_protected %s\n", name_protected);
+
 	Qaullib_StringDbProtect(name_dbprotected, name_protected, sizeof(name_dbprotected));
+	printf("name_dbprotected %s\n", name_dbprotected);
 
 	time(&timestamp);
   	// save Message to database

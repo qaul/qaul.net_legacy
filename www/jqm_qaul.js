@@ -391,7 +391,8 @@ function load_remote_userinfo(name, ip)
       url: path,
       callback: "abc",
       data: {},
-      timeout: 5000,
+      dataType: "jsonp",
+	  timeout: 5000,
       success: function(data) {
 			$("#page_user_files").empty();
 			var nofiles = true;
@@ -825,13 +826,15 @@ function send_direct_msg()
 
     // send data to remote user
     $.jsonp({
-      url: "http://" +$("#user_chat_ip").val() +":8081/pub_msg?",
+      url: "http://" +$("#user_chat_ip").val() +":8081/pub_msg",
       callback: "abc",
       data: {
 			"n": user_name,
 			"m": $("#user_chat_msg").val(),
 			"e": 1
       },
+      dataType: "jsonp",
+	  timeout: 4000,
       success: function(userProfile) {
           	// clear loading info
           	$("#page_user_queue").empty();
