@@ -162,7 +162,7 @@ static struct qaul_populate_config_struct qaul_populate_config[MAX_POPULATE_CONF
 	{"net.protocol",  CONFIG_TYPE_INT, "",                  4},
 	{"net.mask",      CONFIG_TYPE_INT, "",                  8},
 	{"net.gateway",   CONFIG_TYPE_STR, "0.0.0.0",           0},
-	{"net.channel",   CONFIG_TYPE_INT, "",                  11},
+	{"net.channel",   CONFIG_TYPE_INT, "",                  1},
 	{"net.bssid_set", CONFIG_TYPE_INT, "",                  0},
 	{"net.bssid",     CONFIG_TYPE_STR, "B6:B5:B3:F5:AB:E4", 0},
 	{"net.ibss",      CONFIG_TYPE_STR, "qaul.net",          0}
