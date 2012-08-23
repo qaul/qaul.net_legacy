@@ -32,12 +32,24 @@ Qaul::Qaul(QWidget *parent) :
         }
     }
 
-    // set rendering system for rounded corners in web view
-    //QApplication::setGraphicsSystem("raster");
-
     // initialize library
     //QString qpath = QApplication::applicationDirPath();
     Qaullib_Init(qaulLocalDirectory.toLocal8Bit().data());
+
+    // set download folder
+    QString qaulDownloadDirectory = QDir::homePath();
+    qaulDownloadDirectory += "/Downloads";
+    qDebug() << "download path: " << qaulDownloadDirectory;
+    if(!myDir.exists(qaulDownloadDirectory))
+    {
+        qDebug() << "Download path does not exist yet";
+        if(myDir.mkpath(qaulDownloadDirectory))
+        {
+            qDebug() << "Download path created";
+        }
+    }
+    Qaullib_SetConfDownloadFolder(qaulDownloadDirectory.toLocal8Bit().data());
+
     // start web server
     // TODO: make QDialog::exec() as modal information for the user if web server failes
     if(!Qaullib_WebserverStart()) qDebug() << "web server startup failed";
@@ -85,6 +97,17 @@ void Qaul::QaulConfigure(void)
         Qaullib_ConfigStart();
         qaulConfigureCounter = 10;
     }
+
+#ifdef ARS_EDITION
+    // wait for Klangwolke
+    if(qaulConfigureCounter == 10)
+    {
+        if(Qaullib_TimedCheckAppEvent() == QAUL_EVENT_QUIT)
+        {
+            qaulConfigureCounter = 9;
+        }
+    }
+#endif
 
     // check autorization
     if(qaulConfigureCounter == 10)
@@ -324,7 +347,7 @@ void Qaul::QaulWifiConfigure(void)
     // set channel
     qaulConfigProcess->write("/sbin/iwconfig ");
     qaulConfigProcess->write(qaulWifiInterface.toUtf8().constData());
-    qaulConfigProcess->write(" channel 11 \n");
+    qaulConfigProcess->write(" channel 1 \n");
     // set essid
     qaulConfigProcess->write("/sbin/iwconfig ");
     qaulConfigProcess->write(qaulWifiInterface.toUtf8().constData());
@@ -554,6 +577,17 @@ void Qaul::QaulCheckEvents(void)
             QString urlpath = Qaullib_GetAppEventOpenURL();
             qDebug() << urlpath;
             QDesktopServices::openUrl(QUrl(urlpath));
+        }
+        else if(myEvent == QAUL_EVENT_QUIT)
+        {
+            // quit application
+            QApplication::quit();
+        }
+        else if(myEvent == QAUL_EVENT_NOTIFY && myEvent == QAUL_EVENT_RING)
+        {
+            // play beep
+            // does not work under linux
+            QApplication::beep();
         }
     }
 }
