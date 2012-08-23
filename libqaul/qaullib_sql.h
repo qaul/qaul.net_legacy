@@ -182,15 +182,15 @@ struct qaul_populate_file_struct
     int  max_size;
 };
 
-#define FAT_CLIENT        1
+#define FAT_CLIENT        0
 #define MAX_POPULATE_FILE 4
 
 static struct qaul_populate_file_struct qaul_populate_file[MAX_POPULATE_FILE] = {
-	{1,  4, 8433817, "575844dfcaa7d6ba6e378b44ab2bf9f36c1e26c2", "gz",  "ubuntu & debian 32 Bit", 9000000},
+	{1,  4, 8433817, "575844dfcaa7d6ba6e378b44ab2bf9f36c1e26c2", "gz",  "ubuntu & debian 32 Bit",10000000},
 //	{2,  4, 2068596, "0000000000000000000000000000000000000000", "zip", "OSX 10.5",               3000000},
-	{4,  4, 2068596, "a560db563b4f958737ea5052d18a0513c112b55a", "zip", "OSX 10.6",               3000000},
-	{8,  4, 4151214, "834a9eeafc62f9a8d6fc6614d5156a812d424cf6", "exe", "Windows 7",              5000000},
-	{16, 4, 2085071, "dc6705752b242d6147d522418971e420de86abdb", "apk", "Android",                3000000}
+	{4,  4, 2068596, "a560db563b4f958737ea5052d18a0513c112b55a", "zip", "OSX 10.6",               4000000},
+	{8,  4, 4151214, "834a9eeafc62f9a8d6fc6614d5156a812d424cf6", "exe", "Windows 7",              6000000},
+	{16, 4, 2085071, "dc6705752b242d6147d522418971e420de86abdb", "apk", "Android",                4000000}
 };
 
 
