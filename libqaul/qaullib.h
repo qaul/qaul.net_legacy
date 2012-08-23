@@ -37,6 +37,7 @@ extern "C" {
  *
  *   platform specific initializations
  *   @see Qaullib_SetConf()
+ *   @see Qaullib_SetConfDownloadFolder()
  *
  * invoke configuration functions
  *
