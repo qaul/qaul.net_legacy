@@ -15,9 +15,12 @@
 void qaul_net_topo2gui(void)
 {
 	struct tc_entry *tc;
-	char buffer[512];
+	union olsr_message *m;
+	char  buffer[512];
+	float linkcost;
+
 	// create new message
-	union olsr_message *m = (union olsr_message *)buffer;
+	m = (union olsr_message *)buffer;
 	// fill message
 	m->v4.olsr_msgtype = QAUL_IPCTOPO_MESSAGE_TYPE;
 	m->v4.olsr_msgsize = htons(sizeof(struct qaul_node_msg) + sizeof(struct olsrmsg));
@@ -32,9 +35,10 @@ void qaul_net_topo2gui(void)
 		  {
 			  struct qaul_node_msg *node = (struct qaul_node_msg *) &m->v4.message;
 			  // fill the message
+			  linkcost = (float)tc_edge->cost / 1024;
 			  memcpy(&node->ip, &tc_edge->T_dest_addr, sizeof(union olsr_ip_addr));
 			  memcpy(&node->gateway, &tc->addr, sizeof(union olsr_ip_addr));
-			  memcpy(&node->lq, &tc_edge->linkquality[0], sizeof(uint32_t));
+			  memcpy(&node->lq, &linkcost, sizeof(uint32_t));
 
 			  // send the message
 			  qaul_ipc_msg2gui(m);

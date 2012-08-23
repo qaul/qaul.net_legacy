@@ -137,7 +137,7 @@
 // -------------------------------------------------------------------------
 - (void)init_app 
 {
-	NSLog(@"initialize app");
+	NSLog(@"init_app");
 	BOOL success;
 
 	// check if it was initialized
@@ -152,6 +152,7 @@
 		
 		// set Download path
 		NSString *downloadPath = [NSHomeDirectory() stringByAppendingPathComponent:@"/Downloads"];
+		NSLog(@"path to download folder: %@", downloadPath);		
 		Qaullib_SetConfDownloadFolder([downloadPath UTF8String]);
 		
 		qaulStarted = 1;

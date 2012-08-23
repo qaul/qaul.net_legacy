@@ -130,7 +130,7 @@ void Qaullib_SetConfVoIP(void);
  * set the download folder
  * all downloaded files will be copied into this folder after download.
  */
-void Qaullib_SetConfDownloadFolder(char *path);
+void Qaullib_SetConfDownloadFolder(const char *path);
 
 /**
  * start web server

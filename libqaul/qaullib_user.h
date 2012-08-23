@@ -61,7 +61,7 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name);
  * check if ip exists & create it otherwise
  * insert @a ip of user in olsr table
  */
-void Qaullib_UserTouchIp(union olsr_ip_addr *ip);
+void Qaullib_UserTouchIp(union olsr_ip_addr *ip, float linkcost);
 
 /**
  * schedule unnamed users for name download
@@ -105,6 +105,14 @@ void Qaullib_UserFavoriteRemove(char *ipstr);
  * fill favorites from DB into LL
  */
 void Qaullib_UserFavoritesDB2LL(void);
+
+/**
+ * convert the @a linkcost to a connection quality image number
+ *
+ * @retval connection quality image number 0-4
+ */
+int Qaullib_UserLinkcost2Img(float linkcost);
+
 
 #ifdef __cplusplus
 }

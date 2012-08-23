@@ -86,12 +86,12 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 }
 
 // ------------------------------------------------------------
-void Qaullib_UserTouchIp(union olsr_ip_addr *ip)
+void Qaullib_UserTouchIp(union olsr_ip_addr *ip, float linkcost)
 {
+	struct qaul_user_LL_item *user;
+
 	if(QAUL_DEBUG)
 		printf("Qaullib_UserTouchIp \n");
-
-	struct qaul_user_LL_item *user;
 
 	// check if user exists in LL
 	if(Qaullib_User_LL_IpSearch (ip, &user))
@@ -108,6 +108,28 @@ void Qaullib_UserTouchIp(union olsr_ip_addr *ip)
 				user->changed = QAUL_USERCHANGED_UNCHANGED;
 		}
 
+		// set link cost
+		if(linkcost > 20.0)
+		{
+			// delete this user
+			if(user->changed < QAUL_USERCHANGED_DELETED)
+				user->changed = QAUL_USERCHANGED_DELETED;
+		}
+		else
+		{
+			if( user->changed >= QAUL_USERCHANGED_DELETED &&
+				linkcost <= 10.0)
+			{
+				user->changed = QAUL_USERCHANGED_MODIFIED;
+			}
+			else if(Qaullib_UserLinkcost2Img(user->lq) != Qaullib_UserLinkcost2Img(linkcost))
+			{
+				user->changed = QAUL_USERCHANGED_MODIFIED;
+			}
+		}
+		user->lq = linkcost;
+
+		// set last seen time stamp
 		user->time = time(NULL);
 	}
 	else
@@ -117,9 +139,9 @@ void Qaullib_UserTouchIp(union olsr_ip_addr *ip)
 
 		// if user does not exist: create user
 		user = Qaullib_User_LL_Add (ip);
+		user->lq = linkcost;
 	}
 }
-
 
 // ------------------------------------------------------------
 void Qaullib_UserCheckNonames(void)
@@ -404,3 +426,20 @@ void Qaullib_UserFavoritesDB2LL(void)
 	}
 	sqlite3_finalize(ppStmt);
 }
+
+// ------------------------------------------------------------
+int Qaullib_UserLinkcost2Img(float linkcost)
+{
+	if(linkcost < 1.25)
+		return 4;
+	else if(linkcost < 1.6)
+		return 3;
+	else if(linkcost < 2.5)
+		return 2;
+	else if(linkcost < 5)
+		return 1;
+	else
+		return 0;
+}
+
+

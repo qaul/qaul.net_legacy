@@ -859,10 +859,10 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 					add = 0;
 				// FIXME: ipv6
 				mg_printf(conn,
-						"{\"name\":\"%s\",\"ip\":\"%s\",\"lq\":%f,\"add\":%i}",
+						"{\"name\":\"%s\",\"ip\":\"%s\",\"lq\":%i,\"add\":%i}",
 						mynode.item->name,
 						inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
-						mynode.item->lq,
+						Qaullib_UserLinkcost2Img(mynode.item->lq),
 						add
 						);
 			}
@@ -1106,7 +1106,8 @@ static void Qaullib_WwwFileOpen(struct mg_connection *conn, const struct mg_requ
 	char old_path[MAX_PATH_LEN +1];
 	struct qaul_file_LL_item *file_item;
 
-	printf("Qaullib_WwwFileOpen\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwFileOpen\n");
 
 	// get file variable
 	get_qsvar(request_info, "f", hashstr, sizeof(hashstr));
@@ -1123,8 +1124,14 @@ static void Qaullib_WwwFileOpen(struct mg_connection *conn, const struct mg_requ
 		{
 			if(qaul_conf_filedownloadfolder_set)
 			{
+				if(QAUL_DEBUG)
+					printf("qaul_conf_filedownloadfolder_set\n");
+
 				// get path
 				Qaullib_FileCreatePathToDownloadFolder(qaullib_AppEventOpenPath, file_item);
+
+				if(QAUL_DEBUG)
+					printf("path to download folder: %s\n", qaullib_AppEventOpenPath);
 
 				// check if file exists
 				if(Qaullib_FileExists(qaullib_AppEventOpenPath))

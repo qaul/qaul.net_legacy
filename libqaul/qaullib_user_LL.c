@@ -81,7 +81,7 @@ struct qaul_user_LL_item* Qaullib_User_LL_Add (union olsr_ip_addr *ip)
 	new_item->time = time(NULL);
 	new_item->type = QAUL_USERTYPE_UNCHECKED;
 	new_item->changed = QAUL_USERCHANGED_UNCHANGED;
-	new_item->lq = 0;
+	new_item->lq = 10.1;
 	new_item->favorite = 0;
 	memcpy((char *)&new_item->ip, ip, sizeof(union olsr_ip_addr));
 

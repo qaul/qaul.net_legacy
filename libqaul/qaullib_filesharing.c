@@ -268,12 +268,15 @@ int Qaullib_FileCopyToDownloadFolder(struct qaul_file_LL_item *file)
 	char new_path[MAX_PATH_LEN +1];
 	char old_path[MAX_PATH_LEN +1];
 
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileCopyToDownloadFolder\n");
+
 	if(qaul_conf_filedownloadfolder_set)
 	{
 		// create new file path
 		Qaullib_FileCreatePathToDownloadFolder(new_path, file);
 
-		if(Qaullib_FileExists(new_path))
+		if(!Qaullib_FileExists(new_path))
 		{
 			// create existing path
 			Qaullib_FileCreatePath(old_path, file->hashstr, file->suffix);
@@ -623,7 +626,7 @@ void Qaullib_FileCreatePathToDownloadFolder(char *filepath, struct qaul_file_LL_
 	// create the new path
 	if(strlen(new_filename) +strlen(qaullib_FileDownloadFolderPath) <= MAX_PATH_LEN)
 	{
-		strcpy(filepath, webPath);
+		strcpy(filepath, qaullib_FileDownloadFolderPath);
 		strcat(filepath, PATH_SEPARATOR);
 		strcat(filepath, new_filename);
 	}
@@ -849,11 +852,12 @@ void Qaullib_FileCheckSockets(void)
 	        		{
 						// todo: check if file hash matches!
 	        			printf("Qaullib_FileCheckSockets download finished! filesize %i, downloaded %i\n", fileconnections[i].fileinfo->size, fileconnections[i].fileinfo->downloaded);
-	        			Qaullib_FileUpdateStatus(fileconnections[i].fileinfo, QAUL_FILESTATUS_DOWNLOADED);
 
 	        			// copy file to download folder
 	        			if(qaul_conf_filedownloadfolder_set)
 	        				Qaullib_FileCopyToDownloadFolder(fileconnections[i].fileinfo);
+
+	        			Qaullib_FileUpdateStatus(fileconnections[i].fileinfo, QAUL_FILESTATUS_DOWNLOADED);
 	        		}
 	        		// todo: otherwise reschedule for next download
 	        	}

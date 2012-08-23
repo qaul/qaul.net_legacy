@@ -165,10 +165,16 @@ void Qaullib_SetConfVoIP(void)
 		qaul_conf_voip = 1;
 }
 
-void Qaullib_SetConfDownloadFolder(char *path)
+void Qaullib_SetConfDownloadFolder(const char *path)
 {
+	if(QAUL_DEBUG)
+		printf("Qaullib_SetConfDownloadFolder\n");
+
 	if(strlen(path) <= MAX_PATH_LEN +1)
 	{
+		if(QAUL_DEBUG)
+			printf("Qaullib_SetConfDownloadFolder set path: %s\n", path);
+
 		strncpy(qaullib_FileDownloadFolderPath, path, MAX_PATH_LEN);
 		memcpy(&qaullib_FileDownloadFolderPath[MAX_PATH_LEN], "\0", 1);
 		qaul_conf_filedownloadfolder_set = 1;
@@ -341,14 +347,18 @@ int Qaullib_StringDescription2Filename(char *filename, struct qaul_file_LL_item 
 	if(QAUL_DEBUG)
 		printf("Qaullib_StringDescription2Filename\n");
 
+	printf("strlen: %i\n", (int)strlen(file->description));
+
 	j=0;
 	// convert description to file name
-	for(i=0; i<strlen(file->description); i++)
+	for(i=0; i<(int)strlen(file->description); i++)
 	{
+		printf("for schlaufe\n");
+
 		if(j >= buffer_size -1)
 			break;
 
-		if(memcmp(file->description +i, "\0", 1))
+		if(memcmp(file->description +i, "\0", 1) == 0)
 		{
 			break;
 		}
