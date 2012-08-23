@@ -9,21 +9,31 @@
 	<title>qaul.net – قول</title>
 	<link rel="stylesheet" type="text/css" href="jquery.mobile.min.css" />
 	<link rel="stylesheet" type="text/css" href="jqm_qaul.css"/> 
+	<link rel="stylesheet" type="text/css" href="info/info.css"/> 
 	<script type="text/javascript" src="jquery.min.js"></script>
 	<script type="text/javascript" src="jquery.mobile.min.js"></script>
 	<script type="text/javascript" src="index.js"></script>
 </head>
 <body>
 
-<div data-role="page" id="page_join" data-theme="d" data-add-back-btn="true">
+<div data-role="page" id="page_join" data-theme="d">
 	<div data-role="header" data-theme="d">
 		<h1>join qaul.net</h1>
 	</div>
 	<div data-role="content" >
-		<h2>download &amp; install</h2>
-		<ul data-role="listview" data-inset="true" id="binaries">
-			<li id="users_divider" data-role="list-divider">qaul.net installers</li>
-		</ul>
+		<div class="qaul_info">
+			<h2>download &amp; install</h2>
+			<ul data-role="listview" data-inset="true" id="binaries">
+				<li id="users_divider" data-role="list-divider">qaul.net installers</li>
+			</ul>
+			<br/><br/>
+			<ul data-role="listview" data-inset="true">
+				<li data-role="list-divider">information</li>
+				<li><a href="info/about.html">About qaul.net</a></li>
+				<li><a href="info/howto.html">How to</a></li>
+				<li><a href="info/license.html">License</a></li>
+			</ul>
+		</div>
 	</div>
 </div>
 
