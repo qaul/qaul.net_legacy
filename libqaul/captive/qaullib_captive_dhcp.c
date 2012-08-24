@@ -109,8 +109,8 @@ void *Qaullib_DHCP_Server(void *server_ip)
 
 	myAddr.sin_family = AF_INET;
 	myAddr.sin_port = htons(DHCP_PORT); // 67 DHCP server port // 8067 for firewall redirection
-	//myAddr.sin_addr.s_addr=inet_addr("127.0.0.1");
 	myAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	//memcpy(&myAddr.sin_addr.s_addr, server_ip, 4);
 
 	DHCPSocket = socket(PF_INET, SOCK_DGRAM, 0);
 	if(DHCPSocket == INVALID_SOCKET) printf("unable to create DHCPSocket\n");
@@ -192,8 +192,8 @@ void *Qaullib_DHCP_Server(void *server_ip)
 
 					   // 255.255.255.255 is not working as OSX is not broadcasting
 					   // via wifi interface, we have to explicitly use 10.255.255.255
-					   destinationAddr.sin_addr.s_addr = inet_addr("10.255.255.255");
-					   //destinationAddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
+					   //destinationAddr.sin_addr.s_addr = inet_addr("10.255.255.255");
+					   destinationAddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
 					   sendstatus = sendto( DHCPSocket,
 											(char *)&DHCP_Buffer,
 											sizeof(DHCP_Buffer),
@@ -262,8 +262,8 @@ void *Qaullib_DHCP_Server(void *server_ip)
 
 					// 255.255.255.255 is not working as OSX is not broadcasting
 					// via wifi interface, we have to explicitly use 10.255.255.255
-					destinationAddr.sin_addr.s_addr=inet_addr("10.255.255.255");
-					//destinationAddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
+					//destinationAddr.sin_addr.s_addr=inet_addr("10.255.255.255");
+					destinationAddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
 					sendstatus = sendto( DHCPSocket,
 										(char *)&DHCP_Buffer,
 										sizeof(DHCP_Buffer),
