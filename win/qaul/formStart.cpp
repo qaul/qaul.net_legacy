@@ -14,6 +14,8 @@
 #include <objbase.h>
 #include <wtypes.h>
 #include <iphlpapi.h>
+#include <shlobj.h>//for knownFolder
+#include <winerror.h> //for HRESULT
 
 
 #using <System.Xml.Dll>
@@ -27,7 +29,8 @@ using namespace System::Runtime::InteropServices;
 #pragma comment(lib, "wsock32.lib")
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "comdlg32.lib") // needed for GetOpenFileName() function
-#pragma comment(lib, "Shell32.lib") // needed for ShellExecute() function
+#pragma comment(lib, "Shell32.lib")  // needed for ShellExecute() function
+#pragma comment(lib, "comsuppw")     // needed for known folder id´s
 
 namespace qaul
 {
@@ -42,6 +45,17 @@ void formStart::InitializeQaul(void)
 	// initialize qaullib
 	Qaullib_Init((char*)(void*)Marshal::StringToHGlobalAnsi(qaulResourcePath));
 	Debug::WriteLine(L"Qaullib_Init initialized");
+
+	// set path to download folder
+	HRESULT hr;
+	LPWSTR qaulDownloadPath = NULL;
+	hr = SHGetKnownFolderPath(FOLDERID_Downloads, 0, NULL, &qaulDownloadPath);
+	if(SUCCEEDED(hr))
+	{
+		std::string qaulDownloadPathString("\?");
+		cvtLPW2stdstring(qaulDownloadPathString, qaulDownloadPath, CP_ACP);
+		Qaullib_SetConfDownloadFolder(qaulDownloadPathString.c_str());
+	}
 
 	// start webserver
 	if(!Qaullib_WebserverStart()) ErrorShow(L"error starting webserver");
@@ -93,6 +107,14 @@ void formStart::QaulStarting(void)
 
 		qaulStartCounter = 10;
 	}
+
+#ifdef ARS_EDITION
+	if(qaulStartCounter == 10)
+	{
+		if(Qaullib_TimedCheckAppEvent() == QAUL_EVENT_QUIT)
+			qaulStartCounter = 9;
+	}
+#endif
 
 	// check authorization rights
 	if(qaulStartCounter == 10)
@@ -836,6 +858,14 @@ void formStart::CheckAppEvents( Object^ myObject, EventArgs^ myEventArgs)
 			memset(openURLW, 0, len);
 			MultiByteToWideChar(CP_ACP, NULL, openURL, -1, openURLW, len);
 			ShellExecute(NULL, L"open", openURLW, NULL, NULL, SW_SHOWNORMAL);
+		}
+		else if(appEvent == QAUL_EVENT_QUIT)
+		{
+			Application::Exit();
+		}
+		else if(appEvent == QAUL_EVENT_NOTIFY || appEvent == QAUL_EVENT_RING)
+		{
+			Beep(750, 300);
 		}
 	}
 }
