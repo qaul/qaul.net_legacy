@@ -347,7 +347,7 @@ void Qaul::QaulWifiConfigure(void)
     // set channel
     qaulConfigProcess->write("/sbin/iwconfig ");
     qaulConfigProcess->write(qaulWifiInterface.toUtf8().constData());
-    qaulConfigProcess->write(" channel 1 \n");
+    qaulConfigProcess->write(" channel 11 \n");
     // set essid
     qaulConfigProcess->write("/sbin/iwconfig ");
     qaulConfigProcess->write(qaulWifiInterface.toUtf8().constData());
