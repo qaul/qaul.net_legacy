@@ -13,3 +13,7 @@ table.description {
 	padding:0;
 	vertical-align:top;
 }
+
+img {
+	max-width:100%;
+}

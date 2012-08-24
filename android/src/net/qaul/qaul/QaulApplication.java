@@ -22,11 +22,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.AssetManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.tether.system.Configuration;
 import android.tether.system.CoreTask;
@@ -126,6 +129,21 @@ public class QaulApplication extends Application {
     		{
     			Log.d(MSG_TAG, "qaulCheckEvents: open URL");
     			qaulOpenURL(nativeQaul.getAppEventOpenURL());
+    		}
+    		else if(event == 103 || event == 104)
+    		{
+    			Log.d(MSG_TAG, "qaulCheckEvents: notify");
+    			
+    			// Get instance of Vibrator from current Context
+    			Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+    			// Vibrate for 300 milliseconds
+    			v.vibrate(300);
+
+    			// play ring tone
+    			// fixme: seems not to work
+    			Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    			Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+    			r.play();
     		}
     		else
     		{
@@ -319,7 +337,7 @@ public class QaulApplication extends Application {
 	    	{
 	    		Log.i(MSG_TAG, "net filter is supported");
 	    		
-	    		// TODO: check if /system/bin/iptables exexutable exists
+	    		// TODO: check if /system/bin/iptables executable exists
 	    		//       how is tether app doing that?
 	    		//File f = new File("/system/bin/iptables");
 	    		//if(f.exists()) 
