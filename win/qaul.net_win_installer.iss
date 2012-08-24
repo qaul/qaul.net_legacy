@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "qaul.net"
-#define MyAppVersion "public alpha 14. Augst 2012"
+#define MyAppVersion "Ars Electronica release candidate"
 #define MyAppPublisher "qaul.net"
 #define MyAppURL "http://www.qaul.net/"
 #define MyAppExeName "qaul.exe"
@@ -29,6 +29,7 @@ OutputBaseFilename=qaul.net_win7_installer
 SetupIconFile=.\qaul\app.ico
 Compression=lzma
 SolidCompression=yes
+DisableStartupPrompt=true
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -67,7 +68,3 @@ Source: "..\binary_release\qaul.net\*"; DestDir: "{app}"; Flags: ignoreversion r
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-
-[Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-
