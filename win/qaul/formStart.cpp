@@ -205,7 +205,7 @@ void formStart::QaulStarting(void)
 			ipcTimer->Start();
 
 			ipcTimer2->Tick += gcnew EventHandler(CheckIpcTopology);
-			ipcTimer2->Interval = 5000;
+			ipcTimer2->Interval = 3000;
 			ipcTimer2->Start();
 
 			ipcTimer3->Tick += gcnew EventHandler(CheckAppEvents);
