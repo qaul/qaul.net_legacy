@@ -1108,7 +1108,7 @@ static void Qaullib_WwwFileOpen(struct mg_connection *conn, const struct mg_requ
 
 	if(QAUL_DEBUG)
 		printf("Qaullib_WwwFileOpen\n");
-
+/*
 	// get file variable
 	get_qsvar(request_info, "f", hashstr, sizeof(hashstr));
 	memcpy(&hashstr[MAX_HASHSTR_LEN], "\0", 1);
@@ -1158,7 +1158,7 @@ static void Qaullib_WwwFileOpen(struct mg_connection *conn, const struct mg_requ
 			}
 		}
 	}
-
+*/
 	// deliver answer
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
