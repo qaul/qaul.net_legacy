@@ -28,7 +28,7 @@ Install and prepare Firefox for the GUI
 To make further configuration changes to firefox one has to deactivate the R-Kiosk addon.
 Therefore one has to start firefox in safe mode.
 
-    "C:\Program Files (x86)\Mozilla Firefox\firefox.exe" -safe-mode
+    & 'C:\Program Files (x86)\Mozilla Firefox\firefox.exe' -safe-mode
 
 
 Start Up
