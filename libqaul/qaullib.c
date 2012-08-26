@@ -277,7 +277,7 @@ int Qaullib_WebserverStart(void)
 	static const char *options[] = {
 	  "document_root", webPath,
 	  "listening_ports", CHAT_PORT,
-	  "num_threads", "30",
+	  "num_threads", "100",
 	  NULL
 	};
 	ctx = mg_start(&Qaullib_WwwEvent_handler, options);
