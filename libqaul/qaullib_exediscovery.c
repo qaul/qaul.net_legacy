@@ -29,10 +29,10 @@ void Qaullib_ExeInit(void)
 		// fill in the common values
 		qaul_exe_array[i].OS_flag = qaul_populate_file[i].OS_flag;
 		qaul_exe_array[i].max_size = qaul_populate_file[i].max_size;
-		strncpy(qaul_exe_array[i].description, qaul_populate_file[i].description, MAX_SUFFIX_LEN);
-		memcpy(&qaul_exe_array[i].description[MAX_SUFFIX_LEN], "\0", 1);
-		strncpy(qaul_exe_array[i].suffix, qaul_populate_file[i].suffix, MAX_DESCRIPTION_LEN);
-		memcpy(&qaul_exe_array[i].suffix[MAX_DESCRIPTION_LEN], "\0", 1);
+		strncpy(qaul_exe_array[i].description, qaul_populate_file[i].description, MAX_DESCRIPTION_LEN);
+		memcpy(&qaul_exe_array[i].description[MAX_DESCRIPTION_LEN], "\0", 1);
+		strncpy(qaul_exe_array[i].suffix, qaul_populate_file[i].suffix, MAX_SUFFIX_LEN);
+		memcpy(&qaul_exe_array[i].suffix[MAX_SUFFIX_LEN], "\0", 1);
 
 		// create key
 		sprintf(key, "exe.%i", qaul_populate_file[i].OS_flag);
