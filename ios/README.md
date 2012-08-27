@@ -16,6 +16,8 @@ Compile pjsip
 open the file pjlib/include/pj/config_site.h and enter
 
     #define PJ_CONFIG_IPHONE 1
+    #define PJ_IS_LITTLE_ENDIAN 1 
+    #define PJ_IS_BIG_ENDIAN 0
     #include <pj/config_site_sample.h>
 
 Now build pjsip
@@ -32,13 +34,19 @@ Compile iOS:
 Open the iOS project in Xcode to run qaul.net
 
 
-optional:
+Optional: compile olsrd and olsrd_qaul plugin
+---------------------------------------------
+
+Requirements
+* install iOSOpenDev http://iosopendev.com/download/
 
 Compile olsrd
 Open the ios Makefile olsrd-0.6.0/make/Makefile.ios and configure SDK_VERSION
 
     cd olsrd-0.6.0
     make OS=ios
+    # sign the executable
+    /opt/iOSOpenDev/bin/iosod sign ./olsrd
     cp olsrd ../ios/
     cd ../
 
