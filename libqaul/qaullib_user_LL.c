@@ -132,17 +132,26 @@ void Qaullib_User_LL_Clean (void)
 	{
 		if(mynode.item->time +300 < time(NULL))
 		{
-			// only delete if not a favorite
-			if(mynode.item->favorite == 0)
+			if(mynode.item->changed == QAUL_USERCHANGED_CACHED)
 			{
-				mynode.item = mynode.item->prev;
-				Qaullib_User_LL_Delete_Item(mynode.item->next);
+				// only delete if not a favorite
+				if(mynode.item->favorite == 0)
+				{
+					mynode.item = mynode.item->prev;
+					Qaullib_User_LL_Delete_Item(mynode.item->next);
+				}
+			}
+			else
+			{
+				mynode.item->changed == QAUL_USERCHANGED_DELETED;
 			}
 		}
-		else if(mynode.item->changed == 0 && mynode.item->time +10 < time(NULL))
+		else if(mynode.item->time +10 < time(NULL))
 		{
 			if(mynode.item->type > QAUL_USERTYPE_UNCHECKED)
-				mynode.item->changed = QAUL_USERTYPE_KNOWN;
+				mynode.item->changed = QAUL_USERCHANGED_DELETED;
+			else
+				mynode.item->changed = QAUL_USERCHANGED_CACHED;
 		}
 	}
 }

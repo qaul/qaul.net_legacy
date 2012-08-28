@@ -23,6 +23,7 @@ int Qaullib_WgetConnect(struct qaul_wget_connection *myConn)
 {
 	int inet;
 	myConn->connected = 0;
+	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
 
 #ifdef WIN32
   int On = 1;
@@ -49,7 +50,13 @@ int Qaullib_WgetConnect(struct qaul_wget_connection *myConn)
     }
   }
 
-  printf("Attempting connect...");
+  if(QAUL_DEBUG)
+  {
+	  printf("Attempting connect... ");
+	  inet_ntop(AF_INET, &myConn->ip.sin_addr, (char *)&ipbuf, MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN));
+	  printf("to %s\n", ipbuf);
+  }
+
 
   // connect to PORT on HOST
   if (connect(myConn->socket, (struct sockaddr *)&myConn->ip, sizeof(struct sockaddr)) < 0) {
@@ -77,12 +84,19 @@ int Qaullib_WgetConnect(struct qaul_wget_connection *myConn)
       //return 0;
     }
 #endif
+    if(QAUL_DEBUG)
+    	printf("connected\n");
+
     myConn->connected = 1;
     myConn->connected_at = time(NULL);
     myConn->lastreceived_at = time(NULL);
     myConn->received = 0;
     return 1;
   }
+
+  if(QAUL_DEBUG)
+  	printf("not connected\n");
+
   return 0;
 }
 
