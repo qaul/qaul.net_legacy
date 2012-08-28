@@ -71,7 +71,7 @@ void Qaullib_UserCheckNonames(void);
 /**
  * get user info via TCP from the users ip
  */
-void Qaullib_UserGetInfo(struct qaul_user_LL_item *user);
+int Qaullib_UserGetInfo(struct qaul_user_LL_item *user);
 
 /**
  * check user sockets (check if anything was received)

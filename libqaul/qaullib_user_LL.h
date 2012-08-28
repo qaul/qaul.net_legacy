@@ -47,7 +47,7 @@ struct qaul_user_LL_node {
 
 /**
  * user changed
- * this definitions show wheter a update needs to be sent to the GUI
+ * this definitions show whether a update needs to be sent to the GUI
  */
 #define QAUL_USERCHANGED_UNCHANGED 0 /// user is online and unchanged
 #define QAUL_USERCHANGED_MODIFIED  1 /// user was added or modified

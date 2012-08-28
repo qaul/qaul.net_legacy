@@ -143,15 +143,18 @@ void Qaullib_User_LL_Clean (void)
 			}
 			else
 			{
-				mynode.item->changed == QAUL_USERCHANGED_DELETED;
+				mynode.item->changed = QAUL_USERCHANGED_DELETED;
 			}
 		}
 		else if(mynode.item->time +10 < time(NULL))
 		{
-			if(mynode.item->type > QAUL_USERTYPE_UNCHECKED)
-				mynode.item->changed = QAUL_USERCHANGED_DELETED;
-			else
-				mynode.item->changed = QAUL_USERCHANGED_CACHED;
+			if(mynode.item->changed < QAUL_USERCHANGED_DELETED)
+			{
+				if(mynode.item->type > QAUL_USERTYPE_UNCHECKED)
+					mynode.item->changed = QAUL_USERCHANGED_DELETED;
+				else
+					mynode.item->changed = QAUL_USERCHANGED_CACHED;
+			}
 		}
 	}
 }

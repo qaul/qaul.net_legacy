@@ -842,9 +842,6 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 				request_type > 0)
 				)
 		{
-			if(QAUL_DEBUG)
-				printf("changeable user found\n");
-
 			// make sure the user name is not empty
 			if(strlen(mynode.item->name) > 0)
 			{
@@ -853,17 +850,13 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 				else
 					mg_printf(conn, ",");
 
-				if(mynode.item->changed == QAUL_USERCHANGED_MODIFIED)
-					add = 1;
-				else
-					add = 0;
 				// FIXME: ipv6
 				mg_printf(conn,
 						"{\"name\":\"%s\",\"ip\":\"%s\",\"lq\":%i,\"add\":%i}",
 						mynode.item->name,
 						inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
 						Qaullib_UserLinkcost2Img(mynode.item->lq),
-						add
+						mynode.item->changed
 						);
 			}
 

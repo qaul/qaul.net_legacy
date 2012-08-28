@@ -153,12 +153,13 @@ void Qaullib_UserCheckNonames(void)
 	while(Qaullib_User_LL_NextNode(&mynode))
 	{
 		if(mynode.item->type == QAUL_USERTYPE_UNCHECKED)
-			Qaullib_UserGetInfo(mynode.item);
+			if(Qaullib_UserGetInfo(mynode.item) == 0)
+				break;
 	}
 }
 
 // ------------------------------------------------------------
-void Qaullib_UserGetInfo(struct qaul_user_LL_item *user)
+int Qaullib_UserGetInfo(struct qaul_user_LL_item *user)
 {
 	int i, success;
 	printf("[qaullib] Qaullib_UserGetInfo\n");
@@ -192,9 +193,10 @@ void Qaullib_UserGetInfo(struct qaul_user_LL_item *user)
 				user->type = QAUL_USERTYPE_ERROR;
 			}
 
-			break;
+			return 1;
 		}
 	}
+	return 0;
 }
 
 // ------------------------------------------------------------
@@ -284,6 +286,7 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 		if(myuseritem->type < QAUL_USERTYPE_KNOWN)
 		{
 			printf("Qaullib_UserAddInfo name not known yet\n");
+			// set type
 			myuseritem->type = QAUL_USERTYPE_KNOWN;
 			if(myuseritem->changed == QAUL_USERCHANGED_UNCHANGED)
 				myuseritem->changed = QAUL_USERCHANGED_MODIFIED;
@@ -312,6 +315,8 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 	else
 		myuseritem->type = QAUL_USERTYPE_HIDDEN;
 
+	if(QAUL_DEBUG)
+		printf("Qaullib_UserAdd added: %s\n", name);
 }
 
 // ------------------------------------------------------------
