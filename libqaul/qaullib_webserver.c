@@ -1456,10 +1456,7 @@ static void Qaullib_WwwLoading(struct mg_connection *conn, const struct mg_reque
 		mg_printf(conn, "\"change\":0");
 	}
 #ifdef ARS_EDITION
-	else if(
-			(timestamp > ARS_AUS_1 && timestamp < ARS_EIN_1) ||
-			(timestamp > ARS_AUS_2 && timestamp < ARS_EIN_2)
-		)
+	else if(timestamp > ARS_AUS_1 && timestamp < ARS_EIN_1)
 	{
 		// show Klangwolke info screen
 		mg_printf(conn, "\"change\":1,\"page\":\"#page_klangwolke\"");
