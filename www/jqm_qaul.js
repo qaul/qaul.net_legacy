@@ -385,7 +385,7 @@ function show_user(name, ip)
 
 function load_remote_userinfo(name, ip)
 {
-	$("#page_user_files").empty().append("<p class=\"user-file_loading\"><img src=\"images/ajax-loader.gif\"/></p>");
+	$("#page_user_files").empty().append("<p class=\"user-file_loading\"><img src=\"images/i_loading_15.gif\"/></p>");
 	var path = "http://" +ip +":8081/pub_info.json";
     $.jsonp({
       url: path,
@@ -419,7 +419,7 @@ function load_remote_userinfo(name, ip)
           if($("#user_chat_ip").val() == ip)
           {
 			  // show info
-			  var myfile = $("#page_user_files").empty().append("<p class=\"user-file_info\">" +$.i18n._("User not reachable") +" " +"<a onclick=\"javascript:load_remote_userinfo('" +name +"', '" +ip +"')\" data-role=\"button\" data-iconpos=\"notext\" data-icon=\"refresh\">&nbsp;</a>" +"</p>");
+			  var myfile = $("#page_user_files").empty().append("<p class=\"user-file_info\">" +$.i18n._("User not reachable") +"<br/><br/> " +"<a onclick=\"javascript:load_remote_userinfo('" +name +"', '" +ip +"')\" data-role=\"button\" data-iconpos=\"notext\" data-icon=\"refresh\" style=\"margin:0 auto !important;\">&nbsp;</a>" +"</p>");
 			  myfile.trigger('create');
           }
       }
@@ -513,7 +513,7 @@ function call_start()
 	var name = $("#user_chat_name").val();
 	var ip = $("#user_chat_ip").val();
 	// change page
-	$("#call_info").text($.i18n._("Connecting"));
+	$("#call_info").text($.i18n._("Connecting") +'<br/><img src="i_loading_15.gif"/>');
 	call_show_page(name);
 	call_setButtonEnd();
 	// start call
@@ -597,7 +597,7 @@ function call_goback()
 
 function call_setRinging()
 {
-	$("#call_info").text($.i18n._("Ringing"));
+	$("#call_info").text($.i18n._("Ringing") +'<br/><img src="i_loading_15.gif"/>');
 	call_setButtonEnd();
 }
 
@@ -609,13 +609,13 @@ function call_setCalling()
 
 function call_setConnecting()
 {
-	$("#call_info").text($.i18n._("Establishing connection"));
+	$("#call_info").text($.i18n._("Establishing connection") +'<br/><img src="i_loading_15.gif"/>');
 	call_setButtonEnd();
 }
 
 function call_setConnected()
 {
-	$("#call_info").text($.i18n._("Connected"));
+	$("#call_info").text($.i18n._("Connected") +'<br/><img src="i_call_32.gif"/>');
 	call_setButtonEnd();
 }
 
@@ -822,7 +822,7 @@ function send_direct_msg()
 {
     // set loading info
     //$.mobile.pageLoading();
-    $("#page_user_queue").empty().append("<p class=\"user_msg_loading\"><img src=\"images/ajax-loader.gif\"/></p>");
+    $("#page_user_queue").empty().append("<p class=\"user_msg_loading\"><img src=\"images/i_loading_15.gif\"/></p>");
 
     // send data to remote user
     $.jsonp({

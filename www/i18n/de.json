@@ -29,7 +29,7 @@
 "How To's":"Anleitungen",
 "License":"Lizenz",
 "Configuration":"Konfiguration",
-"Change Language":"Sprache Ändern",
+"Change Language":"Sprache ändern",
 "Change User Name":"Benutzername ändern",
 
 "Connecting":"Verbinden",
@@ -43,7 +43,8 @@
 "You called %s":"%s wurde angerufen",
 "Incoming call from %s":"Eingehender Anruf von %s",
 
-"This field is required":"Dieses Feld muss ausgefüllt werden",
+"Please write something":"Bitte etwas schreiben",
+"This field is required":"Bitte etwas schreiben",
 "Spaces are not allowed in the user name":"Es sind keine Leerschläge im Benutzernamen erlaubt",
 "User name is too long":"Der Benutzername ist zu lang",
 "Message is too long":"Die Mitteilung ist zu lang",
@@ -58,5 +59,8 @@
 "Join qaul.net":"Mach mit beim qaul.net",
 "Download and install the qaul.net software on your device":"Installiere die qaul.net software auf deinem Gerät",
 
-"Goodbye":"Auf Wiedersehen"
+"Goodbye":"Auf Wiedersehen",
+
+"Your configuration has been saved":"Die Konfiguration wurde gespeichert",
+"You need to restart qaul.net to activate it":"Das Programm muss neu gestartet werden um die Änderungen zu aktivieren"
 }
