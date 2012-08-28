@@ -23,6 +23,7 @@ Install and prepare Firefox for the GUI
   https://addons.mozilla.org/en-US/firefox/addon/default-fullzoom-level/
 * Configure "Default FullZoom Level" addon to zoom level 250%
 * Install the firefox addon "status-4-evar" to remove the link target pop up
+* Install the firefox addon "Grab and Drag" to scroll the screen instead of selecting text
 * Install the firefox addon "R-Kiosk"
 
 To make further configuration changes to firefox one has to deactivate the R-Kiosk addon.
