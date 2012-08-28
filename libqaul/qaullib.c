@@ -234,10 +234,6 @@ int Qaullib_TimedCheckAppEvent(void)
 	{
 		return QAUL_EVENT_QUIT;
 	}
-	else if(timestamp > ARS_AUS_2 && timestamp < ARS_EIN_2)
-	{
-		return QAUL_EVENT_QUIT;
-	}
 #endif // ARS_EDITION
 
 	int tmp_event = app_event;
@@ -277,7 +273,7 @@ int Qaullib_WebserverStart(void)
 	static const char *options[] = {
 	  "document_root", webPath,
 	  "listening_ports", CHAT_PORT,
-	  "num_threads", "30",
+	  "num_threads", "60",
 	  NULL
 	};
 	ctx = mg_start(&Qaullib_WwwEvent_handler, options);

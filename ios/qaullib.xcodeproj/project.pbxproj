@@ -422,6 +422,7 @@
 					"../pjproject-2.0.1/third_party/srtp/include",
 				);
 				INSTALL_PATH = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = qaullib;
 			};
 			name = Debug;
@@ -448,6 +449,7 @@
 					"../pjproject-2.0.1/third_party/srtp/include",
 				);
 				INSTALL_PATH = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = qaullib;
 			};
 			name = Release;

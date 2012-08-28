@@ -62,20 +62,13 @@ extern "C" {
  *
  * UTC timestamps of the rehearsal of the Klangwolke and of the Klangwolke
  *
- * rehearsal:
- * local time: 30. August 2012 19:00 Ð 21:00
- * UTC:        30. August 2012 17:00 Ð 19:00
- * UTC time stamp: 1346346000 - 1346353200
- *
  * Klangwolke:
- * local time: 1. September 2012 20:00 Ð 22:00
+ * local time: 1. September 2012 20:30 Ð 22:00
  * UTC:        1. September 2012 18:00 Ð 18:00
- * UTC time stamp: 1346522400 - 1346529600
+ * UTC time stamp: 1346524200 - 1346529600
  */
-#define ARS_AUS_1   1346346000
-#define ARS_EIN_1   1346353200
-#define ARS_AUS_2   1346522400
-#define ARS_EIN_2   1346529600
+#define ARS_AUS_1   1346524200
+#define ARS_EIN_1   1346529600
 
 
 /**
