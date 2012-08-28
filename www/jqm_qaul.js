@@ -513,7 +513,7 @@ function call_start()
 	var name = $("#user_chat_name").val();
 	var ip = $("#user_chat_ip").val();
 	// change page
-	$("#call_info").text($.i18n._("Connecting") +'<br/><img src="i_loading_15.gif"/>');
+	$("#call_info").html($.i18n._("Connecting") +'<br/><img src="images/i_loading_15.gif"/>');
 	call_show_page(name);
 	call_setButtonEnd();
 	// start call
@@ -597,7 +597,7 @@ function call_goback()
 
 function call_setRinging()
 {
-	$("#call_info").text($.i18n._("Ringing") +'<br/><img src="i_loading_15.gif"/>');
+	$("#call_info").html($.i18n._("Ringing") +'<br/><img src="images/i_loading_15.gif"/>');
 	call_setButtonEnd();
 }
 
@@ -609,13 +609,13 @@ function call_setCalling()
 
 function call_setConnecting()
 {
-	$("#call_info").text($.i18n._("Establishing connection") +'<br/><img src="i_loading_15.gif"/>');
+	$("#call_info").html($.i18n._("Establishing connection") +'<br/><img src="images/i_loading_15.gif"/>');
 	call_setButtonEnd();
 }
 
 function call_setConnected()
 {
-	$("#call_info").text($.i18n._("Connected") +'<br/><img src="i_call_32.gif"/>');
+	$("#call_info").html($.i18n._("Connected") +'<br/><img src="images/i_call_32.gif"/>');
 	call_setButtonEnd();
 }
 
