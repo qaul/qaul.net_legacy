@@ -615,7 +615,7 @@ function call_setConnecting()
 
 function call_setConnected()
 {
-	$("#call_info").html($.i18n._("Connected") +'<br/><img src="images/i_call_32.gif"/>');
+	$("#call_info").html($.i18n._("Connected") +'<br/><img src="images/i_call_32.png"/>');
 	call_setButtonEnd();
 }
 
