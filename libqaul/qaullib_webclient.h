@@ -11,6 +11,15 @@ extern "C" {
 #endif // __cplusplus
 
 /**
+ * call back functions
+ */
+//void (*qaullib_wget_process)(struct qaul_wget_connection *, void *, int);
+//void (*qaullib_wget_end)(struct qaul_wget_connection *, void *);
+//void (*qaullib_wget_failed)(struct qaul_wget_connection *, void *);
+#define QAUL_WGET_USER 1
+#define QAUL_WGET_FILE 2
+
+/**
  * structure of web client connection
  */
 // FIXME: ipv6
@@ -26,8 +35,26 @@ struct qaul_wget_connection
 	int received;
 	int bufsize;
 	int bufpos;
+
+	int type;  // todo: do this with call back functions
+	void *download_ref;
+//	qaullib_wget_process download_process;
+//	qaullib_wget_end download_end;
+//	qaullib_wget_failed download_failed;
+
+	char header[MAX_HEADER_LEN +1];
 	union qaul_inbuf buf;
 };
+
+/**
+ * start and run the webclient thread
+ */
+void *Qaullib_WgetRunThread(void *connection);
+
+/**
+ * connection @a myConn failed
+ */
+void Qaullib_WgetFailed(struct qaul_wget_connection *myConn);
 
 /**
  * connect the @a myConn info
@@ -52,12 +79,12 @@ int Qaullib_WgetClose(struct qaul_wget_connection *myConn);
  * @retval 1 successfully sent
  * @retval 0 connection error
  */
-int Qaullib_WgetSendHeader(struct qaul_wget_connection *myConn, const char *header);
+int Qaullib_WgetSendHeader(struct qaul_wget_connection *myConn);
 
 /**
- * loop through all sockets and check if something was received
+ * download from connection
  */
-void Qaullib_WgetCheckSockets(void);
+void Qaullib_WgetDownload(struct qaul_wget_connection *myConn);
 
 /**
  * check if connection @a myConn received something

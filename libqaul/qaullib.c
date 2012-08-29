@@ -217,9 +217,11 @@ void Qaullib_TimedSocketReceive(void)
 {
 	// check ipc socket
 	Qaullib_IpcReceive();
+
 	// check user & file sockets
-	Qaullib_UserCheckSockets();
-	Qaullib_FileCheckSockets();
+	//Qaullib_UserCheckSockets();
+	//Qaullib_FileCheckSockets();
+
 	// check UDP sockets
 	Qaullib_UDP_CheckSocket();
 }
@@ -285,9 +287,6 @@ int Qaullib_WebserverStart(void)
 
 	return 1;
 }
-
-
-
 
 // ------------------------------------------------------------
 // SQLite functions

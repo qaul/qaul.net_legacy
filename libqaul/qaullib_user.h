@@ -74,9 +74,19 @@ void Qaullib_UserCheckNonames(void);
 int Qaullib_UserGetInfo(struct qaul_user_LL_item *user);
 
 /**
+ * process download
+ */
+int Qaullib_UserDownloadProcess(struct qaul_user_connection *userconnection, int bytes);
+
+/**
+ * handle a failed download
+ */
+void Qaullib_UserDownloadFailed(struct qaul_user_connection *userconnection);
+
+/**
  * check user sockets (check if anything was received)
  */
-void Qaullib_UserCheckSockets(void);
+//void Qaullib_UserCheckSockets(void);
 
 /**
  * add discovered user information to LL

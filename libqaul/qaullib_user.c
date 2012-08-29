@@ -14,11 +14,15 @@ void Qaullib_UserInit(void)
 	for(i=0; i<MAX_USER_CONNECTIONS; i++)
 	{
 		userconnections[i].conn.connected = 0;
+		userconnections[i].conn.type = QAUL_WGET_USER;
 
 		// fill in socket defaults
 		// FIXME: ipv6
 		userconnections[i].conn.ip.sin_family = AF_INET;
 		userconnections[i].conn.ip.sin_port = htons(WEB_PORT);
+
+		// start thread
+		qaullib_pthread_start((qaullib_thread_func_t) Qaullib_WgetRunThread, &userconnections[i].conn);
 	}
 
 	// fill in the favorites
@@ -169,29 +173,24 @@ int Qaullib_UserGetInfo(struct qaul_user_LL_item *user)
 	{
 		if(userconnections[i].conn.connected == 0)
 		{
+			userconnections[i].conn.received = 0;
 			userconnections[i].conn.bufpos = 0;
 			userconnections[i].user = user;
 			// fill in address
 			// FIXME: ipv6
 			userconnections[i].conn.ip.sin_addr.s_addr = user->ip.v4.s_addr;
 
-			// connect
-			success = Qaullib_WgetConnect(&userconnections[i].conn);
-			// send http header
-			if(success == 1)
-			{
-				if(Qaullib_WgetSendHeader(&userconnections[i].conn, "GET /pub_users HTTP/1.1\r\n\r\n"))
-				{
-					user->type = QAUL_USERTYPE_DOWNLOADING;
-				}
-				else
-					user->type = QAUL_USERTYPE_ERROR;
-			}
-			else
-			{
-				printf("[qaullib] connection error %i\n", success);
-				user->type = QAUL_USERTYPE_ERROR;
-			}
+			// set header
+			strcpy(userconnections[i].conn.header, "GET /pub_users HTTP/1.1\r\n\r\n");
+
+			// set connection reference
+			userconnections[i].conn.download_ref = (void *)&userconnections[i];
+
+			// set user to downloading
+			userconnections[i].user->type = QAUL_USERTYPE_DOWNLOADING;
+
+			// set connection flag
+			userconnections[i].conn.connected = 1;
 
 			return 1;
 		}
@@ -199,6 +198,88 @@ int Qaullib_UserGetInfo(struct qaul_user_LL_item *user)
 	return 0;
 }
 
+// ------------------------------------------------------------
+int Qaullib_UserDownloadProcess(struct qaul_user_connection *userconnection, int bytes)
+{
+	int bufpos;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_UserDownloadProcess\n");
+
+	bufpos = 0;
+
+	if(bytes >= sizeof(struct qaul_userinfo_msg))
+	{
+		printf("Qaullib_UserDownloadProcess received\n");
+		// check for first info (usually requested user)
+		if(memcmp(&userconnection->user->ip, &userconnection->conn.buf.userinfo.ip, sizeof(union olsr_ip_addr)) == 0)
+		{
+			printf("Qaullib_UserDownloadProcess first is asked client\n");
+
+			strncpy(userconnection->user->name, userconnection->conn.buf.userinfo.name, MAX_USER_LEN);
+			memcpy(&userconnection->user->name[MAX_USER_LEN], "\0", 1);
+
+			if(QAUL_DEBUG)
+				printf("Qaullib_UserDownloadProcess first user %s\n", userconnection->user->name);
+
+			// hide empty users
+			if(strlen(userconnection->user->name) > 0)
+			{
+				userconnection->user->type = QAUL_USERTYPE_KNOWN;
+				userconnection->user->changed = QAUL_USERCHANGED_MODIFIED;
+			}
+			else
+			{
+				userconnection->user->type = QAUL_USERTYPE_HIDDEN;
+			}
+		}
+		else
+			Qaullib_UserAddInfo(&userconnection->conn.buf.userinfo);
+
+		// check all further users
+		bufpos = sizeof(struct qaul_userinfo_msg);
+		while(bytes -bufpos >= sizeof(struct qaul_userinfo_msg))
+		{
+			if(QAUL_DEBUG)
+				printf("Qaullib_UserDownloadProcess further user info\n");
+
+			// process information
+			Qaullib_UserAddInfo((struct qaul_userinfo_msg *)&userconnection->conn.buf.buf[bufpos]);
+			// set new bufpos
+			bufpos += sizeof(struct qaul_userinfo_msg);
+		}
+
+		// todo: do this for more users
+		return 0;
+	}
+	else if(bytes > 0)
+	{
+		//userconnection->conn.bufpos += bytes;
+		Qaullib_UserDownloadFailed(userconnection);
+		return 0;
+	}
+	else if(userconnection->conn.received < sizeof(struct qaul_userinfo_msg))
+	{
+		Qaullib_UserDownloadFailed(userconnection);
+		return 0;
+	}
+	else
+		return 0;
+	return 1;
+}
+
+// ------------------------------------------------------------
+void Qaullib_UserDownloadFailed(struct qaul_user_connection *userconnection)
+{
+	if(QAUL_DEBUG)
+		printf("Qaullib_UserDownloadFailed\n");
+
+	// mark user as node
+	if(userconnection->user->type == QAUL_USERTYPE_DOWNLOADING)
+		userconnection->user->type = QAUL_USERTYPE_ERROR;
+}
+
+/*
 // ------------------------------------------------------------
 void Qaullib_UserCheckSockets(void)
 {
@@ -262,6 +343,7 @@ void Qaullib_UserCheckSockets(void)
 		}
 	}
 }
+*/
 
 void Qaullib_UserAddInfo(struct qaul_userinfo_msg *userinfo)
 {

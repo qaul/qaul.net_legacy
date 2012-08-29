@@ -117,9 +117,24 @@ int Qaullib_FileAvailable(char *hashstr, char *suffix, struct qaul_file_LL_item 
 void Qaullib_FileConnect(struct qaul_file_LL_item *file_item);
 
 /**
+ * process downloaded bytes
+ */
+int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int bytes, int first);
+
+/**
+ * handle failed download
+ */
+void Qaullib_FileDownloadFailed(struct qaul_file_connection *fileconnection);
+
+/**
  * check file sockets for incoming traffic
  */
-void Qaullib_FileCheckSockets(void);
+//void Qaullib_FileCheckSockets(void);
+
+/**
+ * end a failed download of th @a fileconnection
+ */
+//void Qaullib_FileEndFailedConnection(struct qaul_file_connection *fileconnection);
 
 /**
  * check if download @a filesize match the @a fileconnection
@@ -127,12 +142,7 @@ void Qaullib_FileCheckSockets(void);
  * @retval 1 success
  * @retval 0 error
  */
-int Qaullib_FileCompairFileSize(struct qaul_file_connection *fileconnection, int filesize);
-
-/**
- * end a failed download of th @a fileconnection
- */
-void Qaullib_FileEndFailedConnection(struct qaul_file_connection *fileconnection);
+int Qaullib_FileCompareFileSize(struct qaul_file_connection *fileconnection, int filesize);
 
 /**
  * check if file @a path exists
