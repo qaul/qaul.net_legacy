@@ -498,6 +498,8 @@ void Qaullib_FileDB2LL(void)
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "downloaded") == 0)
 			{
 		    	myitem.downloaded = sqlite3_column_int(ppStmt, jj);
+		    	if(myitem.downloaded < 0)
+		    		myitem.downloaded = 0;
 			}
 
 		    // todo: to be removed
@@ -782,7 +784,7 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 
 			// get file message type
 			type = ntohl(fileconnection->conn.buf.filechunk.type);
-			printf("Qaullib_FileDownloadProcess type %i\n", type);
+			printf("Qaullib_FileDownloadProcess type %i \n", type);
 
 			if(type == 1)
 			{
@@ -792,7 +794,7 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 					fileconnection->chunksize = ntohl(fileconnection->conn.buf.filechunk.chunksize);
 
 					if(QAUL_DEBUG)
-						printf("[qaullib] file download: %s, filesize %i, chunksize %i\n", fileconnection->fileinfo->hashstr, fileconnection->fileinfo->size, fileconnection->chunksize);
+						printf("Qaullib_FileDownloadProcess file download: %s, filesize %i, chunksize %i\n", fileconnection->fileinfo->hashstr, fileconnection->fileinfo->size, fileconnection->chunksize);
 
 					// write chunk into file
 					fwrite(&fileconnection->conn.buf.buf[sizeof(struct qaul_filechunk_msg)], bytes -sizeof(struct qaul_filechunk_msg), 1, fileconnection->file);
@@ -804,7 +806,7 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 			}
 			else
 			{
-				printf("Qaullib_FileCheckSockets file download failed: bytes %i msg-type %i %s\n", bytes, type, fileconnection->fileinfo->hashstr);
+				printf("Qaullib_FileDownloadProcess file download failed: bytes %i msg-type %i %s\n", bytes, type, fileconnection->fileinfo->hashstr);
 				// end download
 				Qaullib_FileDownloadFailed(fileconnection);
 				return 0;
@@ -818,6 +820,16 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 		}
 		else
 		{
+			if(QAUL_DEBUG)
+			{
+				printf("Qaullib_FileDownloadProcess file-size: %i chunk-size: %i received: %i bufpos: %i\n",
+						fileconnection->fileinfo->size,
+						fileconnection->chunksize,
+						fileconnection->conn.received,
+						fileconnection->conn.bufpos
+				);
+			}
+
 			// write chunk into file
 			fwrite(fileconnection->conn.buf.buf, bytes, 1, fileconnection->file);
 			fileconnection->conn.bufpos = 0;
@@ -837,6 +849,14 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 		{
 			fclose(fileconnection->file);
 			Qaullib_WgetClose(&fileconnection->conn);
+
+			if(QAUL_DEBUG)
+				printf("Qaullib_FileDownloadProcess chunk finished downloading: downloaded %i chunksize %i received %i filesize %i \n",
+						fileconnection->fileinfo->downloaded,
+						fileconnection->chunksize,
+						fileconnection->conn.received,
+						fileconnection->fileinfo->size
+						);
 
 			// update downloaded
 			fileconnection->fileinfo->downloaded += fileconnection->chunksize;
