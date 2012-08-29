@@ -840,6 +840,7 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 
 			// update downloaded
 			fileconnection->fileinfo->downloaded += fileconnection->chunksize;
+			fileconnection->chunksize = 0;
 			Qaullib_FileUpdateDownloaded(fileconnection->fileinfo, fileconnection->fileinfo->downloaded);
 
 			// mark as successfully downloaded

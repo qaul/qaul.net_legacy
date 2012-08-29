@@ -208,20 +208,19 @@ void Qaullib_WgetDownload(struct qaul_wget_connection *myConn)
 		{
 			if(myConn->type == QAUL_WGET_USER)
 			{
-				printf("QAUL_WGET_FILE\n");
-
 				if(!Qaullib_UserDownloadProcess((struct qaul_user_connection *)myConn->download_ref, bytes))
 					break;
 			}
 			else if(myConn->type == QAUL_WGET_FILE)
 			{
-				printf("QAUL_WGET_FILE\n");
-
 				if(!Qaullib_FileDownloadProcess((struct qaul_file_connection *)myConn->download_ref, bytes, first))
 					break;
 			}
 			else
-				printf("No connection type set\n");
+			{
+				if(QAUL_DEBUG)
+					printf("No connection type set\n");
+			}
 		}
 		else
 		{
