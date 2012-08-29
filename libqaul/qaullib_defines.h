@@ -60,6 +60,7 @@ extern "C" {
 #define MAX_USER_CONNECTIONS    3
 #define MAX_FILE_CONNECTIONS    5
 #define MAX_TIMESTR_SIZE       80
+#define MAX_HEADER_LEN       1024
 
 #define QAUL_FILEDISCOVERY_TIMEOUT 60
 

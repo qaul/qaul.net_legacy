@@ -174,6 +174,7 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
     	{
     		qaul_voip_event = 1;
     		qaul_voip_ringing = 1;
+    		app_event = QAUL_EVENT_RING;
     	}
     }
     else

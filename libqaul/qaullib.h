@@ -117,7 +117,7 @@ void Qaullib_SetConf(int conf);
 
 /**
  * platform specific checker
- * QAUL_CHECK_WIFISET
+ * QAUL_CHECK_WIFI_SET
  */
 int Qaullib_CheckConf(int conf);
 
@@ -262,7 +262,7 @@ void Qaullib_TimedSocketReceive(void);
 
 /**
  * check if a file or a username needs to be downloaded
- * to be called every 5s
+ * to be called every 3s
  */
 void Qaullib_TimedDownload(void);
 

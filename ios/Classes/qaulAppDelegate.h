@@ -27,12 +27,12 @@
 	BOOL qaulServiceFound;
 	BOOL qaulServiceConfigured;
 	CFStringRef qaulServiceName;
- 
+*/ 
 	// Timer
 	NSTimer *qaullibTimer;
 	NSTimer *qaullibTimer2;
 	NSTimer *qaullibTimer3;
-*/
+
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
@@ -52,6 +52,20 @@
  * startup and configure app
  */
 - (void) QaulConfigure;
+
+/**
+ * wait for secs until running QaulConfigure again
+ */
+- (void)startDelay:(NSTimeInterval)secs;
+- (void)fireDelay;
+
+/**
+ * timers
+ */
+- (void)startTimer;
+- (void)stopTimer;
+- (void)checkIpcMessage:(NSTimer *)theTimer;
+- (void)checkIpcTopology:(NSTimer *)theTimer;
 
 @end
 

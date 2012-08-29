@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5F7E545315AEC890002D011D /* bstrlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E540615AEC890002D011D /* bstrlib.c */; };
-		5F7E545415AEC890002D011D /* bstrlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E540715AEC890002D011D /* bstrlib.h */; };
 		5F7E545B15AEC890002D011D /* qaullib_captive.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E541415AEC890002D011D /* qaullib_captive.c */; };
 		5F7E545C15AEC890002D011D /* qaullib_captive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E541515AEC890002D011D /* qaullib_captive.h */; };
 		5F7E545E15AEC890002D011D /* qaullib_captive_dhcp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E541715AEC890002D011D /* qaullib_captive_dhcp.c */; };
@@ -50,13 +48,19 @@
 		5F7E551815AECD7B002D011D /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E551415AECD7B002D011D /* config.h */; };
 		5F7E551915AECD7B002D011D /* sha1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7E551515AECD7B002D011D /* sha1.h */; };
 		5F7E551A15AECD7B002D011D /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F7E551615AECD7B002D011D /* sha1.c */; };
+		5FE4779915EABCAE00905BB0 /* qaullib_udp_communication.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FE4779715EABCAE00905BB0 /* qaullib_udp_communication.c */; };
+		5FE4779A15EABCAE00905BB0 /* qaullib_udp_communication.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE4779815EABCAE00905BB0 /* qaullib_udp_communication.h */; };
+		5FE477A215EABCED00905BB0 /* qaullib_exediscovery.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FE4779E15EABCED00905BB0 /* qaullib_exediscovery.c */; };
+		5FE477A315EABCED00905BB0 /* qaullib_exediscovery.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE4779F15EABCED00905BB0 /* qaullib_exediscovery.h */; };
+		5FE477A415EABCED00905BB0 /* qaullib_file_LL.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FE477A015EABCED00905BB0 /* qaullib_file_LL.c */; };
+		5FE477A515EABCED00905BB0 /* qaullib_file_LL.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE477A115EABCED00905BB0 /* qaullib_file_LL.h */; };
+		5FE477A815EABD1300905BB0 /* qaullib_voip.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FE477A615EABD1300905BB0 /* qaullib_voip.c */; };
+		5FE477A915EABD1300905BB0 /* qaullib_voip.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE477A715EABD1300905BB0 /* qaullib_voip.h */; };
 		AA747D9F0F9514B9006C5449 /* qaullib_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* qaullib_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5F7E540615AEC890002D011D /* bstrlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bstrlib.c; sourceTree = "<group>"; };
-		5F7E540715AEC890002D011D /* bstrlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bstrlib.h; sourceTree = "<group>"; };
 		5F7E541415AEC890002D011D /* qaullib_captive.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qaullib_captive.c; sourceTree = "<group>"; };
 		5F7E541515AEC890002D011D /* qaullib_captive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qaullib_captive.h; sourceTree = "<group>"; };
 		5F7E541715AEC890002D011D /* qaullib_captive_dhcp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qaullib_captive_dhcp.c; sourceTree = "<group>"; };
@@ -98,6 +102,14 @@
 		5F7E551415AECD7B002D011D /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		5F7E551515AECD7B002D011D /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
 		5F7E551615AECD7B002D011D /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
+		5FE4779715EABCAE00905BB0 /* qaullib_udp_communication.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib_udp_communication.c; path = ../libqaul/qaullib_udp_communication.c; sourceTree = SOURCE_ROOT; };
+		5FE4779815EABCAE00905BB0 /* qaullib_udp_communication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_udp_communication.h; path = ../libqaul/qaullib_udp_communication.h; sourceTree = SOURCE_ROOT; };
+		5FE4779E15EABCED00905BB0 /* qaullib_exediscovery.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib_exediscovery.c; path = ../libqaul/qaullib_exediscovery.c; sourceTree = SOURCE_ROOT; };
+		5FE4779F15EABCED00905BB0 /* qaullib_exediscovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_exediscovery.h; path = ../libqaul/qaullib_exediscovery.h; sourceTree = SOURCE_ROOT; };
+		5FE477A015EABCED00905BB0 /* qaullib_file_LL.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib_file_LL.c; path = ../libqaul/qaullib_file_LL.c; sourceTree = SOURCE_ROOT; };
+		5FE477A115EABCED00905BB0 /* qaullib_file_LL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_file_LL.h; path = ../libqaul/qaullib_file_LL.h; sourceTree = SOURCE_ROOT; };
+		5FE477A615EABD1300905BB0 /* qaullib_voip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qaullib_voip.c; path = ../libqaul/qaullib_voip.c; sourceTree = SOURCE_ROOT; };
+		5FE477A715EABD1300905BB0 /* qaullib_voip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qaullib_voip.h; path = ../libqaul/qaullib_voip.h; sourceTree = SOURCE_ROOT; };
 		AA747D9E0F9514B9006C5449 /* qaullib_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qaullib_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libqaullib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libqaullib.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -153,13 +165,16 @@
 			isa = PBXGroup;
 			children = (
 				5F7E551115AECD7B002D011D /* polarssl */,
-				5F7E540015AEC890002D011D /* bstrlib */,
 				5F7E541315AEC890002D011D /* captive */,
 				5F7E541B15AEC890002D011D /* mongoose */,
 				5F7E542015AEC890002D011D /* mongoose_extra.h */,
 				5F7E542115AEC890002D011D /* olsrd */,
 				5F7E542915AEC890002D011D /* olsrd_types.h */,
 				5F7E543115AEC890002D011D /* qaullib_defines.h */,
+				5FE4779E15EABCED00905BB0 /* qaullib_exediscovery.c */,
+				5FE4779F15EABCED00905BB0 /* qaullib_exediscovery.h */,
+				5FE477A015EABCED00905BB0 /* qaullib_file_LL.c */,
+				5FE477A115EABCED00905BB0 /* qaullib_file_LL.h */,
 				5F7E543215AEC890002D011D /* qaullib_filesharing.c */,
 				5F7E543315AEC890002D011D /* qaullib_filesharing.h */,
 				5F7E543415AEC890002D011D /* qaullib_ipc.c */,
@@ -168,10 +183,14 @@
 				5F7E543715AEC890002D011D /* qaullib_sql.h */,
 				5F7E543815AEC890002D011D /* qaullib_threads.c */,
 				5F7E543915AEC890002D011D /* qaullib_threads.h */,
+				5FE4779715EABCAE00905BB0 /* qaullib_udp_communication.c */,
+				5FE4779815EABCAE00905BB0 /* qaullib_udp_communication.h */,
 				5F7E543A15AEC890002D011D /* qaullib_user_LL.c */,
 				5F7E543B15AEC890002D011D /* qaullib_user_LL.h */,
 				5F7E543C15AEC890002D011D /* qaullib_user.c */,
 				5F7E543D15AEC890002D011D /* qaullib_user.h */,
+				5FE477A615EABD1300905BB0 /* qaullib_voip.c */,
+				5FE477A715EABD1300905BB0 /* qaullib_voip.h */,
 				5F7E543E15AEC890002D011D /* qaullib_webclient.c */,
 				5F7E543F15AEC890002D011D /* qaullib_webclient.h */,
 				5F7E544015AEC890002D011D /* qaullib_webserver.c */,
@@ -184,16 +203,6 @@
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
-		};
-		5F7E540015AEC890002D011D /* bstrlib */ = {
-			isa = PBXGroup;
-			children = (
-				5F7E540615AEC890002D011D /* bstrlib.c */,
-				5F7E540715AEC890002D011D /* bstrlib.h */,
-			);
-			name = bstrlib;
-			path = ../libqaul/bstrlib;
-			sourceTree = SOURCE_ROOT;
 		};
 		5F7E541315AEC890002D011D /* captive */ = {
 			isa = PBXGroup;
@@ -279,7 +288,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA747D9F0F9514B9006C5449 /* qaullib_Prefix.pch in Headers */,
-				5F7E545415AEC890002D011D /* bstrlib.h in Headers */,
 				5F7E545C15AEC890002D011D /* qaullib_captive.h in Headers */,
 				5F7E546315AEC890002D011D /* mongoose.h in Headers */,
 				5F7E546515AEC890002D011D /* mongoose_extra.h in Headers */,
@@ -303,6 +311,10 @@
 				5F7E548B15AEC890002D011D /* urlcode.h in Headers */,
 				5F7E551815AECD7B002D011D /* config.h in Headers */,
 				5F7E551915AECD7B002D011D /* sha1.h in Headers */,
+				5FE4779A15EABCAE00905BB0 /* qaullib_udp_communication.h in Headers */,
+				5FE477A315EABCED00905BB0 /* qaullib_exediscovery.h in Headers */,
+				5FE477A515EABCED00905BB0 /* qaullib_file_LL.h in Headers */,
+				5FE477A915EABD1300905BB0 /* qaullib_voip.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,7 +368,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F7E545315AEC890002D011D /* bstrlib.c in Sources */,
 				5F7E545B15AEC890002D011D /* qaullib_captive.c in Sources */,
 				5F7E545E15AEC890002D011D /* qaullib_captive_dhcp.c in Sources */,
 				5F7E546015AEC890002D011D /* qaullib_captive_dns.c in Sources */,
@@ -375,6 +386,10 @@
 				5F7E548615AEC890002D011D /* sqlite3.c in Sources */,
 				5F7E548A15AEC890002D011D /* urlcode.c in Sources */,
 				5F7E551A15AECD7B002D011D /* sha1.c in Sources */,
+				5FE4779915EABCAE00905BB0 /* qaullib_udp_communication.c in Sources */,
+				5FE477A215EABCED00905BB0 /* qaullib_exediscovery.c in Sources */,
+				5FE477A415EABCED00905BB0 /* qaullib_file_LL.c in Sources */,
+				5FE477A815EABD1300905BB0 /* qaullib_voip.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,7 +409,20 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = qaullib_Prefix.pch;
+				HEADER_SEARCH_PATHS = (
+					"../pjproject-2.0.1/pjlib/include",
+					"../pjproject-2.0.1/pjlib-util/include",
+					"../pjproject-2.0.1/pjmedia/include",
+					"../pjproject-2.0.1/pjnath/include",
+					"../pjproject-2.0.1/pjsip/include",
+					"../pjproject-2.0.1/third_party/portaudio/include",
+					"../pjproject-2.0.1/third_party/resample/include",
+					"../pjproject-2.0.1/third_party/speex/include",
+					"../pjproject-2.0.1/third_party/srtp/crypto/include",
+					"../pjproject-2.0.1/third_party/srtp/include",
+				);
 				INSTALL_PATH = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = qaullib;
 			};
 			name = Debug;
@@ -408,7 +436,20 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = qaullib_Prefix.pch;
+				HEADER_SEARCH_PATHS = (
+					"../pjproject-2.0.1/pjlib/include",
+					"../pjproject-2.0.1/pjlib-util/include",
+					"../pjproject-2.0.1/pjmedia/include",
+					"../pjproject-2.0.1/pjnath/include",
+					"../pjproject-2.0.1/pjsip/include",
+					"../pjproject-2.0.1/third_party/portaudio/include",
+					"../pjproject-2.0.1/third_party/resample/include",
+					"../pjproject-2.0.1/third_party/speex/include",
+					"../pjproject-2.0.1/third_party/srtp/crypto/include",
+					"../pjproject-2.0.1/third_party/srtp/include",
+				);
 				INSTALL_PATH = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = qaullib;
 			};
 			name = Release;

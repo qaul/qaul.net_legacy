@@ -65,11 +65,15 @@ void Qaullib_FileInit(void)
 	for(i=0; i<MAX_FILE_CONNECTIONS; i++)
 	{
 		fileconnections[i].conn.connected = 0;
+		fileconnections[i].conn.type = QAUL_WGET_FILE;
 
 		// fill in socket defaults
 		// FIXME: ipv6
 		fileconnections[i].conn.ip.sin_family = AF_INET;
 		fileconnections[i].conn.ip.sin_port = htons(WEB_PORT);
+
+		// start thread
+		qaullib_pthread_start((qaullib_thread_func_t) Qaullib_WgetRunThread, &fileconnections[i].conn);
 	}
 
 	// get the files from DB
@@ -494,6 +498,8 @@ void Qaullib_FileDB2LL(void)
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "downloaded") == 0)
 			{
 		    	myitem.downloaded = sqlite3_column_int(ppStmt, jj);
+		    	if(myitem.downloaded < 0)
+		    		myitem.downloaded = 0;
 			}
 
 		    // todo: to be removed
@@ -533,7 +539,7 @@ static void Qaullib_FileUpdateStatus(struct qaul_file_LL_item *file_item, int st
 	char *error_exec=NULL;
 
 	if(QAUL_DEBUG)
-		printf("Qaullib_FileUpdateStatus\n");
+		printf("Qaullib_FileUpdateStatus status: %i\n", status);
 
 	file_item->status = status;
 	file_item->gui_notify = 1;
@@ -552,8 +558,6 @@ static void Qaullib_FileUpdateStatus(struct qaul_file_LL_item *file_item, int st
 			error_exec=NULL;
 		}
 	}
-
-	printf("Qaullib_FileUpdateStatus finished\n");
 }
 
 // ------------------------------------------------------------
@@ -702,6 +706,7 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item)
 				// link file
 				fileconnections[i].fileinfo = file_item;
 				// fill in connection info
+				fileconnections[i].conn.received = 0;
 				fileconnections[i].conn.bufpos = 0;
 
 				// fill in address
@@ -711,51 +716,22 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item)
 				saddr.sin_port = htons(WEB_PORT);
 				memcpy(&fileconnections[i].conn.ip, &saddr, sizeof(struct sockaddr_in));
 
-				// connect
-				if(Qaullib_WgetConnect(&fileconnections[i].conn))
-				{
-					// send http header
-					sprintf(
-							header,
-							"GET /pub_filechunk?h=%s&s=%s&c=%i&e=1 HTTP/1.1\r\n\r\n",
-							fileconnections[i].fileinfo->hashstr,
-							fileconnections[i].fileinfo->suffix,
-							fileconnections[i].fileinfo->downloaded);
+				// set header
+				sprintf(
+						fileconnections[i].conn.header,
+						"GET /pub_filechunk?h=%s&s=%s&c=%i&e=1 HTTP/1.1\r\n\r\n",
+						fileconnections[i].fileinfo->hashstr,
+						fileconnections[i].fileinfo->suffix,
+						fileconnections[i].fileinfo->downloaded);
 
-					if(Qaullib_WgetSendHeader(&fileconnections[i].conn, header))
-					{
-						// open file for writing
-						char local_filepath[MAX_PATH_LEN +1];
-						Qaullib_FileCreatePath(local_filepath, fileconnections[i].fileinfo->hashstr, fileconnections[i].fileinfo->suffix);
-						fileconnections[i].file = fopen(local_filepath, "wb");
+				// set connection reference
+				fileconnections[i].conn.download_ref = (void *)&fileconnections[i];
 
-						if(fileconnections[i].file != NULL)
-						{
-							fseek(fileconnections[i].file, fileconnections[i].fileinfo->downloaded, SEEK_SET);
-							Qaullib_FileUpdateStatus(fileconnections[i].fileinfo, QAUL_FILESTATUS_DOWNLOADING);
-							return;
-						}
-						else
-						{
-							if(QAUL_DEBUG)
-								printf("Qaullib_FileConnect file connection failed\n");
+				// set downloading
+				Qaullib_FileUpdateStatus(fileconnections[i].fileinfo, QAUL_FILESTATUS_DOWNLOADING);
 
-							Qaullib_FileEndFailedConnection(&fileconnections[i]);
-						}
-					}
-					else
-					{
-						if(QAUL_DEBUG)
-							printf("Qaullib_FileConnect sending header failed\n");
-
-						Qaullib_FileEndFailedConnection(&fileconnections[i]);
-					}
-				}
-				else
-				{
-					printf("Qaullib_FileConnect connection error\n");
-					Qaullib_FileEndFailedConnection(&fileconnections[i]);
-				}
+				// set connection flag
+				fileconnections[i].conn.connected = 1;
 			}
 			else
 			{
@@ -767,6 +743,167 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item)
 }
 
 // ------------------------------------------------------------
+int Qaullib_FileOpenFile(struct qaul_file_connection *fileconnection)
+{
+	// open file for writing
+	char local_filepath[MAX_PATH_LEN +1];
+	Qaullib_FileCreatePath(local_filepath, fileconnection->fileinfo->hashstr, fileconnection->fileinfo->suffix);
+	fileconnection->file = fopen(local_filepath, "wb");
+
+	if(fileconnection->file != NULL)
+	{
+		fseek(fileconnection->file, fileconnection->fileinfo->downloaded, SEEK_SET);
+		return 1;
+	}
+
+	return 0;
+}
+
+// ------------------------------------------------------------
+int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int bytes, int first)
+{
+	int type, chunksize, success;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_FileDownloadProcess bytes %i socket %i received %i first %i\n", bytes, fileconnection->conn.socket, fileconnection->conn.received, first);
+
+	if(bytes == 0)
+	{
+		// check if file has finished downloading
+		Qaullib_FileDownloadFailed(fileconnection);
+
+		return 0;
+	}
+	else
+	{
+		if(first == 1 && bytes >= sizeof(struct qaul_filechunk_msg))
+		{
+			// open file
+			if(!Qaullib_FileOpenFile(fileconnection))
+				return 0;
+
+			// get file message type
+			type = ntohl(fileconnection->conn.buf.filechunk.type);
+			printf("Qaullib_FileDownloadProcess type %i \n", type);
+
+			if(type == 1)
+			{
+				if(Qaullib_FileCompareFileSize(fileconnection, ntohl(fileconnection->conn.buf.filechunk.filesize)))
+				{
+					// get chunk size
+					fileconnection->chunksize = ntohl(fileconnection->conn.buf.filechunk.chunksize);
+
+					if(QAUL_DEBUG)
+						printf("Qaullib_FileDownloadProcess file download: %s, filesize %i, chunksize %i\n", fileconnection->fileinfo->hashstr, fileconnection->fileinfo->size, fileconnection->chunksize);
+
+					// write chunk into file
+					fwrite(&fileconnection->conn.buf.buf[sizeof(struct qaul_filechunk_msg)], bytes -sizeof(struct qaul_filechunk_msg), 1, fileconnection->file);
+					fileconnection->conn.received += bytes -sizeof(struct qaul_filechunk_msg);
+					fileconnection->conn.bufpos = 0;
+				}
+				else
+					Qaullib_FileDownloadFailed(fileconnection);
+			}
+			else
+			{
+				printf("Qaullib_FileDownloadProcess file download failed: bytes %i msg-type %i %s\n", bytes, type, fileconnection->fileinfo->hashstr);
+				// end download
+				Qaullib_FileDownloadFailed(fileconnection);
+				return 0;
+			}
+		}
+		else if(first)
+		{
+			//fileconnection->conn.bufpos = bytes;
+			Qaullib_FileDownloadFailed(fileconnection);
+			return 0;
+		}
+		else
+		{
+			if(QAUL_DEBUG)
+			{
+				printf("Qaullib_FileDownloadProcess file-size: %i chunk-size: %i received: %i bufpos: %i\n",
+						fileconnection->fileinfo->size,
+						fileconnection->chunksize,
+						fileconnection->conn.received,
+						fileconnection->conn.bufpos
+				);
+			}
+
+			// write chunk into file
+			fwrite(fileconnection->conn.buf.buf, bytes, 1, fileconnection->file);
+			fileconnection->conn.bufpos = 0;
+			fileconnection->conn.received += bytes;
+
+			// update GUI
+			fileconnection->fileinfo->downloaded_chunk = fileconnection->conn.received;
+			fileconnection->fileinfo->gui_notify = 1;
+		}
+
+		// check if chunk finished downloading
+		if(
+				fileconnection->conn.connected &&
+				fileconnection->chunksize > 0 &&
+				fileconnection->chunksize <= fileconnection->conn.received
+				)
+		{
+			fclose(fileconnection->file);
+			Qaullib_WgetClose(&fileconnection->conn);
+
+			if(QAUL_DEBUG)
+				printf("Qaullib_FileDownloadProcess chunk finished downloading: downloaded %i chunksize %i received %i filesize %i \n",
+						fileconnection->fileinfo->downloaded,
+						fileconnection->chunksize,
+						fileconnection->conn.received,
+						fileconnection->fileinfo->size
+						);
+
+			// update downloaded
+			fileconnection->fileinfo->downloaded += fileconnection->chunksize;
+			fileconnection->chunksize = 0;
+			Qaullib_FileUpdateDownloaded(fileconnection->fileinfo, fileconnection->fileinfo->downloaded);
+
+			// mark as successfully downloaded
+			if(fileconnection->fileinfo->downloaded >= fileconnection->fileinfo->size)
+			{
+				// todo: check if file hash matches!
+				printf("Qaullib_FileCheckSockets download finished! filesize %i, downloaded %i\n", fileconnection->fileinfo->size, fileconnection->fileinfo->downloaded);
+
+				// copy file to download folder
+				if(qaul_conf_filedownloadfolder_set)
+					Qaullib_FileCopyToDownloadFolder(fileconnection->fileinfo);
+
+				Qaullib_FileUpdateStatus(fileconnection->fileinfo, QAUL_FILESTATUS_DOWNLOADED);
+			}
+			// todo: otherwise reschedule for next download
+
+			return 0;
+		}
+	}
+	return 1;
+}
+
+// ------------------------------------------------------------
+void Qaullib_FileDownloadFailed(struct qaul_file_connection *fileconnection)
+{
+	union olsr_ip_addr ip;
+
+	if(QAUL_DEBUG)
+    	printf("Qaullib_FileDownloadFailed\n");
+
+	// close file
+	if(fileconnection->file != NULL)
+		fclose(fileconnection->file);
+
+	// remove this seeder from list
+	memcpy(&ip.v4, &fileconnection->conn.ip, sizeof(ip.v4));
+	Qaullib_Filediscovery_LL_DeleteSeederIp(fileconnection->fileinfo, &ip);
+	// reschedule file
+	Qaullib_FileUpdateStatus(fileconnection->fileinfo, QAUL_FILESTATUS_DISCOVERED);
+}
+
+// ------------------------------------------------------------
+/*
 void Qaullib_FileCheckSockets(void)
 {
 	int i, bytes, type, chunksize, success;
@@ -794,7 +931,7 @@ void Qaullib_FileCheckSockets(void)
 
 					if(type == 1)
 					{
-						if(Qaullib_FileCompairFileSize(&fileconnections[i], ntohl(fileconnections[i].conn.buf.filechunk.filesize)))
+						if(Qaullib_FileCompareFileSize(&fileconnections[i], ntohl(fileconnections[i].conn.buf.filechunk.filesize)))
 						{
 							// get chunk size
 							fileconnections[i].chunksize = ntohl(fileconnections[i].conn.buf.filechunk.chunksize);
@@ -879,10 +1016,31 @@ void Qaullib_FileCheckSockets(void)
 }
 
 // ------------------------------------------------------------
-int Qaullib_FileCompairFileSize(struct qaul_file_connection *fileconnection, int filesize)
+void Qaullib_FileEndFailedConnection(struct qaul_file_connection *fileconnection)
+{
+	union olsr_ip_addr ip;
+
+	if(QAUL_DEBUG)
+    	printf("Qaullib_FileEndFailedConnection\n");
+
+	// close file
+	if(fileconnection->file != NULL)
+		fclose(fileconnection->file);
+
+	// close connection
+	Qaullib_WgetClose(&fileconnection->conn);
+	// remove this seeder from list
+	memcpy(&ip.v4, &fileconnection->conn.ip, sizeof(ip.v4));
+	Qaullib_Filediscovery_LL_DeleteSeederIp(fileconnection->fileinfo, &ip);
+	// reschedule file
+	Qaullib_FileUpdateStatus(fileconnection->fileinfo, QAUL_FILESTATUS_DISCOVERED);
+}
+*/
+// ------------------------------------------------------------
+int Qaullib_FileCompareFileSize(struct qaul_file_connection *fileconnection, int filesize)
 {
 	if(QAUL_DEBUG)
-		printf("Qaullib_FileCompairFileSize\n");
+		printf("Qaullib_FileCompareFileSize\n");
 
 	if(fileconnection->fileinfo->size > 0 && fileconnection->fileinfo->downloaded > 0)
 	{
@@ -902,26 +1060,6 @@ int Qaullib_FileCompairFileSize(struct qaul_file_connection *fileconnection, int
 		Qaullib_FileUpdateSize(fileconnection->fileinfo, filesize);
 	}
 	return 1;
-}
-
-// ------------------------------------------------------------
-void Qaullib_FileEndFailedConnection(struct qaul_file_connection *fileconnection)
-{
-	union olsr_ip_addr ip;
-
-	if(QAUL_DEBUG)
-    	printf("Qaullib_FileEndFailedConnection\n");
-
-	// close file
-	if(fileconnection->file != NULL)
-		fclose(fileconnection->file);
-	// close connection
-	Qaullib_WgetClose(&fileconnection->conn);
-	// remove this seeder from list
-	memcpy(&ip.v4, &fileconnection->conn.ip, sizeof(ip.v4));
-	Qaullib_Filediscovery_LL_DeleteSeederIp(fileconnection->fileinfo, &ip);
-	// reschedule file
-	Qaullib_FileUpdateStatus(fileconnection->fileinfo, QAUL_FILESTATUS_DISCOVERED);
 }
 
 // ------------------------------------------------------------

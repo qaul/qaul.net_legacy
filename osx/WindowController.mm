@@ -440,7 +440,7 @@
     [qaullibTimer fire];
 	
 	[qaullibTimer2 invalidate];
-    qaullibTimer2 = [NSTimer scheduledTimerWithTimeInterval: 5.0 target:self selector:
+    qaullibTimer2 = [NSTimer scheduledTimerWithTimeInterval: 3.0 target:self selector:
 					@selector(checkIpcTopology:) userInfo:nil repeats:YES];
     [qaullibTimer2 fire];
 	
@@ -470,7 +470,7 @@
 - (void)checkIpcTopology:(NSTimer *)theTimer
 {
 	Qaullib_IpcSendCom(1);
-	[self performSelector:@selector(checkNames) withObject:nil afterDelay:15];	
+	[self performSelector:@selector(checkNames) withObject:nil afterDelay:2];	
 }
 
 - (void)checkAppEvents:(NSTimer *)theTimer

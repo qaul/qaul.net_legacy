@@ -13,8 +13,8 @@ hr {
 
 /* --- forms --- */
 label.error {
-	color: red;
 	/*
+	color: red;
 	line-height: 2;
 	position: relative;
 	top:3px;
@@ -288,11 +288,12 @@ span.suffix {
 }
 
 .user_msg_failed {
-	height:64px;
-	text-align:center;
-	color:#ff0000;
+	background-image: url('images/i_attention_64.png');
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding-top: 27px;	
 }
-.user_msg_loading {
+.user_msg_loading, .user_msg_failed {
 	height:64px;
 	text-align:center;
 }

@@ -8,7 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>qaul.net</title>
 	<link rel="stylesheet" type="text/css" href="jquery.mobile.min.css" />
-	<link rel="stylesheet" type="text/css" href="jqm_presentation.css"/> 
+	<link rel="stylesheet" type="text/css" href="jqm_qaul.css"/> 
 	<script type="text/javascript" src="jquery.min.js"></script>
 	<script type="text/javascript" src="jquery-jsonp.min.js"></script>
 	<script type="text/javascript" src="jquery.validate.min.js"></script>
@@ -16,7 +16,7 @@
 	<script type="text/javascript" src="jquery.i18n.min.js"></script>
 	<script type="text/javascript" src="jquery.mobile.min.js"></script>
 	<script type="text/javascript" src="string2byte.js"></script>
-	<script type="text/javascript" src="jqm_presentation.js"></script>
+	<script type="text/javascript" src="jqm_qaul.js"></script>
 </head>
 <body>
 
@@ -96,6 +96,7 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-theme="b" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
+				<!--<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;</a></li>-->
 			</ul>
 		</div>
 	</div>
@@ -117,6 +118,7 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-theme="b" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
+				<!--<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>-->
 			</ul>
 		</div>
 	</div>
@@ -144,6 +146,7 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
+				<!--<li><a href="#page_pref" data-theme="b" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>-->
 			</ul>
 		</div>
 	</div>
@@ -151,6 +154,7 @@
 
 <div data-role="page" id="page_file" data-theme="d">
 	<div data-role="content" >
+		<!--<p><a href="javascript:show_addfile_page()" id="file_addbutton" data-role="button" data-icon="plus" class="i18n">Add File</a></p>-->
 		<div id="page_file_list"></div>
 	</div>
 	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
@@ -159,6 +163,7 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-theme="b" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
+				<!--<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>-->
 			</ul>
 		</div>
 	</div>
@@ -188,7 +193,7 @@
 	<div data-role="header" data-position="fixed" data-theme="d">
 		<div class="qaul_header">
 			<a href="javascript:user_goback()" data-role="button" data-icon="arrow-l" data-inline="true" data-direction="reverse" class="i18n" style="float:left;">Back</a>
-			<!--<img src="images/i_conn0_30.png" style="float:right;"/>-->
+			<img src="images/i_conn0_30.png" style="float:right;width:50px;"/>
 			<h1 id="page_user_name" user_id="" style="text-align:center;">username</h1>
 		</div>
 	</div>
@@ -229,6 +234,7 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-theme="b" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
+				<!--<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>-->
 			</ul>
 		</div>
 	</div>
@@ -255,6 +261,7 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-theme="b" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
+				<!--<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>-->
 			</ul>
 		</div>
 	</div>
@@ -276,22 +283,20 @@
 	<div data-role="content">
 		<p class="i18n">Please turn on your wifi account and select the network: <strong>qaul.net</strong></p>
 		<p class="i18n">Then click <strong>next</strong></p>
-		<p><a href="#page_loading" data-role="button" data-icon="arrow-r" data-iconpos="right" class="i18n">Next</a></p>
+		<p><a href="javascript:set_wifiset()" data-role="button" data-icon="arrow-r" data-iconpos="right" class="i18n">Next</a></p>
 	</div>
 </div>
 
 <div data-role="page" id="page_klangwolke" data-theme="d">
 	<div data-role="content">
-		<p class="qaul_center"><img src="images/ars_klangwolke.png"/></p>
+		<p class="qaul_center"><img src="images/ars_klangwolke.jpg"/></p>
 		<p class="qaul_center">Damit die Wifi Frequenzen zur Steuerung der Klangwolke zur Verfügung stehen, bleibt die <b>Ars Electronica Edition</b> von qaul.net zu folgenden Zeiten <b>offline</b>: </p>
-		<p class="qaul_center">30. August 2012 19:00 - 21:00 (Hauptprobe)<br/>
-		1. September 2012 20:00 - 22:00 (Klangwolke)</p>
+		1. September 2012 20:30 - 22:00</p>
 		<p class="qaul_center">Wir wünschen Ihnen eine unterhaltsame Klangwolke!</p>
 		<hr/>
 		<p class="qaul_center">Due to the use of the wifi frequencies for the control of the Klangwolke, the <b>Ars Electronica Edition</b> of qaul.net will be <b>offline</b> for the following time periods: </p>
 		<p class="qaul_center">
-		30. August 2012 19:00 - 21:00 (rehearsal)<br/>
-		1. September 2012 20:00 - 22:00 (Klangwolke)</p>
+		1. September 2012 20:30 - 22:00</p>
 		<p class="qaul_center">We wish you an enjoyable Klangwolke!</p>
 		<br/>
 		<p class="c_quit"><a href="javascript:quit_qaul()" data-role="button" class="i18n">Quit qaul.net</a></p>
@@ -300,6 +305,7 @@
 
 <div data-role="page" id="page_restart" data-theme="d">
 	<div data-role="content">
+		<p class="qaul_center"><br/><img src="images/i_reboot_64.png"/><br/><br/></p>
 		<h2 class="i18n qaul_center">This configuration requires a restart</h2>
 		<h2 class="i18n qaul_center">Please restart qaul.net</h2>
 		<p class="c_quit"><a href="javascript:quit_qaul()" data-role="button" class="i18n">Quit qaul.net</a></p>

@@ -385,7 +385,7 @@ function show_user(name, ip)
 
 function load_remote_userinfo(name, ip)
 {
-	$("#page_user_files").empty().append("<p class=\"user-file_loading\"><img src=\"images/ajax-loader.gif\"/></p>");
+	$("#page_user_files").empty().append("<p class=\"user-file_loading\"><img src=\"images/i_loading_15.gif\"/></p>");
 	var path = "http://" +ip +":8081/pub_info.json";
     $.jsonp({
       url: path,
@@ -419,7 +419,7 @@ function load_remote_userinfo(name, ip)
           if($("#user_chat_ip").val() == ip)
           {
 			  // show info
-			  var myfile = $("#page_user_files").empty().append("<p class=\"user-file_info\">" +$.i18n._("User not reachable") +" " +"<a onclick=\"javascript:load_remote_userinfo('" +name +"', '" +ip +"')\" data-role=\"button\" data-iconpos=\"notext\" data-icon=\"refresh\">&nbsp;</a>" +"</p>");
+			  var myfile = $("#page_user_files").empty().append("<p class=\"user-file_info\">" +$.i18n._("User not reachable") +"<br/><br/> " +"<a onclick=\"javascript:load_remote_userinfo('" +name +"', '" +ip +"')\" data-role=\"button\" data-iconpos=\"notext\" data-icon=\"refresh\" style=\"margin:0 auto !important;\">&nbsp;</a>" +"</p>");
 			  myfile.trigger('create');
           }
       }
@@ -513,7 +513,7 @@ function call_start()
 	var name = $("#user_chat_name").val();
 	var ip = $("#user_chat_ip").val();
 	// change page
-	$("#call_info").text($.i18n._("Connecting"));
+	$("#call_info").html($.i18n._("Connecting") +'<br/><img src="images/i_loading_15.gif"/>');
 	call_show_page(name);
 	call_setButtonEnd();
 	// start call
@@ -597,7 +597,7 @@ function call_goback()
 
 function call_setRinging()
 {
-	$("#call_info").text($.i18n._("Ringing"));
+	$("#call_info").html($.i18n._("Ringing") +'<br/><img src="images/i_loading_15.gif"/>');
 	call_setButtonEnd();
 }
 
@@ -609,13 +609,13 @@ function call_setCalling()
 
 function call_setConnecting()
 {
-	$("#call_info").text($.i18n._("Establishing connection"));
+	$("#call_info").html($.i18n._("Establishing connection") +'<br/><img src="images/i_loading_15.gif"/>');
 	call_setButtonEnd();
 }
 
 function call_setConnected()
 {
-	$("#call_info").text($.i18n._("Connected"));
+	$("#call_info").html($.i18n._("Connected") +'<br/><img src="images/i_call_32.png"/>');
 	call_setButtonEnd();
 }
 
@@ -822,7 +822,7 @@ function send_direct_msg()
 {
     // set loading info
     //$.mobile.pageLoading();
-    $("#page_user_queue").empty().append("<p class=\"user_msg_loading\"><img src=\"images/ajax-loader.gif\"/></p>");
+    $("#page_user_queue").empty().append("<p class=\"user_msg_loading\"><img src=\"images/i_loading_15.gif\"/></p>");
 
     // send data to remote user
     $.jsonp({
@@ -1473,7 +1473,7 @@ function user_append(name, ip, conn)
 			.attr("onclick","").unbind("click").trigger("refresh");
 			
 		usr.find("a.fav img.ui-li-icon")
-			.attr("src","images/i_conn" +conn +"_20.png");
+			.attr("src","images/i_conn" +conn +"_13.png");
 	}
 	else
 	{
@@ -1484,7 +1484,7 @@ function user_append(name, ip, conn)
 			usr.data('connection', conn);
 				
 			usr.find(".ui-btn-text a img.ui-li-icon")
-				.attr("src","images/i_conn" +conn +"_20.png");
+				.attr("src","images/i_conn" +conn +"_13.png");
 			
 			// todo: update incoming and queued messages
 		}
@@ -1494,7 +1494,7 @@ function user_append(name, ip, conn)
 				.prop('id',id)
 				.data('connection', conn)
 				.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
-					+'\')">' +'<img src="images/i_conn' +conn +'_20.png" class="ui-li-icon ui-corner-none"/>' +name 
+					+'\')">' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					//+'<span class="ui-li-count msg_in">↑4 ↓3</span>' 
 					+'</a>'
 					+'<a href="javascript:favorite_add(\'' +name +'\',\'' +ip +'\');" data-icon="plus">add</a>'
@@ -1521,7 +1521,7 @@ function user_remove(name, ip, conn)
 			.click(function(){
 				return false;
 			})
-			.find("img.ui-li-icon").attr("src","images/i_conn0_20.png");
+			.find("img.ui-li-icon").attr("src","images/i_conn0_13.png");
 	}
 	// remove from list
 	if($("#users #" +id).length)
@@ -1582,7 +1582,7 @@ function favorite_append(name, ip, conn, online)
 		.prop('id',ip2id(ip))
 		.data('connection', conn)
 		.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
-					+'\')" ' +attr +'>' +'<img src="images/i_conn' +conn +'_20.png" class="ui-li-icon ui-corner-none"/>' +name 
+					+'\')" ' +attr +'>' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					//+'<span class="ui-li-count msg_in">↑4 ↓3</span>' 
 					+'</a>'
 					+'<a href="javascript:favorite_del(\'' +name +'\',\'' +ip 

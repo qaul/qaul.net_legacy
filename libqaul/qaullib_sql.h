@@ -186,11 +186,11 @@ struct qaul_populate_file_struct
 #define MAX_POPULATE_FILE 4
 
 static struct qaul_populate_file_struct qaul_populate_file[MAX_POPULATE_FILE] = {
-	{1,  4, 8433817, "8a771af5643e7069ad448e07a3ba37527a917e1c", "gz",  "ubuntu & debian 32 Bit",10000000},
+	{1,  4, 8433817, "0ac217905eb913647bfa9e14ff81f13fc127ed0c", "gz",  "ubuntu & debian 32 Bit",10000000},
 //	{2,  4, 2068596, "0000000000000000000000000000000000000000", "zip", "OSX 10.5",               4000000},
-	{4,  4, 2068596, "4e9cfa6a3538c48d86b4099266a1c3ae511f9b6c", "zip", "OSX 10.6",               4000000},
-	{8,  4, 4151214, "8dbd2f0afa3c8a499849a920f7b5f26717c7b208", "exe", "Windows 7",              7000000},
-	{16, 4, 2085071, "dc6705752b242d6147d522418971e420de86abdb", "apk", "Android",                4000000}
+	{4,  4, 2068596, "fbe88d2c0bc5900e497a12855f702a28b2ebc0e1", "dmg", "OSX 10.6",              10000000},
+	{8,  4, 4151214, "b3043c6abf83dcc8ab86fb3a40999df96bf8b0fd", "exe", "Windows 7",              8000000},
+	{16, 4, 2085071, "efc8af6564a0afd7981c04a980514d9a086a95df", "apk", "Android",                5000000}
 };
 
 

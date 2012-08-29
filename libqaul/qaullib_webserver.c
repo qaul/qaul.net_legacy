@@ -842,9 +842,6 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 				request_type > 0)
 				)
 		{
-			if(QAUL_DEBUG)
-				printf("changeable user found\n");
-
 			// make sure the user name is not empty
 			if(strlen(mynode.item->name) > 0)
 			{
@@ -853,17 +850,13 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn, const struct mg_requ
 				else
 					mg_printf(conn, ",");
 
-				if(mynode.item->changed == QAUL_USERCHANGED_MODIFIED)
-					add = 1;
-				else
-					add = 0;
 				// FIXME: ipv6
 				mg_printf(conn,
 						"{\"name\":\"%s\",\"ip\":\"%s\",\"lq\":%i,\"add\":%i}",
 						mynode.item->name,
 						inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
 						Qaullib_UserLinkcost2Img(mynode.item->lq),
-						add
+						mynode.item->changed
 						);
 			}
 
@@ -1233,6 +1226,8 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	// get size
 	mg_get_var(post, strlen(post == NULL ? "" : post), "size", local_size, MAX_INTSTR_LEN +1);
 	file_item.size = atoi(local_size);
+	if(file_item.size < 0)
+		file_item.size = 0;
 	// get advertised by
 	mg_get_var(post, strlen(post == NULL ? "" : post), "ip", local_ip, MAX_IP_LEN +1);
 
@@ -1244,6 +1239,8 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	file_item.type = QAUL_FILETYPE_FILE;
 	file_item.status = QAUL_FILESTATUS_NEW;
 	time((time_t *)&file_item.created_at);
+	file_item.downloaded = 0;
+	file_item.downloaded_chunk = 0;
 
 	// check if file already exists
 	if(Qaullib_File_LL_HashSearch(file_item.hash, &existing_file))
@@ -1456,10 +1453,7 @@ static void Qaullib_WwwLoading(struct mg_connection *conn, const struct mg_reque
 		mg_printf(conn, "\"change\":0");
 	}
 #ifdef ARS_EDITION
-	else if(
-			(timestamp > ARS_AUS_1 && timestamp < ARS_EIN_1) ||
-			(timestamp > ARS_AUS_2 && timestamp < ARS_EIN_2)
-		)
+	else if(timestamp > ARS_AUS_1 && timestamp < ARS_EIN_1)
 	{
 		// show Klangwolke info screen
 		mg_printf(conn, "\"change\":1,\"page\":\"#page_klangwolke\"");
@@ -1617,7 +1611,15 @@ static void Qaullib_WwwFile2Json(struct mg_connection *conn, struct qaul_file_LL
 {
 	char timestr[MAX_TIME_LEN];
 
-	printf("Qaullib_WwwFile2Json\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwFile2Json %s status: %i\n    downloaded: %i, downloaded_chunk: %i, size: %i \n    (downloaded +downloaded_chunk)*100/size) = %i\n",
+				file->hashstr,
+				file->status,
+				file->downloaded,
+				file->downloaded_chunk,
+				file->size,
+				((file->downloaded +file->downloaded_chunk)*100/file->size)
+				);
 
 	mg_printf(conn, "\n{");
 	mg_printf(conn, "\"hash\":\"%s\",", file->hashstr);

@@ -23,6 +23,7 @@ pthread_mutex_t qaullib_mutex_userLL;
 pthread_mutex_t qaullib_mutex_fileLL;
 pthread_mutex_t qaullib_mutex_filediscoveryLL;
 pthread_mutex_t qaullib_mutex_DhcpLL;
+pthread_mutex_t qaullib_mutex_wget;
 
 
 // --------------------------------------------------------------------------
