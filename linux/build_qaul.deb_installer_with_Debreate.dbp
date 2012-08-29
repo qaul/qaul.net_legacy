@@ -95,6 +95,9 @@ Description: tools for the next revolution
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_conn2_30.png -> i_conn2_30.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_conn3_30.png -> i_conn3_30.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_conn4_30.png -> i_conn4_30.png -> /usr/share/qaul/www/images
+/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_reboot_64.png -> i_reboot_64.png -> /usr/share/qaul/www/images
+/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_loading_15.png -> i_loading_15.png -> /usr/share/qaul/www/images
+/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_attention_64.png -> i_attention_64.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/ars_klangwolke.png -> ars_klangwolke.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/emo_cool.png -> emo_cool.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/emo_sad.png -> emo_sad.png -> /usr/share/qaul/www/images
