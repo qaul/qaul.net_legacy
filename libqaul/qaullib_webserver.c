@@ -1439,26 +1439,15 @@ static void Qaullib_WwwPubInfo(struct mg_connection *conn, const struct mg_reque
 // ------------------------------------------------------------
 static void Qaullib_WwwLoading(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
-#ifdef ARS_EDITION
-	time_t timestamp;
-	time(&timestamp);
-#endif // ARS_EDITION
-
 	printf("Qaullib_WwwLoading\n");
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{");
+
 	if(qaul_loading_wait == 1)
 	{
 		// wait
 		mg_printf(conn, "\"change\":0");
 	}
-#ifdef ARS_EDITION
-	else if(timestamp > ARS_AUS_1 && timestamp < ARS_EIN_1)
-	{
-		// show Klangwolke info screen
-		mg_printf(conn, "\"change\":1,\"page\":\"#page_klangwolke\"");
-	}
-#endif // ARS_EDITION
 	else if(Qaullib_ExistsLocale() == 0)
 	{
 		// show set user name

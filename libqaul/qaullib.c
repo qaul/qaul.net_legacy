@@ -228,16 +228,6 @@ void Qaullib_TimedSocketReceive(void)
 
 int Qaullib_TimedCheckAppEvent(void)
 {
-#ifdef ARS_EDITION
-	time_t timestamp;
-	time(&timestamp);
-
-	if(timestamp > ARS_AUS_1 && timestamp < ARS_EIN_1)
-	{
-		return QAUL_EVENT_QUIT;
-	}
-#endif // ARS_EDITION
-
 	int tmp_event = app_event;
 	app_event = 0;
 	return tmp_event;
