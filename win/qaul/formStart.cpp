@@ -499,7 +499,7 @@ bool formStart::StartOlsr(void)
 
 	TCHAR cCmdBuf[5000];
 	pin_ptr<const TCHAR> tcResourcePath = PtrToStringChars(qaulResourcePath);
-	_stprintf(cCmdBuf,_T("\"%s\\olsrd.exe\" -i if%02x -f \"%s\\olsrd_app.conf\" -d 0"), 
+	_stprintf(cCmdBuf,_T("\"%s\\olsrd.exe\" -i if22 if%02x -f \"%s\\olsrd_app.conf\" -d 0"), 
 							tcResourcePath,
 							netInterface->InterfaceIndex,
 							tcResourcePath);
