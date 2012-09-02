@@ -498,8 +498,8 @@ void Qaullib_FileDB2LL(void)
 			else if(strcmp(sqlite3_column_name(ppStmt,jj), "downloaded") == 0)
 			{
 		    	myitem.downloaded = sqlite3_column_int(ppStmt, jj);
-		    	if(myitem.downloaded < 0)
-		    		myitem.downloaded = 0;
+		    	if(myitem.downloaded <= 0)
+		    		myitem.downloaded = 1024;
 			}
 
 		    // todo: to be removed
