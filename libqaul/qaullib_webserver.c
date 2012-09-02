@@ -1226,8 +1226,8 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	// get size
 	mg_get_var(post, strlen(post == NULL ? "" : post), "size", local_size, MAX_INTSTR_LEN +1);
 	file_item.size = atoi(local_size);
-	if(file_item.size < 0)
-		file_item.size = 0;
+	if(file_item.size <= 0)
+		file_item.size = 1024;
 	// get advertised by
 	mg_get_var(post, strlen(post == NULL ? "" : post), "ip", local_ip, MAX_IP_LEN +1);
 
