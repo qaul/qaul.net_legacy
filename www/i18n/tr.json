@@ -6,6 +6,7 @@
 "Send":"Gönder",
 "Delete":"Sil",
 "Back":"Geri",
+"Next":"Next",
 
 "Favorites / Friends":"Favoriler / Arkadaşlar",
 "Other Users":"Diğer Kullanıcılar",
@@ -58,5 +59,8 @@
 "Join qaul.net":"qaul.net'e katıl",
 "Download and install the qaul.net software on your device":"qaul.net'i indir ve cihazına yükle",
 
-"Goodbye":"Güle Güle!"
+"Goodbye":"Güle Güle!",
+
+"Your configuration has been saved":"Your configuration has been saved",
+"You need to restart qaul.net to activate it":"You need to restart qaul.net to activate it"
 }

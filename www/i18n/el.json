@@ -6,6 +6,7 @@
 "Send":"Αποστολή",
 "Delete":"Διαγραφή",
 "Back":"Πίσω",
+"Next":"Next",
 
 "Favorites / Friends":"Αγαπημένα / Φίλοι",
 "Other Users":"Άλλοι χρήστες",
@@ -62,5 +63,8 @@
 "Join qaul.net":"Συμμετοχή στο qaul.net",
 "Download and install the qaul.net software on your device":"Κατεβάστε και εγκαταστήστε το λογισμικό qaul.net στη συσκευή σας",
 
-"Goodbye":""
+"Goodbye":"",
+
+"Your configuration has been saved":"Your configuration has been saved",
+"You need to restart qaul.net to activate it":"You need to restart qaul.net to activate it"
 }

@@ -6,6 +6,7 @@
 "Send":"versturen",
 "Delete":"verwijderen",
 "Back":"terug",
+"Next":"Next",
 
 "Favorites / Friends":"favorieten / vrienden",
 "Other Users":"andere gebruikers",
@@ -58,5 +59,8 @@
 "Join qaul.net":"doe mee bij qaul.net",
 "Download and install the qaul.net software on your device":"download en installeer qaul.net software op jou apparaat",
 
-"Goodbye":"tot ziens!"
+"Goodbye":"tot ziens!",
+
+"Your configuration has been saved":"Your configuration has been saved",
+"You need to restart qaul.net to activate it":"You need to restart qaul.net to activate it"
 }

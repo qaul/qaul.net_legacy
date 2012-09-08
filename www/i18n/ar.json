@@ -6,6 +6,7 @@
 "Send":"ارسال",
 "Delete":"حذف",
 "Back":"الى الخلف",
+"Next":"Next",
 
 "Favorites / Friends":"الاصدقاء المفضلين",
 "Other Users":"مستخدمين اخرين",
@@ -58,5 +59,8 @@
 "Join qaul.net":"انضم الينا qaul.net",
 "Download and install the qaul.net software on your device":"قم بتحميل و تنصيب برنامج قول على جهازك qaul.net",
 
-"Goodbye":"الى اللقاء"
+"Goodbye":"الى اللقاء",
+
+"Your configuration has been saved":"Your configuration has been saved",
+"You need to restart qaul.net to activate it":"You need to restart qaul.net to activate it"
 }

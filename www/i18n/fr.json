@@ -6,6 +6,7 @@
 "Send":"Envoyer",
 "Delete":"Supprimer",
 "Back":"Retour",
+"Next":"Next",
 
 "Favorites / Friends":"Favoris / Amis",
 "Other Users":"Autres utilisateurs",
@@ -58,5 +59,8 @@
 "Join qaul.net":"Rejoins qaul.net",
 "Download and install the qaul.net software on your device":"Téléchargez et installez le logiciel qaul.net sur votre dispositif",
 
-"Goodbye":"Au revoir"
+"Goodbye":"Au revoir",
+
+"Your configuration has been saved":"Your configuration has been saved",
+"You need to restart qaul.net to activate it":"You need to restart qaul.net to activate it"
 }
