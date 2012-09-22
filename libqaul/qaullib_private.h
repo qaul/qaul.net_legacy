@@ -63,8 +63,8 @@ extern "C" {
  * UTC timestamps of the rehearsal of the Klangwolke and of the Klangwolke
  *
  * Klangwolke:
- * local time: 1. September 2012 20:30 Ð 22:00
- * UTC:        1. September 2012 18:00 Ð 18:00
+ * local time: 1. September 2012 20:30 ï¿½ 22:00
+ * UTC:        1. September 2012 18:00 ï¿½ 18:00
  * UTC time stamp: 1346524200 - 1346529600
  */
 #define ARS_AUS_1   1346524200
@@ -206,6 +206,11 @@ int  Qaullib_DbInit(void);
  * insert a @a value for a configuration @a key
  */
 void Qaullib_DbSetConfigValue(const char* key, const char* value);
+
+/**
+ * insert a @a value for a configuration @a key
+ */
+void Qaullib_DbSetConfigValueInt(const char* key, int value);
 
 /**
  * get config @a value from data base for @a key

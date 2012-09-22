@@ -34,7 +34,20 @@ public class NativeQaul
 	public native int ipcClose();
 	public native void ipcSendCom(int commandId);
 
+	public native String getConfString(String key);
+	public native int    getConfInt(String key);
+	public native void   setConfString(String key, String value);
+	public native void   setConfInt(String key, int value);	
+	
+	public native int   getNetProtocol();
 	public native String getIP();
+	public native int   getNetMask();
+	public native String getNetGateway();
+	public native String getWifiIbss();
+	public native int   getWifiBssIdSet();
+	public native String getWifiBssId();
+	public native int   getWifiChannel();
+	
 	public native int existsUsername();
 	public native void configurationFinished();
 

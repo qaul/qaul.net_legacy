@@ -639,6 +639,38 @@ void Qaullib_DbSetConfigValue(const char* key, const char* value)
 	}
 }
 
+void Qaullib_DbSetConfigValueInt(const char* key, int value)
+{
+	char buffer[10240];
+	char *stmt = buffer;
+	char *error_exec=NULL;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_DbSetConfigValue\n");
+
+	// delete old entries (if exist)
+	sprintf(stmt, sql_config_delete, key);
+	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+	{
+		printf("SQLite error: %s\n",error_exec);
+		sqlite3_free(error_exec);
+		error_exec=NULL;
+	}
+
+	// insert new value
+	sprintf(stmt, sql_config_set_int, key, value);
+
+	if(QAUL_DEBUG)
+		printf("stmt: %s\n", stmt);
+
+	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+	{
+		printf("SQLite error: %s\n", error_exec);
+		sqlite3_free(error_exec);
+		error_exec=NULL;
+	}
+}
+
 int Qaullib_DbGetConfigValue(const char* key, char *value)
 {
 	sqlite3_stmt *ppStmt;
@@ -834,6 +866,31 @@ void Qaullib_CreateIP(char* IP)
 	sprintf(IP,"10.%i.%i.%i",rand1,rand2,rand3);
 }
 
+
+// ------------------------------------------------------------
+int Qaullib_GetConfString(const char *key, char *value)
+{
+	memcpy(value, "\0", 1);
+	Qaullib_DbGetConfigValue(key, value);
+
+	return strlen(value);
+}
+
+int Qaullib_GetConfInt(const char *key)
+{
+	return Qaullib_DbGetConfigValueInt(key);
+}
+
+void Qaullib_SetConfString(const char *key, const char *value)
+{
+	Qaullib_DbSetConfigValue(key, value);
+}
+
+void Qaullib_SetConfInt(const char *key, int value)
+{
+	Qaullib_DbSetConfigValueInt(key, value);
+}
+
 // ------------------------------------------------------------
 int Qaullib_GetNetProtocol(void)
 {
@@ -859,27 +916,32 @@ const char* Qaullib_GetNetGateway(void)
 	return "0.0.0.0";
 }
 
-const char* Qaullib_GetNetIbss(void)
+const char* Qaullib_GetWifiIbss(void)
 {
-	if (Qaullib_DbGetConfigValue("net.ibss", qaul_net_ibss))
+	if (Qaullib_DbGetConfigValue("wifi.ibss", qaul_net_ibss))
 	{
 		return qaul_net_ibss;
 	}
 	return "";
 }
 
-int Qaullib_GetNetBssIdSet(void)
+int Qaullib_GetWifiBssIdSet(void)
 {
-	return Qaullib_DbGetConfigValueInt("net.bssid_set");
+	return Qaullib_DbGetConfigValueInt("wifi.bssid_set");
 }
 
-const char* Qaullib_GetNetBssId(void)
+const char* Qaullib_GetWifiBssId(void)
 {
-	if (Qaullib_DbGetConfigValue("net.bssid", qaul_net_bssid))
+	if (Qaullib_DbGetConfigValue("wifi.bssid", qaul_net_bssid))
 	{
 		return qaul_net_bssid;
 	}
 	return "";
+}
+
+int Qaullib_GetWifiChannel(void)
+{
+	return Qaullib_DbGetConfigValueInt("wifi.channel");
 }
 
 // ------------------------------------------------------------

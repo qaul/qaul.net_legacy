@@ -62,6 +62,37 @@ public class Configuration {
 		return DEVICE_GENERIC;
 	}
 	
+	public static String getWifiModule() 
+	{
+		if ((new File("/system/lib/modules/bcm4330.ko")).exists() == true)
+			return "bcm4330";
+
+		else if ((new File("/system/lib/modules/bcm4329.ko")).exists() == true)
+			return "bcm4329";
+
+		else if ((new File("/system/lib/modules/bcm4325.ko")).exists() == true) 
+			return "bcm4325";
+		
+		else if ((new File("/system/lib/modules/tiwlan_drv.ko")).exists() == true)
+			return "tiwlan_drv";
+		
+		else if ((new File("/system/lib/modules/wlan.ko")).exists() == true) 
+			return "wlan";
+					
+		return "unknown";
+	}
+	
+	public static String getWifiFirmware() 
+	{
+		if ((new File("/system/etc/wifi/fw_bcm4329.bin")).exists() == true) 
+			return "fw_bcm4329.bin";
+
+		else if ((new File("/system/etc/wifi/Fw1273_CHIP.bin")).exists() == true) 
+			return "Fw1273_CHIP.bin";
+		
+		return "unknown";
+	}
+	
 	/**
 	 * Returns the wpa_supplicant-driver which should be used
 	 * on wpa_supplicant-start 

@@ -94,12 +94,106 @@ JNIEXPORT void JNICALL Java_net_qaul_qaul_NativeQaul_ipcSendCom
 	Qaullib_IpcSendCom(commandId);
 }
 
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getConfString
+  (JNIEnv *env, jobject object, jstring key)
+{
+	const char *myKey;
+	myKey = (*env)->GetStringUTFChars(env, key, 0);
+
+	char myValue[257];
+	Qaullib_GetConfString(myKey, myValue);
+
+	jstring myJString;
+	myJString = (*env)->NewStringUTF(env, myValue);
+	return myJString;
+}
+
+JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_getConfInt
+  (JNIEnv *env, jobject object, jstring key)
+{
+	const char *myKey;
+	myKey = (*env)->GetStringUTFChars(env, key, 0);
+
+	return (jint) Qaullib_GetConfInt(myKey);
+}
+
+JNIEXPORT void JNICALL Java_net_qaul_qaul_NativeQaul_setConfString
+  (JNIEnv *env, jobject obj, jstring key, jstring value)
+{
+	const char *myKey;
+	myKey = (*env)->GetStringUTFChars(env, key, 0);
+
+	const char *myValue;
+	myValue = (*env)->GetStringUTFChars(env, value, 0);
+
+	Qaullib_SetConfString(key, value);
+}
+
+JNIEXPORT void JNICALL Java_net_qaul_qaul_NativeQaul_setConfInt
+  (JNIEnv *env, jobject obj, jstring key, jint value)
+{
+	const char *myKey;
+	myKey = (*env)->GetStringUTFChars(env, key, 0);
+
+	Qaullib_SetConfInt(key, (int) value);
+}
+
+
+
+JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_getNetProtocol
+  (JNIEnv *env, jobject object)
+{
+	return (jint) Qaullib_GetNetProtocol();
+}
+
 JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getIP
   (JNIEnv *env, jobject object)
 {
 	jstring myJString;
 	myJString = (*env)->NewStringUTF(env, Qaullib_GetIP());
 	return myJString;
+}
+
+JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_getNetMask
+  (JNIEnv *env, jobject object)
+{
+	return (jint) Qaullib_GetNetMask();
+}
+
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getNetGateway
+  (JNIEnv *env, jobject object)
+{
+	jstring myJString;
+	myJString = (*env)->NewStringUTF(env, Qaullib_GetNetGateway());
+	return myJString;
+}
+
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getWifiIbss
+  (JNIEnv *env, jobject object)
+{
+	jstring myJString;
+	myJString = (*env)->NewStringUTF(env, Qaullib_GetWifiIbss());
+	return myJString;
+}
+
+JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_getWifiBssIdSet
+  (JNIEnv *env, jobject object)
+{
+	return (jint) Qaullib_GetWifiBssIdSet();
+}
+
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getWifiBssId
+  (JNIEnv *env, jobject object)
+{
+	jstring myJString;
+	myJString = (*env)->NewStringUTF(env, Qaullib_GetWifiBssId());
+	return myJString;
+}
+
+JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_getWifiChannel
+  (JNIEnv *env, jobject object)
+{
+	return (jint) Qaullib_GetWifiChannel();
 }
 
 JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_existsUsername

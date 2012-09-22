@@ -40,7 +40,7 @@ action() == "start" && (
 	      sleep("3");
 
 	      # Bring up wifi interface
-	      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.gateway") + " netmask " + getcfg("ip.netmask")) &&
+	      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
 	                  run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");
 	      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " mode ad-hoc"), "Setting ad-hoc mode");
 	      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " essid " + getcfg("wifi.essid")), "Setting essid");
@@ -72,7 +72,7 @@ action() == "start" && (
 	      #
 	      # Bring up wifi interface
 	      #
-	      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.gateway") + " netmask " + getcfg("ip.netmask")) &&
+	      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
 	                  run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");
 	      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " mode ad-hoc"), "Setting ad-hoc mode");
 	      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " essid " + getcfg("wifi.essid")), "Setting essid");
@@ -115,7 +115,7 @@ action() == "start" && (
 	      	log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " txpower " + getcfg("wifi.txpower")), "Setting transmit power");     	
 	  );
       run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " commit");
-      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.gateway") + " netmask " + getcfg("ip.netmask")) &&
+      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
                   run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");                  
     );
     
@@ -160,7 +160,7 @@ action() == "start" && (
       #
       # Bring up wifi interface
       #
-      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.gateway") + " netmask " + getcfg("ip.netmask")) &&
+      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
                   run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");
     );
 	
@@ -196,7 +196,7 @@ action() == "start" && (
       #
       # Bring up wifi interface
       #
-      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " +getcfg("wifi.interface") + " " + getcfg("ip.gateway") + " netmask " + getcfg("ip.netmask")) &&
+      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " +getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
                   run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");
       log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " mode ad-hoc"), "Setting ad-hoc mode");
       log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " essid " + getcfg("wifi.essid")), "Setting essid");
@@ -215,7 +215,7 @@ action() == "start" && (
       log(load_wifi(), "Loading WiFi driver");
       
       # Bring up wifi interface
-      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.gateway") + " netmask " + getcfg("ip.netmask")) &&
+      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
                   run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");
       log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " mode ad-hoc"), "Setting ad-hoc mode");
       log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " essid " + getcfg("wifi.essid")), "Setting essid");

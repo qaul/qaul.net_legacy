@@ -155,24 +155,6 @@ public class QaulApplication extends Application {
     	}
     };
 
-/*
-    private Runnable qaulCheckSockets = new Runnable(){ 
-    	public void run() {
-    		nativeQaul.timedSocketReceive();
-    		if(!qaulTimersStop) qaulStartHandler.postDelayed(qaulCheckSockets, 100);
-    		else Log.d(MSG_TAG, "qaulCheckSockets: stopped");
-    	}
-    };
-    
-    private Runnable qaulCheckTopology = new Runnable(){ 
-    	public void run() {
-    		nativeQaul.timedDownload();
-    		if(!qaulTimersStop) qaulStartHandler.postDelayed(qaulCheckTopology, 5000);
-    		else Log.d(MSG_TAG, "qaulCheckTopology: stopped");
-    	}
-    };
-*/   
-    
 	public void qaulInitLib()
     {
 		// common paths
@@ -388,7 +370,8 @@ public class QaulApplication extends Application {
 		}
 	}
     
-    private void qaulCopyFileOrDir(String path) {
+    private void qaulCopyFileOrDir(String path) 
+    {
         AssetManager assetManager = this.getAssets();
         String assets[] = null;
         try {
@@ -419,7 +402,8 @@ public class QaulApplication extends Application {
         }
     }
 
-    private void qaulCopyFile(String filename) {
+    private void qaulCopyFile(String filename) 
+    {
         AssetManager assetManager = this.getAssets();
 
         InputStream in = null;
@@ -450,7 +434,8 @@ public class QaulApplication extends Application {
         }
     }
 
-    private void qaulCopyFile(File src, File dst) {
+    private void qaulCopyFile(File src, File dst) 
+    {
         try {
 	    	InputStream in = new FileInputStream(src);
 	        OutputStream out = new FileOutputStream(dst);
@@ -670,22 +655,50 @@ public class QaulApplication extends Application {
 		long startStamp = System.currentTimeMillis();
 		
 		boolean encEnabled = this.settings.getBoolean("encpref", false);
-		String ssid = this.settings.getString("ssidpref", "qaul.net");
         String txpower = this.settings.getString("txpowerpref", "disabled");
-        String lannetwork = this.settings.getString("lannetworkpref", DEFAULT_LANNETWORK);
         String wepkey = this.settings.getString("passphrasepref", DEFAULT_PASSPHRASE);
         String wepsetupMethod = this.settings.getString("encsetuppref", DEFAULT_ENCSETUP);
-        String channel = this.settings.getString("channelpref", "11");
         
-		// tether.conf
         this.tethercfg.read();
+        
+		// write system config
 		this.tethercfg.put("device.type", deviceType);
-
-		this.tethercfg.put("wifi.essid", ssid);
-        this.tethercfg.put("wifi.channel", channel);
-		this.tethercfg.put("ip.network", lannetwork.split("/")[0]);
-		this.tethercfg.put("ip.netmask", "255.0.0.0");
-		this.tethercfg.put("ip.gateway", nativeQaul.getIP());
+		this.tethercfg.put("device.model", android.os.Build.MODEL);
+		this.tethercfg.put("device.product", android.os.Build.PRODUCT);
+		this.tethercfg.put("device.manufacturer", android.os.Build.MANUFACTURER);
+		this.tethercfg.put("device.device", android.os.Build.DEVICE);
+		this.tethercfg.put("device.brand", android.os.Build.BRAND);
+		this.tethercfg.put("device.fingerprint", android.os.Build.FINGERPRINT);
+		this.tethercfg.put("device.hardware", android.os.Build.HARDWARE);
+		this.tethercfg.put("device.id", android.os.Build.ID);
+		this.tethercfg.put("device.board", android.os.Build.BOARD);
+		
+		this.tethercfg.put("os.name", System.getProperty("os.name"));
+		this.tethercfg.put("os.version", System.getProperty("os.version"));
+		this.tethercfg.put("os.version2",  android.os.Build.VERSION.INCREMENTAL);
+		this.tethercfg.put("os.version3",  android.os.Build.VERSION.RELEASE);
+		this.tethercfg.put("os.API", android.os.Build.VERSION.SDK);
+		this.tethercfg.put("os.API_INT", Integer.toString(android.os.Build.VERSION.SDK_INT));
+		this.tethercfg.put("os.arch", System.getProperty("os.arch"));
+		
+		this.tethercfg.put("os.wifi.driver", Configuration.getWifiModule());
+		this.tethercfg.put("os.wifi.firmware", Configuration.getWifiFirmware());
+		 
+        // write wifi config
+		this.tethercfg.put("wifi.essid", nativeQaul.getWifiIbss());
+        this.tethercfg.put("wifi.channel", Integer.toString(nativeQaul.getWifiChannel()));
+		//this.tethercfg.put("ip.network", "10.0.0.0");
+		int netmask = nativeQaul.getNetMask();
+		if(netmask == 8)
+			this.tethercfg.put("ip.netmask", "255.0.0.0");
+		else if(netmask == 16)
+			this.tethercfg.put("ip.netmask", "255.255.0.0");
+		else if(netmask == 32)
+			this.tethercfg.put("ip.netmask", "255.255.255.0");
+		else
+			this.tethercfg.put("ip.netmask", "255.0.0.0");
+		this.tethercfg.put("ip.address", nativeQaul.getIP());
+		this.tethercfg.put("ip.gateway", nativeQaul.getNetGateway());
 		if (Configuration.enableFixPersist()) {
 			this.tethercfg.put("tether.fix.persist", "true");
 		}
@@ -724,8 +737,8 @@ public class QaulApplication extends Application {
 				
 				// Update wpa_supplicant.conf
 				Hashtable<String,String> values = new Hashtable<String,String>();
-				values.put("ssid", "\""+this.settings.getString("ssidpref", "qaul.net")+"\"");
-				values.put("wep_key0", "\""+this.settings.getString("passphrasepref", DEFAULT_PASSPHRASE)+"\"");
+				values.put("ssid", "\"" +nativeQaul.getWifiIbss() +"\"");
+				values.put("wep_key0", "\"" +this.settings.getString("passphrasepref", DEFAULT_PASSPHRASE) +"\"");
 				this.wpasupplicant.write(values);
 			}
         }

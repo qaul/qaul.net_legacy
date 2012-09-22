@@ -73,10 +73,98 @@ JNIEXPORT void JNICALL Java_net_qaul_qaul_NativeQaul_ipcSendCom
 
 /*
  * Class:     net_qaul_qaul_NativeQaul
+ * Method:    getConfString
+ * Signature: (Ljava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getConfString
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
+ * Method:    getConfInt
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_getConfInt
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
+ * Method:    setConfString
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_net_qaul_qaul_NativeQaul_setConfString
+  (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
+ * Method:    setConfInt
+ * Signature: (Ljava/lang/String;I)V
+ */
+JNIEXPORT void JNICALL Java_net_qaul_qaul_NativeQaul_setConfInt
+  (JNIEnv *, jobject, jstring, jint);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
+ * Method:    getNetProtocol
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_getNetProtocol
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
  * Method:    getIP
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getIP
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
+ * Method:    getNetMask
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_getNetMask
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
+ * Method:    getNetGateway
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getNetGateway
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
+ * Method:    getWifiIbss
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getWifiIbss
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
+ * Method:    getWifiBssIdSet
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_getWifiBssIdSet
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
+ * Method:    getWifiBssId
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getWifiBssId
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     net_qaul_qaul_NativeQaul
+ * Method:    getWifiChannel
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_net_qaul_qaul_NativeQaul_getWifiChannel
   (JNIEnv *, jobject);
 
 /*

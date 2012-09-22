@@ -130,6 +130,30 @@ void Qaullib_SetConfVoIP(void);
 void Qaullib_SetConfDownloadFolder(const char *path);
 
 /**
+ * get configuration for @key from DB
+ *
+ * @retval configuration string value, "" if nothing is found
+ */
+int Qaullib_GetConfString(const char *key, char *value);
+
+/**
+ * get configuration for @key from DB
+ *
+ * @retval configuration integer value, 0 if nothing is found
+ */
+int Qaullib_GetConfInt(const char *key);
+
+/**
+ * save configuration string @value for @key  to DB
+ */
+void Qaullib_SetConfString(const char *key, const char *value);
+
+/**
+ * save configuration integer @value for @key  to DB
+ */
+void Qaullib_SetConfInt(const char *key, int value);
+
+/**
  * start web server
  *
  * @retval 1 web server started successfully
@@ -184,26 +208,33 @@ int Qaullib_GetNetMask(void);
 const char* Qaullib_GetNetGateway(void);
 
 /**
- * get network ibss name
+ * get wifi ibss name
  *
  * @retval string of ibss name e.g. "qaul.net"
  */
-const char* Qaullib_GetNetIbss(void);
+const char* Qaullib_GetWifiIbss(void);
 
 /**
- * check if the bss id is set
+ * check if the wifi bss id is set
  *
  * @retval 1 bss id is set
  * @retval 0 bss id not set
  */
-int Qaullib_GetNetBssIdSet(void);
+int Qaullib_GetWifiBssIdSet(void);
 
 /**
- * get network ibss id
+ * get wifi ibss id
  *
  * @retval string of bss id e.g. "B6:B5:B3:F5:AB:E4"
  */
-const char* Qaullib_GetNetBssId(void);
+const char* Qaullib_GetWifiBssId(void);
+
+/**
+ * get wifi channel
+ *
+ * @retval wifi channel integer
+ */
+int Qaullib_GetWifiChannel(void);
 
 /**
  * get IP
