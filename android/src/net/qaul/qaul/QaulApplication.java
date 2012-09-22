@@ -296,7 +296,8 @@ public class QaulApplication extends Application {
 		if(qaulStarted == 30)
 		{
 	        Log.i(MSG_TAG, "qaulConfigure 30");
-			if(nativeQaul.existsUsername() == 1) qaulStarted = 40;
+			if(nativeQaul.existsUsername() == 1) 
+				qaulStarted = 40;
 			else
 			{
 				Log.d(MSG_TAG, "wait for username ...");
@@ -312,8 +313,7 @@ public class QaulApplication extends Application {
 			// start olsr
 	        Log.d(MSG_TAG, "start olsrd on interface " +this.tethercfg.get("wifi.interface"));
 	        if (this.coretask.runRootCommand(this.coretask.DATA_FILE_PATH+"/bin/olsrd_start.sh "+this.tethercfg.get("wifi.interface")));
-	        
-			qaulStarted = 49;
+	        	qaulStarted = 49;
 		}
 		
 		// wait for olsrd to start
@@ -678,7 +678,6 @@ public class QaulApplication extends Application {
         String channel = this.settings.getString("channelpref", "11");
         
 		// tether.conf
-        //String subnet = lannetwork.substring(0, lannetwork.lastIndexOf("."));
         this.tethercfg.read();
 		this.tethercfg.put("device.type", deviceType);
 
@@ -686,7 +685,6 @@ public class QaulApplication extends Application {
         this.tethercfg.put("wifi.channel", channel);
 		this.tethercfg.put("ip.network", lannetwork.split("/")[0]);
 		this.tethercfg.put("ip.netmask", "255.0.0.0");
-		//this.tethercfg.put("ip.gateway", subnet + ".254");    
 		this.tethercfg.put("ip.gateway", nativeQaul.getIP());
 		if (Configuration.enableFixPersist()) {
 			this.tethercfg.put("tether.fix.persist", "true");
@@ -701,30 +699,13 @@ public class QaulApplication extends Application {
 			this.tethercfg.put("tether.fix.route", "false");
 		}
 		
-		/**
-		 * TODO: Quick and ugly workaround for nexus
-		 */
-		if (Configuration.getDeviceType().equals(Configuration.DEVICE_NEXUSONE) &&
-				Configuration.getWifiInterfaceDriver(this.deviceType).equals(Configuration.DRIVER_SOFTAP_GOG)) {			
-			this.tethercfg.put("wifi.interface", "wl0.1");
-		}
-		else {
-			this.tethercfg.put("wifi.interface", this.coretask.getProp("wifi.interface"));
-		}
+		this.tethercfg.put("wifi.interface", this.coretask.getProp("wifi.interface"));
 
 		this.tethercfg.put("wifi.txpower", txpower);
 
 		// wepEncryption
 		if (encEnabled) {
-			if (this.interfaceDriver.startsWith("softap")) {
-				this.tethercfg.put("wifi.encryption", "wpa2-psk");
-			}
-			else if (this.interfaceDriver.equals(Configuration.DRIVER_HOSTAP)) {
-				this.tethercfg.put("wifi.encryption", "unused");
-			}
-			else {
-				this.tethercfg.put("wifi.encryption", "wep");
-			}
+			this.tethercfg.put("wifi.encryption", "wep");
 			// Storing wep-key
 			this.tethercfg.put("wifi.encryption.key", wepkey);
 
@@ -746,16 +727,6 @@ public class QaulApplication extends Application {
 				values.put("ssid", "\""+this.settings.getString("ssidpref", "qaul.net")+"\"");
 				values.put("wep_key0", "\""+this.settings.getString("passphrasepref", DEFAULT_PASSPHRASE)+"\"");
 				this.wpasupplicant.write(values);
-				
-				// this was commented out by author of android.tether
-				/*
-				// Make sure the ctrl_interface (directory) exists
-				File ctrlInterfaceDir = new File("/data/data/net.qaul.qaul/var/wpa_supplicant");
-				if (ctrlInterfaceDir.exists() == false) {
-					if (ctrlInterfaceDir.mkdirs() == false) {
-						Log.e(MSG_TAG, "Unable to create ctrl-interface (directory) for wpa_supplicant!");
-					}
-				}*/
 			}
         }
 		else {
@@ -841,16 +812,7 @@ public class QaulApplication extends Application {
     }
     
     public String getTetherNetworkDevice() {
-		/**
-		 * TODO: Quick and ugly workaround for nexus
-		 */
-		if (Configuration.getDeviceType().equals(Configuration.DEVICE_NEXUSONE) &&
-				Configuration.getWifiInterfaceDriver(this.deviceType).equals(Configuration.DRIVER_SOFTAP_GOG)) {
-			return "wl0.1";
-		}
-		else {
-			return this.coretask.getProp("wifi.interface");
-		}
+		return this.coretask.getProp("wifi.interface");
     }
     
     // gets user preference on whether wakelock should be disabled during tethering

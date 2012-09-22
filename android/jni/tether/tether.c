@@ -29,15 +29,9 @@
 #define SCRIPT_NAME "/data/data/net.qaul.qaul/conf/tether.edify"
 
 int main(int argc, char** argv) {
-FILE *f;
-    /*
-    if (argc != 4) {
-        fprintf(stderr, "unexpected number of arguments (%d)\n", argc);
-        return 1;
-    }
+	FILE *f;
 
-*/
-    // Set up the pipe for sending commands back to the parent process.
+	// Set up the pipe for sending commands back to the parent process.
     int fd = atoi(argv[2]);
     FILE* cmd_pipe = fdopen(fd, "wb");
     setlinebuf(cmd_pipe);

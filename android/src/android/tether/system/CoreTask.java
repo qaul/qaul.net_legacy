@@ -262,23 +262,6 @@ public class CoreTask {
     	return true;
     }
     
-    public boolean isAccessControlSupported() {
-    	if ((new File("/proc/config.gz")).exists() == false) {
-	    	if ((new File("/proc/net/ip_tables_matches")).exists() == false) {
-	    		return false;
-	    	}
-	    	if (Configuration.getDeviceType().equals(Configuration.DEVICE_DROIDX)) {
-	    		return false;
-	    	}
-    	}
-    	else {
-    		if (!Configuration.hasKernelFeature("CONFIG_NETFILTER_XT_MATCH_MAC="))
-    		return false;
-    	}
-    	
-    	return true;
-    }
-    
     public boolean isProcessRunning(String processName) throws Exception {
    	
     	boolean processIsRunning = false;

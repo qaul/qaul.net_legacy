@@ -28,89 +28,48 @@ public class Configuration {
 	public static final String DEVICE_GALAXY2X   = "galaxy2x";
 	public static final String DEVICE_LEGEND     = "legend";
 	public static final String DEVICE_DREAM      = "dream";
-	public static final String DEVICE_MOMENT     = "moment";
-	public static final String DEVICE_ALLY       = "ally";
-	public static final String DEVICE_DROIDX     = "droidx";
-	public static final String DEVICE_BLADE      = "blade";
 	public static final String DEVICE_GENERIC    = "generic";
 	
 	public static final String DRIVER_TIWLAN0     = "tiwlan0";
 	public static final String DRIVER_WEXT        = "wext";
-	public static final String DRIVER_SOFTAP_HTC1 = "softap_htc1";
-	public static final String DRIVER_SOFTAP_HTC2 = "softap_htc2";
-	public static final String DRIVER_SOFTAP_GOG  = "softap_gog";
-	public static final String DRIVER_HOSTAP      = "hostap";
 	
 	/**
 	 * Returns the device-type as string.
 	 * A very ugly hack - checking for wifi-kernel-modules.
 	 */
-	
-	public static String getDeviceType() {
-		if ((new File("/system/lib/modules/bcm4329.ko")).exists() == true) {
-			return DEVICE_NEXUSONE;
-		}
-		else if ((new File("/system/libmodules/bcm4325.ko")).exists() == true) {
+	public static String getDeviceType() 
+	{
+		//if ((new File("/system/lib/modules/bcm4329.ko")).exists() == true) {
+		//	return DEVICE_NEXUSONE;
+		//}
+		if ((new File("/system/libmodules/bcm4325.ko")).exists() == true) 
+		{
 			int sdkVersion = Integer.parseInt(Build.VERSION.SDK);
         	if (sdkVersion >= Build.VERSION_CODES.DONUT) {
         		return DEVICE_GALAXY2X;
         	}
 			return DEVICE_GALAXY1X;
 		}
-		else if ((new File("/system/lib/modules/tiap_drv.ko")).exists() == true
-				&& (new File("/system/bin/Hostapd")).exists() == true
-				&& (new File("/system/etc/wifi/fw_tiwlan_ap.bin")).exists() == true
-				&& (new File("/system/etc/wifi/tiwlan_ap.ini")).exists() == true) {
-			return DEVICE_DROIDX;
-		}
 		else if ((new File("/system/lib/modules/tiwlan_drv.ko")).exists() == true 
-				&& (new File("/system/etc/wifi/Fw1273_CHIP.bin")).exists() == true) {
+				&& (new File("/system/etc/wifi/Fw1273_CHIP.bin")).exists() == true) 
+		{
 			return DEVICE_LEGEND;
 		}
-		else if ((new File("/system/lib/modules/wlan.ko")).exists() == true) {
+		else if ((new File("/system/lib/modules/wlan.ko")).exists() == true) 
+		{
 			return DEVICE_DREAM;
-		}
-		else if ((new File("/lib/modules/dhd.ko")).exists() == true
-				&& (new File("/etc/rtecdc.bin")).exists() == true){
-			return DEVICE_MOMENT;
-		}
-		else if ((new File("/system/lib/modules/wireless.ko")).exists() == true
-				&& (new File("/system/etc/wl/rtecdc.bin")).exists() == true
-				&& (new File("/system/etc/wl/nvram.txt")).exists() == true){
-			return DEVICE_ALLY;
-		}
-		else if ((new File("/system/wifi/ar6000.ko")).exists() == true
-				&& (new File("/system/bin/hostapd")).exists() == true) {
-			return DEVICE_BLADE;
 		}
 		return DEVICE_GENERIC;
 	}
-	
 	
 	/**
 	 * Returns the wpa_supplicant-driver which should be used
 	 * on wpa_supplicant-start 
 	 */
-	public static String getWifiInterfaceDriver(String deviceType) {
+	public static String getWifiInterfaceDriver(String deviceType) 
+	{
 		if (deviceType.equals(DEVICE_DREAM)) {
 			return DRIVER_TIWLAN0;
-		}
-		/**
-		 * Extremely ugly stuff here - we really need a better method to detect such stuff
-		 */
-		else if (deviceType.equals(DEVICE_NEXUSONE) && hasKernelFeature("CONFIG_BCM4329_SOFTAP=")) {
-			if (Integer.parseInt(Build.VERSION.SDK) >= Build.VERSION_CODES.FROYO) {
-				return DRIVER_SOFTAP_HTC2;
-			}
-			return DRIVER_SOFTAP_HTC1;
-		}
-		else if (deviceType.equals(DEVICE_NEXUSONE) && (
-				(new File("/etc/firmware/fw_bcm4329_apsta.bin")).exists() || (new File("/vendor/firmware/fw_bcm4329_apsta.bin")).exists())
-			) {
-			return DRIVER_SOFTAP_GOG;
-		}
-		else if (deviceType.equals(DEVICE_DROIDX) || deviceType.equals(DEVICE_BLADE)) {
-			return DRIVER_HOSTAP;
 		}
 		return DRIVER_WEXT;
 	}
@@ -131,13 +90,16 @@ public class Configuration {
 	 * @param feature
 	 * @return
 	 */
-	public static boolean enableFixPersist() {
+	public static boolean enableFixPersist() 
+	{
 		if ((new File("/system/lib/modules/tiwlan_drv.ko")).exists() == true 
 				&& (new File("/system/etc/wifi/fw_wlan1271.bin")).exists() == true
-				&& getWifiInterfaceDriver(getDeviceType()).equals(DRIVER_WEXT) == true){
+				&& getWifiInterfaceDriver(getDeviceType()).equals(DRIVER_WEXT) == true)
+		{
 			return true;
 		}
-		if (getDeviceType().equals(DEVICE_LEGEND) == true) {
+		if (getDeviceType().equals(DEVICE_LEGEND) == true) 
+		{
 			return true;
 		}
 		return false;
@@ -148,18 +110,22 @@ public class Configuration {
 	 * @param feature
 	 * @return
 	 */
-	public static boolean enableFixRoute() {
+	public static boolean enableFixRoute() 
+	{
 		if ((new File("/system/etc/iproute2/rt_tables")).exists() == true 
-				&& NativeTask.getProp("ro.product.manufacturer").equalsIgnoreCase("HTC")) {
+				&& NativeTask.getProp("ro.product.manufacturer").equalsIgnoreCase("HTC")) 
+		{
 			return true;
 		}
 		return false;
 	}	
 	
-    public static boolean hasKernelFeature(String feature) {
+    public static boolean hasKernelFeature(String feature) 
+    {
     	try {
 			File cfg = new File("/proc/config.gz");
-			if (cfg.exists() == false) {
+			if (cfg.exists() == false) 
+			{
 				return true;
 			}
 			FileInputStream fis = new FileInputStream(cfg);
