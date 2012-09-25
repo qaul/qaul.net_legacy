@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.zip.GZIPInputStream;
 
-import android.os.Build;
-
 public class Configuration {
 
 	public static final String DEVICE_NEXUSONE   = "nexusone";
@@ -33,35 +31,42 @@ public class Configuration {
 	public static final String DRIVER_TIWLAN0     = "tiwlan0";
 	public static final String DRIVER_WEXT        = "wext";
 	
-	/**
-	 * Returns the device-type as string.
-	 * A very ugly hack - checking for wifi-kernel-modules.
-	 */
-	public static String getDeviceType() 
-	{
-		//if ((new File("/system/lib/modules/bcm4329.ko")).exists() == true) {
-		//	return DEVICE_NEXUSONE;
-		//}
-		if ((new File("/system/libmodules/bcm4325.ko")).exists() == true) 
-		{
-			int sdkVersion = Integer.parseInt(Build.VERSION.SDK);
-        	if (sdkVersion >= Build.VERSION_CODES.DONUT) {
-        		return DEVICE_GALAXY2X;
-        	}
-			return DEVICE_GALAXY1X;
-		}
-		else if ((new File("/system/lib/modules/tiwlan_drv.ko")).exists() == true 
-				&& (new File("/system/etc/wifi/Fw1273_CHIP.bin")).exists() == true) 
-		{
-			return DEVICE_LEGEND;
-		}
-		else if ((new File("/system/lib/modules/wlan.ko")).exists() == true) 
-		{
-			return DEVICE_DREAM;
-		}
-		return DEVICE_GENERIC;
-	}
+//	/**
+//	 * delete this method
+//	 * 
+//	 * Returns the device-type as string.
+//	 * A very ugly hack - checking for wifi-kernel-modules.
+//	 */
+//	public static String getDeviceType() 
+//	{
+//		if ((new File("/system/lib/modules/bcm4329.ko")).exists() == true) {
+//			return DEVICE_NEXUSONE;
+//		}
+//		if ((new File("/system/libmodules/bcm4325.ko")).exists() == true) 
+//		{
+//			int sdkVersion = Integer.parseInt(Build.VERSION.SDK);
+//        	if (sdkVersion >= Build.VERSION_CODES.DONUT) {
+//        		return DEVICE_GALAXY2X;
+//        	}
+//			return DEVICE_GALAXY1X;
+//		}
+//		else if ((new File("/system/lib/modules/tiwlan_drv.ko")).exists() == true 
+//				&& (new File("/system/etc/wifi/Fw1273_CHIP.bin")).exists() == true) 
+//		{
+//			return DEVICE_LEGEND;
+//		}
+//		else if ((new File("/system/lib/modules/wlan.ko")).exists() == true) 
+//		{
+//			return DEVICE_DREAM;
+//		}
+//		return DEVICE_GENERIC;
+//	}
 	
+	/**
+	 * check which wifi chip this device uses
+	 * 
+	 * @return wifi module
+	 */
 	public static String getWifiModule() 
 	{
 		if ((new File("/system/lib/modules/bcm4330.ko")).exists() == true)
@@ -79,16 +84,47 @@ public class Configuration {
 		else if ((new File("/system/lib/modules/wlan.ko")).exists() == true) 
 			return "wlan";
 					
+		else if ((new File("/system/lib/modules/sdio.ko")).exists() == true) 
+			return "sdio";
+					
 		return "unknown";
 	}
 	
-	public static String getWifiFirmware() 
+	/**
+	 * check which firmware this device uses
+	 * 
+	 * @return firmware file
+	 */
+	public static String getFirmwarePath() 
 	{
-		if ((new File("/system/etc/wifi/fw_bcm4329.bin")).exists() == true) 
-			return "fw_bcm4329.bin";
-
+		// HTC sensation
+		if ((new File("/etc/firmware/fw_bcm4329.bin")).exists() == true) 
+			return "/etc/firmware/fw_bcm4329.bin";
+		
+		// HTC Legend
 		else if ((new File("/system/etc/wifi/Fw1273_CHIP.bin")).exists() == true) 
-			return "Fw1273_CHIP.bin";
+			return "/system/etc/wifi/Fw1273_CHIP.bin";
+		
+		// HTC dream/magic/tattoo/eris/hero
+		else if ((new File("/system/etc/wifi/Fw1251r1c.bin")).exists() == true) 
+			return "/system/etc/wifi/Fw1251r1c.bin";
+		
+		return "unknown";
+	}
+	
+	/**
+	 * determine the nvram path
+	 * 
+	 * @return nvram_path
+	 */
+	public static String getNvramPath() 
+	{
+		// HTC Sensation
+		if ((new File("/system/etc/calibration")).exists() == true) 
+			return "/system/etc/calibration";
+
+		else if ((new File("/system/etc/nvram.txt")).exists() == true) 
+			return "/system/etc/nvram.txt";
 		
 		return "unknown";
 	}
@@ -97,24 +133,25 @@ public class Configuration {
 	 * Returns the wpa_supplicant-driver which should be used
 	 * on wpa_supplicant-start 
 	 */
-	public static String getWifiInterfaceDriver(String deviceType) 
+	public static String getWifiInterfaceDriver() 
 	{
-		if (deviceType.equals(DEVICE_DREAM)) {
-			return DRIVER_TIWLAN0;
+		if ((new File("/system/lib/modules/wlan.ko")).exists() == true) 
+		{
+			return "tiwlan0";
 		}
-		return DRIVER_WEXT;
+		return "wext";
 	}
 
-	/**
-	 * Returns the wpa_supplicant-driver which should be used
-	 * on wpa_supplicant-start 
-	 */
-	public static String getEncryptionAutoMethod(String deviceType) {
-		if (deviceType.equals(DEVICE_LEGEND) || deviceType.equals(DEVICE_NEXUSONE)) {
-			return "iwconfig";
-		}
-		return "wpa_supplicant";
-	}
+//	/**
+//	 * Returns the wpa_supplicant-driver which should be used
+//	 * on wpa_supplicant-start 
+//	 */
+//	public static String getEncryptionAutoMethod(String deviceType) {
+//		if (deviceType.equals(DEVICE_LEGEND) || deviceType.equals(DEVICE_NEXUSONE)) {
+//			return "iwconfig";
+//		}
+//		return "wpa_supplicant";
+//	}
 	
 	/**
 	 * Returns a boolean if fix_persist.sh is required
@@ -125,14 +162,16 @@ public class Configuration {
 	{
 		if ((new File("/system/lib/modules/tiwlan_drv.ko")).exists() == true 
 				&& (new File("/system/etc/wifi/fw_wlan1271.bin")).exists() == true
-				&& getWifiInterfaceDriver(getDeviceType()).equals(DRIVER_WEXT) == true)
+				&& getWifiInterfaceDriver().equals(DRIVER_WEXT) == true)
 		{
 			return true;
 		}
-		if (getDeviceType().equals(DEVICE_LEGEND) == true) 
+		else if ((new File("/system/lib/modules/tiwlan_drv.ko")).exists() == true 
+				&& (new File("/system/etc/wifi/Fw1273_CHIP.bin")).exists() == true) 
 		{
 			return true;
 		}
+		
 		return false;
 	}
 	

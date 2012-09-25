@@ -16,17 +16,17 @@ action() == "start" && (
     ################################################################################
     # test a device
     ################################################################################
-    getcfg("device.type") == "test" && 
+    getcfg("wifi.setup") == "test" && 
     (
 		  # Loading firmware
 		  #
 		  # check if module was loaded 
 		  ## $ /system/bin/cat /proc/modules
 		  #
-	      module_loaded("bcm4329") || 
+	      module_loaded(os.wifi.driver) || 
 	      
 		  # load kernel module & firmware
-		  ## $ /system/bin/insmod /system/lib/modules/bcm4329.ko firmware_path=/etc/firmware/fw_bcm4329.bin
+		  ## $ /system/bin/insmod /system/lib/modules/bcm4329.ko firmware_path=/etc/firmware/fw_bcm4329.bin nvram_path=/system/etc/calibration
 		  #
 		  # unload this kernel module
 		  ## $ /system/bin/rmmod bcm4329
@@ -35,7 +35,7 @@ action() == "start" && (
 		  ## $ /system/bin/cat /proc/modules
 		  # on success the network interface is created (this is not the case)
 		  ## $ ls /etc/wifi
-	      log(insmod("/system/lib/modules/bcm4329.ko", "firmware_path=/etc/firmware/fw_bcm4329.bin"), "Loading bcm4329.ko module");
+	      log(insmod("/system/lib/modules/" +os.wifi.driver +".ko", "firmware_path=" +os.wifi.firmware_path +" nvram_path=" +os.wifi.nvram_path), "Loading wifi module");
 	      
 	      sleep("3");
 
@@ -45,205 +45,72 @@ action() == "start" && (
 	      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " mode ad-hoc"), "Setting ad-hoc mode");
 	      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " essid " + getcfg("wifi.essid")), "Setting essid");
 	      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " channel " + getcfg("wifi.channel")), "Setting channel");
-	      getcfg("wifi.txpower") != "disabled" && 
-	      (
-	      	log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " txpower " + getcfg("wifi.txpower")), "Setting transmit power");     	
-	      );
+		  getcfg("wifi.txpower") != "disabled" && (
+		      	log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " txpower " + getcfg("wifi.txpower")), "Setting transmit power");     	
+		  );      
+	      run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " commit");
 	 );
 
     ################################################################################
-    # bcm4329 (Nexus One)
+    # iwconfig
     ################################################################################
-    getcfg("device.type") == "nexusone" && 
+    getcfg("wifi.setup") == "iwconfig" && 
     (
-		  # Loading firmware
-		  file_exists("/sdcard/net.qaul.qaul/fw_bcm4329.bin") && (
-	      	module_loaded("bcm4329") || log(insmod("/system/lib/modules/bcm4329.ko", "firmware_path=/sdcard/net.qaul.qaul/fw_bcm4329.bin"), "Loading bcm4329.ko module<br>(fw_bcm4329.bin from /sdcard/net.qaul.qaul)");
-	      );      
-	      !file_exists("/sdcard/net.qaul.qaul/fw_bcm4329.bin") && (
-	        file_exists("/etc/firmware/fw_bcm4329_ap.bin") && (
-	        	module_loaded("bcm4329") || log(insmod("/system/lib/modules/bcm4329.ko", "firmware_path=/etc/firmware/fw_bcm4329_ap.bin"), "Loading bcm4329.ko module<br>(fw_bcm4329_ap.bin from /etc/firmware)");
-	        );
-	        !file_exists("/etc/firmware/fw_bcm4329_ap.bin") && (
-	      		module_loaded("bcm4329") || log(insmod("/system/lib/modules/bcm4329.ko", ""), "Loading bcm4329.ko module");
-	      	);
-	      );
-	      sleep("3");
-	      #
-	      # Bring up wifi interface
-	      #
-	      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
-	                  run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");
-	      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " mode ad-hoc"), "Setting ad-hoc mode");
-	      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " essid " + getcfg("wifi.essid")), "Setting essid");
-	      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " channel " + getcfg("wifi.channel")), "Setting channel");
-	      getcfg("wifi.txpower") != "disabled" && 
-	      (
-	      	log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " txpower " + getcfg("wifi.txpower")), "Setting transmit power");     	
-	      );
-	);
-    
-    ################################################################################
-    # bcm4325 (Samsung Galaxy)
-    ################################################################################
-    is_substring("galaxy", getcfg("device.type")) && (
-	  file_exists("/sdcard/net.qaul.qaul/rtecdc.bin") && (
- 	      module_loaded("bcm4325") || log(insmod("/system/libmodules/bcm4325.ko",
-	                                             	"firmware_path=/sdcard/net.qaul.qaul/rtecdc.bin nvram_path=/etc/nvram.txt"),
-	                                      			"Loading bcm4325.ko module<br>(rtecdc.bin from /sdcard/net.qaul.qaul)");
-	  );     
-      !file_exists("/sdcard/net.qaul.qaul/rtecdc.bin") && (
-		  !file_exists("/etc/rtecdc_adhoc.bin") && (
-		      module_loaded("bcm4325") || log(insmod("/system/libmodules/bcm4325.ko", 
-		      										"firmware_path=/etc/rtecdc.bin nvram_path=/etc/nvram.txt"), 
-		      										"Loading bcm4325.ko module<br>(rtecdc.bin from /system/etc)");
-		  );  
-		  file_exists("/etc/rtecdc_adhoc.bin") && (
-		      module_loaded("bcm4325") || log(insmod("/system/libmodules/bcm4325.ko", 
-		      										"firmware_path=/etc/rtecdc_adhoc.bin nvram_path=/etc/nvram.txt"), 
-		      										"Loading bcm4325.ko module<br>(rtecdc_adhoc.bin from /system/etc)");
-		  );
-	  );  
-      sleep("3");
-      #
-      # Bring up wifi interface
-      #
-      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " mode ad-hoc"), "Setting ad-hoc mode");
-      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " essid " + getcfg("wifi.essid")), "Setting essid");
-      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " channel " + getcfg("wifi.channel")), "Setting channel");
-      getcfg("wifi.txpower") != "disabled" && (
-	      	log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " txpower " + getcfg("wifi.txpower")), "Setting transmit power");     	
-	  );
-      run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " commit");
-      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
-                  run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");                  
+		# check which driver one needs to load
+		  
+		# load generic driver
+		log(load_wifi(), "Loading WiFi driver");
+		  
+		# Bring up wifi interface
+		log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
+			run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");
+		log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " mode ad-hoc"), "Setting ad-hoc mode");
+		log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " essid " + getcfg("wifi.essid")), "Setting essid");
+		log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " channel " + getcfg("wifi.channel")), "Setting channel");
+		getcfg("wifi.txpower") != "disabled" && (
+			log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " txpower " + getcfg("wifi.txpower")), "Setting transmit power");     	
+		);      
+		run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " commit");
     );
-    
+        
     ################################################################################
-    # wlan.ko & Fw1251r1c.bin (HTC dream/magic/tattoo/eris/hero)
+    # wpa_cli (available in cyanogen mods)
     ################################################################################
-    getcfg("device.type") == "dream" && 
+    getcfg("wifi.setup") == "wpa_cli" && 
     (
-	  module_loaded("wlan") || log(insmod("/system/lib/modules/wlan.ko", ""), "Loading wlan.ko module");
-      file_exists("/proc/calibration") && (
-	      file_exists("/sdcard/net.qaul.qaul/Fw1251r1c.bin") && (
-	 	      log(run_program("/system/bin/wlan_loader -f /sdcard/net.qaul.qaul/Fw1251r1c.bin -e " +
-		                  "/proc/calibration -i /data/data/net.qaul.qaul/conf/tiwlan.ini"), "Configuring WiFi interface<br>(Fw1251r1c.bin from /sdcard/net.qaul.qaul)");
-	      );
-	      !file_exists("/sdcard/net.qaul.qaul/Fw1251r1c.bin") && (
-		      file_exists("/system/etc/wifi/Fw1251r1c.bin") && (
-			      log(run_program("/system/bin/wlan_loader -f /system/etc/wifi/Fw1251r1c.bin -e " +
-			                  "/proc/calibration -i /data/data/net.qaul.qaul/conf/tiwlan.ini"), "Configuring WiFi interface<br>(Fw1251r1c.bin from /system/etc/wifi)");
-		      );
-		      file_exists("/system/etc/firmware/Fw1251r1c.bin") && (
-			      log(run_program("/system/bin/wlan_loader -f /system/etc/firmware/Fw1251r1c.bin -e " +
-			                  "/proc/calibration -i /data/data/net.qaul.qaul/conf/tiwlan.ini"), "Configuring WiFi interface<br>(Fw1251r1c.bin from /system/etc/firmware)");
-		      );      
-	      );
-      );
-      file_exists("/data/calibration") && (
- 	      file_exists("/sdcard/net.qaul.qaul/Fw1251r1c.bin") && (
-	 	      log(run_program("/system/bin/wlan_loader -f /sdcard/net.qaul.qaul/Fw1251r1c.bin -e " +
-		                  "/data/calibration -i /data/data/net.qaul.qaul/conf/tiwlan.ini"), "Configuring WiFi interface<br>(Fw1251r1c.bin from /sdcard/net.qaul.qaul)");
-	      );
-	      !file_exists("/sdcard/net.qaul.qaul/Fw1251r1c.bin") && (
-		      file_exists("/system/etc/wifi/Fw1251r1c.bin") && (
-			      log(run_program("/system/bin/wlan_loader -f /system/etc/wifi/Fw1251r1c.bin -e " +
-			                  "/data/calibration -i /data/data/net.qaul.qaul/conf/tiwlan.ini"), "Configuring WiFi interface<br>(Fw1251r1c.bin from /system/etc/wifi)");
-		      );
-		      file_exists("/system/etc/firmware/Fw1251r1c.bin") && (
-			      log(run_program("/system/bin/wlan_loader -f /system/etc/firmware/Fw1251r1c.bin -e " +
-			                  "/data/calibration -i /data/data/net.qaul.qaul/conf/tiwlan.ini"), "Configuring WiFi interface<br>(Fw1251r1c.bin from /system/etc/firmware)");
-		      );      
-	      );     
-      );
-      #
-      # Bring up wifi interface
-      #
-      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
-                  run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");
-    );
-	
-    ################################################################################
-    # tiwlan (HTC Legend)
-    ################################################################################
-    getcfg("device.type") == "legend" && 
-    (
-      module_loaded("sdio") || log(insmod("/system/lib/modules/sdio.ko",""), "Loading sdio.ko module");
-      module_loaded("tiwlan_drv") || log(insmod("/system/lib/modules/tiwlan_drv.ko", ""), "Loading tiwlan_drv.ko module");
-      
-      file_exists("/system/bin/tiwlan_loader") && (
-	      file_exists("/proc/calibration") && (
-	      	run_program("/system/bin/tiwlan_loader -f /system/etc/wifi/Fw1273_CHIP.bin -e " +
-	                  	"/proc/calibration -i /system/etc/wifi/tiwlan.ini");
-	      );
-	      file_exists("/data/calibration") && (
-	      	run_program("/system/bin/tiwlan_loader -f /system/etc/wifi/Fw1273_CHIP.bin -e " +
-	                  	"/data/calibration -i /system/etc/wifi/tiwlan.ini");
-	      );     
-      );
-      file_exists("/system/bin/wlan_loader") && (
-	      file_exists("/proc/calibration") && (
-	      	run_program("/system/bin/wlan_loader -f /system/etc/wifi/Fw1273_CHIP.bin -e " +
-	                  	"/proc/calibration -i /system/etc/wifi/tiwlan.ini");
-	      );
-	      file_exists("/data/calibration") && (
-	      	run_program("/system/bin/wlan_loader -f /system/etc/wifi/Fw1273_CHIP.bin -e " +
-	                  	"/data/calibration -i /system/etc/wifi/tiwlan.ini");
-	      );     
-      );
-      sleep("3");
-      #
-      # Bring up wifi interface
-      #
-      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " +getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
-                  run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");
-      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " mode ad-hoc"), "Setting ad-hoc mode");
-      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " essid " + getcfg("wifi.essid")), "Setting essid");
-      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " channel " + getcfg("wifi.channel")), "Setting channel");
-	  getcfg("wifi.txpower") != "disabled" && (
-	      	log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " txpower " + getcfg("wifi.txpower")), "Setting transmit power");     	
-	  );      
-      run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " commit");
-    );
-
-    ################################################################################
-    # (Generic device)
-    ################################################################################
-    getcfg("device.type") == "generic" && 
-    (
+      # todo: set up wifi via wpa_cli
+      # wpa_cli is available on
       log(load_wifi(), "Loading WiFi driver");
-      
-      # Bring up wifi interface
-      log(run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " " + getcfg("ip.address") + " netmask " + getcfg("ip.netmask")) &&
-                  run_program("/data/data/net.qaul.qaul/bin/ifconfig " + getcfg("wifi.interface") + " up"),  "Activating WiFi interface");
-      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " mode ad-hoc"), "Setting ad-hoc mode");
-      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " essid " + getcfg("wifi.essid")), "Setting essid");
-      log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " channel " + getcfg("wifi.channel")), "Setting channel");
-	  getcfg("wifi.txpower") != "disabled" && (
-	      	log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " txpower " + getcfg("wifi.txpower")), "Setting transmit power");     	
-	  );      
-      run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " commit");
     );
     
     ################################################################################
-    # WEP-Encryption
+    # wpa_supplicant
     ################################################################################
-    getcfg("wifi.encryption") == "wep" && 
+    getcfg("wifi.setup") == "wpa_supplicant" && 
     (
-      getcfg("wifi.setup") == "iwconfig" && (      	
-        log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " key s:"+getcfg("wifi.encryption.key")+"") &&
-          run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " key restricted"), "Activating encryption<br/>(iwconfig)");
-        run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " commit");
-      );
-      getcfg("wifi.setup") == "wpa_supplicant" && (      	
-        sleep("2");
-	log(run_program("cd /data/local/tmp; mkdir /data/local/tmp/wpa_supplicant; wpa_supplicant -B -D" +
-	  getcfg("wifi.driver") +
-	  " -i" + getcfg("wifi.interface") +
-	  " -c/data/data/net.qaul.qaul/conf/wpa_supplicant.conf"), "Activating encryption<br/>(wpa_supplicant)");
-      );
+      # todo: set up wifi via custom wpa_supplicant
+      log(load_wifi(), "Loading WiFi driver");
     );
+    
+#    ################################################################################
+#    ################################################################################
+#    # WEP-Encryption
+#    ################################################################################
+#    getcfg("wifi.encryption") == "wep" && 
+#    (
+#      getcfg("wifi.setup") == "iwconfig" && (      	
+#        log(run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " key s:"+getcfg("wifi.encryption.key")+"") &&
+#          run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " key restricted"), "Activating encryption<br/>(iwconfig)");
+#        run_program("/data/data/net.qaul.qaul/bin/iwconfig " + getcfg("wifi.interface") + " commit");
+#      );
+#      getcfg("wifi.setup") == "wpa_supplicant" && (      	
+#        sleep("2");
+#		log(run_program("cd /data/local/tmp; mkdir /data/local/tmp/wpa_supplicant; wpa_supplicant -B -D" +
+#		  getcfg("wifi.driver") +
+#		  " -i" + getcfg("wifi.interface") +
+#		  " -c/data/data/net.qaul.qaul/conf/wpa_supplicant.conf"), "Activating encryption<br/>(wpa_supplicant)");
+#      );
+#    );
 
     #
     # Starting persist-fixer in background

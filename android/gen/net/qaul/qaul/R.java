@@ -59,10 +59,11 @@ public final class R {
         public static final int tether=0x7f04000d;
         public static final int tether_conf=0x7f04000e;
         public static final int tether_edify=0x7f04000f;
-        public static final int tiwlan_ini=0x7f040010;
-        public static final int ultra_bcm_config=0x7f040011;
-        public static final int wificonfig=0x7f040012;
-        public static final int wpa_supplicant_conf=0x7f040013;
+        public static final int tether_edify_bak=0x7f040010;
+        public static final int tiwlan_ini=0x7f040011;
+        public static final int ultra_bcm_config=0x7f040012;
+        public static final int wificonfig=0x7f040013;
+        public static final int wpa_supplicant_conf=0x7f040014;
     }
     public static final class string {
         public static final int app_name=0x7f050000;

@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Hashtable;
 
 import android.app.Application;
 import android.app.Notification;
@@ -45,8 +44,8 @@ public class QaulApplication extends Application {
 	public final String DEFAULT_ENCSETUP   = "wpa_supplicant";
 	
 	// Devices-Information
-	public String deviceType = Configuration.DEVICE_GENERIC; 
-	public String interfaceDriver = Configuration.DRIVER_WEXT; 
+	//public String deviceType = Configuration.DEVICE_GENERIC; 
+	//public String interfaceDriver = Configuration.DRIVER_WEXT; 
 	
 	// StartUp-Check performed
 	public boolean startupCheckPerformed = false;
@@ -605,8 +604,8 @@ public class QaulApplication extends Application {
         this.qaulInitLib();
         
         // Set device-information
-        this.deviceType = Configuration.getDeviceType();
-        this.interfaceDriver = Configuration.getWifiInterfaceDriver(this.deviceType);
+        //this.deviceType = Configuration.getDeviceType();
+        //this.interfaceDriver = Configuration.getWifiInterfaceDriver(this.deviceType);
         
         // Preferences
 		this.settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -662,7 +661,7 @@ public class QaulApplication extends Application {
         this.tethercfg.read();
         
 		// write system config
-		this.tethercfg.put("device.type", deviceType);
+		//this.tethercfg.put("device.type", deviceType);
 		this.tethercfg.put("device.model", android.os.Build.MODEL);
 		this.tethercfg.put("device.product", android.os.Build.PRODUCT);
 		this.tethercfg.put("device.manufacturer", android.os.Build.MANUFACTURER);
@@ -682,7 +681,8 @@ public class QaulApplication extends Application {
 		this.tethercfg.put("os.arch", System.getProperty("os.arch"));
 		
 		this.tethercfg.put("os.wifi.driver", Configuration.getWifiModule());
-		this.tethercfg.put("os.wifi.firmware", Configuration.getWifiFirmware());
+		this.tethercfg.put("os.wifi.firmware_path", Configuration.getFirmwarePath());
+		this.tethercfg.put("os.wifi.nvram_path", Configuration.getNvramPath());
 		 
         // write wifi config
 		this.tethercfg.put("wifi.essid", nativeQaul.getWifiIbss());
@@ -716,61 +716,76 @@ public class QaulApplication extends Application {
 
 		this.tethercfg.put("wifi.txpower", txpower);
 
-		// wepEncryption
-		if (encEnabled) {
-			this.tethercfg.put("wifi.encryption", "wep");
-			// Storing wep-key
-			this.tethercfg.put("wifi.encryption.key", wepkey);
+//		// TODO encryption setup
+//		// wepEncryption
+//		if (encEnabled) {
+//			this.tethercfg.put("wifi.encryption", "wep");
+//			// Storing wep-key
+//			this.tethercfg.put("wifi.encryption.key", wepkey);
+//
+//			// Getting encryption-method if setup-method on auto 
+//			if (wepsetupMethod.equals("auto")) {
+//				wepsetupMethod = Configuration.getEncryptionAutoMethod(deviceType);
+//			}
+//			// Setting setup-mode
+//			this.tethercfg.put("wifi.setup", wepsetupMethod);
+//			// Prepare wpa_supplicant-config if wpa_supplicant selected
+//			if (wepsetupMethod.equals("wpa_supplicant")) {
+//				// Install wpa_supplicant.conf-template
+//				if (this.wpasupplicant.exists() == false) {
+//					this.installWpaSupplicantConfig();
+//				}
+//				
+//				// Update wpa_supplicant.conf
+//				Hashtable<String,String> values = new Hashtable<String,String>();
+//				values.put("ssid", "\"" +nativeQaul.getWifiIbss() +"\"");
+//				values.put("wep_key0", "\"" +this.settings.getString("passphrasepref", DEFAULT_PASSPHRASE) +"\"");
+//				this.wpasupplicant.write(values);
+//			}
+//        }
+//		else {
+//			this.tethercfg.put("wifi.encryption", "open");
+//			this.tethercfg.put("wifi.encryption.key", "none");
+//			
+//			// Make sure to remove wpa_supplicant.conf
+//			if (this.wpasupplicant.exists()) {
+//				this.wpasupplicant.remove();
+//			}			
+//		}
+		
+		// configure wifi as open
+		this.tethercfg.put("wifi.encryption", "open");
+		this.tethercfg.put("wifi.encryption.key", "none");
+		
+		// Make sure to remove wpa_supplicant.conf
+		if (this.wpasupplicant.exists()) {
+			this.wpasupplicant.remove();
+		}			
 
-			// Getting encryption-method if setup-method on auto 
-			if (wepsetupMethod.equals("auto")) {
-				wepsetupMethod = Configuration.getEncryptionAutoMethod(deviceType);
-			}
-			// Setting setup-mode
-			this.tethercfg.put("wifi.setup", wepsetupMethod);
-			// Prepare wpa_supplicant-config if wpa_supplicant selected
-			if (wepsetupMethod.equals("wpa_supplicant")) {
-				// Install wpa_supplicant.conf-template
-				if (this.wpasupplicant.exists() == false) {
-					this.installWpaSupplicantConfig();
-				}
-				
-				// Update wpa_supplicant.conf
-				Hashtable<String,String> values = new Hashtable<String,String>();
-				values.put("ssid", "\"" +nativeQaul.getWifiIbss() +"\"");
-				values.put("wep_key0", "\"" +this.settings.getString("passphrasepref", DEFAULT_PASSPHRASE) +"\"");
-				this.wpasupplicant.write(values);
-			}
-        }
-		else {
-			this.tethercfg.put("wifi.encryption", "open");
-			this.tethercfg.put("wifi.encryption.key", "none");
-			
-			// Make sure to remove wpa_supplicant.conf
-			if (this.wpasupplicant.exists()) {
-				this.wpasupplicant.remove();
-			}			
-		}
-		
 		// determine driver wpa_supplicant
-		this.tethercfg.put("wifi.driver", Configuration.getWifiInterfaceDriver(deviceType));
+		this.tethercfg.put("wifi.driver", Configuration.getWifiInterfaceDriver());
 		
+		// determine which setup method to use
+		//this.tethercfg.put("wifi.setup", "test");
+		this.tethercfg.put("wifi.setup", "iwconfig");
+		
+		// -------------------------------------------------------------------------
 		// writing config-file
 		if (this.tethercfg.write() == false) {
 			Log.e(MSG_TAG, "Unable to update tether.conf!");
 		}
 		
-		/*
-		 * TODO
-		 * Need to find a better method to identify if the used device is a
-		 * HTC Dream aka T-Mobile G1
-		 */
-		if (deviceType.equals(Configuration.DEVICE_DREAM)) {
-			Hashtable<String,String> values = new Hashtable<String,String>();
-			values.put("dot11DesiredSSID", this.settings.getString("ssidpref", "qaul.net"));
-			values.put("dot11DesiredChannel", this.settings.getString("channelpref", "11"));
-			this.tiwlan.write(values);
-		}
+//		/*
+//		 * TODO
+//		 * Need to find a better method to identify if the used device is a
+//		 * HTC Dream aka T-Mobile G1
+//		 */
+//		if (deviceType.equals(Configuration.DEVICE_DREAM)) {
+//			Hashtable<String,String> values = new Hashtable<String,String>();
+//			values.put("dot11DesiredSSID", this.settings.getString("ssidpref", "qaul.net"));
+//			values.put("dot11DesiredChannel", this.settings.getString("channelpref", "11"));
+//			this.tiwlan.write(values);
+//		}
 		
 		Log.d(MSG_TAG, "Creation of configuration-files took ==> "+(System.currentTimeMillis()-startStamp)+" milliseconds.");
 	}
@@ -1129,7 +1144,7 @@ public class QaulApplication extends Application {
      */
     public boolean isTransmitPowerSupported() {
     	// Only supported for the nexusone 
-    	if (Configuration.getWifiInterfaceDriver(deviceType).equals(Configuration.DRIVER_WEXT)) {
+    	if (Configuration.getWifiInterfaceDriver().equals(Configuration.DRIVER_WEXT)) {
     		return true;
     	}
     	return false;
