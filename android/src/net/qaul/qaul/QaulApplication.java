@@ -330,7 +330,7 @@ public class QaulApplication extends Application {
 	    			Log.i(MSG_TAG, "/system/bin/iptables does not exist");
 
 	    		// start iptables
-	    		this.coretask.runRootCommand("/data/data/net.qaul.qaul/bin/iptables_start.sh "+this.tethercfg.get("wifi.interface") +" " +nativeQaul.getIP());	    		
+	    		this.coretask.runRootCommand("/data/data/net.qaul.qaul/bin/iptables_start.sh " +this.tethercfg.get("wifi.interface") +" " +nativeQaul.getIP());	    		
 	    	}
 	    	else 
 	    	{
@@ -948,15 +948,25 @@ public class QaulApplication extends Application {
 			public void run(){
 		    	Log.d(MSG_TAG, "installFiles.Runnable()");
 				String message = null;
-				// tether
+				// tether & edify
 		    	if (message == null) {
 		        	Log.d(MSG_TAG, String.format("installFiles.Runnable() %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/tether"));
 			    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/tether", "0755", R.raw.tether);
+					QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/conf/tether.conf", "0644", R.raw.tether_conf);
+					QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/conf/tether.edify", "0644", R.raw.tether_edify);
 		    	}
-		    	// iptables
+		    	// iptables & portforwarding
 		    	if (message == null) {
 		        	Log.d(MSG_TAG, String.format("installFiles.Runnable() %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables"));
 			    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables", "0755", R.raw.iptables);
+		        	Log.d(MSG_TAG, String.format("copy configuration %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables_start.sh"));
+			    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables_start.sh", "0755", R.raw.iptables_start);
+		        	Log.d(MSG_TAG, String.format("copy configuration %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables_stop.sh"));
+			    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables_stop.sh", "0755", R.raw.iptables_stop);
+		        	Log.d(MSG_TAG, String.format("copy configuration %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/socat"));
+			    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/socat", "0755", R.raw.socat);
+		        	Log.d(MSG_TAG, String.format("installFiles.Runnable() %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/socat_start.sh"));
+			    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/socat_start.sh", "0755", R.raw.socat_start);
 		    	}
 		    	// ifconfig
 		    	if (message == null) {
@@ -968,6 +978,7 @@ public class QaulApplication extends Application {
 		        	Log.d(MSG_TAG, String.format("installFiles.Runnable() %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iwconfig"));
 			    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iwconfig", "0755", R.raw.iwconfig);
 		    	}
+		    	// FIXME: is this really needed? What for?
 		    	// ultra_bcm_config
 		    	if (message == null) {
 		        	Log.d(MSG_TAG, String.format("installFiles.Runnable() %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/ultra_bcm_config"));
@@ -989,19 +1000,22 @@ public class QaulApplication extends Application {
 		        	Log.d(MSG_TAG, String.format("copy configuration %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/olsrd_start.sh"));
 			    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/olsrd_start.sh", "0755", R.raw.olsrd_start);
 		    	}
-		    	// port forwarding
-	        	Log.d(MSG_TAG, String.format("copy configuration %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables_start.sh"));
-		    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables_start.sh", "0755", R.raw.iptables_start);
-	        	Log.d(MSG_TAG, String.format("copy configuration %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables_stop.sh"));
-		    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/iptables_stop.sh", "0755", R.raw.iptables_stop);
-	        	Log.d(MSG_TAG, String.format("copy configuration %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/socat"));
-		    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/socat", "0755", R.raw.socat);
-	        	Log.d(MSG_TAG, String.format("installFiles.Runnable() %s", QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/socat_start.sh"));
-		    	message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/socat_start.sh", "0755", R.raw.socat_start);
 
-		    	/**
-				 * Installing fix-scripts if needed
-				 */
+//				// install device specific configuration files
+//				// bcm4330
+//				if (message == null) {
+//					Log.d(MSG_TAG, "device specific configuration files");
+//					QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/conf/dhd.ko", "0644", R.raw.custom_bcm4330_dhd_ko);
+//					QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/conf/custom_bcm4330_sta.bin", "0644", R.raw.custom_bcm4330_sta_bin);
+//					QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/conf/custom_bcm4330_nvram_net.txt", "0644", R.raw.custom_bcm4330_nvram_net_txt);
+//				}
+		    	// tiwlan.ini
+				if (message == null) {
+					Log.d(MSG_TAG, "tiwlan.ini");
+					QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/conf/tiwlan.ini", "0644", R.raw.tiwlan_ini);
+				}
+				
+		    	// Install fix-scripts if needed
 				if (Configuration.enableFixPersist()) {	
 					Log.d(MSG_TAG, "Configuration.enableFixPersist()");
 					// fixpersist.sh
@@ -1015,22 +1029,6 @@ public class QaulApplication extends Application {
 					if (message == null) {
 						message = QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/bin/fixroute.sh", "0755", R.raw.fixroute_sh);
 					}
-				}
-				
-		    	// tiwlan.ini
-				if (message == null) {
-					Log.d(MSG_TAG, "tiwlan.ini");
-					QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/conf/tiwlan.ini", "0644", R.raw.tiwlan_ini);
-				}
-				// edify script
-				if (message == null) {
-					Log.d(MSG_TAG, "edify script");
-					QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/conf/tether.edify", "0644", R.raw.tether_edify);
-				}
-				// tether.cfg
-				if (message == null) {
-					Log.d(MSG_TAG, "tether.cfg");
-					QaulApplication.this.copyFile(QaulApplication.this.coretask.DATA_FILE_PATH+"/conf/tether.conf", "0644", R.raw.tether_conf);
 				}
 				
 				// wpa_supplicant drops privileges, we need to make files readable.

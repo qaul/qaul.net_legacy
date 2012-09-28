@@ -69,8 +69,9 @@ public class Configuration {
 	 */
 	public static String getWifiModule() 
 	{
-		if ((new File("/system/lib/modules/bcm4330.ko")).exists() == true)
-			return "bcm4330";
+		// Samsung Galaxy S2, Galaxy Tab
+		if ((new File("/lib/modules/dhd.ko")).exists() == true)
+			return "dhd";
 
 		else if ((new File("/system/lib/modules/bcm4329.ko")).exists() == true)
 			return "bcm4329";
@@ -109,6 +110,10 @@ public class Configuration {
 		else if ((new File("/system/etc/wifi/Fw1251r1c.bin")).exists() == true) 
 			return "/system/etc/wifi/Fw1251r1c.bin";
 		
+		// Samsung Galaxy S2
+		else if ((new File("/system/etc/wifi/bcm4330_sta.bin")).exists() == true) 
+			return "/system/etc/wifi/bcm4330_sta.bin";
+		
 		return "unknown";
 	}
 	
@@ -125,6 +130,10 @@ public class Configuration {
 
 		else if ((new File("/system/etc/nvram.txt")).exists() == true) 
 			return "/system/etc/nvram.txt";
+		
+		// Samsung Galaxy S2
+		else if ((new File("/system/etc/wifi/nvram_net.txt")).exists() == true) 
+			return "/system/etc/wifi/nvram_net.txt";
 		
 		return "unknown";
 	}

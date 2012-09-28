@@ -27,15 +27,36 @@ action() == "start" && (
 	      
 		  # load kernel module & firmware
 		  ## $ /system/bin/insmod /system/lib/modules/bcm4329.ko firmware_path=/etc/firmware/fw_bcm4329.bin nvram_path=/system/etc/calibration
+		  ## $ /system/bin/insmod /lib/modules/dhd.ko firmware_path=/system/etc/wifi/bcm4330_sta.bin nvram_path=/system/etc/wifi/nvram_net.txt
 		  #
 		  # unload this kernel module
 		  ## $ /system/bin/rmmod bcm4329
+		  ## $ /system/bin/rmmod dhd
 		  #
 		  # on success the module is loaded (yes it is loaded)
 		  ## $ /system/bin/cat /proc/modules
 		  # on success the network interface is created (this is not the case)
 		  ## $ ls /etc/wifi
-	      log(insmod("/system/lib/modules/" +os.wifi.driver +".ko", "firmware_path=" +os.wifi.firmware_path +" nvram_path=" +os.wifi.nvram_path), "Loading wifi module");
+		  # on error you can display the errors with
+		  ## $ dmesg
+		  
+	      # HTC Sensation
+	      #log(insmod("/system/lib/modules/" +os.wifi.driver +".ko", "firmware_path=" +os.wifi.firmware_path +" nvram_path=" +os.wifi.nvram_path), "Loading wifi module");
+	      # Samsung Galaxy S2 == GB
+	      #log(insmod("/lib/modules/dhd.ko", "firmware_path=/system/etc/wifi/bcm4330_sta.bin nvram_path=/system/etc/wifi/nvram_net.txt"), "Loading wifi module");
+	      # Samsung Galaxy S2 >= ICS
+	      # insmod /data/data/net.qaul.qaul/conf/dhd.ko firmware_path=/data/data/net.qaul.qaul/conf/custom_bcm4330_sta.bin nvram_path=/data/data/net.qaul.qaul/conf/custom_bcm4330_nvram_net.txt
+	      # iface_name=wlan0
+	      log(insmod("/data/data/net.qaul.qaul/conf/dhd.ko", "firmware_path=/data/data/net.qaul.qaul/conf/custom_bcm4330_sta.bin nvram_path=/data/data/net.qaul.qaul/conf/custom_bcm4330_nvram_net.txt"), "Loading wifi module");
+
+	      # -> use modprobe to load the module
+	      # insmod loads a module into kernel but does not solve dependencies
+	      
+	      
+	      sleep("3");
+	      
+	      # load wifi interface
+		  log(run_program("/system/bin/start wlan_loader"), "load wlan interface");	      
 	      
 	      sleep("3");
 

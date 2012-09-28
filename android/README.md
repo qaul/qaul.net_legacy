@@ -1,12 +1,22 @@
 Android Instructions
 ====================
 
-qaul.net was tested on:
-* Android 2.3 Gingerbread
-
 It should work on all ARM android devices starting from Android 2.3 Gingerbread
 (due to before unsupported pthread functions in pjsip). 
 The Android device needs to be rooted.
+
+qaul.net was tested on the following devices:
+
+<table>
+<tr><th>Device           </th><th>2.3</th><th>4.0</th><th>CM9</th></tr>
+<tr><td>Samsung Galaxy S2</td><td> Y </td><td> N </td><td> N </td></tr>
+<tr><td>HTC Sensation    </td><td> ? </td><td> Y </td><td> Y </td></tr>
+</table>
+
+Legend:
+* Y = it works
+* N = it doesn't work yet
+* ? = it wasn't tested yet
 
 
 Installation and Compile Instructions
