@@ -60,11 +60,12 @@ Description: tools for the next revolution
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/el.css -> el.css -> /usr/share/qaul/www/i18n
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/fr.json -> fr.json -> /usr/share/qaul/www/i18n
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/fr.css -> fr.css -> /usr/share/qaul/www/i18n
+/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/it.json -> it.json -> /usr/share/qaul/www/i18n
+/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/it.css -> it.css -> /usr/share/qaul/www/i18n
+/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/nl.json -> nl.json -> /usr/share/qaul/www/i18n
+/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/nl.css -> nl.css -> /usr/share/qaul/www/i18n
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/tr.json -> tr.json -> /usr/share/qaul/www/i18n
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/tr.css -> tr.css -> /usr/share/qaul/www/i18n
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/jquery.mobile.min.js -> jquery.mobile.min.js -> /usr/share/qaul/www/i18n
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/jqm_qaul.css -> jqm_qaul.css -> /usr/share/qaul/www/i18n
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/jquery.mobile.min.css -> jquery.mobile.min.css -> /usr/share/qaul/www/i18n
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/f_pdf_64.png -> f_pdf_64.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/f_failed_64.png -> f_failed_64.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/b_callend_64.png -> b_callend_64.png -> /usr/share/qaul/www/images
@@ -96,7 +97,6 @@ Description: tools for the next revolution
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_conn3_30.png -> i_conn3_30.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_conn4_30.png -> i_conn4_30.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_reboot_64.png -> i_reboot_64.png -> /usr/share/qaul/www/images
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_loading_15.png -> i_loading_15.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_attention_64.png -> i_attention_64.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/ars_klangwolke.png -> ars_klangwolke.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/emo_cool.png -> emo_cool.png -> /usr/share/qaul/www/images
@@ -148,7 +148,6 @@ Description: tools for the next revolution
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/jquery.min.js -> jquery.min.js -> /usr/share/qaul/www
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/jqm_qaul.js -> jqm_qaul.js -> /usr/share/qaul/www
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/jquery.validate.min.js -> jquery.validate.min.js -> /usr/share/qaul/www
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/.project -> .project -> /usr/share/qaul/www
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/jquery.progressbar.min.js -> jquery.progressbar.min.js -> /usr/share/qaul/www
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/jquery.mobile.min.js -> jquery.mobile.min.js -> /usr/share/qaul/www
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/favicon.ico* -> favicon.ico -> /usr/share/qaul/www
@@ -162,14 +161,8 @@ Description: tools for the next revolution
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/qaul* -> qaul -> /usr/share/qaul
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/portfwd.conf -> portfwd.conf -> /usr/share/qaul
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/olsrd_qaul.so.0.1* -> olsrd_qaul.so.0.1 -> /usr/share/qaul
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/qaul.o -> qaul.o -> /usr/share/qaul
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/olsrd* -> olsrd -> /usr/share/qaul
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/moc_qaul.o -> moc_qaul.o -> /usr/share/qaul
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/ui_qaul.h -> ui_qaul.h -> /usr/share/qaul
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/Makefile -> Makefile -> /usr/share/qaul
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/qaullib.db -> qaullib.db -> /usr/share/qaul
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/moc_qaul.cpp -> moc_qaul.cpp -> /usr/share/qaul
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/main.o -> main.o -> /usr/share/qaul
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/olsrd_linux.conf -> olsrd_linux.conf -> /usr/share/qaul
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/app_icon.png -> app_icon.png -> /usr/share/qaul
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/portfwd* -> portfwd -> /usr/share/qaul
