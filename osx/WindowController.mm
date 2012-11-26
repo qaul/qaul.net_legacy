@@ -169,22 +169,49 @@
 		qaulStarted = 10;
 	}
 
-#ifdef ARS_EDITION
-	// wait for Klangwolke
-	if(qaulStarted == 10)
-	{
-		if(Qaullib_TimedCheckAppEvent() == QAUL_EVENT_QUIT)
-			qaulStarted = 9;
-	}
-#endif
-	
 	// check authorization 
 	if(qaulStarted == 10)
 	{
 		// Create authorization reference
 		// authorization
 		NSLog(@"authorize");
-		status = AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &authorizationRef);	
+		
+		const char *path0 = "/usr/bin/killall";
+		const char *path1 = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"olsrd_start.sh"] cString];
+		const char *path2 = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"olsrd_stop.sh"] cString];
+		const char *path3 = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"socat_start.sh"] cString];
+		const char *path4 = "/usr/sbin/networksetup";
+		const char *path5 = "/usr/sbin/ipconfig";		
+		const char *path6 = "/sbin/dmesg";
+		const char *path7 = "/sbin/ipfw";
+		const char *path8 = "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Support/networksetup";
+		
+		AuthorizationItem authItem0		= { kAuthorizationRightExecute, 1, &path0, 0 };
+		AuthorizationItem authItem1		= { kAuthorizationRightExecute, 1, &path1, 0 };
+		AuthorizationItem authItem2		= { kAuthorizationRightExecute, 1, &path2, 0 };
+		AuthorizationItem authItem3		= { kAuthorizationRightExecute, 1, &path3, 0 };
+		AuthorizationItem authItem4		= { kAuthorizationRightExecute, 1, &path4, 0 };
+		AuthorizationItem authItem5		= { kAuthorizationRightExecute, 1, &path5, 0 };
+		AuthorizationItem authItem6		= { kAuthorizationRightExecute, 1, &path6, 0 };
+		AuthorizationItem authItem7		= { kAuthorizationRightExecute, 1, &path7, 0 };
+		AuthorizationItem authItem8		= { kAuthorizationRightExecute, 1, &path8, 0 };
+		
+		AuthorizationItem items[9];
+		
+		items[0] =  authItem0;
+		items[1] =  authItem1;
+		items[2] =  authItem2;
+		items[3] =  authItem3;
+		items[4] =  authItem4;
+		items[5] =  authItem5;
+		items[6] =  authItem6;
+		items[7] =  authItem7;
+		items[8] =  authItem8;
+		
+		AuthorizationRights authRights	= { 8, items};
+		AuthorizationFlags flags = kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagPreAuthorize | kAuthorizationFlagExtendRights;		
+		
+		status = AuthorizationCreate(&authRights, kAuthorizationEmptyEnvironment, flags, &authorizationRef);
 		if (status == errAuthorizationSuccess) 
 			NSLog(@"Authorization success");
 		else 
