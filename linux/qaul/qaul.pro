@@ -59,6 +59,7 @@ LIBS     += \
 OTHER_FILES += \
     olsrd_linux.conf \
     portfwd.conf \
+    tail \
     copy_files.sh
 
 copyfiles.commands  = ../qaul/copy_files.sh

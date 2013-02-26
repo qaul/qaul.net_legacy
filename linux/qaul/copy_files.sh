@@ -12,6 +12,9 @@ cp ../qaul/olsrd_linux.conf ./
 cp ../qaul/portfwd ./
 cp ../qaul/portfwd.conf ./
 
+# dns
+cp ../qaul/tail ./
+
 # web
 cp -R ../../www ./
 

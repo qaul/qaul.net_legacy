@@ -77,6 +77,9 @@ Qaul::~Qaul()
     // remove firewall rules
     QaulStopFirewall();
 
+    // remove custom dns
+    qaulConfigProcess->write("/bin/rm /etc/resolvconf/resolv.conf.d/tail \n");
+
     // start network manager
     qaulConfigProcess->write("/usr/bin/service network-manager start \n");
     qaulConfigProcess->write("exit \n");
@@ -365,6 +368,15 @@ void Qaul::QaulWifiConfigure(void)
 
     // write wifi sucess token
     qaulConfigProcess->write("/bin/echo 'qaulTokenWifi' \n");
+
+    // set dns server manually
+    // TODO: preserve old tail / make all configuration via nm
+    qaulConfigProcess->write("/bin/rm /etc/resolvconf/resolv.conf.d/tail \n");
+    QString myPath = QApplication::applicationDirPath();
+    QString myCmd;
+    myCmd = "/bin/cp " +myPath +"/tail /etc/resolvconf/resolv.conf.d/tail \n";
+    qaulConfigProcess->write(myCmd.toUtf8().constData());
+    qaulConfigProcess->write("resolvconf -u \n");
 
     qDebug() << "process cmd written";
 

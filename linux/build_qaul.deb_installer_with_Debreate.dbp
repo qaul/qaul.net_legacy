@@ -160,6 +160,7 @@ Description: tools for the next revolution
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/index.js -> index.js -> /usr/share/qaul/www
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/qaul* -> qaul -> /usr/share/qaul
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/portfwd.conf -> portfwd.conf -> /usr/share/qaul
+/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/tail -> tail -> /usr/share/qaul
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/olsrd_qaul.so.0.1* -> olsrd_qaul.so.0.1 -> /usr/share/qaul
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/olsrd* -> olsrd -> /usr/share/qaul
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/Makefile -> Makefile -> /usr/share/qaul
