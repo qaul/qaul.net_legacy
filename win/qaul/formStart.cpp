@@ -108,14 +108,6 @@ void formStart::QaulStarting(void)
 		qaulStartCounter = 10;
 	}
 
-#ifdef ARS_EDITION
-	if(qaulStartCounter == 10)
-	{
-		if(Qaullib_TimedCheckAppEvent() == QAUL_EVENT_QUIT)
-			qaulStartCounter = 9;
-	}
-#endif
-
 	// check authorization rights
 	if(qaulStartCounter == 10)
 	{
