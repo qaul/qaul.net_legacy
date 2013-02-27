@@ -159,7 +159,7 @@
 }
 
 
-- (BOOL)connect2network:(AuthorizationRef)authRef name:(NSString*)name channel:(int)channel interface:(SCNetworkInterfaceRef)interface
+- (BOOL)connect2network:(AuthorizationRef)authRef name:(NSString*)name channel:(int)channel interface:(SCNetworkInterfaceRef)interface service:(SCNetworkServiceRef)service
 {
 	NSLog(@"connect 2 network\n");
 	
@@ -223,7 +223,9 @@
 				[params setValue:nil forKey:kCWAssocKeyPassphrase];
 				created = [wifiInterface associateToNetwork:selectedNetwork parameters:[NSDictionary dictionaryWithDictionary:params] error:&error];
 				if(created) 
+				{
 					NSLog(@"qaul.net joined");
+				}
 				else 
 					NSLog(@"joining qaul.net failed: %@", error);				
 			}
@@ -234,6 +236,12 @@
 			}
 
 		}
+		
+		// set dns servers for internet gateway
+		// TODO: WLAN adapter names with spaces
+		if([self syscall:authRef command:networksetupPath arguments:[NSArray arrayWithObjects:@"-setdnsservers",SCNetworkServiceGetName(service),@"88.84.130.20",@"194.50.176.206",nil]])
+			NSLog(@"DNS servers set");
+			
 		return created;
 	}
 #endif

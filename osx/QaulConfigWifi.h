@@ -29,7 +29,7 @@
 - (BOOL)stopAirport:(AuthorizationRef)authRef interface:(SCNetworkInterfaceRef)interface;
 - (BOOL)setAddress:(AuthorizationRef)authRef address:(NSString*)address service:(SCNetworkServiceRef)service;
 - (BOOL)setDhcp:(AuthorizationRef)authRef service:(SCNetworkServiceRef)service interface:(SCNetworkInterfaceRef)interface;
-- (BOOL)connect2network:(AuthorizationRef)authRef name:(NSString*)name channel:(int)channel interface:(SCNetworkInterfaceRef)interface;
+- (BOOL)connect2network:(AuthorizationRef)authRef name:(NSString*)name channel:(int)channel interface:(SCNetworkInterfaceRef)interface service:(SCNetworkServiceRef)service;
 - (BOOL)startOlsrd:(AuthorizationRef)authRef interface:(SCNetworkInterfaceRef)interface;
 - (BOOL)stopOlsrd:(AuthorizationRef)authRef;
 - (BOOL)startPortForwarding:(AuthorizationRef)authRef interface:(SCNetworkInterfaceRef)interface;
