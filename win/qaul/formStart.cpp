@@ -108,14 +108,6 @@ void formStart::QaulStarting(void)
 		qaulStartCounter = 10;
 	}
 
-#ifdef ARS_EDITION
-	if(qaulStartCounter == 10)
-	{
-		if(Qaullib_TimedCheckAppEvent() == QAUL_EVENT_QUIT)
-			qaulStartCounter = 9;
-	}
-#endif
-
 	// check authorization rights
 	if(qaulStartCounter == 10)
 	{
@@ -460,6 +452,9 @@ bool formStart::WifiSetIp(void)
 	System::String^ ip = Marshal::PtrToStringAnsi((IntPtr) (char *) Qaullib_GetIP());
 	pin_ptr<const TCHAR> ipTchar = PtrToStringChars(ip);
 	TCHAR cCmdBuf[5000];
+
+	// --------------------------------------------------------------
+	// set ip
 	_stprintf(cCmdBuf,_T("netsh interface ip set address %i static %s 255.0.0.0 0.0.0.0 1"),
 							(int)netInterface->InterfaceIndex,
 							ipTchar
@@ -470,6 +465,94 @@ bool formStart::WifiSetIp(void)
 
 	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
 		Debug::WriteLine(System::String::Format("ip configuration error: {0}",GetLastError()));
+		return false;
+	}
+	else
+	{
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, INFINITE );
+
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );
+	}
+
+	// --------------------------------------------------------------
+	// set DNS
+	_stprintf(cCmdBuf,_T("netsh interface ip add dns %i static none"),
+							(int)netInterface->InterfaceIndex
+							);
+
+	strCmd = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("{0}", strCmd));
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		Debug::WriteLine(System::String::Format("dns configuration error: {0}",GetLastError()));
+		return false;
+	}
+	else
+	{
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, INFINITE );
+
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );
+	}
+
+	_stprintf(cCmdBuf,_T("netsh interface ip add dns %i 88.84.130.20 1"),
+							(int)netInterface->InterfaceIndex
+							);
+
+	strCmd = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("{0}", strCmd));
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		Debug::WriteLine(System::String::Format("dns configuration error: {0}",GetLastError()));
+		return false;
+	}
+	else
+	{
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, INFINITE );
+
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );
+	}
+
+	_stprintf(cCmdBuf,_T("netsh interface ip add dns %i 194.50.176.206 2"),
+							(int)netInterface->InterfaceIndex
+							);
+
+	strCmd = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("{0}", strCmd));
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		Debug::WriteLine(System::String::Format("dns configuration error: {0}",GetLastError()));
+		return false;
+	}
+	else
+	{
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, INFINITE );
+
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );
+	}
+
+	// --------------------------------------------------------------
+	// remove bogous default gateway
+	_stprintf(cCmdBuf,_T("route delete 0.0.0.0 0.0.0.0 if %i"),
+							(int)netInterface->InterfaceIndex
+							);
+
+	strCmd = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("{0}", strCmd));
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		Debug::WriteLine(System::String::Format("gateway delete error: {0}",GetLastError()));
 		return false;
 	}
 	else
