@@ -8,10 +8,10 @@ qaul.net implements a redundant, open communication principle, in which wireless
 http://www.qaul.net
 
 
-Testing Binaries
------------------
+Test Binaries
+--------------
 
-Download the current testing binaries from the [binary_release](https://github.com/WachterJud/qaul.net/tree/master/binary_release) folder.
+Download the current test binaries from the [binary_release](https://github.com/WachterJud/qaul.net/tree/master/binary_release) folder.
 
 
 Documentation
