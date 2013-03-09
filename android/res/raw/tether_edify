@@ -141,7 +141,16 @@ action() == "start" && (
 		run_program("/data/data/net.qaul.qaul/bin/fixpersist.sh "+ getcfg("wifi.interface") +" "+ getcfg("wifi.essid") +" "+ getcfg("wifi.channel") +" & echo $! > /data/data/net.qaul.qaul/var/fixpersist.pid");
       );
     );
-
+	
+    #
+    # set DNS servers
+    #    
+   log("set DNS servers");
+   log(run_program("setprop net.rmnet0.dns1 88.84.130.20"), "setprop net.rmnet0.dns1 88.84.130.20");
+   log(run_program("setprop net.rmnet0.dns2 194.50.176.206"), "setprop net.rmnet0.dns2 194.50.176.206");
+   log(run_program("setprop net.dns1 88.84.130.20"), "setprop net.dns1 88.84.130.20");
+   log(run_program("setprop net.dns2 194.50.176.206"), "setprop net.dns2 194.50.176.206");
+	
   log("Tethering now running");
 );
 
