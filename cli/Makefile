@@ -112,6 +112,44 @@ LIBS= \
     -lm
 endif
 
+# raspberry pi
+ifeq ($(OS),raspberry)
+LIBS= \
+    -lpjsua-armv6l-unknown-linux-gnu \
+    -lpjsip-ua-armv6l-unknown-linux-gnu \
+    -lpjsip-simple-armv6l-unknown-linux-gnu \
+    -lpjsip-armv6l-unknown-linux-gnu \
+    -lpjmedia-codec-armv6l-unknown-linux-gnu \
+    -lpjmedia-videodev-armv6l-unknown-linux-gnu \
+    -lpjmedia-armv6l-unknown-linux-gnu \
+    -lpjmedia-audiodev-armv6l-unknown-linux-gnu \
+    -lpjnath-armv6l-unknown-linux-gnu \
+    -lpjlib-util-armv6l-unknown-linux-gnu \
+    -lresample-armv6l-unknown-linux-gnu \
+    -lmilenage-armv6l-unknown-linux-gnu \
+    -lsrtp-armv6l-unknown-linux-gnu \
+    -lgsmcodec-armv6l-unknown-linux-gnu \
+    -lspeex-armv6l-unknown-linux-gnu \
+    -lilbccodec-armv6l-unknown-linux-gnu \
+    -lg7221codec-armv6l-unknown-linux-gnu \
+    -lportaudio-armv6l-unknown-linux-gnu \
+    -lpj-armv6l-unknown-linux-gnu \
+    \
+    -L/usr/local/lib \
+    -lavformat \
+    -lavcodec \
+    -lswscale \
+    -lavutil \
+    -lasound \
+    -lcrypto \
+    -lssl \
+    \
+    -lpthread \
+    -ldl \
+    -luuid \
+    -lm
+endif
+
 # windows
 ifeq ($(OS),win)
 LIBDEST_WIN= \
@@ -135,14 +173,17 @@ CFLAGS= \
 	-I$(PJBASE)/third_party/srtp/include	
 
 SRC= ../libqaul/qaullib.c ../libqaul/qaullib_ipc.c ../libqaul/qaullib_webserver.c ../libqaul/qaullib_voip.c \
-     ../libqaul/qaullib_webclient.c ../libqaul/qaullib_filesharing.c ../libqaul/qaullib_threads.c \
+     ../libqaul/qaullib_webclient.c ../libqaul/qaullib_threads.c \
      ../libqaul/qaullib_user.c ../libqaul/qaullib_user_LL.c \
+     ../libqaul/qaullib_filesharing.c ../libqaul/qaullib_file_LL.c \
+     ../libqaul/qaullib_exediscovery.c \
+     ../libqaul/qaullib_udp_communication.c \
      ../libqaul/captive/qaullib_captive.c ../libqaul/captive/qaullib_captive_dhcp.c ../libqaul/captive/qaullib_captive_dns.c \
      ../libqaul/mongoose/mongoose.c ../libqaul/sqlite/sqlite3.c \
-     ../libqaul/urlcode/urlcode.c ../libqaul/bstrlib/bstrlib.c ../libqaul/polarssl/sha1.c \
+     ../libqaul/urlcode/urlcode.c ../libqaul/polarssl/sha1.c \
      ../libqaul/olsrd/mantissa.c ../libqaul/olsrd/hashing.c \
      $(SRC_WIN) \
-	 main.c
+     main.c
 
 LIBDIR= \
 	-L$(PJBASE)/pjlib/lib \
@@ -158,7 +199,7 @@ OBJS=$(SRC:.c=.o)
 
 ifndef OS
 all:
-	@echo "make ( OS=osx | OS=linux | OS=win )"
+	@echo "make ( OS=osx | OS=linux | OS=win | OS=raspberry )"
 	@echo "make clean ( OS=win )"
 else
 all: $(OBJS)
@@ -173,6 +214,16 @@ ifeq ($(OS),osx)
 	@cp -R ../www ./
 endif
 ifeq ($(OS),linux)
+	@echo application Makefile - linking qaul
+	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul $(LFLAGS)
+	@echo copy olsrd executable into this directory
+	@cp ../olsrd_0.6.2/olsrd ./
+	@echo copy olsrd_qaul plugin into this directory
+	@cp ../olsrd_0.6.2/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
+	@echo copy www folder into this directory
+	@cp -R ../www ./
+endif
+ifeq ($(OS),raspberry)
 	@echo application Makefile - linking qaul
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul $(LFLAGS)
 	@echo copy olsrd executable into this directory

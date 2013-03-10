@@ -1,10 +1,11 @@
 Linux Instructions
 ==================
 
-qaul.net was tested on:
+qaul.net has been tested on:
 * Ubuntu 11.10: Oneiric Ocelot
+* Ubuntu 12.04: Precise Pangolin
 
-It should work on all recent Debian & Ubuntu distributions.
+It should run on all recent Debian & Ubuntu distributions.
 
 
 Installation and Compile Instructions

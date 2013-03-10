@@ -6,9 +6,10 @@ The CLI client is mainly for testing purposes.
 builds and runs on the following platforms:
 * Linux
 * OSX
-* Windows 7
+* Windows 7, Windows 8
+* Raspberry Pi
 
-Feel free to port it to the other supported platforms.
+Feel free to port it to other platforms.
 
 
 Compile Instructions
@@ -26,6 +27,7 @@ Check the build instructions for your platform
 * [ Windows ] (https://github.com/WachterJud/qaul.net/blob/master/win/README.md)
 * [ OSX ]     (https://github.com/WachterJud/qaul.net/blob/master/osx/README.md)
 * [ Linux ]   (https://github.com/WachterJud/qaul.net/blob/master/linux/README.md)
+* [ Raspberry Pi ]   (https://github.com/WachterJud/qaul.net/blob/master/raspberry/README.md)
 
 
 Build the CLI client
@@ -37,6 +39,8 @@ Build the CLI client
     make OS=win
     # for OSX
     make OS=osx
+    # for Raspberry Pi
+    make OS=raspberry
 
 
 Run CLI
