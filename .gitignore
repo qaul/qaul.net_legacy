@@ -40,6 +40,7 @@ cli/qaul.exe
 cli/olsrd
 cli/olsrd.exe
 cli/www
+cli/olsrd_dyn_gw.so.0.5
 
 # build files & executables
 *.[oad]

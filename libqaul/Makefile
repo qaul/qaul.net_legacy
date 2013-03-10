@@ -14,6 +14,9 @@ endif
 # linux
 ifeq ($(OS),linux)
 endif
+# raspberry pi
+ifeq ($(OS),raspberry)
+endif
 # Windows
 ifeq ($(OS),win)
 PJ_WIN32=1
@@ -86,7 +89,7 @@ OBJS=$(SRC:.c=.o)
 
 ifndef OS
 all:
-	@echo "make ( OS=osx | OS=linux | OS=win )"
+	@echo "make ( OS=osx | OS=linux | OS=win | OS=raspberry )"
 	@echo "make clean ( OS=win )"
 else
 all: $(OBJS)
