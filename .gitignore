@@ -2,6 +2,8 @@
 .DS_Store
 [Tt]humbs.db
 *~
+*.swp
+*.lock
 
 # Eclipse
 .project
@@ -21,8 +23,21 @@ win/qaul/Release
 # Xcode
 osx/build/
 ios/build/
+DerivedData/
 *.mode1v3
 *.pbxuser
+*~.nib
+*.mode2v3
+*.perspectivev3
+!default.pbxuser
+!default.mode1v3
+!default.mode2v3
+!default.perspectivev3
+xcuserdata/**/*
+!xcuserdata/**/xcschemes/*
+LatestBuild
+ios/Packages
+qaul.net.app
 
 # QT
 linux/qaul-build-desktop

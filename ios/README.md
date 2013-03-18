@@ -5,6 +5,16 @@ qaul.net tested on:
 * iOS 5.1.1 iphone 4
 
 
+Prerequisites
+-------------
+
+The following setup was used to
+
+* Xcode 4.5
+* iOSOpenDev http://iosopendev.com/download/
+* The iPhone needs to be jailbreaked
+
+
 Installation and Compile Instructions
 --------------------------------------
 
@@ -30,8 +40,22 @@ Now build pjsip
 Compile qaullib: 
 Open the qaullib Xcode project ios/qaullib.xcodeproj and build the static library.
 
-Compile iOS: 
-Open the iOS project in Xcode to run qaul.net
+Compile iOS
+* Open the iOS project in Xcode
+* Make sure you can SSH to your iPhone from your developer machine
+* Change target > Build Settings > User-Defined > iOSOpenDevDevice from "iqaul.local" to 
+  your device name or device IP.
+* Perform a “Build For Profiling” ( cmd + shift + i ) to build and install qaul.net via
+  iOSOpenDev
+* Start qaul.net app manually on your iPhone
+
+Watch the log output on your iPhone
+* Install syslogd from cydia store on your iPhone (restart the device after installation)
+* Create a SSH over USB connection to your iPhone (e.g. via iTools 
+  http://itools.hk/cms/webpage32.htm )
+* Display the logs:
+
+    tail -f /var/log/syslog
 
 
 Optional: compile olsrd and olsrd_qaul plugin

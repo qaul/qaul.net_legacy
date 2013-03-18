@@ -1453,7 +1453,7 @@ static void Qaullib_WwwLoading(struct mg_connection *conn, const struct mg_reque
 		// show set user name
 		mg_printf(conn, "\"change\":1,\"page\":\"#page_config_locale\"");
 	}
-	else if(qaul_conf_ios && qaul_conf_wifi_set == 0)
+	else if(qaul_conf_ios == 1 && qaul_conf_wifi_set == 0)
 	{
 		// show open wifi page
 		mg_printf(conn, "\"change\":1,\"page\":\"#page_iphone\"");

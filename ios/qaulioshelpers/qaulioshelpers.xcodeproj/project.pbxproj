@@ -1,0 +1,628 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		494CB01416F784B100C647EB /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 494CB01316F784B100C647EB /* main.c */; };
+		494CB02916F784D900C647EB /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 494CB02816F784D900C647EB /* main.c */; };
+		494CB03E16F784EA00C647EB /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 494CB03D16F784EA00C647EB /* main.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		494CB00616F784B100C647EB /* qstartolsr */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = qstartolsr; sourceTree = BUILT_PRODUCTS_DIR; };
+		494CB00D16F784B100C647EB /* control */ = {isa = PBXFileReference; lastKnownFileType = text; name = control; path = Package/DEBIAN/control; sourceTree = "<group>"; };
+		494CB00F16F784B100C647EB /* PackageVersion.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PackageVersion.plist; sourceTree = "<group>"; };
+		494CB01216F784B100C647EB /* 0xdeadfa11 */ = {isa = PBXFileReference; lastKnownFileType = text; name = 0xdeadfa11; path = Package/usr/bin/0xdeadfa11; sourceTree = "<group>"; };
+		494CB01316F784B100C647EB /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		494CB01C16F784D900C647EB /* qstopolsr */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = qstopolsr; sourceTree = BUILT_PRODUCTS_DIR; };
+		494CB02216F784D900C647EB /* control */ = {isa = PBXFileReference; lastKnownFileType = text; name = control; path = Package/DEBIAN/control; sourceTree = "<group>"; };
+		494CB02416F784D900C647EB /* PackageVersion.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PackageVersion.plist; sourceTree = "<group>"; };
+		494CB02716F784D900C647EB /* 0xdeadfa11 */ = {isa = PBXFileReference; lastKnownFileType = text; name = 0xdeadfa11; path = Package/usr/bin/0xdeadfa11; sourceTree = "<group>"; };
+		494CB02816F784D900C647EB /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		494CB03116F784EA00C647EB /* qsetip */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = qsetip; sourceTree = BUILT_PRODUCTS_DIR; };
+		494CB03716F784EA00C647EB /* control */ = {isa = PBXFileReference; lastKnownFileType = text; name = control; path = Package/DEBIAN/control; sourceTree = "<group>"; };
+		494CB03916F784EA00C647EB /* PackageVersion.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PackageVersion.plist; sourceTree = "<group>"; };
+		494CB03C16F784EA00C647EB /* 0xdeadfa11 */ = {isa = PBXFileReference; lastKnownFileType = text; name = 0xdeadfa11; path = Package/usr/bin/0xdeadfa11; sourceTree = "<group>"; };
+		494CB03D16F784EA00C647EB /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		494CB00316F784B100C647EB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		494CB01916F784D900C647EB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		494CB02E16F784EA00C647EB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		494CAFF916F7849E00C647EB = {
+			isa = PBXGroup;
+			children = (
+				494CB00916F784B100C647EB /* qstartolsr */,
+				494CB01E16F784D900C647EB /* qstopolsr */,
+				494CB03316F784EA00C647EB /* qsetip */,
+				494CB00716F784B100C647EB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		494CB00716F784B100C647EB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				494CB00616F784B100C647EB /* qstartolsr */,
+				494CB01C16F784D900C647EB /* qstopolsr */,
+				494CB03116F784EA00C647EB /* qsetip */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		494CB00916F784B100C647EB /* qstartolsr */ = {
+			isa = PBXGroup;
+			children = (
+				494CB01316F784B100C647EB /* main.c */,
+				494CB00A16F784B100C647EB /* Package */,
+				494CB00E16F784B100C647EB /* Supporting Files */,
+			);
+			path = qstartolsr;
+			sourceTree = "<group>";
+		};
+		494CB00A16F784B100C647EB /* Package */ = {
+			isa = PBXGroup;
+			children = (
+				494CB00B16F784B100C647EB /* DEBIAN */,
+				494CB01016F784B100C647EB /* usr */,
+			);
+			name = Package;
+			sourceTree = "<group>";
+		};
+		494CB00B16F784B100C647EB /* DEBIAN */ = {
+			isa = PBXGroup;
+			children = (
+				494CB00D16F784B100C647EB /* control */,
+			);
+			name = DEBIAN;
+			sourceTree = "<group>";
+		};
+		494CB00E16F784B100C647EB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				494CB00F16F784B100C647EB /* PackageVersion.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		494CB01016F784B100C647EB /* usr */ = {
+			isa = PBXGroup;
+			children = (
+				494CB01116F784B100C647EB /* bin */,
+			);
+			name = usr;
+			sourceTree = "<group>";
+		};
+		494CB01116F784B100C647EB /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				494CB01216F784B100C647EB /* 0xdeadfa11 */,
+			);
+			name = bin;
+			sourceTree = "<group>";
+		};
+		494CB01E16F784D900C647EB /* qstopolsr */ = {
+			isa = PBXGroup;
+			children = (
+				494CB02816F784D900C647EB /* main.c */,
+				494CB01F16F784D900C647EB /* Package */,
+				494CB02316F784D900C647EB /* Supporting Files */,
+			);
+			path = qstopolsr;
+			sourceTree = "<group>";
+		};
+		494CB01F16F784D900C647EB /* Package */ = {
+			isa = PBXGroup;
+			children = (
+				494CB02016F784D900C647EB /* DEBIAN */,
+				494CB02516F784D900C647EB /* usr */,
+			);
+			name = Package;
+			sourceTree = "<group>";
+		};
+		494CB02016F784D900C647EB /* DEBIAN */ = {
+			isa = PBXGroup;
+			children = (
+				494CB02216F784D900C647EB /* control */,
+			);
+			name = DEBIAN;
+			sourceTree = "<group>";
+		};
+		494CB02316F784D900C647EB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				494CB02416F784D900C647EB /* PackageVersion.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		494CB02516F784D900C647EB /* usr */ = {
+			isa = PBXGroup;
+			children = (
+				494CB02616F784D900C647EB /* bin */,
+			);
+			name = usr;
+			sourceTree = "<group>";
+		};
+		494CB02616F784D900C647EB /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				494CB02716F784D900C647EB /* 0xdeadfa11 */,
+			);
+			name = bin;
+			sourceTree = "<group>";
+		};
+		494CB03316F784EA00C647EB /* qsetip */ = {
+			isa = PBXGroup;
+			children = (
+				494CB03D16F784EA00C647EB /* main.c */,
+				494CB03416F784EA00C647EB /* Package */,
+				494CB03816F784EA00C647EB /* Supporting Files */,
+			);
+			path = qsetip;
+			sourceTree = "<group>";
+		};
+		494CB03416F784EA00C647EB /* Package */ = {
+			isa = PBXGroup;
+			children = (
+				494CB03516F784EA00C647EB /* DEBIAN */,
+				494CB03A16F784EA00C647EB /* usr */,
+			);
+			name = Package;
+			sourceTree = "<group>";
+		};
+		494CB03516F784EA00C647EB /* DEBIAN */ = {
+			isa = PBXGroup;
+			children = (
+				494CB03716F784EA00C647EB /* control */,
+			);
+			name = DEBIAN;
+			sourceTree = "<group>";
+		};
+		494CB03816F784EA00C647EB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				494CB03916F784EA00C647EB /* PackageVersion.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		494CB03A16F784EA00C647EB /* usr */ = {
+			isa = PBXGroup;
+			children = (
+				494CB03B16F784EA00C647EB /* bin */,
+			);
+			name = usr;
+			sourceTree = "<group>";
+		};
+		494CB03B16F784EA00C647EB /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				494CB03C16F784EA00C647EB /* 0xdeadfa11 */,
+			);
+			name = bin;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		494CB00516F784B100C647EB /* qstartolsr */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 494CB01516F784B100C647EB /* Build configuration list for PBXNativeTarget "qstartolsr" */;
+			buildPhases = (
+				494CB00216F784B100C647EB /* Sources */,
+				494CB00316F784B100C647EB /* Frameworks */,
+				494CB00416F784B100C647EB /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = qstartolsr;
+			productName = qstartolsr;
+			productReference = 494CB00616F784B100C647EB /* qstartolsr */;
+			productType = "com.apple.product-type.tool";
+		};
+		494CB01B16F784D900C647EB /* qstopolsr */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 494CB02A16F784D900C647EB /* Build configuration list for PBXNativeTarget "qstopolsr" */;
+			buildPhases = (
+				494CB01816F784D900C647EB /* Sources */,
+				494CB01916F784D900C647EB /* Frameworks */,
+				494CB01A16F784D900C647EB /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = qstopolsr;
+			productName = qstopolsr;
+			productReference = 494CB01C16F784D900C647EB /* qstopolsr */;
+			productType = "com.apple.product-type.tool";
+		};
+		494CB03016F784EA00C647EB /* qsetip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 494CB03F16F784EA00C647EB /* Build configuration list for PBXNativeTarget "qsetip" */;
+			buildPhases = (
+				494CB02D16F784EA00C647EB /* Sources */,
+				494CB02E16F784EA00C647EB /* Frameworks */,
+				494CB02F16F784EA00C647EB /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = qsetip;
+			productName = qsetip;
+			productReference = 494CB03116F784EA00C647EB /* qsetip */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		494CAFFB16F7849E00C647EB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+			};
+			buildConfigurationList = 494CAFFE16F7849E00C647EB /* Build configuration list for PBXProject "qaulioshelpers" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 494CAFF916F7849E00C647EB;
+			productRefGroup = 494CB00716F784B100C647EB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				494CB00516F784B100C647EB /* qstartolsr */,
+				494CB01B16F784D900C647EB /* qstopolsr */,
+				494CB03016F784EA00C647EB /* qsetip */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		494CB00416F784B100C647EB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/opt/iOSOpenDev/bin/iosod --xcbp";
+		};
+		494CB01A16F784D900C647EB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/opt/iOSOpenDev/bin/iosod --xcbp";
+		};
+		494CB02F16F784EA00C647EB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/opt/iOSOpenDev/bin/iosod --xcbp";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		494CB00216F784B100C647EB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				494CB01416F784B100C647EB /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		494CB01816F784D900C647EB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				494CB02916F784D900C647EB /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		494CB02D16F784EA00C647EB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				494CB03E16F784EA00C647EB /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		494CB00016F7849E00C647EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				HEADER_SEARCH_PATHS = "$(iOSOpenDevPath)/include/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = "$(iOSOpenDevPath)/lib/**";
+				SDKROOT = iphoneos;
+				iOSOpenDevPath = /opt/iOSOpenDev;
+			};
+			name = Debug;
+		};
+		494CB00116F7849E00C647EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				HEADER_SEARCH_PATHS = "$(iOSOpenDevPath)/include/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = "$(iOSOpenDevPath)/lib/**";
+				SDKROOT = iphoneos;
+				iOSOpenDevPath = /opt/iOSOpenDev;
+			};
+			name = Release;
+		};
+		494CB01616F784B100C647EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /usr/bin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = NO;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = iqaul.local;
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Debug;
+		};
+		494CB01716F784B100C647EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /usr/bin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = iqaul.local;
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Release;
+		};
+		494CB02B16F784D900C647EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /usr/bin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = NO;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = iqaul.local;
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Debug;
+		};
+		494CB02C16F784D900C647EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /usr/bin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = iqaul.local;
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Release;
+		};
+		494CB04016F784EA00C647EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /usr/bin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = NO;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = iqaul.local;
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Debug;
+		};
+		494CB04116F784EA00C647EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /usr/bin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = iqaul.local;
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		494CAFFE16F7849E00C647EB /* Build configuration list for PBXProject "qaulioshelpers" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				494CB00016F7849E00C647EB /* Debug */,
+				494CB00116F7849E00C647EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		494CB01516F784B100C647EB /* Build configuration list for PBXNativeTarget "qstartolsr" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				494CB01616F784B100C647EB /* Debug */,
+				494CB01716F784B100C647EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		494CB02A16F784D900C647EB /* Build configuration list for PBXNativeTarget "qstopolsr" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				494CB02B16F784D900C647EB /* Debug */,
+				494CB02C16F784D900C647EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		494CB03F16F784EA00C647EB /* Build configuration list for PBXNativeTarget "qsetip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				494CB04016F784EA00C647EB /* Debug */,
+				494CB04116F784EA00C647EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 494CAFFB16F7849E00C647EB /* Project object */;
+}

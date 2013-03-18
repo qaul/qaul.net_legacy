@@ -1,0 +1,23 @@
+Package: net.qaul.qaul-net
+Name: qaul.net
+Version: 0.1-1
+Description: tools for the next revolution
+ independent networking, 
+ wifi mesh network, 
+ text messaging, chat, 
+ file sharing, 
+ VoIP, voice calls, 
+ olsr
+Section: Networking
+Depends: firmware (>= 5.0)
+Conflicts: 
+Replaces: 
+Priority: optional
+Architecture: iphoneos-arm
+Author: Christoph Wachter & Mathias Jud
+dev: 
+Homepage: http://qaul.net
+Depiction: 
+Maintainer: qaul.net community <contact@qaul.net>
+Icon: 
+
