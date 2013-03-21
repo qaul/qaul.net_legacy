@@ -21,7 +21,7 @@
 	
 	// set configuration
 	Qaullib_SetConf(QAUL_CONF_QUIT);
-	//Qaullib_SetConf(QAUL_CONF_IOS);
+	Qaullib_SetConf(QAUL_CONF_IOS);
 	
 	// start web server
 	NSLog(@"start web server");
@@ -157,8 +157,8 @@
 	// check authorization
 	if(qaulStarted == 10)
 	{
-		// todo: how to get root previleges?
-		
+        // nothing to do here for the moment
+        
 		qaulStarted = 20;
 	}
 	
@@ -186,7 +186,9 @@
 	if(qaulStarted == 25)
 	{
 		// set static ip as root
-		//system("/usr/bin/qsetip");
+		NSString *myip = [NSString stringWithFormat:@"/usr/bin/qaulhelper setip %s", Qaullib_GetIP()];
+		system([myip UTF8String]);
+        NSLog(@"* * * ip configured * * *");
         
 		qaulStarted = 40;
 	}
@@ -196,7 +198,7 @@
 	if(qaulStarted == 40)
 	{
 		NSLog(@"* * * start olsrd * * *");
-		system("/usr/bin/qstartolsr");
+		system("/usr/bin/qaulhelper startolsrd");
 		NSLog(@"* * * olsrd started * * *");
 		
 		qaulStarted = 44;
@@ -216,10 +218,16 @@
 	// connect captive
 	if(qaulStarted == 46)
 	{
+		// start VoIP
+		Qaullib_SetConfVoIP();
+		
+		// start
+		Qaullib_UDP_StartServer();
+		
 		// start captive portal
 		Qaullib_CaptiveStart();
 		
-		// start port forwarding
+		// TODO: start port forwarding
 		//success = [mysudo startPortForwarding:authorizationRef interface:qaulWifiInterface];
 		
 		// TODO: configure firewall
@@ -348,7 +356,9 @@
         }
         else if(appEvent == QAUL_EVENT_QUIT)
         {
-//            [NSApp terminate:nil];
+            NSLog(@"QAUL_EVENT_QUIT\n");
+            system("/usr/bin/qaulhelper stopolsrd");            
+            exit(0);
         }
         else if(appEvent == QAUL_EVENT_NOTIFY || appEvent == QAUL_EVENT_RING)
         {

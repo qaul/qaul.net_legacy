@@ -58,20 +58,6 @@ extern "C" {
 
 
 /**
- * extension for the Ars Electronica Edition
- *
- * UTC timestamps of the rehearsal of the Klangwolke and of the Klangwolke
- *
- * Klangwolke:
- * local time: 1. September 2012 20:30 � 22:00
- * UTC:        1. September 2012 18:00 � 18:00
- * UTC time stamp: 1346524200 - 1346529600
- */
-#define ARS_AUS_1   1346524200
-#define ARS_EIN_1   1346529600
-
-
-/**
  * for debugging messages switch this to 1
  */
 #define QAUL_DEBUG              1

@@ -341,6 +341,7 @@ static void Qaullib_WwwSetWifiSet(struct mg_connection *conn, const struct mg_re
 		printf("Qaullib_WwwSetWifiSet\n");
 
 	qaul_conf_wifi_set = 1;
+	qaul_gui_pagename_set = 0;
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");

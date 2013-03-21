@@ -1,6 +1,6 @@
-Package: net.qaul.qstopolsr
-Name: qstopolsr
-Version: 0.1-1
+Package: net.qaul.qaulhelper
+Name: qaulhelper
+Version: 1.0-1
 Description: 
 Section: System
 Depends: firmware (>= 5.0)

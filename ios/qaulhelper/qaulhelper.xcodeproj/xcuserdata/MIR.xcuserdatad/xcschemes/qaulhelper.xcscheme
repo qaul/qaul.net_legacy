@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "494CB00516F784B100C647EB"
-               BuildableName = "qstartolsr"
-               BlueprintName = "qstartolsr"
-               ReferencedContainer = "container:qaulioshelpers.xcodeproj">
+               BlueprintIdentifier = "494CB05016F9D81700C647EB"
+               BuildableName = "qaulhelper"
+               BlueprintName = "qaulhelper"
+               ReferencedContainer = "container:qaulhelper.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "494CB00516F784B100C647EB"
-            BuildableName = "qstartolsr"
-            BlueprintName = "qstartolsr"
-            ReferencedContainer = "container:qaulioshelpers.xcodeproj">
+            BlueprintIdentifier = "494CB05016F9D81700C647EB"
+            BuildableName = "qaulhelper"
+            BlueprintName = "qaulhelper"
+            ReferencedContainer = "container:qaulhelper.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -51,10 +51,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "494CB00516F784B100C647EB"
-            BuildableName = "qstartolsr"
-            BlueprintName = "qstartolsr"
-            ReferencedContainer = "container:qaulioshelpers.xcodeproj">
+            BlueprintIdentifier = "494CB05016F9D81700C647EB"
+            BuildableName = "qaulhelper"
+            BlueprintName = "qaulhelper"
+            ReferencedContainer = "container:qaulhelper.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -69,10 +69,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "494CB00516F784B100C647EB"
-            BuildableName = "qstartolsr"
-            BlueprintName = "qstartolsr"
-            ReferencedContainer = "container:qaulioshelpers.xcodeproj">
+            BlueprintIdentifier = "494CB05016F9D81700C647EB"
+            BuildableName = "qaulhelper"
+            BlueprintName = "qaulhelper"
+            ReferencedContainer = "container:qaulhelper.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
