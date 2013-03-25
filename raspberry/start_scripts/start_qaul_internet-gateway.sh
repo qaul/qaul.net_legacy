@@ -1,5 +1,5 @@
 #!/bin/bash
-# use raspberry pi as an Internet gateway and infrastructure node for qaul.net
+# use raspberry pi as an Internet gateway and run qaul.net
 
 # uncomment the following line if you execute the script via /etc/rc.local
 #sleep 60
@@ -9,8 +9,8 @@ echo $SCRIPT_DIR
 cd $SCRIPT_DIR
 
 # configure wifi
-./wifi_qaul.sh wlan0 10.111.1.1
-./wifi_qaul.sh wlan1 10.111.1.2
+./wifi_qaul.sh wlan0 10.111.1.10
+./wifi_qaul.sh wlan1 10.111.1.11
 
 # configure internet over wifi
 #./wifi_dhcp.sh wlan2 wangba
@@ -20,3 +20,9 @@ cd $SCRIPT_DIR
 
 # start NAT for Internet sharing
 ./nat.sh eth0
+
+# start qaul
+./qaul.sh
+
+# start captive portal
+./portfwd.sh 10.111.1.10 10.111.1.11

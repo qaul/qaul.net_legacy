@@ -8,4 +8,6 @@ sudo iwconfig $1 channel 11
 sudo iwconfig $1 essid 'qaul.net'
 #sudo iwconfig $1 ap 02:11:87:88:D6:FF
 sudo ip link set $1 up
-sudo ip addr add $2/24 dev $1
+sudo ifconfig $1 $2 netmask 255.0.0.0 broadcast 255.255.255.255
+
+sleep 2

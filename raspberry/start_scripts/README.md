@@ -12,6 +12,9 @@ Edit one of the startup scripts according to your needs:
 * start_internet-gateway.sh 
   Raspberry is an Internet gateway.
 
+Edit olsrd.conf to load all the needed plugins.
+
+Edit qaul.net data base /home/pi/qaul.net/cli/qaullib.db (set IP, set name)
 
 Set auto start /etc/rc.local
 
