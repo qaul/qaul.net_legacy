@@ -5,5 +5,5 @@ sudo killall qaul
 sudo killall olsrd
 
 # stop port forwarding
-sudo killall portfwd
+#sudo killall portfwd
 sudo iptables -t nat -D PREROUTING 1 

@@ -19,4 +19,7 @@ cd $SCRIPT_DIR
 ./qaul.sh
 
 # start captive portal
-./portfwd.sh 10.111.1.10 10.111.1.11
+./captive_iptables.sh wlan0 10.111.1.10
+./captive_iptables.sh wlan1 10.111.1.11
+#./captive_portfwd.sh 
+./captive_dhcp.sh 
