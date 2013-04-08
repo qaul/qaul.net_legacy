@@ -200,7 +200,7 @@ OBJS=$(SRC:.c=.o)
 ifndef OS
 all:
 	@echo "make ( OS=osx | OS=linux | OS=win | OS=raspberry )"
-	@echo "make clean ( OS=win )"
+	@echo "make clean [ OS=win ]"
 else
 all: $(OBJS)
 ifeq ($(OS),osx)
