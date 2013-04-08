@@ -9,16 +9,15 @@
 # configure access point IP in 
 # /etc/network/interfaces
 
-# configure udhcp server in
-# /etc/udhcpd.conf
-# enable udhcp server in 
-# /etc/default/udhcpd
+# configure isc-dhcp-server server in
+# /etc/default/isc-dhcp-server
+# /etc/dhcp/dhcpd.conf
 
 # configure interface
 sudo ifconfig ap0 192.168.111.1 netmask 255.255.255.0 broadcast 192.168.111.255 
 
 # restart dhcp server
-sudo /etc/init.d/udhcpd restart
+sudo /etc/init.d/isc-dhcp-server restart
 
 # start nat
 ./nat.sh $*

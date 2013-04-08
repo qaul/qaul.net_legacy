@@ -11,6 +11,12 @@ Edit one of the startup scripts according to your needs:
 
 * start_internet-gateway.sh 
   Raspberry is an Internet gateway.
+* start_qaul_internet-gateway.sh 
+  Raspberry is a qaul user and an Internet gateway.
+* start_qaul.sh 
+  Raspberry is a qaul user.
+* start_relais.sh 
+  Raspberry is an olsr infrastructure relais node.
 
 Edit olsrd.conf to load all the needed plugins.
 
