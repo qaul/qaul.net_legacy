@@ -15,6 +15,8 @@
 	QaulConfigWifi *mysudo;
 	NSArray * qaulInterfacesAll;
 	NSEnumerator *en;
+	BOOL qaulInterfaceManual;	
+	NSString *qaulInterfaceName;
 	SCNetworkInterfaceRef qaulWifiInterface;
 	BOOL qaulWifiInterfaceSet;
 	SCNetworkServiceRef qaulServiceId;
