@@ -249,6 +249,7 @@ const char* Qaullib_GetIP(void);
  * @retval 1 sucessfully started
  * @retval 0 failed
  */
+
 int Qaullib_CaptiveStart(void);
 
 /**

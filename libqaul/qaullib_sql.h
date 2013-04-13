@@ -146,7 +146,7 @@ static const char* sql_file_delete_hash = "DELETE FROM 'file' WHERE hash = \"%s\
 /********************************************//**
  * populate configuration
  ***********************************************/
-#define MAX_POPULATE_CONFIG 7
+#define MAX_POPULATE_CONFIG 9
 #define CONFIG_TYPE_INT     0
 #define CONFIG_TYPE_STR     1
 
@@ -159,13 +159,15 @@ struct qaul_populate_config_struct
 };
 
 static struct qaul_populate_config_struct qaul_populate_config[MAX_POPULATE_CONFIG] = {
-	{"net.protocol",   CONFIG_TYPE_INT, "",                  4},
-	{"net.mask",       CONFIG_TYPE_INT, "",                  8},
-	{"net.gateway",    CONFIG_TYPE_STR, "0.0.0.0",           0},
-	{"wifi.channel",   CONFIG_TYPE_INT, "",                 11},
-	{"wifi.bssid_set", CONFIG_TYPE_INT, "",                  0},
-	{"wifi.bssid",     CONFIG_TYPE_STR, "B6:B5:B3:F5:AB:E4", 0},
-	{"wifi.ibss",      CONFIG_TYPE_STR, "qaul.net",          0}
+	{"net.protocol",            CONFIG_TYPE_INT, "",                  4},
+	{"net.mask",                CONFIG_TYPE_INT, "",                  8},
+	{"net.gateway",             CONFIG_TYPE_STR, "0.0.0.0",           0},
+	{"wifi.channel",            CONFIG_TYPE_INT, "",                 11},
+	{"wifi.bssid_set",          CONFIG_TYPE_INT, "",                  0},
+	{"wifi.bssid",              CONFIG_TYPE_STR, "B6:B5:B3:F5:AB:E4", 0},
+	{"wifi.ibss",               CONFIG_TYPE_STR, "qaul.net",          0},
+	{"net.interface.method",    CONFIG_TYPE_INT, "",                  0},
+	{"net.interface.name",      CONFIG_TYPE_STR, "",                  0}
 };
 
 /********************************************//**

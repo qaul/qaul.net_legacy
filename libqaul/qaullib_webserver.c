@@ -16,6 +16,7 @@
 static void Qaullib_WwwSetName(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwSetLocale(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwGetName(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwSetInterface(struct mg_connection *conn, const struct mg_request_info *request_info);
 
 /**
  * Quit program
@@ -183,6 +184,10 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 			{
 				Qaullib_WwwSetPageName(conn, request_info);
 			}
+			else if (strcmp(request_info->uri, "/setinterface") == 0)
+			{
+				Qaullib_WwwSetInterface(conn, request_info);
+			}
 			else if (strcmp(request_info->uri, "/setopenurl.json") == 0)
 			{
 				Qaullib_WwwSetOpenUrl(conn, request_info);
@@ -297,6 +302,33 @@ static void Qaullib_WwwSetLocale(struct mg_connection *conn, const struct mg_req
 	Qaullib_SetLocale(qaul_locale);
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+
+	free(post);
+}
+
+// ------------------------------------------------------------
+static void Qaullib_WwwSetInterface(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	char my_method[2];
+	char *content_length;
+	int length;
+
+	// Fetch values
+	content_length = (char *)mg_get_header(conn, "Content-Length");
+	length = atoi(content_length);
+	char *post = (char *)malloc(length+length/8+1);
+	mg_read(conn, post, length); //read post data
+	// extract variable
+	mg_get_var(post, strlen(post == NULL ? "" : post), "im", my_method, sizeof(my_method));
+	qaul_interface_method = atoi(my_method);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "if", qaul_interface_name, sizeof(qaul_interface_name));
+
+	printf("save interface configuration; method: %i name: %s\n", qaul_interface_method, qaul_interface_name);
+	Qaullib_SetConfInt("net.interface.method", qaul_interface_method);
+	Qaullib_SetConfString("net.interface.name", qaul_interface_name);
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
 
 	free(post);
 }
@@ -493,7 +525,7 @@ static void Qaullib_WwwGetConfig(struct mg_connection *conn, const struct mg_req
 	if(Qaullib_ExistsLocale()) mg_printf(conn, "\"locale\":\"%s\",", Qaullib_GetLocale());
 	// send user name
 	if(Qaullib_ExistsUsername()) mg_printf(conn, "\"name\":\"%s\",", Qaullib_GetUsername());
-
+	
 	// send all the rest
 	// TODO: make configurable
 	mg_printf(conn, "\"msg_max\":20,");
@@ -506,6 +538,10 @@ static void Qaullib_WwwGetConfig(struct mg_connection *conn, const struct mg_req
 		mg_printf(conn, "\"c_debug\":true");
 	else
 		mg_printf(conn, "\"c_debug\":false");
+
+	// send interface
+	mg_printf(conn, "\"c_interface_set\":\"%s\",", Qaullib_GetUsername());
+	mg_printf(conn, "\"c_interface\":\"%s\",", Qaullib_GetUsername());
 
 	mg_printf(conn, "}");
 }

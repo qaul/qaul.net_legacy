@@ -113,6 +113,13 @@ function init_start()
 		}
 	});
 	
+	// set interface
+	$("#form_config_interface").validate({
+		submitHandler: function(form){
+			send_interface();
+		}
+	});
+	
 	// files
 	$("#file_add_form").validate({
 		submitHandler: function(form){
@@ -229,6 +236,11 @@ function qaul_configure(data)
 		$(".c_quit").show();
 	if(qaul_config.c_debug) 
 		$(".c_debug").show();
+	
+//	if(qaul_config.c_interface_set)
+//	{
+//		$("#wifi_interface").val(qaul_config.c_interface);
+//	}
 	
 	if(qaul_config.locale)
 	{
@@ -449,6 +461,20 @@ function show_tag(tag)
 	
 	return true;
 }
+
+/*
+// load configuration
+function show_config_interface()
+{
+	// load configuration
+	
+	
+	// open page
+	$.mobile.changePage($("#page_config_interface"),"slide");
+	
+	return true;
+}
+*/
 
 // invoked before a new page will load
 function onPageBeforeChange(event, data)
@@ -1382,6 +1408,20 @@ function send_name()
 			function(data){
 				// update username
 				set_username($("#name_name").val());
+				// forward to loading
+				$.mobile.changePage($("#page_loading"));
+				// set timer to check which page to load
+				setTimeout(function(){loadingtimer();},1000);
+		});
+};
+
+function send_interface()
+{
+	// send user name
+	$.post(
+			'setinterface',
+			{"im": $("input[name=im]:checked", "#form_config_interface").val(), "if": $("#interface_name").val(), "e":1},
+			function(data){
 				// forward to loading
 				$.mobile.changePage($("#page_loading"));
 				// set timer to check which page to load
