@@ -34,6 +34,7 @@
 		qaulWifiInterface = nil;
 		qaulWifiInterfaceSet = FALSE;
 		qaulServiceConfigured = FALSE;
+		qaulInterfaceManual = FALSE;
 	}
 	return self;
 }
@@ -119,7 +120,9 @@
 		NSLog(@"airport not stopped");
 	
 	// change location
-	[mysudo deleteNetworkProfile:authorizationRef];
+	if (!qaulInterfaceManual)
+		[mysudo deleteNetworkProfile:authorizationRef];
+	
 	usleep(50000);
 	
 	return TRUE;
@@ -165,6 +168,26 @@
 		
 		// start user configuration
 		Qaullib_ConfigStart();
+		
+		qaulStarted = 2;
+	}
+
+	// get configuration
+	if(qaulStarted == 2)
+	{
+		// check saved interface configuration
+		char config_interface_c[256];
+		if(Qaullib_GetConfInt("net.interface.method"))
+		{	
+			NSLog(@"interface is set manually");
+			if(Qaullib_GetConfString("net.interface.name", config_interface_c))
+			{
+				NSLog(@"interface name found");
+				qaulInterfaceName = [NSString stringWithFormat:@"%s", config_interface_c];
+				qaulInterfaceManual = true;
+				NSLog(@"name is %s", config_interface_c);
+			}
+		}
 		
 		qaulStarted = 10;
 	}
@@ -232,7 +255,9 @@
 	// otherwise.
 	if(qaulStarted == 20)
 	{
-		success = [mysudo createNetworkProfile:authorizationRef];		
+		if(!qaulInterfaceManual)
+			success = [mysudo createNetworkProfile:authorizationRef];
+		
 		qaulStarted = 21;
 	}
 	
@@ -242,6 +267,8 @@
 		NSLog(@"loop through interfaces");
 		// -----------------------------------
 		// configure & start up wifi
+		
+		// get all interfaces
 		qaulInterfacesAll = (NSArray *) SCNetworkInterfaceCopyAll ();
 		en = [qaulInterfacesAll objectEnumerator];
 		SCNetworkInterfaceRef inter;
@@ -251,26 +278,51 @@
 		SCNetworkServiceRef service;
 
 		// loop through interfaces
-		while ((inter = (SCNetworkInterfaceRef) [en nextObject])) 
+		if(qaulInterfaceManual)
 		{
-			//CFStringRef name = SCNetworkInterfaceGetBSDName (inter);
-			//NSLog(@"%@", name);
-			
-			// check if it is a Wifi
-			CFStringRef typesMy = SCNetworkInterfaceGetInterfaceType(inter);
-			if (typesMy == kSCNetworkInterfaceTypeIEEE80211)
+			NSLog(@"check manual");
+			while ((inter = (SCNetworkInterfaceRef) [en nextObject])) 
 			{
-				//NSLog(@"Its a Wifi!");
-				qaulWifiInterface = inter;
-				qaulWifiInterfaceSet = TRUE;
-				// TODO:
-				// put connection into array
-				//[qaulInterfacesWifi addObject:[qaulInterfacesAll objectAtIndex:i]];
-				//[qaulInterfacesWifi addObject:inter];
+				// manual configuration:
+				// check if this interface exists
+				NSString *myinterface = [NSString stringWithFormat:@"%@", SCNetworkInterfaceGetBSDName(inter)];
+				NSLog(@"%@ <=> %@", myinterface, qaulInterfaceName);
+				if([myinterface isEqualToString:qaulInterfaceName])
+				{
+					NSLog(@"manual interface found: %@", myinterface);					
+					// TODO: multiple interfaces
+					qaulWifiInterface = inter;
+					qaulWifiInterfaceSet = TRUE;
+					break;
+				}
+			}			
+		}
+
+		// check for auto interfaces if the manually configured was not found
+		if(!qaulWifiInterfaceSet)
+		{
+			// loop through interfaces
+			while ((inter = (SCNetworkInterfaceRef) [en nextObject])) 
+			{
+				// auto configuration:
+				// check if it is a Wifi
+				CFStringRef typesMy = SCNetworkInterfaceGetInterfaceType(inter);
+				if (typesMy == kSCNetworkInterfaceTypeIEEE80211)
+				{
+					qaulWifiInterface = inter;
+					qaulWifiInterfaceSet = TRUE;
+					break;
+					
+					// TODO:
+					// put connection into array
+					//[qaulInterfacesWifi addObject:[qaulInterfacesAll objectAtIndex:i]];
+					//[qaulInterfacesWifi addObject:inter];
+				}	
 			}
 		}
 		
 		// loop through Services
+		NSLog(@"loop through services");
 		while (service = (SCNetworkServiceRef)[e nextObject]) 
 		{
 			inter = SCNetworkServiceGetInterface(service);
@@ -301,12 +353,6 @@
 			}
 		}
 		
-		//success = [mysudo startAirport:authorizationRef interface:qaulWifiInterface];
-		//if(success) NSLog(@"startAirport success!!");
-		//else NSLog(@"startAirport no success");
-		
-		//if(qaulServiceFound) ;
-		//else 
 		qaulStarted = 22;
 	}
 	
@@ -335,14 +381,13 @@
 	if(qaulStarted == 23)
 	{
 		NSLog(@"switch airport on");
+		// TODO: check if interface is a configurable wifi interface
 		// switch on airport via cli 
 		success = [mysudo startAirport:authorizationRef interface:qaulWifiInterface];
 		if(success) 
 			NSLog(@"startAirport success!!");
 		else 
 			NSLog(@"startAirport no success");
-		
-		// configure Address taken away from this place...
 		
 		qaulStarted = 24;
 	}
