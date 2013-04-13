@@ -112,7 +112,8 @@ void Qaul::QaulConfigure(void)
     if(qaulConfigureCounter == 20)
     {
         qDebug() << "[configure] search interface";
-        if(QaulWifiGetInterface()) qaulConfigureCounter = 21;
+        if(QaulWifiGetInterface()) 
+        	qaulConfigureCounter = 21;
         else
         {
             qDebug() << "no wifi interface found";
@@ -208,48 +209,64 @@ void Qaul::QaulConfigureDelayFired(void)
 // -----------------------------------------------------------------
 bool Qaul::QaulWifiGetInterface(void)
 {
-    // get all wifi interfaces
-    // iwconfig
-    QProcess *myProcess = new QProcess(this);
-    myProcess->start("iwconfig");
-    // wait until process has finished
-    if(!myProcess->waitForFinished(10000))
-    {
-        qDebug() << "iwconfig process crashed";
-        return false;
-    }
-    //QByteArray myOutput = myProcess->readAllStandardOutput();
-    QString myString(myProcess->readAllStandardOutput());
-    QRegExp myRx("^([\\S]+)");
-    int myPos = 0;
-    if((myPos = myRx.indexIn(myString, myPos)) == -1)
-    {
-        qDebug() << "iwconfig returned no interface";
-        return false;
-    }
-    // take the first interface
-    // TODO: make interface list
-    qaulWifiInterface = myRx.cap(1);
-    qDebug() << "interface found: " << qaulWifiInterface;
+	char config_interface_c[256];
+	// check if static interface was set
+	if(Qaullib_GetConfInt("net.interface.method"))
+	{
+		qDebug() << "interface is set manually";
+		if(Qaullib_GetConfString("net.interface.name", config_interface_c))
+		{
+			qDebug() << "interface name found";
+			//qaulInterfaceName = [NSString stringWithFormat:@"%s", config_interface_c];
+			//qaulInterfaceManual = true;
+			qDebug() << "name is " << config_interface_c;
+		}
+	}
+	else
+	}
+		// get all wifi interfaces
+		// iwconfig
+		QProcess *myProcess = new QProcess(this);
+		myProcess->start("iwconfig");
+		// wait until process has finished
+		if(!myProcess->waitForFinished(10000))
+		{
+			qDebug() << "iwconfig process crashed";
+			return false;
+		}
+		//QByteArray myOutput = myProcess->readAllStandardOutput();
+		QString myString(myProcess->readAllStandardOutput());
+		QRegExp myRx("^([\\S]+)");
+		int myPos = 0;
+		if((myPos = myRx.indexIn(myString, myPos)) == -1)
+		{
+			qDebug() << "iwconfig returned no interface";
+			return false;
+		}
+		// take the first interface
+		// TODO: make interface list
+		qaulWifiInterface = myRx.cap(1);
+		qDebug() << "interface found: " << qaulWifiInterface;
 
-    // check if interface is active
-    if(!QaulWifiInterfaceActive(qaulWifiInterface))
-    {
-        qDebug() << "interface not active";
+		// check if interface is active
+		if(!QaulWifiInterfaceActive(qaulWifiInterface))
+		{
+			qDebug() << "interface not active";
 
-        // deblock wifi
-        myProcess->start("rfkill unblock all");
-        if(!myProcess->waitForFinished(2000))
-            qDebug() << "rfkill unblock process crashed";
+			// deblock wifi
+			myProcess->start("rfkill unblock all");
+			if(!myProcess->waitForFinished(2000))
+				qDebug() << "rfkill unblock process crashed";
 
-        // try to activate interface if not available
-        myProcess->start("nmcli nm wifi on");
-        if(!myProcess->waitForFinished(10000))
-            qDebug() << "nmcli process crashed";
+			// try to activate interface if not available
+			myProcess->start("nmcli nm wifi on");
+			if(!myProcess->waitForFinished(10000))
+				qDebug() << "nmcli process crashed";
 
-        if(!QaulWifiInterfaceActive(qaulWifiInterface)) return false;
-    }
-
+			if(!QaulWifiInterfaceActive(qaulWifiInterface)) 
+				return false;
+		}
+	}
     return true;
 }
 

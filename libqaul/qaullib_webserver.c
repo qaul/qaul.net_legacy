@@ -539,10 +539,6 @@ static void Qaullib_WwwGetConfig(struct mg_connection *conn, const struct mg_req
 	else
 		mg_printf(conn, "\"c_debug\":false");
 
-	// send interface
-	mg_printf(conn, "\"c_interface_set\":\"%s\",", Qaullib_GetUsername());
-	mg_printf(conn, "\"c_interface\":\"%s\",", Qaullib_GetUsername());
-
 	mg_printf(conn, "}");
 }
 
