@@ -13,8 +13,16 @@
 # /etc/default/isc-dhcp-server
 # /etc/dhcp/dhcpd.conf
 
+# configure hostap
+# /etc/hostapd/hostapd.conf
+
 # configure interface
 sudo ifconfig ap0 192.168.111.1 netmask 255.255.255.0 broadcast 192.168.111.255 
+
+# restart hostapd with multiple interfaces
+#sudo /etc/init.d/hostapd stop
+#sudo hostapd ./hostapd.conf ./hostapd_2.conf &
+#sleep 5
 
 # restart dhcp server
 sudo /etc/init.d/isc-dhcp-server restart
