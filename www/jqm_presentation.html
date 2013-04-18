@@ -9,6 +9,7 @@
 	<title>qaul.net</title>
 	<link rel="stylesheet" type="text/css" href="jquery.mobile.min.css" />
 	<link rel="stylesheet" type="text/css" href="jqm_qaul.css"/> 
+	<link rel="stylesheet" type="text/css" href="jqm_presentation.css"/> 
 	<script type="text/javascript" src="jquery.min.js"></script>
 	<script type="text/javascript" src="jquery-jsonp.min.js"></script>
 	<script type="text/javascript" src="jquery.validate.min.js"></script>
@@ -96,7 +97,7 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-theme="b" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
-				<!--<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;</a></li>-->
+				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;</a></li>
 			</ul>
 		</div>
 	</div>
@@ -118,7 +119,7 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-theme="b" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
-				<!--<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>-->
+				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -126,19 +127,36 @@
 
 <div data-role="page" id="page_pref" data-theme="d">
 	<div data-role="content" >
-		<p class="c_quit"><a href="javascript:quit_qaul()" data-role="button" class="i18n">Quit qaul.net</a></p>
-		<h2 id="page_pref_name">User</h2>
-		<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider" class="i18n">Configuration</li>
-			<li><a href="#page_config_locale" data-transition="none" class="i18n">Change Language</a></li>
-			<li><a href="#page_config_name" data-transition="none" class="i18n">Change User Name</a></li>
-		</ul>
-		<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider" class="i18n">Information</li>
-			<li data-icon="info"><a href="javascript:qaul_openurl('info/about.html')" data-transition="none" class="i18n">About qaul.net</a></li>
-			<li data-icon="info"><a href="javascript:qaul_openurl('info/howto.html')" data-transition="none" class="i18n">How To's</a></li>
-			<li data-icon="info"><a href="javascript:qaul_openurl('info/license.html')" data-transition="none" class="i18n">License</a></li>
-		</ul>
+		<h1>About qaul.net</h1>
+		<h3>
+		qaul.net implements a redundant, open communication principle, in which wireless-enabled computers and mobile devices can directly form a spontaneous network. Text messaging, file sharing and voice calls are possible independent of internet and cellular networks. Qaul.net can spread like a virus, and an Open Source Community can modify it freely.
+		</h3><h3>
+		In a time of communication blackouts in places like Egypt, Burma, and Tibet, and given the large power outages often caused by natural disasters, qaul.net has taken on the challenge of critically examining existing communication pathways while simultaneously exploring new horizons.
+		</h3>
+		<p><img src="info/images/about_viral.png" style="width:100%;"/></p>
+		<p>The program is passed on like a virus: from user to user. When a new user discovers a wifi qaul.net access one can download the software from this very connection. After the installation one can use it immediately, and pass it on to others.</p>
+		<p>qaul.net connects different wireless devices directly to the mesh network, it works therefore without a mobile service provider or server.</p>
+		<h1>How To use qaul.net</h1>
+		<p>
+		At startup, qaul.net configures your device and the network automatically.
+		</p>
+		<p>
+		qaul.net offers many services:
+		</p>
+		<p><img src="info/images/howto_123.png" style="width:100%;"/></p>
+		<table class="description" width="100%">
+		<tr>
+		<td width="33%">
+		<p style="text-align:center;">cloud chat</p>
+		</td>
+		<td width="33%">
+		<p style="text-align:center;">private messaging</p>
+		</td>
+		<td width="34%">
+		<p style="text-align:center;">voice calls</p>
+		</td>
+		</tr>
+		</table>
 	</div>
 	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
 		<div data-role="navbar">
@@ -146,7 +164,7 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
-				<!--<li><a href="#page_pref" data-theme="b" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>-->
+				<li><a href="#page_pref" data-theme="b" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -163,7 +181,7 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-theme="b" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
-				<!--<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>-->
+				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -234,7 +252,7 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-theme="b" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
-				<!--<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>-->
+				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>
 			</ul>
 		</div>
 	</div>
