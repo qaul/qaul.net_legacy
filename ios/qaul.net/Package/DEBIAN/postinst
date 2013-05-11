@@ -1,0 +1,8 @@
+#!/bin/sh
+
+chown -R root.wheel /usr/bin/qaulhelper
+chown -R root.wheel /usr/bin/olsrd
+chown -R root.wheel /usr/bin/olsrd_ios.conf
+chown -R root.wheel /usr/lib/olsrd_qaul.0.1.dylib
+
+exit 0

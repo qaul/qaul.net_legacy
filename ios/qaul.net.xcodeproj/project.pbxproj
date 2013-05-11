@@ -18,6 +18,10 @@
 		493CBA3116F2135500C9061D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 493CBA3016F2135500C9061D /* Default-568h@2x.png */; };
 		493CBA3416F2135500C9061D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 493CBA3316F2135500C9061D /* ViewController.m */; };
 		493CBA3716F2135500C9061D /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 493CBA3516F2135500C9061D /* ViewController.xib */; };
+		49585067173E669D0051566B /* olsrd_qaul.0.1.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 49585066173E669D0051566B /* olsrd_qaul.0.1.dylib */; };
+		4958506B173E66A90051566B /* olsrd in Resources */ = {isa = PBXBuildFile; fileRef = 49585068173E66A90051566B /* olsrd */; };
+		4958506C173E66A90051566B /* olsrd_ios.conf in Resources */ = {isa = PBXBuildFile; fileRef = 49585069173E66A90051566B /* olsrd_ios.conf */; };
+		4958506D173E66A90051566B /* qaulhelper in Resources */ = {isa = PBXBuildFile; fileRef = 4958506A173E66A90051566B /* qaulhelper */; };
 		495EA61616F39B00000691EE /* app_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 495EA61516F39B00000691EE /* app_icon.png */; };
 		495EA61816F39B05000691EE /* app_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 495EA61716F39B05000691EE /* app_icon@2x.png */; };
 		495EA67A16F52D77000691EE /* www in Resources */ = {isa = PBXBuildFile; fileRef = 495EA67916F52D76000691EE /* www */; };
@@ -42,9 +46,6 @@
 		495EA6B316F5CA1F000691EE /* libspeex-arm-apple-darwin9.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 495EA6AC16F5CA1F000691EE /* libspeex-arm-apple-darwin9.a */; };
 		495EA6B416F5CA1F000691EE /* libsrtp-arm-apple-darwin9.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 495EA6AD16F5CA1F000691EE /* libsrtp-arm-apple-darwin9.a */; };
 		495EA6B616F5CA7A000691EE /* libpj-arm-apple-darwin9.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 495EA6B516F5CA7A000691EE /* libpj-arm-apple-darwin9.a */; };
-		495EA6C216F62271000691EE /* olsrd in Resources */ = {isa = PBXBuildFile; fileRef = 495EA6C116F62271000691EE /* olsrd */; };
-		495EA6C516F62288000691EE /* olsrd_ios.conf in Resources */ = {isa = PBXBuildFile; fileRef = 495EA6C316F62288000691EE /* olsrd_ios.conf */; };
-		495EA6C616F62288000691EE /* olsrd_qaul.0.1.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 495EA6C416F62288000691EE /* olsrd_qaul.0.1.dylib */; };
 		49E7E1EA16FB013E001A8497 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E7E1E916FB013E001A8497 /* CoreAudio.framework */; };
 		49E7E1EE16FB025E001A8497 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E7E1ED16FB025E001A8497 /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
@@ -66,6 +67,11 @@
 		493CBA3216F2135500C9061D /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		493CBA3316F2135500C9061D /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		493CBA3616F2135500C9061D /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
+		49585061173E61930051566B /* postinst */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = postinst; sourceTree = "<group>"; };
+		49585066173E669D0051566B /* olsrd_qaul.0.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.bundle"; path = olsrd_qaul.0.1.dylib; sourceTree = "<group>"; };
+		49585068173E66A90051566B /* olsrd */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = olsrd; sourceTree = "<group>"; };
+		49585069173E66A90051566B /* olsrd_ios.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = olsrd_ios.conf; sourceTree = "<group>"; };
+		4958506A173E66A90051566B /* qaulhelper */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = qaulhelper; sourceTree = "<group>"; };
 		495EA61216F36B8E000691EE /* control */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = control; sourceTree = "<group>"; };
 		495EA61516F39B00000691EE /* app_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = app_icon.png; path = ../app_icon.png; sourceTree = "<group>"; };
 		495EA61716F39B05000691EE /* app_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "app_icon@2x.png"; path = "../app_icon@2x.png"; sourceTree = "<group>"; };
@@ -91,9 +97,6 @@
 		495EA6AC16F5CA1F000691EE /* libspeex-arm-apple-darwin9.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libspeex-arm-apple-darwin9.a"; path = "../pjproject-2.0.1/third_party/lib/libspeex-arm-apple-darwin9.a"; sourceTree = "<group>"; };
 		495EA6AD16F5CA1F000691EE /* libsrtp-arm-apple-darwin9.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsrtp-arm-apple-darwin9.a"; path = "../pjproject-2.0.1/third_party/lib/libsrtp-arm-apple-darwin9.a"; sourceTree = "<group>"; };
 		495EA6B516F5CA7A000691EE /* libpj-arm-apple-darwin9.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpj-arm-apple-darwin9.a"; path = "../pjproject-2.0.1/pjlib/lib/libpj-arm-apple-darwin9.a"; sourceTree = "<group>"; };
-		495EA6C116F62271000691EE /* olsrd */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = olsrd; sourceTree = SOURCE_ROOT; };
-		495EA6C316F62288000691EE /* olsrd_ios.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = olsrd_ios.conf; sourceTree = SOURCE_ROOT; };
-		495EA6C416F62288000691EE /* olsrd_qaul.0.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.bundle"; path = olsrd_qaul.0.1.dylib; sourceTree = SOURCE_ROOT; };
 		49E7E1E916FB013E001A8497 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		49E7E1ED16FB025E001A8497 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -204,9 +207,6 @@
 		493CBA2116F2135500C9061D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				495EA6C316F62288000691EE /* olsrd_ios.conf */,
-				495EA6C416F62288000691EE /* olsrd_qaul.0.1.dylib */,
-				495EA6C116F62271000691EE /* olsrd */,
 				495EA67916F52D76000691EE /* www */,
 				493CBA2216F2135500C9061D /* qaul.net-Info.plist */,
 				493CBA2316F2135500C9061D /* InfoPlist.strings */,
@@ -219,9 +219,37 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		4958505C173E54900051566B /* usr */ = {
+			isa = PBXGroup;
+			children = (
+				4958505D173E54900051566B /* bin */,
+				4958505F173E54900051566B /* lib */,
+			);
+			path = usr;
+			sourceTree = "<group>";
+		};
+		4958505D173E54900051566B /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				49585068173E66A90051566B /* olsrd */,
+				49585069173E66A90051566B /* olsrd_ios.conf */,
+				4958506A173E66A90051566B /* qaulhelper */,
+			);
+			path = bin;
+			sourceTree = "<group>";
+		};
+		4958505F173E54900051566B /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				49585066173E669D0051566B /* olsrd_qaul.0.1.dylib */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
 		495EA60F16F36B8E000691EE /* Package */ = {
 			isa = PBXGroup;
 			children = (
+				4958505C173E54900051566B /* usr */,
 				495EA61016F36B8E000691EE /* Applications */,
 				495EA61116F36B8E000691EE /* DEBIAN */,
 			);
@@ -239,6 +267,7 @@
 			isa = PBXGroup;
 			children = (
 				495EA61216F36B8E000691EE /* control */,
+				49585061173E61930051566B /* postinst */,
 			);
 			path = DEBIAN;
 			sourceTree = "<group>";
@@ -303,9 +332,10 @@
 				495EA61616F39B00000691EE /* app_icon.png in Resources */,
 				495EA61816F39B05000691EE /* app_icon@2x.png in Resources */,
 				495EA67A16F52D77000691EE /* www in Resources */,
-				495EA6C216F62271000691EE /* olsrd in Resources */,
-				495EA6C516F62288000691EE /* olsrd_ios.conf in Resources */,
-				495EA6C616F62288000691EE /* olsrd_qaul.0.1.dylib in Resources */,
+				49585067173E669D0051566B /* olsrd_qaul.0.1.dylib in Resources */,
+				4958506B173E66A90051566B /* olsrd in Resources */,
+				4958506C173E66A90051566B /* olsrd_ios.conf in Resources */,
+				4958506D173E66A90051566B /* qaulhelper in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

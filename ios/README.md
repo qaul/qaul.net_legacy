@@ -38,7 +38,9 @@ Now build pjsip
 
 
 Compile qaullib: 
-Open the qaullib Xcode project ios/qaullib.xcodeproj and build the static library.
+* Open the qaullib Xcode project ios/qaullib.xcodeproj and build the static library.
+* Copy the newly built static libqaullib.a library to the ios directory
+
 
 Compile iOS
 * Open the iOS project in Xcode
@@ -71,12 +73,23 @@ Open the ios Makefile olsrd-0.6.0/make/Makefile.ios and configure SDK_VERSION
     make OS=ios
     # sign the executable
     /opt/iOSOpenDev/bin/iosod sign ./olsrd
-    cp olsrd ../ios/
+    cp olsrd ../ios/Package/usr/bin/
     cd ../
 
 Compile olsrd_qaul plugin
 
     cd olsrd-0.6.0/lib/olsrd_qaul
     make OS=ios
-    cp olsrd_qaul.so.0.1 ../../../ios/
+    cp olsrd_qaul.so.0.1 ../../../ios/Package/usr/lib/
     cd ../../../
+
+
+Compile qaulhelper
+* Open the qaulhelper project in Xcode
+* Build the project
+* Copy the executable into the qaul.net project and set suid bit
+
+    cd ios
+    cp qaulhelper/qaulhelper/Package/usr/bin/qaulhelper qaul.net/Package/usr/bin/
+    chmod 6755 qaul.net/Package/usr/bin/qaulhelper
+    cd ../
