@@ -200,7 +200,7 @@ OBJS=$(SRC:.c=.o)
 ifndef OS
 all:
 	@echo "make ( OS=osx | OS=linux | OS=win | OS=raspberry )"
-	@echo "make clean ( OS=win )"
+	@echo "make clean [ OS=win ]"
 else
 all: $(OBJS)
 ifeq ($(OS),osx)
@@ -226,10 +226,6 @@ endif
 ifeq ($(OS),raspberry)
 	@echo application Makefile - linking qaul
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul $(LFLAGS)
-	@echo copy olsrd executable into this directory
-	@cp ../olsrd_0.6.2/olsrd ./
-	@echo copy olsrd_qaul plugin into this directory
-	@cp ../olsrd_0.6.2/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
 	@echo copy www folder into this directory
 	@cp -R ../www ./
 endif

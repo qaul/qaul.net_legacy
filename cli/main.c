@@ -57,7 +57,8 @@ int main(int argc, char *argv[])
 
 	if(!Qaullib_IpcConnect()) printf("Ipc connection failed\n");
 	Qaullib_SetConfVoIP();
-	if(!Qaullib_CaptiveStart()) printf("Captive Portal failed\n");
+	if(!Qaullib_UDP_StartServer()) printf("UDP server failed\n");
+	if(!Qaullib_CaptiveStart()) printf("Captive portal failed\n");
 	Qaullib_ConfigurationFinished();
 
 	// test config

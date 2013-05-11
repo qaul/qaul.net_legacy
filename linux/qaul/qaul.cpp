@@ -101,17 +101,6 @@ void Qaul::QaulConfigure(void)
         qaulConfigureCounter = 10;
     }
 
-#ifdef ARS_EDITION
-    // wait for Klangwolke
-    if(qaulConfigureCounter == 10)
-    {
-        if(Qaullib_TimedCheckAppEvent() == QAUL_EVENT_QUIT)
-        {
-            qaulConfigureCounter = 9;
-        }
-    }
-#endif
-
     // check autorization
     if(qaulConfigureCounter == 10)
     {
