@@ -349,10 +349,9 @@
         }
         else if(appEvent == QAUL_EVENT_OPENURL)
         {
-/*
             // open url
-            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", Qaullib_GetAppEventOpenURL()]]];
- */
+            if (![[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", Qaullib_GetAppEventOpenURL()]]])
+                NSLog(@"%@%@",@"Failed to open url:",[NSString stringWithFormat:@"%s", Qaullib_GetAppEventOpenURL()]);
         }
         else if(appEvent == QAUL_EVENT_QUIT)
         {

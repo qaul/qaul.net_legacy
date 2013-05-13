@@ -86,7 +86,7 @@ Compile olsrd_qaul plugin
 
 Compile qaulhelper
 * Open the qaulhelper project in Xcode
-* Build the project
+* Build the project with iOSOpenDev (CMD - SHIFT - i)
 * Copy the executable into the qaul.net project and set suid bit
 
     cd ios
