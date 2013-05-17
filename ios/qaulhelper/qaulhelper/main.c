@@ -13,6 +13,7 @@
  *   qaulhelper startolsrd
  *   qaulhelper stopolsrd
  *   qaulhelper setip <IP>
+ *   qaulhelper setdhcp
  */
 
 
