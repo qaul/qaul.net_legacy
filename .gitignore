@@ -4,6 +4,8 @@
 *~
 *.swp
 *.lock
+Debug/
+/linux/qaul.net_1.0_i386.deb
 
 # Eclipse
 .project
@@ -136,4 +138,4 @@ www/files/*.exe
 
 # binary creation
 binary_release/qaul.net/
-
+binary_release/mof/
