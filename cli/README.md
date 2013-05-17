@@ -55,6 +55,7 @@ The following steps are needed to successfully run the CLI client
   IP: 10.233.89.32, 
   Netmask: 255.0.0.0, 
   Gateway: 0.0.0.0 
+
 * Start olsrd manually
 
     # linux
