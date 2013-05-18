@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "qaul.net"
-#define MyAppVersion "Ars Electronica release candidate"
+#define MyAppVersion "beta2 18.05.2013"
 #define MyAppPublisher "qaul.net"
 #define MyAppURL "http://www.qaul.net/"
 #define MyAppExeName "qaul.exe"
@@ -25,7 +25,7 @@ DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=..\binary_release\qaul.net\Licenses\qaul.net_license.txt
 OutputDir=..\binary_release
-OutputBaseFilename=qaul.net_win7_installer
+OutputBaseFilename=qaul.net_win7-8_installer
 SetupIconFile=.\qaul\app.ico
 Compression=lzma
 SolidCompression=yes
