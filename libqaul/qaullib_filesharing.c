@@ -83,11 +83,12 @@ void Qaullib_FileInit(void)
 // ------------------------------------------------------------
 void Qaullib_FilePopulate(void)
 {
+	FILE *file;
 	char buffer[2048];
 	char *stmt;
 	char *key;
 	char *error_exec;
-	int  status, i;
+	int  status, i, ret;
 	char local_destiny[MAX_PATH_LEN +1];
 	time_t timestamp;
 
@@ -95,6 +96,32 @@ void Qaullib_FilePopulate(void)
 	key  = buffer;
 	error_exec = NULL;
 
+	Qaullib_FileCreatePath(local_destiny, "fat", "sql");
+
+	if ((file = fopen(local_destiny, "r")) == NULL)
+	{
+		if (errno == ENOENT) {
+			printf("File doesn't exist: %s \n", local_destiny);
+		}
+		else {
+			// Check for other errors too, like EACCES and EISDIR
+			printf("Some error occured: %s \n", local_destiny);
+		}
+	}
+	else
+	{
+	  printf("is fat binary, importing binaries\n", local_destiny);
+
+	  ret = fread(&buffer, sizeof(buffer)-1, 1, file);
+	  // terminate string
+	  if(ret >= 0 && ret <= 2048)
+		  memcpy(&buffer[ret], "\0", 1);
+	  else
+		  memcpy(&buffer, "\0", 1);
+
+	  fclose(file);
+	}
+/*
 	if(FAT_CLIENT)
 	{
 		// loop trough entries
@@ -133,6 +160,7 @@ void Qaullib_FilePopulate(void)
 			}
 		}
 	}
+*/
 }
 
 // ------------------------------------------------------------

@@ -170,7 +170,16 @@ static struct qaul_populate_config_struct qaul_populate_config[MAX_POPULATE_CONF
 
 /********************************************//**
  * populate file sharing
+ ***********************************************
+ * configuration keys, flags
+ * exe.1 : ubuntu & debian 32 Bit
+ * exe.2 : OSX 10.5
+ * exe.4 : OSX 10.6 - 10.8
+ * exe.8 : Windows 7 / 8
+ * exe.16: Android
+ * exe.32: iOS
  ***********************************************/
+
 struct qaul_populate_file_struct
 {
 	uint32_t  OS_flag;
