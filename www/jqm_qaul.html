@@ -34,7 +34,10 @@
 					<legend>&nbsp;</legend>
 					<input type="radio" name="l" id="locale_en" value="en" checked="checked"/>
 					<label for="locale_en">English</label>
-			
+<!--
+					<input type="radio" name="l" id="locale_cn" value="cn"/>
+					<label for="locale_cn">中文</label>
+-->			
 					<input type="radio" name="l" id="locale_es" value="es"/>
 					<label for="locale_es">Español</label>
 
@@ -76,6 +79,29 @@
 				<label for="name_name" class="i18n">Choose a user name</label>
 				<input type="text" name="n" id="name_name" class="required nospaces userlen"/>
 				<input class="submit i18n" type="submit" value="Save" id="name_submit"/>
+			</form>
+		</p>
+		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
+	</div>
+</div>
+
+<div data-role="page" id="page_config_interface" data-theme="d">
+	<div data-role="content" >
+		<p>
+			<form action="interface" method="post" id="form_config_interface">
+				<fieldset data-role="controlgroup">
+					<legend>Select Network Interface</legend>
+					<input type="radio" name="im" id="interface_method_auto" value="0" checked="checked" />
+					<label for="interface_method_auto" class="i18n">Automatically</label>
+			
+					<input type="radio" name="im" id="interface_method_manual" value="1"  />
+					<label for="interface_method_manual" class="i18n">Manually</label>
+				</fieldset>
+				
+				<label for="wifi_interface" class="i18n">Enter Interface Name</label>
+				<input type="text" name="if" id="interface_name" class="nospaces userlen"/>
+				
+				<input class="submit i18n" type="submit" value="Save" id="interface_submit"/>
 			</form>
 		</p>
 		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
@@ -135,6 +161,7 @@
 			<li data-role="list-divider" class="i18n">Configuration</li>
 			<li><a href="#page_config_locale" data-transition="none" class="i18n">Change Language</a></li>
 			<li><a href="#page_config_name" data-transition="none" class="i18n">Change User Name</a></li>
+			<li><a href="#page_config_interface" data-transition="none" class="i18n">Select Network Adapter</a></li>
 		</ul>
 		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider" class="i18n">Information</li>

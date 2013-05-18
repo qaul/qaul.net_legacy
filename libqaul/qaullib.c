@@ -16,6 +16,7 @@ void Qaullib_Init(const char* resourcePath)
 	ipc_connected = 0;
 	qaul_username_set = 0;
 	qaul_locale_set = 0;
+	qaul_interface_set = 0;
 	qaul_ip_set = 0;
 	qaul_gui_pagename_set = 0;
 	app_event = 0;
@@ -183,23 +184,26 @@ void Qaullib_SetConfDownloadFolder(const char *path)
 
 int Qaullib_ExistsLocale(void)
 {
-	// if user name is set return it
-	if (qaul_locale_set) return qaul_locale_set;
+	// if locale is set return it
+	if (qaul_locale_set)
+		return qaul_locale_set;
 
-	// check if user name is in Database
+	// check if locale is in Database
 	qaul_locale_set = Qaullib_DbGetConfigValue("locale", qaul_locale);
 	return qaul_locale_set;
 }
 
 const char* Qaullib_GetLocale(void)
 {
-	// if user name is set return it
-	if (qaul_locale_set) return qaul_locale;
+	// if locale is set return it
+	if (qaul_locale_set)
+		return qaul_locale;
 
-	// check if user name is in Database
-	if (Qaullib_DbGetConfigValue("locale", qaul_locale)) return qaul_locale;
+	// check if locale is in Database
+	if (Qaullib_DbGetConfigValue("locale", qaul_locale))
+		return qaul_locale;
 
-	// no user name found
+	// no locale found
 	return "";
 }
 
@@ -209,6 +213,43 @@ void Qaullib_SetLocale(const char* locale)
 	strcpy(qaul_locale, locale);
 	qaul_locale_set = 1;
 }
+
+/*
+// deprecated remove this
+
+void Qaullib_LoadInterfaceConfiguration(void)
+{
+	Qaullib_GetConfInt("net.interface.method", qaul_interface_method);
+	Qaullib_GetConfString("net.interface.name", qaul_interface_name);
+	qaul_interface_set = 1;
+}
+
+int Qaullib_GetInterfaceMethod(void)
+{
+	if (qaul_interface_set == 0)
+		Qaullib_LoadInterfaceConfiguration();
+
+	return qaul_interface_method;
+}
+
+const char* Qaullib_GetInterfaceName(void)
+{
+	if (qaul_interface_set == 0)
+		Qaullib_LoadInterfaceConfiguration();
+
+	return qaul_interface_name;
+}
+
+void Qaullib_SetInterfaceMethod(int method)
+{
+	Qaullib_DbSetConfigValueInt("net.interface.method", method);
+}
+
+int Qaullib_SetInterfaceName(const char* name)
+{
+	Qaullib_DbSetConfigValue("net.interface.name", name);
+}
+*/
 
 // ------------------------------------------------------------
 // timed functions

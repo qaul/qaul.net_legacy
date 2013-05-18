@@ -108,6 +108,10 @@ int qaul_ip_set;
 char qaul_net_gateway[MAX_IP_LEN +1]; // string of the gateway IP
 char qaul_net_ibss[255 +1];           // string of the IBSS name
 char qaul_net_bssid[17 +1];           // string of the BSSID
+// interfaces
+int  qaul_interface_set;
+int  qaul_interface_method;
+char qaul_interface_name[MAX_USER_LEN +1];
 // locale i18n
 int qaul_locale_set;
 char qaul_locale[MAX_LOCALE_LEN +1];
@@ -231,6 +235,11 @@ void Qaullib_SetLocale(const char* locale);
  * @retval 0 error
  */
 int Qaullib_Timestamp2Isostr(char *isostr, int timestamp, int buffer_size);
+
+/**
+ * load interface configuration from DB
+ */
+void Qaullib_LoadInterfaceConfiguration(void);
 
 
 #ifdef __cplusplus
