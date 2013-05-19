@@ -38,8 +38,15 @@ int main(int argc, char *argv[])
 	// enable debug menu
 	qaul_conf_debug = 1;
 
-	if(!Qaullib_WebserverStart()) printf("Webserver startup failed\n");
+	if(!Qaullib_WebserverStart())
+		printf("Webserver startup failed\n");
 	Qaullib_ConfigStart();
+
+	printf("----------------------------------------------------\n");
+	printf(" config started\n");
+	printf("----------------------------------------------------\n");
+	// The invoking of Qaullib_GetIP() is mandatory to load the IP.
+	printf("IP: %s\n", Qaullib_GetIP());
 
 	// wait until user name is set
 	int username_flag = 0;
@@ -55,10 +62,13 @@ int main(int argc, char *argv[])
 	}
 	printf("user name successfully set!\n");
 
-	if(!Qaullib_IpcConnect()) printf("Ipc connection failed\n");
+	if(!Qaullib_IpcConnect())
+		printf("Ipc connection failed\n");
 	Qaullib_SetConfVoIP();
-	if(!Qaullib_UDP_StartServer()) printf("UDP server failed\n");
-	if(!Qaullib_CaptiveStart()) printf("Captive portal failed\n");
+	if(!Qaullib_UDP_StartServer())
+		printf("UDP server failed\n");
+	if(!Qaullib_CaptiveStart())
+		printf("Captive portal failed\n");
 	Qaullib_ConfigurationFinished();
 
 	// test config

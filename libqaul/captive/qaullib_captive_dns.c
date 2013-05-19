@@ -57,10 +57,12 @@ void *Qaullib_DNS_Server(void *server_ip)
 	myAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	DNSSocket = socket(PF_INET, SOCK_DGRAM, 0);
-	if(DNSSocket == INVALID_SOCKET) printf("unable to create DNSSocket\n");
+	if(DNSSocket == INVALID_SOCKET)
+		printf("unable to create DNSSocket\n");
 
 	status = bind(DNSSocket, (struct sockaddr *)&myAddr, sizeof(myAddr));
-	if(status < 0) perror("bind DNSSocket error");
+	if(status < 0)
+		perror("bind DNSSocket error");
 
 	// set socket options
 	// set reuse flag
