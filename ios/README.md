@@ -41,6 +41,10 @@ Compile qaullib:
 * Open the qaullib Xcode project ios/qaullib.xcodeproj and build the static library.
 * Copy the newly built static libqaullib.a library to the ios directory
 
+    cd ios
+    cp build/qaullib.build/Release-iphoneos/qaullib.build/Objects-normal/armv7/libqaullib.a ./
+    cd ../
+
 
 Compile iOS
 * Open the iOS project in Xcode
