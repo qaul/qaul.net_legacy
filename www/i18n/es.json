@@ -6,7 +6,7 @@
 "Send":"Enviar",
 "Delete":"Eliminar",
 "Back":"Anterior",
-"Next":"Next",
+"Next":"Siguiente",
 
 "Favorites / Friends":"Favoritos / Amigos",
 "Other Users":"Otros usuarios",
@@ -61,6 +61,6 @@
 
 "Goodbye":"Hasta la vista",
 
-"Your configuration has been saved":"Your configuration has been saved",
-"You need to restart qaul.net to activate it":"You need to restart qaul.net to activate it"
+"Your configuration has been saved":"Su configuración ha sido guardada",
+"You need to restart qaul.net to activate it":"Reinicia qaul.net para activarla"
 }
