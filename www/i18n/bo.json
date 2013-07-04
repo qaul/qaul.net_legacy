@@ -2,7 +2,7 @@
 "!!!":"Noch nicht verwenden. Muss ich noch von einem Tibeter kontrollieren lassen",
 "Name of this Language":"བོད་ཡིག།",
 
-"OK":"OK",
+"OK":"འགྲིགས།",
 "Save":"མཛོད་ཁང་དུ་འཇུག་པ།",
 "Send":"གཏོང།",
 "Delete":"སྤོ་བ།",
@@ -11,5 +11,13 @@
 
 "Favorites / Friends":"སྤྱན་གསལ་དང་གྲོགས་པོ།",
 "Other Users":"བེད་སྤྱོད་གཏོང་མཁན་གཞན་དག།",
+"Filter items":"དེབ་འགོད་ཚགས།",
+
+"Chat":"ཁ་བདར་གློད།",
+"File Sharing":"ཡིག་སྣོད་བགོ་བཤའ་རྒྱག།",
+"Send Private Message":"ལན་སྒེར་གཏོང།",
+"!!!!":"User Discovery und Kontaktliste ist nicht das gleiche. Was soll ich nehmen?",
+"Contact List":"ཐུག་འཕྲད་གྱི་ཐོ།",
+"User Discovery":"བེད་སྤྱོད་གཏོང་མཁན་གསར་དུ་རྙེད་པ།"
 
 }
