@@ -166,7 +166,6 @@
 	// wait for wifi configuration
 	if(qaulStarted == 20)
 	{
-/*
 		if(Qaullib_CheckConf(QAUL_CHECK_WIFI_SET))
 		{
 			NSLog(@"wifi configured");
@@ -178,8 +177,6 @@
 			qaulStarted = 19;
 			[self startDelay: 1.0f];
 		}
- */
-        qaulStarted = 25;
 	}
 	
 	// set static ip

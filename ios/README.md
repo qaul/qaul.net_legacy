@@ -42,7 +42,7 @@ Compile qaullib:
 * Copy the newly built static libqaullib.a library to the ios directory
 
     cd ios
-    cp build/qaullib.build/Release-iphoneos/qaullib.build/Objects-normal/armv7/libqaullib.a ./
+    cp ~/Library/Developer/Xcode/DerivedData/qaullib-{RANDOM}/Build/Intermediates/qaullib.build/Release-iphoneos/qaullib.build/Objects-normal/armv7/libqaullib.a ./
     cd ../
 
 
@@ -84,7 +84,7 @@ Compile olsrd_qaul plugin
 
     cd olsrd-0.6.0/lib/olsrd_qaul
     make OS=ios
-    cp olsrd_qaul.so.0.1 ../../../ios/Package/usr/lib/
+    cp olsrd_qaul.0.1.dylib ../../../ios/qaul.net/Package/usr/lib/
     cd ../../../
 
 

@@ -7,7 +7,7 @@
 ##################################################################################
 
 SDK_VERSION=5.1
-#SDK_PRAEFIX=/Applications/Xcode.app
+#SDK_PRAEFIX=/Applications/Xcode.app/Contents
 
 ##################################################################################
 # END SYSTEM CONFIGURATION
