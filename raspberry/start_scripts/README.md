@@ -29,3 +29,13 @@ Set auto start /etc/rc.local
     # insert the following line at the end of the file.
     # use the name and path of your specific start script.
     /home/pi/bin/start.sh
+
+
+configure wifi interface
+------------------------
+
+If you need the wifi interfaces to be configured in a specific order, define interface 
+names for specific MAC addresses in /etc/udev/rules.d/70-persistent-net.rules
+
+    SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="00:13:33:b3:92:ec", ATTR{dev_id}=="0x0", ATTR{type}=="1", KERNEL=="wlan*", NAME="qaul0"
+
