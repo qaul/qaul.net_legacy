@@ -500,7 +500,7 @@ bool formStart::WifiSetIp(void)
 		CloseHandle( pi.hThread );
 	}
 
-	_stprintf(cCmdBuf,_T("netsh interface ip add dns %i 88.84.130.20 1"),
+	_stprintf(cCmdBuf,_T("netsh interface ip add dns %i 178.254.31.11 1"),
 							(int)netInterface->InterfaceIndex
 							);
 

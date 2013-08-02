@@ -239,7 +239,7 @@
 		
 		// set dns servers for internet gateway
 		// TODO: WLAN adapter names with spaces
-		if([self syscall:authRef command:networksetupPath arguments:[NSArray arrayWithObjects:@"-setdnsservers",SCNetworkServiceGetName(service),@"88.84.130.20",@"176.10.111.206",nil]])
+		if([self syscall:authRef command:networksetupPath arguments:[NSArray arrayWithObjects:@"-setdnsservers",SCNetworkServiceGetName(service),@"178.254.31.11",@"176.10.111.206",nil]])
 			NSLog(@"DNS servers set");
 			
 		return created;

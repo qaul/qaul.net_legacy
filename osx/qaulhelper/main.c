@@ -399,7 +399,7 @@ int set_dns (int argc, const char * argv[])
     setuid(0);
     
     // set dns
-    system("/usr/sbin/networksetup -setdnsservers 88.84.130.20 176.10.111.206");
+    system("/usr/sbin/networksetup -setdnsservers 178.254.31.11 176.10.111.206");
     
     printf("DNS set\n");
 	return 0;
