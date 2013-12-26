@@ -7,7 +7,13 @@
  * qaul helper functions running as root user
  *
  * For this executable the suid bit needs to be set, to be
- * callable from userspace.
+ * callable from userspace. This is done by qaul.net on the first 
+ * program start. 
+ * To set the suid bit manually for testing, open a Terminal, navigate
+ * to the qaulhelper executable binary and type:
+ *   sudo chown root qaulhelper
+ *   sudo chgrp wheel qaulhelper
+ *   sudo chmod 6755 qaulhelper
  *
  * usage:
  *   qaulhelper startolsrd <INTERFACE> <RESOURCEPATH>
@@ -399,7 +405,7 @@ int set_dns (int argc, const char * argv[])
     setuid(0);
     
     // set dns
-    system("/usr/sbin/networksetup -setdnsservers 178.254.31.11 176.10.111.206");
+    system("/usr/sbin/networksetup -setdnsservers 178.254.31.11 77.67.33.81");
     
     printf("DNS set\n");
 	return 0;
