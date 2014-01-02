@@ -37,6 +37,7 @@ DerivedData/
 !default.perspectivev3
 xcuserdata/**/*
 !xcuserdata/**/xcschemes/*
+UserInterfaceState.xcuserstate
 LatestBuild
 ios/Packages
 qaul.net.app
