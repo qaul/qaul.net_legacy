@@ -27,6 +27,12 @@
  *   qaulhelper enablewifi 1038 en1
  *   qaulhelper disablewifi <OSXVERSION> <INTERFACE>
  *   qaulhelper disablewifi 1038 en1
+ *   qaulhelper createnetworkprofile <POFILENAME>
+ *   qaulhelper createnetworkprofile qaul.net
+ *   qaulhelper switchnetworkprofile <POFILENAME>
+ *   qaulhelper switchnetworkprofile qaul.net
+ *   qaulhelper deletenetworkprofile <POFILENAME>
+ *   qaulhelper deletenetworkprofile qaul.net
  *   qaulhelper setip <SERVICENAME> <IP> <SUBNET> <ROUTER>
  *   qaulhelper setip Wi-Fi 10.213.28.55 255.0.0.0 0.0.0.0
  *   qaulhelper setdhcp <SERVICENAME> <INTERFACENAME>
@@ -85,6 +91,21 @@ int enable_wifi (int argc, const char * argv[]);
  * disable wifi
  */
 int disable_wifi (int argc, const char * argv[]);
+
+/**
+ * create network profile
+ */
+int create_networkprofile (int argc, const char * argv[]);
+
+/**
+ * switch network profile
+ */
+int switch_networkprofile (int argc, const char * argv[]);
+
+/**
+ * delete network profile
+ */
+int delete_networkprofile (int argc, const char * argv[]);
 
 /**
  * create or join IBSS
@@ -182,6 +203,18 @@ int main (int argc, const char * argv[])
         {
             disable_wifi(argc, argv);
         }
+        else if(strncmp(argv[1], "createnetworkprofile", 20) == 0)
+        {
+            create_networkprofile(argc, argv);
+        }
+        else if(strncmp(argv[1], "switchnetworkprofile", 20) == 0)
+        {
+            switch_networkprofile(argc, argv);
+        }
+        else if(strncmp(argv[1], "deletenetworkprofile", 20) == 0)
+        {
+            delete_networkprofile(argc, argv);
+        }
         else if(strncmp(argv[1], "createibss", 10) == 0)
         {
             create_ibss(argc, argv);
@@ -199,7 +232,10 @@ int main (int argc, const char * argv[])
             set_dns(argc, argv);
         }
         else
-            printf("unknown command\n");
+        {
+            printf("unknown command ...\n");
+            printf("execute qaulhelper without arguments to see help instructions.\n");
+        }
     }
     else
     {
@@ -216,6 +252,12 @@ int main (int argc, const char * argv[])
         printf("  qaulhelper enablewifi 1038 en1\n");
         printf("  qaulhelper disablewifi <OSXVERSION> <INTERFACE>\n");
         printf("  qaulhelper disablewifi 1038 en1\n");
+        printf("  qaulhelper createnetworkprofile <POFILENAME>\n");
+        printf("  qaulhelper createnetworkprofile qaul.net\n");
+        printf("  qaulhelper switchnetworkprofile <POFILENAME>\n");
+        printf("  qaulhelper switchnetworkprofile qaul.net\n");
+        printf("  qaulhelper deletenetworkprofile <POFILENAME>\n");
+        printf("  qaulhelper deletenetworkprofile qaul.net\n");
         printf("  qaulhelper setip <SERVICENAME> <IP> <SUBNET> <ROUTER>\n");
         printf("  qaulhelper setip Wi-Fi 10.213.28.55 255.0.0.0 0.0.0.0\n");
         printf("  qaulhelper setdhcp <SERVICENAME> <INTERFACE>\n");
@@ -407,6 +449,96 @@ int disable_wifi (int argc, const char * argv[])
         system(s);
         
         printf("wifi enabled\n");
+    }
+    else
+        printf("missing argument\n");
+    
+	return 0;
+}
+
+int create_networkprofile (int argc, const char * argv[])
+{
+    char s[512];
+    printf("create network profile\n");
+    
+    if(argc >= 3)
+    {
+        // validate arguments
+        if (validate_service(argv[2]) == 0)
+        {
+            printf("argument 1 not valid\n");
+            return 0;
+        }
+        
+        // become root
+        setuid(0);
+        
+        // create network profile
+        sprintf(s,"/usr/sbin/networksetup -createlocation \"%s\" populate", argv[2]);
+        printf("%s\n",s);
+        system(s);
+        
+        printf("network profile created\n");
+    }
+    else
+        printf("missing argument\n");
+    
+	return 0;
+}
+
+int switch_networkprofile (int argc, const char * argv[])
+{
+    char s[512];
+    printf("switch network profile\n");
+    
+    if(argc >= 3)
+    {
+        // validate arguments
+        if (validate_service(argv[2]) == 0)
+        {
+            printf("argument 1 not valid\n");
+            return 0;
+        }
+        
+        // become root
+        setuid(0);
+        
+        // switche network profile
+        sprintf(s,"/usr/sbin/networksetup -switchtolocation \"%s\"", argv[2]);
+        printf("%s\n",s);
+        system(s);
+        
+        printf("network profile switched\n");
+    }
+    else
+        printf("missing argument\n");
+    
+	return 0;
+}
+
+int delete_networkprofile (int argc, const char * argv[])
+{
+    char s[512];
+    printf("delete network profile\n");
+    
+    if(argc >= 3)
+    {
+        // validate arguments
+        if (validate_service(argv[2]) == 0)
+        {
+            printf("argument 1 not valid\n");
+            return 0;
+        }
+        
+        // become root
+        setuid(0);
+        
+        // switche network profile
+        sprintf(s,"/usr/sbin/networksetup -deletelocation \"%s\"", argv[2]);
+        printf("%s\n",s);
+        system(s);
+        
+        printf("network profile deleted\n");
     }
     else
         printf("missing argument\n");
@@ -621,7 +753,7 @@ int validate_service (const char* str)
     {
         if(validate_char_problematic(str[i]) == 0)
         {
-            printf("invalid character %d of %s\n", i, str);
+            printf("invalid character %d : %c\n", i, str[i]);
             return 0;
         }
     }
@@ -710,25 +842,25 @@ int validate_essid (const char* str)
 
 int validate_char_number (char mychar)
 {
-    if(strncmp(&mychar, "0", 1))
+    if(strncmp(&mychar, "0", 1)==0)
         return 1;
-    if(strncmp(&mychar, "1", 1))
+    if(strncmp(&mychar, "1", 1)==0)
         return 1;
-    if(strncmp(&mychar, "2", 1))
+    if(strncmp(&mychar, "2", 1)==0)
         return 1;
-    if(strncmp(&mychar, "3", 1))
+    if(strncmp(&mychar, "3", 1)==0)
         return 1;
-    if(strncmp(&mychar, "4", 1))
+    if(strncmp(&mychar, "4", 1)==0)
         return 1;
-    if(strncmp(&mychar, "5", 1))
+    if(strncmp(&mychar, "5", 1)==0)
         return 1;
-    if(strncmp(&mychar, "6", 1))
+    if(strncmp(&mychar, "6", 1)==0)
         return 1;
-    if(strncmp(&mychar, "7", 1))
+    if(strncmp(&mychar, "7", 1)==0)
         return 1;
-    if(strncmp(&mychar, "8", 1))
+    if(strncmp(&mychar, "8", 1)==0)
         return 1;
-    if(strncmp(&mychar, "9", 1))
+    if(strncmp(&mychar, "9", 1)==0)
         return 1;
     
     return 0;
@@ -736,57 +868,57 @@ int validate_char_number (char mychar)
 
 int validate_char_letter (char mychar)
 {
-    if(strncmp(&mychar, "a", 1) || strncmp(&mychar, "A", 1))
+    if(strncmp(&mychar, "a", 1)==0 || strncmp(&mychar, "A", 1)==0)
         return 1;
-    if(strncmp(&mychar, "b", 1) || strncmp(&mychar, "B", 1))
+    if(strncmp(&mychar, "b", 1)==0 || strncmp(&mychar, "B", 1)==0)
         return 1;
-    if(strncmp(&mychar, "c", 1) || strncmp(&mychar, "C", 1))
+    if(strncmp(&mychar, "c", 1)==0 || strncmp(&mychar, "C", 1)==0)
         return 1;
-    if(strncmp(&mychar, "d", 1) || strncmp(&mychar, "D", 1))
+    if(strncmp(&mychar, "d", 1)==0 || strncmp(&mychar, "D", 1)==0)
         return 1;
-    if(strncmp(&mychar, "e", 1) || strncmp(&mychar, "E", 1))
+    if(strncmp(&mychar, "e", 1)==0 || strncmp(&mychar, "E", 1)==0)
         return 1;
-    if(strncmp(&mychar, "f", 1) || strncmp(&mychar, "F", 1))
+    if(strncmp(&mychar, "f", 1)==0 || strncmp(&mychar, "F", 1)==0)
         return 1;
-    if(strncmp(&mychar, "g", 1) || strncmp(&mychar, "G", 1))
+    if(strncmp(&mychar, "g", 1)==0 || strncmp(&mychar, "G", 1)==0)
         return 1;
-    if(strncmp(&mychar, "h", 1) || strncmp(&mychar, "H", 1))
+    if(strncmp(&mychar, "h", 1)==0 || strncmp(&mychar, "H", 1)==0)
         return 1;
-    if(strncmp(&mychar, "i", 1) || strncmp(&mychar, "I", 1))
+    if(strncmp(&mychar, "i", 1)==0 || strncmp(&mychar, "I", 1)==0)
         return 1;
-    if(strncmp(&mychar, "j", 1) || strncmp(&mychar, "J", 1))
+    if(strncmp(&mychar, "j", 1)==0 || strncmp(&mychar, "J", 1)==0)
         return 1;
-    if(strncmp(&mychar, "k", 1) || strncmp(&mychar, "K", 1))
+    if(strncmp(&mychar, "k", 1)==0 || strncmp(&mychar, "K", 1)==0)
         return 1;
-    if(strncmp(&mychar, "l", 1) || strncmp(&mychar, "L", 1))
+    if(strncmp(&mychar, "l", 1)==0 || strncmp(&mychar, "L", 1)==0)
         return 1;
-    if(strncmp(&mychar, "m", 1) || strncmp(&mychar, "M", 1))
+    if(strncmp(&mychar, "m", 1)==0 || strncmp(&mychar, "M", 1)==0)
         return 1;
-    if(strncmp(&mychar, "n", 1) || strncmp(&mychar, "N", 1))
+    if(strncmp(&mychar, "n", 1)==0 || strncmp(&mychar, "N", 1)==0)
         return 1;
-    if(strncmp(&mychar, "o", 1) || strncmp(&mychar, "O", 1))
+    if(strncmp(&mychar, "o", 1)==0 || strncmp(&mychar, "O", 1)==0)
         return 1;
-    if(strncmp(&mychar, "p", 1) || strncmp(&mychar, "P", 1))
+    if(strncmp(&mychar, "p", 1)==0 || strncmp(&mychar, "P", 1)==0)
         return 1;
-    if(strncmp(&mychar, "q", 1) || strncmp(&mychar, "Q", 1))
+    if(strncmp(&mychar, "q", 1)==0 || strncmp(&mychar, "Q", 1)==0)
         return 1;
-    if(strncmp(&mychar, "r", 1) || strncmp(&mychar, "R", 1))
+    if(strncmp(&mychar, "r", 1)==0 || strncmp(&mychar, "R", 1)==0)
         return 1;
-    if(strncmp(&mychar, "s", 1) || strncmp(&mychar, "S", 1))
+    if(strncmp(&mychar, "s", 1)==0 || strncmp(&mychar, "S", 1)==0)
         return 1;
-    if(strncmp(&mychar, "t", 1) || strncmp(&mychar, "T", 1))
+    if(strncmp(&mychar, "t", 1)==0 || strncmp(&mychar, "T", 1)==0)
         return 1;
-    if(strncmp(&mychar, "u", 1) || strncmp(&mychar, "U", 1))
+    if(strncmp(&mychar, "u", 1)==0 || strncmp(&mychar, "U", 1)==0)
         return 1;
-    if(strncmp(&mychar, "v", 1) || strncmp(&mychar, "V", 1))
+    if(strncmp(&mychar, "v", 1)==0 || strncmp(&mychar, "V", 1)==0)
         return 1;
-    if(strncmp(&mychar, "w", 1) || strncmp(&mychar, "W", 1))
+    if(strncmp(&mychar, "w", 1)==0 || strncmp(&mychar, "W", 1)==0)
         return 1;
-    if(strncmp(&mychar, "x", 1) || strncmp(&mychar, "X", 1))
+    if(strncmp(&mychar, "x", 1)==0 || strncmp(&mychar, "X", 1)==0)
         return 1;
-    if(strncmp(&mychar, "y", 1) || strncmp(&mychar, "Y", 1))
+    if(strncmp(&mychar, "y", 1)==0 || strncmp(&mychar, "Y", 1)==0)
         return 1;
-    if(strncmp(&mychar, "z", 1) || strncmp(&mychar, "Z", 1))
+    if(strncmp(&mychar, "z", 1)==0 || strncmp(&mychar, "Z", 1)==0)
         return 1;
     
     return 0;
@@ -794,17 +926,47 @@ int validate_char_letter (char mychar)
 
 int validate_char_problematic (char mychar)
 {
-    if(strncmp(&mychar, "\"", 1))
+    if(strncmp(&mychar, "\"", 1) == 0)
         return 0;
-    if(strncmp(&mychar, "'", 1))
+    if(strncmp(&mychar, "'", 1) == 0)
         return 0;
-    if(strncmp(&mychar, ";", 1))
+    if(strncmp(&mychar, "`", 1) == 0)
         return 0;
-    if(strncmp(&mychar, "\\", 1))
+    if(strncmp(&mychar, ";", 1) == 0)
         return 0;
-    if(strncmp(&mychar, "&", 1))
+    if(strncmp(&mychar, "\\", 1) == 0)
         return 0;
-    if(strncmp(&mychar, ">", 1))
+    if(strncmp(&mychar, "&", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, ">", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "<", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "|", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "$", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "*", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "%", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "?", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "!", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "#", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "~", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "=", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "(", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "[", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "{", 1) == 0)
+        return 0;
+    if(strncmp(&mychar, "^", 1) == 0)
         return 0;
     
     return 1;
