@@ -166,7 +166,7 @@ int main (int argc, const char * argv[])
         {
             stop_olsrd(argc, argv);
         }
-        if(strncmp(argv[1], "startportforwarding", 19) == 0)
+        else if(strncmp(argv[1], "startportforwarding", 19) == 0)
         {
             start_portforwarding(argc, argv);
         }
@@ -174,7 +174,7 @@ int main (int argc, const char * argv[])
         {
             stop_portforwarding(argc, argv);
         }
-        if(strncmp(argv[1], "enablewifi", 10) == 0)
+        else if(strncmp(argv[1], "enablewifi", 10) == 0)
         {
             enable_wifi(argc, argv);
         }
@@ -303,7 +303,7 @@ int start_portforwarding (int argc, const char * argv[])
         sprintf(s,"/sbin/ipfw add 1053 fwd localhost,8081 tcp from any to any 80 in recv %s", argv[2]);
         printf("%s\n",s);
         system(s);
-        
+
         // start portforwarding of udp ports
         sprintf(s,"/usr/local/qaul/socat UDP4-RECVFROM:53,fork UDP4-SENDTO:localhost:8053 &");
         printf("%s\n",s);
@@ -311,7 +311,7 @@ int start_portforwarding (int argc, const char * argv[])
         sprintf(s,"/usr/local/qaul/socat UDP4-RECVFROM:67,fork UDP4-SENDTO:localhost:8067 &");
         printf("%s\n",s);
         system(s);
-        
+
         printf("portforwarding started\n");
     }
     else
