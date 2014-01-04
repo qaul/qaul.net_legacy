@@ -277,7 +277,9 @@ int main (int argc, const char * argv[])
 
 int start_olsrd (int argc, const char * argv[])
 {
-    char s[512];
+    pid_t pid1;
+    int status;
+    char s[256];
     printf("start olsrd\n");
     
     if(argc >= 4)
@@ -293,15 +295,22 @@ int start_olsrd (int argc, const char * argv[])
             printf("argument 2 not valid\n");
             return 0;
         }
-                
+        
         // become root
         setuid(0);
         
         // start olsrd
-        sprintf(s,"/usr/local/qaul/olsrd -f %s/olsrd_osx.conf -i %s -d 0 -nofork &", argv[2], argv[3]);
-        printf("%s\n",s);
-        system(s);
-            
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+        {
+            sprintf(s,"%s/olsrd_osx.conf", argv[2]);
+            execl("/usr/local/qaul/olsrd", "olsrd", "-f", s, "-i", argv[3], "-d", "0", (char*)0);
+        }
+        else
+            waitpid(pid1, &status, 0);
+        
         printf("olsrd started\n");
     }
     else
@@ -312,13 +321,21 @@ int start_olsrd (int argc, const char * argv[])
 
 int stop_olsrd (int argc, const char * argv[])
 {
+    pid_t pid1;
+    int status;
     printf("stop olsrd\n");
     
     // become root
     setuid(0);
-    
+
     // kill olsrd
-    system("killall olsrd");
+    pid1 = fork();
+    if (pid1 < 0)
+        printf("fork for pid1 failed\n");
+    else if(pid1 == 0)
+        execl("/usr/bin/killall", "killall", "olsrd", (char*)0);
+    else
+        waitpid(pid1, &status, 0);
     
     printf("olsrd stopped\n");
 	return 0;
@@ -326,7 +343,7 @@ int stop_olsrd (int argc, const char * argv[])
 
 int start_portforwarding (int argc, const char * argv[])
 {
-    char s[512];
+    pid_t pid1, pid2, pid3;
     printf("start portforwarding\n");
     
     if(argc >= 3)
@@ -340,19 +357,32 @@ int start_portforwarding (int argc, const char * argv[])
         
         // become root
         setuid(0);
-        
-        // forward port 80 by firewall
-        sprintf(s,"/sbin/ipfw add 1053 fwd localhost,8081 tcp from any to any 80 in recv %s", argv[2]);
-        printf("%s\n",s);
-        system(s);
 
-        // start portforwarding of udp ports
-        sprintf(s,"/usr/local/qaul/socat UDP4-RECVFROM:53,fork UDP4-SENDTO:localhost:8053 &");
-        printf("%s\n",s);
-        system(s);
-        sprintf(s,"/usr/local/qaul/socat UDP4-RECVFROM:67,fork UDP4-SENDTO:localhost:8067 &");
-        printf("%s\n",s);
-        system(s);
+        // forward port 80 by firewall
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+            execl("/sbin/ipfw", "ipfw", "add", "1053", "fwd", "localhost,8081", "tcp", "from", "any", "to", "any", "80", "in", "recv", argv[2], (char*)0);
+        else
+            printf("tcp port 80 forwarded\n");
+
+        // forward udp ports by socat
+        pid2 = fork();
+        if (pid2 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid2 == 0)
+            execl("/usr/local/qaul/socat", "socat", "UDP4-RECVFROM:53,fork", "UDP4-SENDTO:localhost:8053", (char*)0);
+        else
+            printf("udp port 53 forwarded\n");
+        
+        pid3 = fork();
+        if (pid3 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid3 == 0)
+            execl("/usr/local/qaul/socat", "socat", "UDP4-RECVFROM:67,fork", "UDP4-SENDTO:localhost:8067", (char*)0);
+        else
+            printf("udp port 67 forwarded\n");
 
         printf("portforwarding started\n");
     }
@@ -364,23 +394,39 @@ int start_portforwarding (int argc, const char * argv[])
 
 int stop_portforwarding (int argc, const char * argv[])
 {
+    pid_t pid1, pid2;
+    int status;
     printf("stop port forwarding\n");
     
     // become root
     setuid(0);
-    
+
     // remove firewall rules
-    system("/sbin/ipfw delete 1053");
-    // stop port forwarding
-    system("/usr/bin/killall socat");
+    pid1 = fork();
+    if (pid1 < 0)
+        printf("fork for pid1 failed\n");
+    else if(pid1 == 0)
+        execl("/sbin/ipfw", "ipfw", "delete", "1053", (char*)0);
+    else
+        printf("tcp port 80 forwarding stopped\n");
     
+    // stop port forwarding
+    pid2 = fork();
+    if (pid2 < 0)
+        printf("fork for pid2 failed\n");
+    else if(pid2 == 0)
+        execl("/usr/bin/killall", "killall", "socat", (char*)0);
+    else
+        waitpid(pid2, &status, 0);
+
     printf("port forwarding stopped\n");
 	return 0;
 }
 
 int enable_wifi (int argc, const char * argv[])
 {
-    char s[512];
+    pid_t pid1;
+    int status;
     printf("enable wifi\n");
     
     if(argc >= 4)
@@ -399,16 +445,21 @@ int enable_wifi (int argc, const char * argv[])
         
         // become root
         setuid(0);
-        
-        // enable wifi
-        if(atoi(argv[2]) <= NSAppKitVersionNumber10_5)
-            sprintf(s,"/usr/sbin/networksetup -setairportpower on");
-        else
-            sprintf(s,"/usr/sbin/networksetup -setairportpower %s on", argv[3]);
-        
-        printf("%s\n",s);
-        system(s);
 
+        // enable wifi
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+        {
+            if(atoi(argv[2]) <= NSAppKitVersionNumber10_5)
+                execl("/usr/sbin/networksetup", "networksetup", "-setairportpower", "on", (char*)0);
+            else
+                execl("/usr/sbin/networksetup", "networksetup", "-setairportpower", argv[3], "on", (char*)0);
+        }
+        else
+            waitpid(pid1, &status, 0);
+        
         printf("wifi enabled\n");
     }
     else
@@ -419,7 +470,8 @@ int enable_wifi (int argc, const char * argv[])
 
 int disable_wifi (int argc, const char * argv[])
 {
-    char s[512];
+    pid_t pid1;
+    int status;
     printf("disable wifi\n");
     
     if(argc >= 4)
@@ -438,17 +490,22 @@ int disable_wifi (int argc, const char * argv[])
 
         // become root
         setuid(0);
-        
-        // enable wifi
-        if(atoi(argv[2]) <= NSAppKitVersionNumber10_5)
-            sprintf(s,"/usr/sbin/networksetup -setairportpower off");
+
+        // disable wifi
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+        {
+            if(atoi(argv[2]) <= NSAppKitVersionNumber10_5)
+                execl("/usr/sbin/networksetup", "networksetup", "-setairportpower", "off", (char*)0);
+            else
+                execl("/usr/sbin/networksetup", "networksetup", "-setairportpower", argv[3], "off", (char*)0);        
+        }
         else
-            sprintf(s,"/usr/sbin/networksetup -setairportpower \"%s\" off", argv[3]);
-        
-        printf("%s\n",s);
-        system(s);
-        
-        printf("wifi enabled\n");
+            waitpid(pid1, &status, 0);
+
+        printf("wifi disabled\n");
     }
     else
         printf("missing argument\n");
@@ -458,7 +515,8 @@ int disable_wifi (int argc, const char * argv[])
 
 int create_networkprofile (int argc, const char * argv[])
 {
-    char s[512];
+    pid_t pid1;
+    int status;
     printf("create network profile\n");
     
     if(argc >= 3)
@@ -472,11 +530,15 @@ int create_networkprofile (int argc, const char * argv[])
         
         // become root
         setuid(0);
-        
+
         // create network profile
-        sprintf(s,"/usr/sbin/networksetup -createlocation \"%s\" populate", argv[2]);
-        printf("%s\n",s);
-        system(s);
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+            execl("/usr/sbin/networksetup", "networksetup", "-createlocation", argv[2], "populate", (char*)0);
+        else
+            waitpid(pid1, &status, 0);
         
         printf("network profile created\n");
     }
@@ -488,7 +550,8 @@ int create_networkprofile (int argc, const char * argv[])
 
 int switch_networkprofile (int argc, const char * argv[])
 {
-    char s[512];
+    pid_t pid1;
+    int status;
     printf("switch network profile\n");
     
     if(argc >= 3)
@@ -502,11 +565,15 @@ int switch_networkprofile (int argc, const char * argv[])
         
         // become root
         setuid(0);
-        
-        // switche network profile
-        sprintf(s,"/usr/sbin/networksetup -switchtolocation \"%s\"", argv[2]);
-        printf("%s\n",s);
-        system(s);
+
+        // switch network profile
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+            execl("/usr/sbin/networksetup", "networksetup", "-switchtolocation", argv[2], (char*)0);
+        else
+            waitpid(pid1, &status, 0);
         
         printf("network profile switched\n");
     }
@@ -518,7 +585,8 @@ int switch_networkprofile (int argc, const char * argv[])
 
 int delete_networkprofile (int argc, const char * argv[])
 {
-    char s[512];
+    pid_t pid1;
+    int status;
     printf("delete network profile\n");
     
     if(argc >= 3)
@@ -532,12 +600,16 @@ int delete_networkprofile (int argc, const char * argv[])
         
         // become root
         setuid(0);
-        
-        // switche network profile
-        sprintf(s,"/usr/sbin/networksetup -deletelocation \"%s\"", argv[2]);
-        printf("%s\n",s);
-        system(s);
-        
+
+        // switch network profile
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+            execl("/usr/sbin/networksetup", "networksetup", "-deletelocation", argv[2], (char*)0);
+        else
+            waitpid(pid1, &status, 0);
+
         printf("network profile deleted\n");
     }
     else
@@ -548,7 +620,10 @@ int delete_networkprofile (int argc, const char * argv[])
 
 int create_ibss (int argc, const char * argv[])
 {
-    char s[512];
+    pid_t pid1;
+    int status;
+    char s1[256];
+    char s2[256];
     printf("create or join ibss\n");
     
     if(argc >= 4)
@@ -567,12 +642,20 @@ int create_ibss (int argc, const char * argv[])
         
         // become root
         setuid(0);
-        
+
         // create or join ibss
-        sprintf(s,"/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -i%s -c%s", argv[2], argv[3]);
-        printf("%s\n",s);
-        system(s);
-        
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+        {
+            sprintf(s1,"-i%s", argv[2]);
+            sprintf(s2,"-c%s", argv[3]);
+            execl("/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport", "airport", s1, s2, (char*)0);
+        }
+        else
+            waitpid(pid1, &status, 0);
+
         printf("ibss created\n");
     }
     else
@@ -583,13 +666,14 @@ int create_ibss (int argc, const char * argv[])
 
 int set_ip (int argc, const char * argv[])
 {
-    char s[512];    
+    pid_t pid1;
+    int status;
     printf("configure ip\n");
     
     if(argc >= 6)
     {
         // validate arguments
-        if (validate_ip(argv[2]) == 0)
+        if (validate_service(argv[2]) == 0)
         {
             printf("argument 1 not valid\n");
             return 0;
@@ -612,12 +696,16 @@ int set_ip (int argc, const char * argv[])
         
         // become root
         setuid(0);
-        
+
         // set ip manually
-        sprintf(s,"/usr/sbin/networksetup -setmanual %s %s %s %s", argv[2], argv[3], argv[4], argv[5]);
-        printf("%s\n",s);
-        system(s);
-        
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+            execl("/usr/sbin/networksetup", "networksetup", "-setmanual", argv[2], argv[3], argv[4], argv[5], (char*)0);
+        else
+            waitpid(pid1, &status, 0);
+
         printf("ip configured\n");
     }
     else
@@ -628,31 +716,45 @@ int set_ip (int argc, const char * argv[])
 
 int set_dhcp (int argc, const char * argv[])
 {
-    char s[512];
+    pid_t pid1, pid2;
+    int status;
     printf("set DHCP\n");
     
     if(argc >= 3)
     {
         // validate arguments
-        if (validate_interface(argv[2]) == 0)
+        if (validate_service(argv[2]) == 0)
         {
             printf("argument 1 not valid\n");
+            return 0;
+        }
+        if (validate_interface(argv[3]) == 0)
+        {
+            printf("argument 2 not valid\n");
             return 0;
         }
         
         // become root
         setuid(0);
-        
+
         // set dhcp
-        sprintf(s,"/usr/sbin/networksetup -setdhcp %s", argv[2]);
-        printf("%s\n",s);
-        system(s);
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+            execl("/usr/sbin/networksetup", "networksetup", "-setdhcp", argv[2], (char*)0);
+        else
+            waitpid(pid1, &status, 0);
         
         usleep(200000);
         
-        sprintf(s,"/usr/sbin/ipconfig set %s DHCP", argv[3]);
-        printf("%s\n",s);
-        system(s);
+        pid2 = fork();
+        if (pid2 < 0)
+            printf("fork for pid2 failed\n");
+        else if(pid2 == 0)
+            execl("/usr/sbin/ipconfig", "ipconfig", "set", argv[3], "DHCP", (char*)0);
+        else
+            waitpid(pid2, &status, 0);
         
         printf("DHCP set\n");
     }
@@ -664,19 +766,31 @@ int set_dhcp (int argc, const char * argv[])
 
 int set_dns (int argc, const char * argv[])
 {
-    char s[512];
+    pid_t pid1;
+    int status;
     printf("set DNS\n");
     
     if(argc >= 3)
     {
+        // validate arguments
+        if (validate_service(argv[2]) == 0)
+        {
+            printf("argument 1 not valid\n");
+            return 0;
+        }
+
         // set root rights
         setuid(0);
-    
+
         // set dns
-        sprintf(s,"/usr/sbin/networksetup -setdnsservers %s 178.254.31.11 77.67.33.81", argv[2]);
-        printf("%s\n",s);
-        system(s);
-    
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+            execl("/usr/sbin/networksetup", "networksetup", "-setdnsservers", argv[2], "178.254.31.11", "77.67.33.81", (char*)0);
+        else
+            waitpid(pid1, &status, 0);
+        
         printf("DNS set\n");
     }
     else
