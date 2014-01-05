@@ -56,6 +56,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 
 #define NSAppKitVersionNumber10_4 824
@@ -344,6 +347,7 @@ int stop_olsrd (int argc, const char * argv[])
 int start_portforwarding (int argc, const char * argv[])
 {
     pid_t pid1, pid2, pid3;
+    int fd;
     printf("start portforwarding\n");
     
     if(argc >= 3)
@@ -363,7 +367,16 @@ int start_portforwarding (int argc, const char * argv[])
         if (pid1 < 0)
             printf("fork for pid1 failed\n");
         else if(pid1 == 0)
+        {
+            // redirect standart output and error to /dev/null
+            // the program otherwise often didn't return correctly
+            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+            // execute program
             execl("/sbin/ipfw", "ipfw", "add", "1053", "fwd", "localhost,8081", "tcp", "from", "any", "to", "any", "80", "in", "recv", argv[2], (char*)0);
+        }
         else
             printf("tcp port 80 forwarded\n");
 
@@ -372,7 +385,16 @@ int start_portforwarding (int argc, const char * argv[])
         if (pid2 < 0)
             printf("fork for pid1 failed\n");
         else if(pid2 == 0)
+        {
+            // redirect standart output and error to /dev/null
+            // the program otherwise often didn't return correctly
+            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+            // execute program
             execl("/usr/local/qaul/socat", "socat", "UDP4-RECVFROM:53,fork", "UDP4-SENDTO:localhost:8053", (char*)0);
+        }
         else
             printf("udp port 53 forwarded\n");
         
@@ -380,7 +402,16 @@ int start_portforwarding (int argc, const char * argv[])
         if (pid3 < 0)
             printf("fork for pid1 failed\n");
         else if(pid3 == 0)
+        {
+            // redirect standart output and error to /dev/null
+            // the program otherwise often didn't return correctly
+            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+            // execute program
             execl("/usr/local/qaul/socat", "socat", "UDP4-RECVFROM:67,fork", "UDP4-SENDTO:localhost:8067", (char*)0);
+        }
         else
             printf("udp port 67 forwarded\n");
 
@@ -902,27 +933,30 @@ int validate_path (const char* str)
     int i;
     
     // check length
-    if(strlen(str)>100)
+    if(strlen(str)>200)
     {
         printf("argument too long\n");
         return 0;
     }
     
-    // check numbers and dots
+    // check if it is a valid path
+    if(strncmp(&str[0], "/", 1) != 0)
+    {
+        printf("not an absolute path\n");
+        return 0;
+    }
+    
     for(i=0; i<strlen(str); i++)
     {
-        if(validate_char_number(str[i]) == 0 &&
-           validate_char_letter(str[i]) == 0 &&
-           strncmp(&str[i], ".", 1) != 0 &&
-           strncmp(&str[i], "-", 1) != 0 &&
-           strncmp(&str[i], "_", 1) != 0 &&
-           strncmp(&str[i], "/", 1) != 0
+        if(
+           strncmp(&str[i], ":", 1) == 0
            )
         {
             printf("invalid character\n");
             return 0;
         }
     }
+        
     return 1;
 }
 
