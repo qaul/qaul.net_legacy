@@ -12,7 +12,7 @@
 	int qaulStarted;
 	
 	// wifi config
-	QaulConfigWifi *mysudo;
+	QaulConfigWifi *qaulConfigWifi;
 	NSArray * qaulInterfacesAll;
 	NSEnumerator *en;
 	SCNetworkInterfaceRef qaulWifiInterface;
@@ -22,7 +22,7 @@
 	BOOL qaulServiceConfigured;
 	CFStringRef qaulServiceName;
 	OSStatus status;
-	AuthorizationRef authorizationRef;
+//	AuthorizationRef authorizationRef;
 	
 	// Timer
 	NSTimer *qaullibTimer;

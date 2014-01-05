@@ -2,7 +2,6 @@
 //  QaulConfigWifi.m
 //  wificonfig
 //
-//  Created by foton on 3/5/11.
 //  GPL software by qaul.net
 //
 
@@ -41,14 +40,9 @@
 	{ 
 		resourcePath = [[NSBundle mainBundle] resourcePath];
 		olsrdPath = [NSString stringWithFormat:@"%@/olsrd",resourcePath];
-
-		if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_4) 
-			networksetupPath=[NSString stringWithFormat:@"/usr/sbin/networksetup"];
-		else 
-			networksetupPath=[NSString stringWithFormat:@"/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Support/networksetup"];	
-		
-		airportPath = [NSString stringWithFormat:@"/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"];
-	} 
+        
+        [self setPaths];
+    }
 	return self; 
 } 
 
@@ -62,112 +56,76 @@
 	else 
 		networksetupPath=[NSString stringWithFormat:@"/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Support/networksetup"];	
 	
-	airportPath = [NSString stringWithFormat:@"/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"];	
+	airportPath = [NSString stringWithFormat:@"/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"];
+	qaulhelperPath = [NSString stringWithFormat:@"/usr/local/qaul/qaulhelper"];
 }
 
-- (BOOL)syscall:(AuthorizationRef)authRef command:(NSString*)strCmd arguments:(NSArray*)args
+- (BOOL)runTask:(NSString*)path arguments:(NSArray*)arguments
 {
-	OSStatus err;
-    FILE *fd = NULL;
-    int argc = [args count];
-    char **argv = (char **)malloc(sizeof(char *) * (argc + 1));
-    int i;
+	NSTask *task;
+	task = [[NSTask alloc] init];
+	[task setLaunchPath:path];
 	
-	NSLog([NSString stringWithFormat:@"command: %@", strCmd]);
-    for(i=0; i<argc; i++)
-	{
-        argv[i] = (char *) [[[args objectAtIndex:i] description] UTF8String];
-		NSLog([NSString stringWithFormat:@"argument %i: %@", i, [[args objectAtIndex:i] description]]);
-	}
-	argv[i] = NULL;
+	[task setArguments: arguments];
 	
-	if( (err = AuthorizationExecuteWithPrivileges(
-											 authRef,
-											 [strCmd UTF8String], 
-											 kAuthorizationFlagDefaults, 
-											 argv, &fd)) != noErr )
-	{
-		NSLog([NSString stringWithFormat:@"error: %d", err]);
-	}
-	else
-	{
-		//// wait for process to terminate
-		//int child;
-		//wait(&child);
-		//close(fileno(fd));
-		//NSLog(@"no error");
-	}
+	NSPipe *pipe;
+	pipe = [NSPipe pipe];
+	[task setStandardOutput: pipe];
 	
-	// this function crashes... how can the memory be released
-	//free(*argv);
+	NSFileHandle *file;
+	file = [pipe fileHandleForReading];
 	
-	return (err ==0) ? true : false;
-}
-
-- (BOOL)testAuthorization:(AuthorizationRef)authRef
-{
-	[self setPaths];
-	NSString *strAuth = @"/sbin/dmesg";
-	return [self syscall:authRef command:strAuth arguments:[NSArray arrayWithObjects:nil]];
-}
-
-- (BOOL)startAirport:(AuthorizationRef)authRef interface:(SCNetworkInterfaceRef)interface
-{
-	[self setPaths];
-	NSArray *arguments;
-	if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5)
-	{
-		arguments = [NSArray arrayWithObjects:@"-setairportpower",SCNetworkInterfaceGetBSDName(interface),@"on",nil];
-	}
-	else 
-	{
-		arguments = [NSArray arrayWithObjects:@"-setairportpower",@"on",nil];
-	}
-	return [self syscall:authRef command:networksetupPath arguments:arguments];
-}
-
-- (BOOL)stopAirport:(AuthorizationRef)authRef interface:(SCNetworkInterfaceRef)interface
-{
-	[self setPaths];
-	NSArray *arguments;
-	if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_5)
-	{
-		arguments = [NSArray arrayWithObjects:@"-setairportpower",SCNetworkInterfaceGetBSDName(interface),@"off",nil];
-	}
-	else 
-	{
-		arguments = [NSArray arrayWithObjects:@"-setairportpower",@"off",nil];
-	}
-	return [self syscall:authRef command:networksetupPath arguments:arguments];
-}
-
-- (BOOL)setAddress:(AuthorizationRef)authRef address:(NSString*)address service:(SCNetworkServiceRef)service
-{
-	[self setPaths];
-	return [self syscall:authRef command:networksetupPath arguments:[NSArray arrayWithObjects:@"-setmanual",SCNetworkServiceGetName(service),address,@"255.0.0.0",@"0.0.0.0",nil]];
-}
-
-- (BOOL)setDhcp:(AuthorizationRef)authRef service:(SCNetworkServiceRef)service interface:(SCNetworkInterfaceRef)interface
-{
-	[self setPaths];
-	NSArray *arguments = [NSArray arrayWithObjects:@"-setdhcp",SCNetworkServiceGetName(service),nil];
-	if(![self syscall:authRef command:networksetupPath arguments:arguments]) 
-		NSLog(@"Wifi DHCP not set");
-	usleep(200000);
-	NSArray *arguments2 = [NSArray arrayWithObjects:@"set",SCNetworkInterfaceGetBSDName(interface),@"DHCP",nil];
-	return [self syscall:authRef command:[NSString stringWithFormat:@"/usr/sbin/ipconfig"] arguments:arguments2];
-}
-
-
-- (BOOL)connect2network:(AuthorizationRef)authRef name:(NSString*)name channel:(int)channel interface:(SCNetworkInterfaceRef)interface service:(SCNetworkServiceRef)service
-{
-	NSLog(@"connect 2 network\n");
+	[task launch];
 	
+	NSData *data;
+	data = [file readDataToEndOfFile];
+	
+	NSString *myString;
+	myString = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+	
+	[task release];
+	[myString release];
+	
+	return true;
+}
+
+- (BOOL)startAirport:(SCNetworkInterfaceRef)interface
+{
 	[self setPaths];
+    NSLog(@"start airport\n");
+    return [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"enablewifi",[NSString stringWithFormat:@"%i",(int)floor(NSAppKitVersionNumber)],SCNetworkInterfaceGetBSDName(interface),nil]];
+}
+
+- (BOOL)stopAirport:(SCNetworkInterfaceRef)interface
+{
+	[self setPaths];
+    NSLog(@"stop airport\n");
+    return [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"disablewifi",[NSString stringWithFormat:@"%i",(int)floor(NSAppKitVersionNumber)],SCNetworkInterfaceGetBSDName(interface),nil]];
+}
+
+- (BOOL)setAddress:(NSString*)address service:(SCNetworkServiceRef)service
+{
+	[self setPaths];
+    return [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"setip",SCNetworkServiceGetName(service),address,@"255.0.0.0",@"0.0.0.0",nil]];
+}
+
+- (BOOL)setDhcp:(SCNetworkServiceRef)service interface:(SCNetworkInterfaceRef)interface
+{
+	[self setPaths];
+    return [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"setdhcp",SCNetworkServiceGetName(service),SCNetworkInterfaceGetBSDName(interface),nil]];
+}
+
+
+- (BOOL)connect2network:(NSString*)name channel:(int)channel interface:(SCNetworkInterfaceRef)interface service:(SCNetworkServiceRef)service
+{
+	[self setPaths];
+    NSLog(@"connect 2 network\n");
+    BOOL created;
+	
 	if(floor(NSAppKitVersionNumber) < NSAppKitVersionNumber10_6)
 	{
 		NSLog(@"OSX 10.5 or lower");
-		return [self syscall:authRef command:airportPath arguments:[NSArray arrayWithObjects:[NSString stringWithFormat:@"-i%@",name],[NSString stringWithFormat:@"-c%i",channel],nil]];
+        created = [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"createibss",[NSString stringWithFormat:@"%@",name],[NSString stringWithFormat:@"%i",channel],nil]];
 	}
 #ifdef IS_OSX_10_6_OR_HIGHER
 	else 
@@ -185,7 +143,7 @@
 		CWInterface* wifiInterface = [CWInterface interfaceWithName:[NSString stringWithFormat:@"%@",SCNetworkInterfaceGetBSDName(interface)]];
 		//if (wifiInterface) NSLog(@"CWInterface wifi interface created: %@", wifiInterface);
 		//else NSLog([NSString stringWithFormat:@"%@",SCNetworkInterfaceGetBSDName(interface)]);
-		BOOL created = [wifiInterface enableIBSSWithParameters:[NSDictionary dictionaryWithDictionary:ibssParams] error:&error];
+		created = [wifiInterface enableIBSSWithParameters:[NSDictionary dictionaryWithDictionary:ibssParams] error:&error];
 		
 		// if creation failed try to join the existing qaul.net network
 		if(!created)
@@ -236,105 +194,47 @@
 			}
 
 		}
-		
-		// set dns servers for internet gateway
-		// TODO: WLAN adapter names with spaces
-		if([self syscall:authRef command:networksetupPath arguments:[NSArray arrayWithObjects:@"-setdnsservers",SCNetworkServiceGetName(service),@"178.254.31.11",@"176.10.111.206",nil]])
-			NSLog(@"DNS servers set");
-			
-		return created;
 	}
 #endif
-	return false;
+    
+    // set dns servers for internet gateway
+    // TODO: WLAN adapter names with spaces
+    if([self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"setdns",SCNetworkServiceGetName(service),nil]])
+        NSLog(@"DNS servers set");
+    
+	return created;
 }
 
-- (BOOL)startOlsrd:(AuthorizationRef)authRef interface:(SCNetworkInterfaceRef)interface
+- (BOOL)startOlsrd:(SCNetworkInterfaceRef)interface
 {
 	[self setPaths];
-	
-	// ------------------------------------------------
-	// uses script & destroys network connection
-	// destroys network connection
-	NSString *startScript = [NSString stringWithFormat:@"%@/olsrd_start.sh",resourcePath];
-	return [self syscall:authRef command:startScript arguments:[NSArray arrayWithObjects:resourcePath,SCNetworkInterfaceGetBSDName(interface),nil]];
-	
-	// ------------------------------------------------
-	// invoke the olsrd directly
-	// needs to copy the shared olsrd qaul library into the library folder
-	// invoke program
-	//NSString *startScript = [NSString stringWithFormat:@"%@/olsrd",resourcePath];
-	//return [self syscall:authRef command:startScript arguments:[NSArray arrayWithObjects:@"-i",SCNetworkInterfaceGetBSDName(interface),@"-f",[NSString stringWithFormat:@"%@/olsrd_osx.conf",resourcePath],@"-d",@"0",nil]];
+    NSLog(@"qaulhelper startolsrd %@ %@", resourcePath, SCNetworkInterfaceGetBSDName(interface));
+    return [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"startolsrd",resourcePath,SCNetworkInterfaceGetBSDName(interface),nil]];
 }
 
-- (BOOL)stopOlsrd:(AuthorizationRef)authRef
+- (BOOL)stopOlsrd
 {
 	[self setPaths];
-	NSString *stopScript = [NSString stringWithFormat:@"%@/olsrd_stop.sh",resourcePath];
-	return [self syscall:authRef command:stopScript arguments:[NSArray arrayWithObjects:nil]];
+    return [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"stopolsrd",nil]];
 }
 
-- (BOOL)startPortForwarding:(AuthorizationRef)authRef interface:(SCNetworkInterfaceRef)interface
+- (BOOL)startPortForwarding:(SCNetworkInterfaceRef)interface
 {
-	NSLog(@"start port forwarding");
-	
-	// forward port 80 by firewall
 	[self setPaths];
-	[self syscall:authRef command:@"/sbin/ipfw" arguments:[NSArray arrayWithObjects:@"add",@"1053",@"fwd",@"localhost,8081",@"tcp",@"from",@"any",@"to",@"any",@"80",@"in",@"recv",SCNetworkInterfaceGetBSDName(interface),nil]];
-
-	NSLog(@"start udp forwarding");
-	
-	// start portforwarding of udp ports
-	[self syscall:authRef command:[NSString stringWithFormat:@"%@/socat_start.sh",resourcePath] arguments:[NSArray arrayWithObjects:resourcePath,nil]];
-	//[self syscall:authRef command:[NSString stringWithFormat:@"%@/socat",resourcePath] arguments:[NSArray arrayWithObjects:@"UDP4-RECVFROM:67,fork",@"UDP4-SENDTO:localhost:8067","&",nil]];
-	//[self syscall:authRef command:[NSString stringWithFormat:@"%@/socat",resourcePath] arguments:[NSArray arrayWithObjects:@"UDP4-RECVFROM:53,fork",@"UDP4-SENDTO:localhost:8053","&",nil]];
-	NSLog(@"udp forwarding started");
-	
-	return true;
+    NSLog(@"start port forwarding");
+    return [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"startportforwarding",SCNetworkInterfaceGetBSDName(interface),nil]];
 }
 
-- (BOOL)stopPortForwarding:(AuthorizationRef)authRef
+- (BOOL)stopPortForwarding
 {
-	// remove firewall rules
-	[self syscall:authRef command:@"/sbin/ipfw" arguments:[NSArray arrayWithObjects:@"delete",@"1053",nil]];
-	
-	// stop port forwarding
-	[self syscall:authRef command:@"/usr/bin/killall" arguments:[NSArray arrayWithObjects:@"socat",nil]];
-	
-	return true;
+	[self setPaths];
+    return [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"stopportforwarding",nil]];
 }
 
-- (BOOL)runTask:(NSString*)path arguments:(NSArray*)arguments
+- (BOOL)createNetworkProfile
 {
-	NSTask *task;
-	task = [[NSTask alloc] init];
-	[task setLaunchPath:path];
-	
-	[task setArguments: arguments];
-	
-	NSPipe *pipe;
-	pipe = [NSPipe pipe];
-	[task setStandardOutput: pipe];
-	
-	NSFileHandle *file;
-	file = [pipe fileHandleForReading];
-	
-	[task launch];
-	
-	NSData *data;
-	data = [file readDataToEndOfFile];
-	
-	NSString *myString;
-	myString = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-	
-	[task release];
-	[myString release];
-	
-	return true;
-}
-
-- (BOOL)createNetworkProfile:(AuthorizationRef)authRef
-{
-	NSLog(@"createNetworkProfile");
+	[self setPaths];
+    NSLog(@"createNetworkProfile");
 	
 	NSTask *task;
 	task = [[NSTask alloc] init];
@@ -362,33 +262,23 @@
 	networkProfile = [[arguments objectAtIndex:0] description];
 	
 	NSLog (@"current networkProfile: '%@'", networkProfile);
-	[self runTask:@"/usr/sbin/networksetup" arguments:[NSArray arrayWithObjects:@"-createlocation",@"new",@"populate",nil]];
-/*
-	if([networkProfile isEqualToString:@"qaul.net"])
-	{
-		networkProfile = @"new";
-		[self runTask:@"/usr/sbin/networksetup" arguments:[NSArray arrayWithObjects:@"-createlocation",networkProfile,@"populate",nil]];
-		NSLog(@"new networkProfile name '%@'", networkProfile);
-	}
-*/
+    [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"createnetworkprofile",@"new",nil]];
+
 	[task release];
 	
 	// ----------------------------------------------------------------
-
-	[self runTask:@"/usr/sbin/networksetup" arguments:[NSArray arrayWithObjects:@"-createlocation",@"qaul.net",@"populate",nil]];
-	[self runTask:@"/usr/sbin/networksetup" arguments:[NSArray arrayWithObjects:@"-switchtolocation",@"qaul.net",nil]];
-
+    [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"createnetworkprofile",@"qaul.net",nil]];
+    [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"switchnetworkprofile",@"qaul.net",nil]];
+    
 	NSLog(@"createNetworkProfile created");
 	return true;	
 }
 
-- (BOOL)deleteNetworkProfile:(AuthorizationRef)authRef
+- (BOOL)deleteNetworkProfile
 {
-	NSLog(@"deleteNetworkProfile");
-	
-	[self runTask:@"/usr/sbin/networksetup" arguments:[NSArray arrayWithObjects:@"-switchtolocation",@"new",nil]];
-	//[self runTask:@"/usr/sbin/networksetup" arguments:[NSArray arrayWithObjects:@"-deletelocation",@"qaul.net",nil]];
-
+	[self setPaths];
+    NSLog(@"deleteNetworkProfile");
+    [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"switchnetworkprofile",@"new",nil]];
 	NSLog(@"deleteNetworkProfile deleted");
 	
 	return true;		

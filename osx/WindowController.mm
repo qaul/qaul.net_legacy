@@ -30,7 +30,7 @@
 	{
 		qaulStarted = 0;
 		//qaulResourcePath =(NSString *)[[NSBundle mainBundle] resourcePath];
-		mysudo = [[QaulConfigWifi alloc] init];
+		qaulConfigWifi = [[QaulConfigWifi alloc] init];
 		qaulWifiInterface = nil;
 		qaulWifiInterfaceSet = FALSE;
 		qaulServiceConfigured = FALSE;
@@ -44,8 +44,7 @@
 // -------------------------------------------------------------------------
 - (void)awakeFromNib
 {
-	//status = AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &authorizationRef);
-	//NSLog(@"awake from nib!");
+    //NSLog(@"awake from nib!");
 	//[self init_app];
 }
 
@@ -64,22 +63,6 @@
 	[NSApp terminate:nil];
 	
 	return TRUE;
-	
-/*
-	// open alert message
-	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-	[alert addButtonWithTitle:@"OK"];
-	[alert addButtonWithTitle:@"Cancel"];
-	[alert setMessageText:@"Quit qaul.net?"];
-	[alert setAlertStyle:NSInformationalAlertStyle];
-	[alert 
-					beginSheetModalForWindow:sender
-					modalDelegate:self 
-					didEndSelector:@selector(endAlert:returnCode:contextInfo:) 
-					contextInfo:nil];	
-	
-	return FALSE;
-*/
 }
 
 - (void)endAlert:(id)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -96,30 +79,24 @@
 	NSLog(@"Application should Terminate Event");
 	
 	// TODO: stop timers
-	
-	// check for Authorization
-	if([mysudo testAuthorization:authorizationRef]) 
-		NSLog(@"Authorization tested success");
-	else 
-		NSLog(@"Authorization tested error");
-	
+
 	// stop library
 	Qaullib_Exit();
 	
 	// stop olsrd 
-	if(![mysudo stopOlsrd:authorizationRef]) 
+	if(![qaulConfigWifi stopOlsrd]) 
 		NSLog(@"olsrd not killed");
 	// stop portforwarding 
-	if(![mysudo stopPortForwarding:authorizationRef]) 
+	if(![qaulConfigWifi stopPortForwarding]) 
 		NSLog(@"portforwarding not removed");
 	
 	usleep(50000);
 	// stop wifi
-	if(![mysudo stopAirport:authorizationRef interface:qaulWifiInterface]) 
+	if(![qaulConfigWifi stopAirport:qaulWifiInterface]) 
 		NSLog(@"airport not stopped");
 	
 	// change location
-	[mysudo deleteNetworkProfile:authorizationRef];
+	[qaulConfigWifi deleteNetworkProfile];
 	usleep(50000);
 	
 	return TRUE;
@@ -136,7 +113,7 @@
 	// check if it was initialized
 	if(qaulStarted == 0)
 	{
-		[qaulTabView selectTabViewItemWithIdentifier:@"start"];		
+		[qaulTabView selectTabViewItemWithIdentifier:@"start"];
 		
 		// init qaullib
 		NSLog(@"initialize app");		
@@ -172,57 +149,7 @@
 	// check authorization 
 	if(qaulStarted == 10)
 	{
-		// Create authorization reference
-		// authorization
-		NSLog(@"authorize");
-		
-		const char *path0 = "/usr/bin/killall";
-		const char *path1 = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"olsrd_start.sh"] cString];
-		const char *path2 = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"olsrd_stop.sh"] cString];
-		const char *path3 = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"socat_start.sh"] cString];
-		const char *path4 = "/usr/sbin/networksetup";
-		const char *path5 = "/usr/sbin/ipconfig";		
-		const char *path6 = "/sbin/dmesg";
-		const char *path7 = "/sbin/ipfw";
-		const char *path8 = "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Support/networksetup";
-		
-		AuthorizationItem authItem0		= { kAuthorizationRightExecute, 1, &path0, 0 };
-		AuthorizationItem authItem1		= { kAuthorizationRightExecute, 1, &path1, 0 };
-		AuthorizationItem authItem2		= { kAuthorizationRightExecute, 1, &path2, 0 };
-		AuthorizationItem authItem3		= { kAuthorizationRightExecute, 1, &path3, 0 };
-		AuthorizationItem authItem4		= { kAuthorizationRightExecute, 1, &path4, 0 };
-		AuthorizationItem authItem5		= { kAuthorizationRightExecute, 1, &path5, 0 };
-		AuthorizationItem authItem6		= { kAuthorizationRightExecute, 1, &path6, 0 };
-		AuthorizationItem authItem7		= { kAuthorizationRightExecute, 1, &path7, 0 };
-		AuthorizationItem authItem8		= { kAuthorizationRightExecute, 1, &path8, 0 };
-		
-		AuthorizationItem items[9];
-		
-		items[0] =  authItem0;
-		items[1] =  authItem1;
-		items[2] =  authItem2;
-		items[3] =  authItem3;
-		items[4] =  authItem4;
-		items[5] =  authItem5;
-		items[6] =  authItem6;
-		items[7] =  authItem7;
-		items[8] =  authItem8;
-		
-		AuthorizationRights authRights	= { 8, items};
-		AuthorizationFlags flags = kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagPreAuthorize | kAuthorizationFlagExtendRights;		
-		
-		status = AuthorizationCreate(&authRights, kAuthorizationEmptyEnvironment, flags, &authorizationRef);
-		if (status == errAuthorizationSuccess) 
-			NSLog(@"Authorization success");
-		else 
-			NSLog(@"Authorization failed");
-		
-		// use the authorization
-		if([mysudo testAuthorization:authorizationRef]) 
-			NSLog(@"Authorization tested success");
-		else 
-			NSLog(@"Authorization tested error");
-		
+        // tasks that need authorization are now executed by external qaulhelper
 		qaulStarted = 20;
 	}
 
@@ -232,7 +159,7 @@
 	// otherwise.
 	if(qaulStarted == 20)
 	{
-		success = [mysudo createNetworkProfile:authorizationRef];		
+		success = [qaulConfigWifi createNetworkProfile];
 		qaulStarted = 21;
 	}
 	
@@ -336,7 +263,7 @@
 	{
 		NSLog(@"switch airport on");
 		// switch on airport via cli 
-		success = [mysudo startAirport:authorizationRef interface:qaulWifiInterface];
+		success = [qaulConfigWifi startAirport:qaulWifiInterface];
 		if(success) 
 			NSLog(@"startAirport success!!");
 		else 
@@ -352,9 +279,8 @@
 	{
 		// set IP
 		NSString *myip = [NSString stringWithFormat:@"%s",Qaullib_GetIP()];
-		success = [mysudo setAddress:authorizationRef address:myip service:qaulServiceId];
-		//success = [mysudo setAddress:authorizationRef address:@"10.202.0.40" service:qaulServiceId];
-		if(success) 
+		success = [qaulConfigWifi setAddress:myip service:qaulServiceId];
+		if(success)
 			NSLog(@"setAddress success!!");
 		else 
 			NSLog(@"setAddress no success");		
@@ -373,7 +299,7 @@
 	// configure airport
 	if(qaulStarted == 26)
 	{
-		success = [mysudo connect2network:authorizationRef name:@"qaul.net" channel:11 interface:qaulWifiInterface service:qaulServiceId]; // channel selection is buggy on many devices, default channel depends on OS, channel 1 usually works
+		success = [qaulConfigWifi connect2network:@"qaul.net" channel:11 interface:qaulWifiInterface service:qaulServiceId]; // channel selection is buggy on many devices, default channel depends on OS, channel 1 usually works
 		if(success) 
 			NSLog(@"connect2network success!!");
 		else 
@@ -403,7 +329,7 @@
 	// start olsrd
 	if(qaulStarted == 40)
 	{
-		success = [mysudo startOlsrd:authorizationRef interface:qaulWifiInterface];
+		success = [qaulConfigWifi startOlsrd:qaulWifiInterface];
 		if(success) 
 			NSLog(@"olsrd start success!!");
 		else 
@@ -436,9 +362,9 @@
 		Qaullib_CaptiveStart();
 		
 		// start port forwarding
-		success = [mysudo startPortForwarding:authorizationRef interface:qaulWifiInterface];
-		
-		// TODO: configure firewall
+		success = [qaulConfigWifi startPortForwarding:qaulWifiInterface];
+        
+        NSLog(@"captive portal configured");
 		
 		qaulStarted = 50;
 	}
@@ -497,7 +423,7 @@
 - (void)checkIpcTopology:(NSTimer *)theTimer
 {
 	Qaullib_IpcSendCom(1);
-	[self performSelector:@selector(checkNames) withObject:nil afterDelay:2];	
+	[self performSelector:@selector(checkNames) withObject:nil afterDelay:2];
 }
 
 - (void)checkAppEvents:(NSTimer *)theTimer

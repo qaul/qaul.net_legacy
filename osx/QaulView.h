@@ -2,8 +2,7 @@
 //  QaulView.h
 //  qaul
 //
-//  Created by foton on 3/5/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  GPL software by qaul.net
 //
 
 #import <Cocoa/Cocoa.h>
