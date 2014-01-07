@@ -17,8 +17,8 @@
  *
  *
  * usage:
- *   qaulhelper startolsrd <RESOURCEPATH> <INTERFACE> 
- *   qaulhelper startolsrd /Applications/qaul.app/Contents/Resources en1
+ *   qaulhelper startolsrd <ISGATEWAY yes|no> <INTERFACE> 
+ *   qaulhelper startolsrd yes en1
  *   qaulhelper stopolsrd
  *   qaulhelper startportforwarding <INTERFACE>
  *   qaulhelper startportforwarding en1
@@ -39,7 +39,11 @@
  *   qaulhelper setdhcp Wi-Fi en1
  *   qaulhelper setdns <SERVICENAME>
  *   qaulhelper setdns Wi-Fi
- * 
+ *   qaulhelper startgateway <INTERFACE>
+ *   qaulhelper startgateway en1
+ *   qaulhelper stopgateway
+ *   qaulhelper stopgateway
+ *
  * only for OSX <= 10.5
  *   qaulhelper createibss <ESSID> <CHANNEL>
  *   qaulhelper createibss qaul.net 11
@@ -131,6 +135,19 @@ int set_dhcp (int argc, const char * argv[]);
  * set dns servers
  */
 int set_dns (int argc, const char * argv[]);
+
+/**
+ * start gateway
+ * 
+ * this function needs to be called as root
+ */
+int start_gateway (int argc, const char * argv[]);
+
+/**
+ * stop gateway
+ */
+int stop_gateway (int argc, const char * argv[]);
+
 
 /**
  * validate IP argument
@@ -234,6 +251,14 @@ int main (int argc, const char * argv[])
         {
             set_dns(argc, argv);
         }
+        else if(strncmp(argv[1], "startgateway", 12) == 0)
+        {
+            start_gateway(argc, argv);
+        }
+        else if(strncmp(argv[1], "stopgateway", 11) == 0)
+        {
+            stop_gateway(argc, argv);
+        }
         else
         {
             printf("unknown command ...\n");
@@ -245,8 +270,8 @@ int main (int argc, const char * argv[])
         printf("\n");
         printf("qaulhelper executes helper functions for qaul.net\n\n");
         printf("usage:\n");
-        printf("  qaulhelper startolsrd <RESOURCEPATH> <INTERFACE>\n");
-        printf("  qaulhelper startolsrd /Applications/qaul.app/Contents/Resources en1\n");
+        printf("  qaulhelper startolsrd <ISGATEWAY yes|no> <INTERFACE>\n");
+        printf("  qaulhelper startolsrd yes en1\n");
         printf("  qaulhelper stopolsrd\n");
         printf("  qaulhelper startportforwarding <INTERFACE>\n");
         printf("  qaulhelper startportforwarding en1\n");
@@ -267,6 +292,9 @@ int main (int argc, const char * argv[])
         printf("  qaulhelper setdhcp Wi-Fi en1\n");
         printf("  qaulhelper setdns <SERVICENAME>\n");
         printf("  qaulhelper setdns Wi-Fi\n");
+        printf("  qaulhelper startgateway <INTERFACE>\n");
+        printf("  qaulhelper startgateway en1\n");
+        printf("  qaulhelper stopgateway\n");
         printf("\n");
         printf("only for OSX <= 10.5\n");
         printf("  qaulhelper createibss <ESSID> <CHANNEL>\n");
@@ -281,18 +309,18 @@ int main (int argc, const char * argv[])
 int start_olsrd (int argc, const char * argv[])
 {
     pid_t pid1;
-    int status;
+    int status, fd;
     char s[256];
     printf("start olsrd\n");
     
     if(argc >= 4)
     {
         // validate arguments
-        if (validate_path(argv[2]) == 0)
-        {
-            printf("argument 1 not valid\n");
-            return 0;
-        }
+        if(strncmp(argv[3], "yes", 3)==0)
+            sprintf(s,"/Library/qaul.net/olsrd_osx_gw.conf");
+        else
+            sprintf(s,"/Library/qaul.net/olsrd_osx.conf");
+        
         if (validate_interface(argv[3]) == 0)
         {
             printf("argument 2 not valid\n");
@@ -308,8 +336,12 @@ int start_olsrd (int argc, const char * argv[])
             printf("fork for pid1 failed\n");
         else if(pid1 == 0)
         {
-            sprintf(s,"%s/olsrd_osx.conf", argv[2]);
-            execl("/usr/local/qaul/olsrd", "olsrd", "-f", s, "-i", argv[3], "-d", "0", (char*)0);
+            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+            // execute program
+            execl("/Library/qaul.net/olsrd", "olsrd", "-f", s, "-i", argv[3], "-d", "0", (char*)0);
         }
         else
             waitpid(pid1, &status, 0);
@@ -346,8 +378,8 @@ int stop_olsrd (int argc, const char * argv[])
 
 int start_portforwarding (int argc, const char * argv[])
 {
-    pid_t pid1, pid2, pid3;
-    int fd;
+    pid_t pid0, pid1, pid2, pid3;
+    int fd, status;
     printf("start portforwarding\n");
     
     if(argc >= 3)
@@ -362,6 +394,24 @@ int start_portforwarding (int argc, const char * argv[])
         // become root
         setuid(0);
 
+        // set firewall variable (just in case ...)
+        pid0 = fork();
+        if (pid0 < 0)
+            printf("fork for pid0 failed\n");
+        else if(pid0 == 0)
+        {
+            // redirect standart output and error to /dev/null
+            // the program otherwise often didn't return correctly
+            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+            // execute program
+            execl("/usr/sbin/sysctl", "sysctl", "-w", "net.inet.ip.fw.enable=1", (char*)0);
+        }
+        else
+            waitpid(pid0, &status, 0);
+        
         // forward port 80 by firewall
         pid1 = fork();
         if (pid1 < 0)
@@ -383,7 +433,7 @@ int start_portforwarding (int argc, const char * argv[])
         // forward udp ports by socat
         pid2 = fork();
         if (pid2 < 0)
-            printf("fork for pid1 failed\n");
+            printf("fork for pid2 failed\n");
         else if(pid2 == 0)
         {
             // redirect standart output and error to /dev/null
@@ -393,14 +443,14 @@ int start_portforwarding (int argc, const char * argv[])
             dup2(fd, STDERR_FILENO);
             close(fd);
             // execute program
-            execl("/usr/local/qaul/socat", "socat", "UDP4-RECVFROM:53,fork", "UDP4-SENDTO:localhost:8053", (char*)0);
+            execl("/Library/qaul.net/socat", "socat", "UDP4-RECVFROM:53,fork", "UDP4-SENDTO:localhost:8053", (char*)0);
         }
         else
             printf("udp port 53 forwarded\n");
         
         pid3 = fork();
         if (pid3 < 0)
-            printf("fork for pid1 failed\n");
+            printf("fork for pid3 failed\n");
         else if(pid3 == 0)
         {
             // redirect standart output and error to /dev/null
@@ -410,7 +460,7 @@ int start_portforwarding (int argc, const char * argv[])
             dup2(fd, STDERR_FILENO);
             close(fd);
             // execute program
-            execl("/usr/local/qaul/socat", "socat", "UDP4-RECVFROM:67,fork", "UDP4-SENDTO:localhost:8067", (char*)0);
+            execl("/Library/qaul.net/socat", "socat", "UDP4-RECVFROM:67,fork", "UDP4-SENDTO:localhost:8067", (char*)0);
         }
         else
             printf("udp port 67 forwarded\n");
@@ -829,6 +879,120 @@ int set_dns (int argc, const char * argv[])
     
     return 0;
 }
+
+int start_gateway (int argc, const char * argv[])
+{
+    pid_t pid1, pid2, pid3;
+    int fd, status;
+    printf("start gateway\n");
+    
+    if(argc >= 3)
+    {
+        // validate arguments
+        if (validate_interface(argv[2]) == 0)
+        {
+            printf("argument 1 not valid\n");
+            return 0;
+        }
+        
+        // NOTE: don't do that withsetuid, for that the user 
+        //       has to enter password for this service
+        //
+        // become root
+        //setuid(0);
+        
+        // set gateway variable
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+        {
+            // redirect standart output and error to /dev/null
+            // the program otherwise often didn't return correctly
+            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+            // execute program
+            execl("/usr/sbin/sysctl", "sysctl", "-w", "net.inet.ip.forwarding=1", (char*)0);
+        }
+        else
+            waitpid(pid1, &status, 0);
+        
+        // start natd
+        pid2 = fork();
+        if (pid2 < 0)
+            printf("fork for pid2 failed\n");
+        else if(pid2 == 0)
+        {
+            // redirect standart output and error to /dev/null
+            // the program otherwise often didn't return correctly
+            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+            // execute program
+            execl("/usr/sbin/natd", "natd", "-interface", argv[2], (char*)0);
+        }
+        else
+            waitpid(pid2, &status, 0);
+        
+        // set 
+        pid3 = fork();
+        if (pid3 < 0)
+            printf("fork for pid3 failed\n");
+        else if(pid3 == 0)
+        {
+            // redirect standart output and error to /dev/null
+            // the program otherwise often didn't return correctly
+            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+            // execute program
+            execl("/sbin/ipfw", "ipfw", "add", "1055", "divert", "natd", "all", "from", "any", "to", "any", "via", argv[2], (char*)0);
+        }
+        else
+            printf("NAT activated\n");
+        
+        printf("gateway started\n");
+    }
+    else
+        printf("missing argument\n");
+    
+    return 0;
+}
+
+int stop_gateway (int argc, const char * argv[])
+{
+    pid_t pid1, pid2;
+    printf("stop gateway\n");
+    
+    // become root
+    setuid(0);
+    
+    // remove firewall rules
+    pid1 = fork();
+    if (pid1 < 0)
+        printf("fork for pid1 failed\n");
+    else if(pid1 == 0)
+        execl("/sbin/ipfw", "ipfw", "delete", "1055", (char*)0);
+    else
+        printf("firewall rules removed\n");
+    
+    // stop port forwarding
+    pid2 = fork();
+    if (pid2 < 0)
+        printf("fork for pid2 failed\n");
+    else if(pid2 == 0)
+        execl("/usr/bin/killall", "killall", "natd", (char*)0);
+    else
+        printf("natd stopped\n");
+    
+    printf("gateway stopped\n");
+    return 0;
+}
+
 
 /**
  * validation functions
