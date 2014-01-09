@@ -1,9 +1,7 @@
-//
-//  QaulConfigWifi.m
-//  wificonfig
-//
-//  GPL software by qaul.net
-//
+/*
+ * qaul.net is free software
+ * licensed under GPL (version 3)
+ */
 
 #import "QaulConfigWifi.h"
 
@@ -38,9 +36,6 @@
 { 
 	if( self = [super init] ) 
 	{ 
-		resourcePath = [[NSBundle mainBundle] resourcePath];
-		olsrdPath = [NSString stringWithFormat:@"%@/olsrd",resourcePath];
-        
         [self setPaths];
     }
 	return self; 
@@ -48,9 +43,6 @@
 
 - (void)setPaths
 {
-	resourcePath = [[NSBundle mainBundle] resourcePath];
-	olsrdPath = [NSString stringWithFormat:@"%@/olsrd",resourcePath];
-	
 	if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_4) 
 		networksetupPath=[NSString stringWithFormat:@"/usr/sbin/networksetup"];
 	else 

@@ -1,3 +1,8 @@
+/*
+ * qaul.net is free software
+ * licensed under GPL (version 3)
+ */
+
 #import "WindowController.h"
 #import "qaullib.h"
 
@@ -29,7 +34,6 @@
 	if(self)
 	{
 		qaulStarted = 0;
-		//qaulResourcePath =(NSString *)[[NSBundle mainBundle] resourcePath];
 		qaulConfigWifi = [[QaulConfigWifi alloc] init];
 		qaulWifiInterface = nil;
 		qaulWifiInterfaceSet = FALSE;
@@ -38,6 +42,59 @@
 	return self;
 }
 
+// -------------------------------------------------------------------------
+// first startup tasks
+// -------------------------------------------------------------------------
+- (void)copyFilesAtFirstStartup
+{
+	NSFileManager *filemgr;
+	NSError *dError;    
+	NSString *qaulApplicationPath;
+    
+    NSLog(@"CopyFilesAtFirstStartup 1");
+    
+    // check if files have been copied
+    filemgr =[NSFileManager defaultManager];
+    
+    NSLog(@"CopyFilesAtFirstStartup 2");
+    
+    qaulApplicationPath = [[NSBundle mainBundle] resourcePath];
+    NSLog(@"CopyFilesAtFirstStartup");
+    NSLog(@"qaulResourcePath: %@, qaulApplicationPath: %@", qaulResourcePath, qaulApplicationPath);    
+    
+	// check if data base exists
+	if(![filemgr fileExistsAtPath:[NSString stringWithFormat:@"%@/qaullib.db", qaulResourcePath]])
+	{
+        NSLog(@"First startup: copy files to document directory");
+        
+        // create resource folder
+        if (![filemgr createDirectoryAtPath:qaulResourcePath withIntermediateDirectories:NO attributes:nil error:&dError])
+            NSLog(@"Create qaulResourcePath directory error: %@", dError);
+        
+		if(![filemgr copyItemAtPath:[NSString stringWithFormat:@"%@/www", qaulApplicationPath] toPath:[NSString stringWithFormat:@"%@/www", qaulResourcePath] error:&dError])
+			NSLog(@"Error: %@", dError);
+		else
+			NSLog(@"Sucessfully copied");
+	}
+	else
+		NSLog(@"Not first startup");
+	
+	[filemgr release];
+}
+
+- (void)createDirectory:(NSString *)directoryName atFilePath:(NSString *)filePath
+{
+    NSString *filePathAndDirectory = [filePath stringByAppendingPathComponent:directoryName];
+    NSError *error;
+    
+    if (![[NSFileManager defaultManager] createDirectoryAtPath:filePathAndDirectory
+                                   withIntermediateDirectories:NO
+                                                    attributes:nil
+                                                         error:&error])
+    {
+        NSLog(@"Create directory error: %@", error);
+    }
+}
 
 // -------------------------------------------------------------------------
 // window is opened
@@ -115,9 +172,12 @@
 	{
 		[qaulTabView selectTabViewItemWithIdentifier:@"start"];
 		
+        // copy files at first startup
+        qaulResourcePath = [NSString stringWithFormat:@"%@/qaul.net", [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0]];
+        [self copyFilesAtFirstStartup];
+        
 		// init qaullib
 		NSLog(@"initialize app");		
-		qaulResourcePath = [[NSBundle mainBundle] resourcePath];
 		Qaullib_Init([qaulResourcePath UTF8String]);
 		
 		// set Download path

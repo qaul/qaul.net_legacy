@@ -1,3 +1,8 @@
+/*
+ * qaul.net is free software
+ * licensed under GPL (version 3)
+ */
+
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebView.h>
 #import "QaulConfigWifi.h"
@@ -30,27 +35,43 @@
 	NSTimer *qaullibTimer3;
 }
 
+/**
+ * copy files to the home directory the first time the application is started
+ */
+- (void)copyFilesAtFirstStartup;
+- (void)createDirectory:(NSString *)directoryName atFilePath:(NSString *)filePath;
 
-// window loaded
+/**
+ * window loaded
+ */
 - (void)awakeFromNib;
 - (void)applicationDidFinishLaunching:(id)sender;
-// window is closing
+
+/**
+ * window is closing
+ */
 - (BOOL)windowShouldClose:(id)sender;
 - (BOOL)applicationShouldTerminate:(id)app;
 
-// support methods
+/** 
+ * support methods
+ */
 - (void)endAlert:(id)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
 - (void)init_app;
 
-// timer
+/**
+ * timers
+ */
 - (void)startTimer;
 - (void)stopTimer;
 - (void)checkIpcMessage:(NSTimer *)theTimer;
 - (void)checkIpcTopology:(NSTimer *)theTimer;
 - (void)checkNames;
 
-// wait timer
+/**
+ * wait timer
+ */
 - (void)startDelay:(NSTimeInterval)secs;
 - (void)fireDelay;
 

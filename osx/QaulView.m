@@ -1,9 +1,7 @@
-//
-//  QaulView.m
-//  qaul
-//
-//  GPL software by qaul.net
-//
+/*
+ * qaul.net is free software
+ * licensed under GPL (version 3)
+ */
 
 #import "QaulView.h"
 

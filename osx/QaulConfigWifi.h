@@ -1,9 +1,7 @@
-//
-//  QaulConfigWifi.h
-//  wificonfig
-//
-//  GPL software by qaul.net
-//
+/*
+ * qaul.net is free software
+ * licensed under GPL (version 3)
+ */
 
 #import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
@@ -14,8 +12,6 @@
 
 
 @interface QaulConfigWifi : NSObject {
-	NSString* olsrdPath;
-	NSString* resourcePath;
 	NSString* networksetupPath; 
 	NSString* airportPath;
     NSString* qaulhelperPath;

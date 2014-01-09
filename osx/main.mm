@@ -1,10 +1,7 @@
-//
-//  main.m
-//  qaul
-//
-//  Created by foton on 2/9/11.
-//  Copyright __MyCompanyName__ 2011. All rights reserved.
-//
+/*
+ * qaul.net is free software
+ * licensed under GPL (version 3)
+ */
 
 #import <Cocoa/Cocoa.h>
 
