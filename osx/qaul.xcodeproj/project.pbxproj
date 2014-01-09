@@ -37,11 +37,7 @@
 		5F7E59D115B1EC4C002D011D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7E59D015B1EC4C002D011D /* Security.framework */; };
 		5F8FA1D51322E629005FD408 /* QaulConfigWifi.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FED4E901322CFC800C2E6E0 /* QaulConfigWifi.mm */; };
 		5F8FA36E13239A32005FD408 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 5F8FA35613239A32005FD408 /* www */; };
-		5F8FA38E1323ADA2005FD408 /* olsrd_start.sh in Resources */ = {isa = PBXBuildFile; fileRef = 5F8FA38D1323ADA2005FD408 /* olsrd_start.sh */; };
-		5FAE9B8E132D6D1A00E54A7D /* olsrd_stop.sh in Resources */ = {isa = PBXBuildFile; fileRef = 5FAE9B8D132D6D1A00E54A7D /* olsrd_stop.sh */; };
 		5FC30C73131A6F9A0016E3FC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FC30C72131A6F9A0016E3FC /* WebKit.framework */; };
-		5FE1B4AD158BB1C300C1470C /* socat in Resources */ = {isa = PBXBuildFile; fileRef = 5FE1B4AC158BB1C300C1470C /* socat */; };
-		5FE1B4B6158BE18C00C1470C /* socat_start.sh in Resources */ = {isa = PBXBuildFile; fileRef = 5FE1B4B5158BE18C00C1470C /* socat_start.sh */; };
 		5FE583D7133518B5005B46FA /* qaul.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5FE583D6133518B5005B46FA /* qaul.icns */; };
 		5FED4DEB1322988C00C2E6E0 /* QaulView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FED4DEA1322988C00C2E6E0 /* QaulView.m */; };
 		5FED4E951322D0BA00C2E6E0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FED4E941322D0BA00C2E6E0 /* SystemConfiguration.framework */; };
@@ -50,9 +46,6 @@
 		5FED502E1322E4D900C2E6E0 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97324FDCFA39411CA2CEA /* AppKit.framework */; };
 		5FED502F1322E4D900C2E6E0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E42FB307B3F0F600E4EEF1 /* CoreData.framework */; };
 		5FED50301322E4D900C2E6E0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
-		5FFF1F9F15AA608E00B295EA /* olsrd in Resources */ = {isa = PBXBuildFile; fileRef = 5FFF1F9E15AA608E00B295EA /* olsrd */; };
-		5FFF1FA115AA609E00B295EA /* olsrd_osx.conf in Resources */ = {isa = PBXBuildFile; fileRef = 5FFF1FA015AA609E00B295EA /* olsrd_osx.conf */; };
-		5FFF1FA315AA61AB00B295EA /* olsrd_qaul.so.0.1 in Resources */ = {isa = PBXBuildFile; fileRef = 5FFF1FA215AA61AB00B295EA /* olsrd_qaul.so.0.1 */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.mm */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -110,11 +103,7 @@
 		5F7E599D15B0B6A0002D011D /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		5F7E59D015B1EC4C002D011D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		5F8FA35613239A32005FD408 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../www; sourceTree = SOURCE_ROOT; };
-		5F8FA38D1323ADA2005FD408 /* olsrd_start.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = olsrd_start.sh; sourceTree = "<group>"; };
-		5FAE9B8D132D6D1A00E54A7D /* olsrd_stop.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = olsrd_stop.sh; sourceTree = "<group>"; };
 		5FC30C72131A6F9A0016E3FC /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
-		5FE1B4AC158BB1C300C1470C /* socat */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = socat; sourceTree = "<group>"; };
-		5FE1B4B5158BE18C00C1470C /* socat_start.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = socat_start.sh; sourceTree = "<group>"; };
 		5FE583D6133518B5005B46FA /* qaul.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = qaul.icns; sourceTree = "<group>"; };
 		5FED4DE91322988C00C2E6E0 /* QaulView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QaulView.h; sourceTree = "<group>"; };
 		5FED4DEA1322988C00C2E6E0 /* QaulView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QaulView.m; sourceTree = "<group>"; };
@@ -123,9 +112,6 @@
 		5FED4E941322D0BA00C2E6E0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		5FED4EA81322E1B300C2E6E0 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		5FED4EAB1322E1CD00C2E6E0 /* SecurityFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityFoundation.framework; path = /System/Library/Frameworks/SecurityFoundation.framework; sourceTree = "<absolute>"; };
-		5FFF1F9E15AA608E00B295EA /* olsrd */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = olsrd; sourceTree = "<group>"; };
-		5FFF1FA015AA609E00B295EA /* olsrd_osx.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = olsrd_osx.conf; sourceTree = "<group>"; };
-		5FFF1FA215AA61AB00B295EA /* olsrd_qaul.so.0.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = olsrd_qaul.so.0.1; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* qaul.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = qaul.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -247,18 +233,11 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				5FFF1FA215AA61AB00B295EA /* olsrd_qaul.so.0.1 */,
-				5FFF1FA015AA609E00B295EA /* olsrd_osx.conf */,
-				5FFF1F9E15AA608E00B295EA /* olsrd */,
-				5FE1B4B5158BE18C00C1470C /* socat_start.sh */,
-				5FE1B4AC158BB1C300C1470C /* socat */,
 				5FE583D6133518B5005B46FA /* qaul.icns */,
 				5F8FA35613239A32005FD408 /* www */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
-				5F8FA38D1323ADA2005FD408 /* olsrd_start.sh */,
-				5FAE9B8D132D6D1A00E54A7D /* olsrd_stop.sh */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -368,14 +347,7 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				5F8FA36E13239A32005FD408 /* www in Resources */,
-				5F8FA38E1323ADA2005FD408 /* olsrd_start.sh in Resources */,
-				5FAE9B8E132D6D1A00E54A7D /* olsrd_stop.sh in Resources */,
 				5FE583D7133518B5005B46FA /* qaul.icns in Resources */,
-				5FE1B4AD158BB1C300C1470C /* socat in Resources */,
-				5FE1B4B6158BE18C00C1470C /* socat_start.sh in Resources */,
-				5FFF1F9F15AA608E00B295EA /* olsrd in Resources */,
-				5FFF1FA115AA609E00B295EA /* olsrd_osx.conf in Resources */,
-				5FFF1FA315AA61AB00B295EA /* olsrd_qaul.so.0.1 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -498,7 +470,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -511,7 +483,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};

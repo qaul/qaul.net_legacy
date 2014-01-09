@@ -1,5 +1,0 @@
-#!/bin/zsh
-
-killall olsrd
-
-

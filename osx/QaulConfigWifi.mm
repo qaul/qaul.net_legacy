@@ -34,7 +34,7 @@
 
 @implementation QaulConfigWifi
 
-- (id) init 
+- (id)init 
 { 
 	if( self = [super init] ) 
 	{ 
@@ -57,7 +57,7 @@
 		networksetupPath=[NSString stringWithFormat:@"/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Support/networksetup"];	
 	
 	airportPath = [NSString stringWithFormat:@"/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"];
-	qaulhelperPath = [NSString stringWithFormat:@"/usr/local/qaul/qaulhelper"];
+	qaulhelperPath = [NSString stringWithFormat:@"/Library/qaul.net/qaulhelper"];
 }
 
 - (BOOL)runTask:(NSString*)path arguments:(NSArray*)arguments
@@ -208,8 +208,8 @@
 - (BOOL)startOlsrd:(SCNetworkInterfaceRef)interface
 {
 	[self setPaths];
-    NSLog(@"qaulhelper startolsrd %@ %@", resourcePath, SCNetworkInterfaceGetBSDName(interface));
-    return [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"startolsrd",resourcePath,SCNetworkInterfaceGetBSDName(interface),nil]];
+    NSLog(@"qaulhelper startolsrd %@ %@", @"no", SCNetworkInterfaceGetBSDName(interface));
+    return [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"startolsrd", @"no", SCNetworkInterfaceGetBSDName(interface), nil]];
 }
 
 - (BOOL)stopOlsrd
