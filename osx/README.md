@@ -2,9 +2,10 @@ OSX Instructions
 ================
 
 qaul.net works on:
-* OSX 1.5 Leopard
+* OSX 1.5 Leopard (needs special build)
 * OSX 1.6 Snow Leopard
 * OSX 1.7 Lion
+* OSX 1.8 Mountain Lion
 
 
 Installation and Compile Instructions
@@ -62,3 +63,15 @@ Compile olsrd_qaul plugin
     # you need to install the shared library in /usr/lib/
     sudo make install
     cd ../../../
+
+
+Installer
+---------
+
+To build the qaul.net package installer you need to download and install the free and
+open source program "packages":
+http://s.sudre.free.fr/Software/Packages/about.html
+
+
+Open the project file osx/installer/qaul.net with "packages" and build the installer 
+by selecting "Build > Build" from the menu.

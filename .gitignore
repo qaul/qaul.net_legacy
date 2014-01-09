@@ -24,6 +24,7 @@ win/qaul/Release
 
 # Xcode
 osx/build/
+osx/installer/build/
 ios/build/
 DerivedData/
 *.mode1v3
