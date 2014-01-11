@@ -188,11 +188,11 @@
 		qaulStarted = 1;
 	}
 	
-	// start webserver
+	// start web server
 	// set tab to web view
 	if(qaulStarted == 1)
 	{
-		// start webserver
+		// start web server
 		Qaullib_WebserverStart();
 		
 		// change to chat view	
@@ -257,7 +257,7 @@
 			}
 		}
 		
-		// loop through Services
+		// loop through services
 		while (service = (SCNetworkServiceRef)[e nextObject]) 
 		{
 			inter = SCNetworkServiceGetInterface(service);
