@@ -121,46 +121,6 @@ void Qaullib_FilePopulate(void)
 
 	  fclose(file);
 	}
-/*
-	if(FAT_CLIENT)
-	{
-		// loop trough entries
-		for(i=0; i<MAX_POPULATE_FILE; i++)
-		{
-			// check if the file exists
-			Qaullib_FileCreatePath(local_destiny, qaul_populate_file[i].hashstr, qaul_populate_file[i].suffix);
-			if(Qaullib_FileExists(local_destiny))
-			{
-				status = QAUL_FILESTATUS_MYFILE;
-
-				time(&timestamp);
-				// write entry into DB
-				sprintf(stmt,
-						sql_file_add,
-						qaul_populate_file[i].hashstr,
-						qaul_populate_file[i].suffix,
-						qaul_populate_file[i].description,
-						qaul_populate_file[i].size,
-						status,
-						qaul_populate_file[i].type,
-						"",
-						"",
-						(int)timestamp
-						);
-				if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
-				{
-					printf("SQLite error: %s\n",error_exec);
-					sqlite3_free(error_exec);
-					error_exec=NULL;
-				}
-
-				// write into config table
-				sprintf(key, "exe.%i", qaul_populate_file[i].OS_flag);
-				Qaullib_DbSetConfigValue(key, qaul_populate_file[i].hashstr);
-			}
-		}
-	}
-*/
 }
 
 // ------------------------------------------------------------

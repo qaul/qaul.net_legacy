@@ -191,7 +191,7 @@ struct qaul_populate_file_struct
     int  max_size;
 };
 
-#define FAT_CLIENT        0
+
 #define MAX_POPULATE_FILE 4
 
 static struct qaul_populate_file_struct qaul_populate_file[MAX_POPULATE_FILE] = {

@@ -77,10 +77,12 @@ void Qaullib_Init(const char* resourcePath)
 
 	// configure sqlite
 	// make sure sqlite is in full mutex mode for multi threading
-	if(sqlite3_config(SQLITE_CONFIG_SERIALIZED) != SQLITE_OK) printf("SQLITE_CONFIG_SERIALIZED error\n");
+	if(sqlite3_config(SQLITE_CONFIG_SERIALIZED) != SQLITE_OK)
+		printf("SQLITE_CONFIG_SERIALIZED error\n");
 	// open database
 	rc = sqlite3_open(dbPath, &db);
-	if( rc ){
+	if( rc )
+	{
 		//fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
 		sqlite3_close(db);
 		exit(1);
