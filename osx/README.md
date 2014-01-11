@@ -72,6 +72,20 @@ To build the qaul.net package installer you need to download and install the fre
 open source program "packages":
 http://s.sudre.free.fr/Software/Packages/about.html
 
+Put the applications (qaul.app, qaulhelper, olsrd, olsrd plugins, olsrd configuration 
+files, socat) to their locations:
+
+    /Applications
+        /qaul.app
+    /Library
+        /qaul.net
+            /olsrd
+            /olsrd_dyn_gw.so.0.5
+            /olsrd_osx.conf
+            /olsrd_osx_gw.conf
+            /olsrd_qaul.so.0.1
+            /qaulhelper
+            /socat
 
 Open the project file osx/installer/qaul.net with "packages" and build the installer 
 by selecting "Build > Build" from the menu.
