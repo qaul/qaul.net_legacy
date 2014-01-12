@@ -110,14 +110,25 @@ void Qaullib_FilePopulate(void)
 	}
 	else
 	{
-	  printf("is fat binary, importing binaries\n", local_destiny);
+	  printf("is fat binary, importing binaries from %s\n", local_destiny);
 
-	  ret = fread(&buffer, sizeof(buffer)-1, 1, file);
+	  // read file into buffer
+	  ret = fread(&buffer, 1, sizeof(buffer), file);
 	  // terminate string
 	  if(ret >= 0 && ret <= 2048)
 		  memcpy(&buffer[ret], "\0", 1);
 	  else
 		  memcpy(&buffer, "\0", 1);
+
+	  // put into data base
+	  if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+	  {
+		  printf("SQLite error: %s\n",error_exec);
+		  sqlite3_free(error_exec);
+		  error_exec=NULL;
+	  }
+	  else
+		  printf("fat binaries imported\n",stmt);
 
 	  fclose(file);
 	}

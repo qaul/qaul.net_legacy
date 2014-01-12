@@ -50,7 +50,7 @@ static const char* sql_msg_set_voip = "INSERT INTO 'msg' ('type','name','msg','i
  *
  * contains key value pairs
  */
-static const char* sql_config_table = "CREATE TABLE IF NOT EXISTS 'config' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL, 'key' TEXT, 'type' INTEGER, 'value' TEXT, 'value_int' INTEGER, 'time' INTEGER DEFAULT CURRENT_TIMESTAMP);";
+static const char* sql_config_table = "CREATE TABLE IF NOT EXISTS 'config' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL, 'key' TEXT DEFAULT '', 'type' INTEGER DEFAULT 0, 'value' TEXT DEFAULT '', 'value_int' INTEGER DEFAULT 0, 'time' INTEGER DEFAULT CURRENT_TIMESTAMP);";
 
 // get value
 static const char* sql_config_get = "SELECT * FROM 'config' WHERE key = \"%s\";";
@@ -116,7 +116,7 @@ static const char* sql_user_delete_ipv4 = "DELETE FROM 'user' WHERE ipv4 = %i;";
 
 
 
-static const char* sql_file_table = "CREATE TABLE IF NOT EXISTS 'file' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'type' INTEGER NOT NULL DEFAULT 1, 'hash' TEXT, 'suffix' CHAR(5), 'description' TEXT, 'size' INTEGER, 'status' INTEGER DEFAULT 0, 'favorite' INTEGER DEFAULT 0, 'created_at' INTEGER DEFAULT 0, 'adv_name' TEXT, 'adv_ip' TEXT, 'geolon' REAL, 'geolat' REAL, 'requests' INTEGER DEFAULT 0, 'downloaded' FLOAT DEFAULT 0);";
+static const char* sql_file_table = "CREATE TABLE IF NOT EXISTS 'file' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'type' INTEGER NOT NULL DEFAULT 1, 'hash' TEXT, 'suffix' CHAR(5), 'description' TEXT, 'size' INTEGER, 'status' INTEGER DEFAULT 0, 'favorite' INTEGER DEFAULT 0, 'created_at' INTEGER DEFAULT 0, 'adv_name' TEXT DEFAULT '', 'adv_ip' TEXT DEFAULT '', 'geolon' REAL DEFAULT 0, 'geolat' REAL DEFAULT 0, 'requests' INTEGER DEFAULT 0, 'downloaded' FLOAT DEFAULT 0);";
 
 // set indexes
 static const char* sql_file_index = "CREATE INDEX IF NOT EXISTS 'file_hash' ON 'file' ('hash' DESC); CREATE INDEX IF NOT EXISTS 'file_suffix' ON 'file' ('suffix' DESC);";
