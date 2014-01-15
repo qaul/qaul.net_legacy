@@ -86,9 +86,6 @@ void Qaullib_ExeScheduleDiscovery(void)
 			qaul_exe_array[i].discovery_timestamp < time(NULL) -QAUL_FILEDISCOVERY_TIMEOUT
 			)
 		{
-			if(QAUL_DEBUG)
-				printf("Qaullib_ExeScheduleDiscovery send exe discovery message\n");
-
 			// update timestamp
 			qaul_exe_array[i].discovery_timestamp = time(NULL);
 
@@ -103,6 +100,9 @@ void Qaullib_ExeScheduleDiscovery(void)
 					qaul_exe_array[i].discovery_timestamp = time(NULL);
 				}
 			}
+
+			if(QAUL_DEBUG)
+				printf("Qaullib_ExeScheduleDiscovery send flag %i\n", OS_flag);
 
 			// fill in exe discovery message
 			// todo: ipv6
@@ -179,6 +179,10 @@ void Qaullib_ExeProcessAvailableMsg(struct qaul_exeavailable_msg *msg)
 					qaul_exe_array[i].discovered = 1;
 				}
 			}
+
+			if(QAUL_DEBUG)
+				printf("Qaullib_ExeProcessAvailableMsg received %s %s\n", key, qaul_exe_array[i].hashstr);
+
 			return;
 		}
 	}
