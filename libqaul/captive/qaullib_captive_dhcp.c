@@ -113,10 +113,14 @@ void *Qaullib_DHCP_Server(void *server_ip)
 	//memcpy(&myAddr.sin_addr.s_addr, server_ip, 4);
 
 	DHCPSocket = socket(PF_INET, SOCK_DGRAM, 0);
-	if(DHCPSocket == INVALID_SOCKET) printf("unable to create DHCPSocket\n");
+
+	if(DHCPSocket == INVALID_SOCKET)
+		printf("unable to create DHCPSocket\n");
 
 	status = bind(DHCPSocket, (struct sockaddr *)&myAddr, sizeof(myAddr));
-	if(status < 0) perror("bind DHCPSocket error");
+
+	if(status < 0)
+		perror("bind DHCPSocket error");
 
 	// set socket options
 	// set broadcast flag
@@ -192,15 +196,18 @@ void *Qaullib_DHCP_Server(void *server_ip)
 
 					   // 255.255.255.255 is not working as OSX is not broadcasting
 					   // via wifi interface, we have to explicitly use 10.255.255.255
-					   //destinationAddr.sin_addr.s_addr = inet_addr("10.255.255.255");
-					   destinationAddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
+					   destinationAddr.sin_addr.s_addr = inet_addr("10.255.255.255");
+					   //destinationAddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
 					   sendstatus = sendto( DHCPSocket,
 											(char *)&DHCP_Buffer,
 											sizeof(DHCP_Buffer),
 											0,
 											(struct sockaddr *)&destinationAddr,
 											sizeof(destinationAddr));
-					   if(sendstatus < 0) perror("sendto error");
+
+					   if(sendstatus < 0)
+						   perror("sendto error");
+
 					   printf("[DHCP] 4\n");
 				   }
 				   break;
@@ -262,15 +269,17 @@ void *Qaullib_DHCP_Server(void *server_ip)
 
 					// 255.255.255.255 is not working as OSX is not broadcasting
 					// via wifi interface, we have to explicitly use 10.255.255.255
-					//destinationAddr.sin_addr.s_addr=inet_addr("10.255.255.255");
-					destinationAddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
+					destinationAddr.sin_addr.s_addr=inet_addr("10.255.255.255");
+					//destinationAddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
 					sendstatus = sendto( DHCPSocket,
 										(char *)&DHCP_Buffer,
 										sizeof(DHCP_Buffer),
 										0,
 										(struct sockaddr *)&destinationAddr,
 										sizeof( destinationAddr ));
-					if(sendstatus < 0) perror("sendto error");
+
+					if(sendstatus < 0)
+						perror("sendto error");
 
 					break;
 
