@@ -56,8 +56,14 @@ void Qaullib_ExeInit(void)
 			qaul_exe_available = 0;
 			qaul_exe_array[i].discovered = 0;
 			memset(&qaul_exe_array[i].discovery_timestamp, 0, sizeof(time_t));
+
+			if(QAUL_DEBUG)
+				printf("Qaullib_ExeInit: exe.%i has not been discovered\n", qaul_populate_file[i].OS_flag);
 		}
 	}
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_ExeInit: qaul_exe_available %i\n", qaul_exe_available);
 }
 
 // ------------------------------------------------------------
