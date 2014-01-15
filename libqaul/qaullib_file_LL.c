@@ -215,13 +215,15 @@ int Qaullib_File_LL_HashSearch (char *filehash, struct qaul_file_LL_item **item)
 	struct qaul_file_LL_node mynode;
 	Qaullib_File_LL_InitNodeWithHash(&mynode, filehash);
 
-	printf("Qaullib_File_LL_HashSearch\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_File_LL_HashSearch\n");
 
 	while(Qaullib_File_LL_NextItem(&mynode))
 	{
 		if(memcmp(&mynode.item->hash, filehash, MAX_HASH_LEN) == 0)
 		{
-			printf("item found: %s\n", mynode.item->hashstr);
+			if(QAUL_DEBUG)
+				printf("item found: %s\n", mynode.item->hashstr);
 			*item = mynode.item;
 			return 1;
 		}

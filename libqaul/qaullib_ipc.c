@@ -359,7 +359,7 @@ void Qaullib_IpcEvaluateExediscover(union olsr_message *msg)
 			)
 		{
 			if(QAUL_DEBUG)
-				printf("flag found %i\n", qaul_exe_array[i].OS_flag);
+				printf("flag %i found (for %s)\n", qaul_exe_array[i].OS_flag, qaul_exe_array[i].hashstr);
 
 			// check if file is available
 			if(Qaullib_File_LL_FileAvailable(qaul_exe_array[i].hash))

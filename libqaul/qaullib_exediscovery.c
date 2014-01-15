@@ -16,6 +16,7 @@ void Qaullib_ExeInit(void)
 	int i;
 	char buffer[1024];
 	char *key;
+	struct qaul_file_LL_item *file_item;
 
 	key = buffer;
 	qaul_exe_available = 1;
@@ -40,12 +41,18 @@ void Qaullib_ExeInit(void)
 		// check if this file has been discovered
 		if(Qaullib_DbGetConfigValue(key, qaul_exe_array[i].hashstr))
 		{
-			// fill in specific values
-			strncpy(qaul_exe_array[i].hashstr, qaul_populate_file[i].hashstr, MAX_HASHSTR_LEN);
-			memcpy(&qaul_exe_array[i].hashstr[MAX_HASHSTR_LEN], "\0", 1);
-
 			// create hash from hash string
 			Qaullib_StringToHash(qaul_exe_array[i].hashstr, qaul_exe_array[i].hash);
+
+			// get missing values from linked list
+			if(Qaullib_File_LL_HashSearch (qaul_exe_array[i].hash, &file_item))
+			{
+				qaul_exe_array[i].size = file_item->size;
+				qaul_exe_array[i].discovery_timestamp = file_item->discovery_timestamp;
+
+				if(QAUL_DEBUG)
+					printf("Qaullib_ExeInit: available exe.%i %s %i\n", qaul_populate_file[i].OS_flag, qaul_exe_array[i].hashstr, qaul_exe_array[i].size);
+			}
 
 			// mark this file as discovered
 		    qaul_exe_array[i].discovered = 1;
