@@ -153,6 +153,10 @@ void Qaullib_ExeProcessAvailableMsg(struct qaul_exeavailable_msg *msg)
 				memcpy(file_item.hash, msg->hash, MAX_HASH_LEN);
 				Qaullib_HashToString(msg->hash, file_item.hashstr);
 
+				// TODO: change all this to trusted users
+				memcpy(&file_item.adv_name[0], "\0", 1);
+				file_item.adv_validip = 0;
+
 				// add exe to DB & LL
 				if(Qaullib_FileAdd(&file_item))
 				{
