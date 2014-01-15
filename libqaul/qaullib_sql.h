@@ -74,7 +74,7 @@ static const char* sql_config_delete = "DELETE FROM 'config' WHERE key = \"%s\";
 static const char* sql_user_table = "CREATE TABLE IF NOT EXISTS 'user' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL, 'name' TEXT, 'ipv' INTEGER DEFAULT 4, 'ipv4' INTEGER, 'ipv6' CHAR(16), 'icon' VARCHAR(255), 'created_at' INTEGER DEFAULT CURRENT_TIMESTAMP);";
 
 // set indexes
-static const char* sql_user_index = "CREATE INDEX IF NOT EXISTS 'user_name' ON 'user' ('name' ASC); CREATE INDEX IF NOT EXISTS 'user_ip' ON 'user' ('ipv4' ASC); CREATE INDEX IF NOT EXISTS 'user_lastseen_at' ON 'user' ('lastsee_at' DESC);";
+static const char* sql_user_index = "CREATE INDEX IF NOT EXISTS 'user_name' ON 'user' ('name' ASC); CREATE INDEX IF NOT EXISTS 'user_ip' ON 'user' ('ipv4' ASC);";
 
 // get users
 static const char* sql_user_get_all = "SELECT * FROM 'user' ORDER BY name ASC;";
@@ -195,11 +195,11 @@ struct qaul_populate_file_struct
 #define MAX_POPULATE_FILE 4
 
 static struct qaul_populate_file_struct qaul_populate_file[MAX_POPULATE_FILE] = {
-	{1,  4, 9454126, "42953ad2601dd9addb87b3ba010ba6f90ab221c7", "gz",  "ubuntu & debian 32 Bit",10000000},
-	//	{2,  4, 2068596, "0000000000000000000000000000000000000000", "zip", "OSX 10.5",               4000000},
-	{4,	 4, 4555287, "c11fbd4a4fa33020eb8bc4a913a7261de404db39", "dmg", "OSX 10.6",              10000000},
-	{8,  4, 5008754, "6dadc199f8c4b919bd5b22fead9e121d73511083", "exe", "Windows 7",              8000000},
-	{16, 4, 3109958, "85f671aabaf48d56a9631247c60f8359719dd5e4", "apk", "Android",                5000000}
+	{1,  4, 9454126, "0000000000000000000000000000000000000000", "gz",  "ubuntu & debian 32 Bit", 10000000},
+//  {2,  4, 2068596, "0000000000000000000000000000000000000000", "zip", "OSX 10.5",               4000000},
+	{4,	 4, 4555287, "0000000000000000000000000000000000000000", "dmg", "OSX 10.6 - 10.9",        10000000},
+	{8,  4, 5008754, "0000000000000000000000000000000000000000", "exe", "Windows 7 / 8",          8000000},
+	{16, 4, 3109958, "0000000000000000000000000000000000000000", "apk", "Android",                5000000}
 };
 
 
