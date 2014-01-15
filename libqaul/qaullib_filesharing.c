@@ -866,7 +866,8 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 			if(fileconnection->fileinfo->downloaded >= fileconnection->fileinfo->size)
 			{
 				// todo: check if file hash matches!
-				printf("Qaullib_FileCheckSockets download finished! filesize %i, downloaded %i\n", fileconnection->fileinfo->size, fileconnection->fileinfo->downloaded);
+				if(QAUL_DEBUG)
+					printf("Qaullib_FileCheckSockets download finished! filesize %i, downloaded %i\n", fileconnection->fileinfo->size, fileconnection->fileinfo->downloaded);
 
 				// copy file to download folder
 				if(qaul_conf_filedownloadfolder_set)

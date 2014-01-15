@@ -616,7 +616,7 @@ void Qaullib_DbSetConfigValue(const char* key, const char* value)
 	char *error_exec=NULL;
 
 	if(QAUL_DEBUG)
-		printf("Qaullib_DbSetConfigValue\n");
+		printf("Qaullib_DbSetConfigValue %s %s\n", key, value);
 
 	// delete old entries (if exist)
 	sprintf(stmt, sql_config_delete, key);

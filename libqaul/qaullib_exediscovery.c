@@ -156,15 +156,16 @@ void Qaullib_ExeProcessAvailableMsg(struct qaul_exeavailable_msg *msg)
 				// add exe to DB & LL
 				if(Qaullib_FileAdd(&file_item))
 				{
+					// fill exe discover struct
+					qaul_exe_array[i].size = size;
+					memcpy(qaul_exe_array[i].hash, msg->hash, MAX_HASH_LEN);
+					strncpy(qaul_exe_array[i].hashstr, file_item.hashstr, MAX_HASHSTR_LEN);
+					memcpy(&file_item.hashstr[MAX_HASHSTR_LEN], "\0", 1);
+
 					// write into config table
 					sprintf(key, "exe.%i", qaul_exe_array[i].OS_flag);
 					Qaullib_DbSetConfigValue(key, qaul_exe_array[i].hashstr);
 
-					// fill exe discover struct
-					qaul_exe_array[i].size = size;
-					memcpy(qaul_exe_array[i].hash, msg->hash, MAX_HASH_LEN);
-					strncpy(qaul_exe_array[i].hashstr, file_item.hash, MAX_HASHSTR_LEN);
-					memcpy(&file_item.hashstr[MAX_HASHSTR_LEN], "\0", 1);
 					qaul_exe_array[i].discovered = 1;
 				}
 			}
