@@ -1600,15 +1600,15 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 static void Qaullib_WwwFile2Json(struct mg_connection *conn, struct qaul_file_LL_item *file)
 {
 	char timestr[MAX_TIME_LEN];
+	double perc;
 
 	if(QAUL_DEBUG)
-		printf("Qaullib_WwwFile2Json %s status: %i\n    downloaded: %i, downloaded_chunk: %i, size: %i \n    (downloaded +downloaded_chunk)*100/size) = %i\n",
+		printf("Qaullib_WwwFile2Json %s status: %i\n    downloaded: %i, downloaded_chunk: %i, size: %i\n",
 				file->hashstr,
 				file->status,
 				file->downloaded,
 				file->downloaded_chunk,
-				file->size,
-				((file->downloaded +file->downloaded_chunk)*100/file->size)
+				file->size
 				);
 
 	mg_printf(conn, "\n{");
@@ -1621,7 +1621,18 @@ static void Qaullib_WwwFile2Json(struct mg_connection *conn, struct qaul_file_LL
 	mg_printf(conn, "\"time\":\"%s\",", timestr);
 	mg_printf(conn, "\"status\":%i,", file->status);
 	if(file->size > 0)
-		mg_printf(conn, "\"downloaded\":%i", ((file->downloaded +file->downloaded_chunk)*100/file->size));
+	{
+		if(file->downloaded >= file->size)
+			mg_printf(conn, "\"downloaded\":100");
+		else
+		{
+			perc = file->downloaded + file->downloaded_chunk;
+			perc = perc *100;
+			perc = perc / file->size;
+			printf("downloaded percentage: %.0f\n", floor(perc));
+			mg_printf(conn, "\"downloaded\":%.0f", floor(perc));
+		}
+	}
 	else
 		mg_printf(conn, "\"downloaded\":0");
 	mg_printf(conn, "}");
