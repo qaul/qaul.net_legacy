@@ -45,7 +45,7 @@ Description: tools for the next revolution
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/info/images/howto_select.png -> howto_select.png -> /usr/share/qaul/www/info/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/info/images/howto_userdiscovery.png -> howto_userdiscovery.png -> /usr/share/qaul/www/info/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/info/images/howto_voip.png -> howto_voip.png -> /usr/share/qaul/www/info/images
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/files/5ff0588a8316ddb587848c6b7886afc3fbde87e6.jpg -> 5ff0588a8316ddb587848c6b7886afc3fbde87e6.jpg -> /usr/share/qaul/www/files
+/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/files/fat.example.sql -> fat.example.sql -> /usr/share/qaul/www/files
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/ltr_qaul.css -> ltr_qaul.css -> /usr/share/qaul/www/i18n
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/rtl_qaul.css -> rtl_qaul.css -> /usr/share/qaul/www/i18n
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/i18n/ar.json -> ar.json -> /usr/share/qaul/www/i18n
@@ -79,7 +79,7 @@ Description: tools for the next revolution
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_chat_64.png -> i_chat_64.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_call_32.png -> i_call_32.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_info_64.png -> i_info_64.png -> /usr/share/qaul/www/images
-/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_loading_15.png -> i_loading_15.png -> /usr/share/qaul/www/images
+/home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_loading_15.gif -> i_loading_15.gif -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_prefs_64.png -> i_prefs_64.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_users_64.png -> i_users_64.png -> /usr/share/qaul/www/images
 /home/sojus/src/meshnet/qaul.net/linux/qaul-build-desktop/www/images/i_files_64.png -> i_files_64.png -> /usr/share/qaul/www/images
@@ -198,6 +198,12 @@ rm "/usr/bin/qaul"
 <</SCRIPTS>>
 <<CHANGELOG>>
 <<DEST>>DEFAULT<</DEST>>
+qaul.net (beta 2) ; urgency=low
+
+  * bugfixes and stabilisation
+
+ -- qaul.net community <contact@qaul.net>  Thu, 16 Jan 2014 17:09:27 +0100
+
 qaul.net (0.8) ; urgency=low
 
   * first test release for ubuntu
