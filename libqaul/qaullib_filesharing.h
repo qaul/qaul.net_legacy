@@ -174,12 +174,20 @@ void Qaullib_FileDB2LL(void);
 int Qaullib_HashToString(unsigned char *hash, char *string);
 
 /**
- * reconverts a hashstring @a string to the @a hash
+ * reconverts a hash string @a string to the @a hash
  *
  * @retval 1 on success
  * @retval 0 on error
  */
 int Qaullib_StringToHash(char *string, unsigned char *hash);
+
+/**
+ * compares the hash with the downloaded file of @a file_item
+ *
+ * @retval 1 on success: hash and file match
+ * @retval 0 on error: hash and file differ
+ */
+int Qaullib_VerifyDownload(struct qaul_file_LL_item *file_item);
 
 
 #ifdef __cplusplus

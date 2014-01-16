@@ -340,8 +340,6 @@ int Qaullib_StringDescription2Filename(char *filename, struct qaul_file_LL_item 
 	// convert description to file name
 	for(i=0; i<(int)strlen(file->description); i++)
 	{
-		printf("for schlaufe\n");
-
 		if(j >= buffer_size -1)
 			break;
 
