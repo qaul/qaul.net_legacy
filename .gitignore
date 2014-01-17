@@ -17,6 +17,7 @@ Debug/
 *.opensdf
 *.suo
 *.vcxproj.user
+*.def
 win/Debug
 win/Release
 win/qaul/Debug
