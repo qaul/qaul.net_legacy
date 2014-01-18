@@ -270,6 +270,38 @@
 																			<key>GID</key>
 																			<integer>80</integer>
 																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/i18n/bo.css</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/i18n/bo.json</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
 																			<string>/Applications/qaul.app/Contents/Resources/www/i18n/de.css</string>
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
