@@ -64,6 +64,8 @@ function init_start()
 	$(document).bind("pagechange", onPageChange);
 	$(document).bind("pagebeforechange", onPageBeforeChange);
 	
+	$("#interface_select_auto").change(configInterfaceToggle);
+	
 	// add custom validation method
 	jQuery.validator.addMethod("nospaces", function(value, element) { 
 		return this.optional(element) || /^[^\s]+$/.test(value); 
@@ -110,6 +112,13 @@ function init_start()
 	name_form.validate({
 		submitHandler: function(form){
 			send_name();
+		}
+	});
+	
+	// set interface
+	$("#config_interface_form").validate({
+		submitHandler: function(form){
+			send_interface();
 		}
 	});
 	
@@ -186,6 +195,17 @@ function init_start()
 			return false;
 		});
 		
+		// set network interface
+		$("#config_interface_form").click(function(){
+			if($("#config_interface_form").valid())
+				send_interface();
+			return false;
+		});
+		
+		// TODO: start/stop internet sharing
+		
+		// TODO: configure custom network
+	
 		// files
 		$("#file_add_form input").keypress(function(e){
 			if(e.which == 13)
@@ -229,6 +249,12 @@ function qaul_configure(data)
 		$(".c_quit").show();
 	if(qaul_config.c_debug) 
 		$(".c_debug").show();
+	if(qaul_config.c_interface) 
+		$(".c_interface").css("display","block");
+	if(qaul_config.c_internet) 
+		$(".c_internet").css("display","block");
+	if(qaul_config.c_network) 
+		$(".c_network").css("display","block");
 	
 	if(qaul_config.locale)
 	{
@@ -256,6 +282,9 @@ function qaul_configure(data)
 
 function qaul_translate(dictionary)
 {
+	// TODO: is the following line needed? 
+	//       creates an error in firefox.
+	//       TypeError: $.i18n.setDictionary is not a function
 	$.i18n.setDictionary(dictionary);
 
 	// check for all i18n classes
@@ -1065,7 +1094,7 @@ function file_suffix2filetype(suffix)
 	if(suffix.match(/^((jpe?g)|(png)|(gif)|(bmp)|(tiff?)|(raw)|(svg))$/i)) type = "f_img";
 	else if(suffix.match(/^((mov)|(3gpp?)|(avi)|(mpg)|(mp4)|(m4v)|(wmv)|(flv))$/i)) type = "f_mov";
 	else if(suffix.match(/^((mp3)|(wav)|(ogg)|(aiff?)|(m4a)|(m4p))$/i)) type = "f_sound";
-	else if(suffix.match(/^((pdf))$/i)) type = "f_pdf";
+	else if(suffix.match(/^((pdf)|(ps))$/i)) type = "f_pdf";
 	else if(suffix.match(/^((txt)|(rtf)|(html?)|(docx?)|(xls)|(xml)|(ppt)|(odt))$/i)) type = "f_txt";
 	else if(suffix.match(/^((zip)|(tar)|(gz))$/i)) type = "f_zip";
 	else type = "f_file";
@@ -1382,6 +1411,84 @@ function send_name()
 			function(data){
 				// update username
 				set_username($("#name_name").val());
+				// forward to loading
+				$.mobile.changePage($("#page_loading"));
+				// set timer to check which page to load
+				setTimeout(function(){loadingtimer();},1000);
+		});
+};
+
+// interface configuration
+function show_config_interface()
+{
+	// load configuration
+	$.ajax({
+		url:   "config_if.json",
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			config_interface_data_loaded(data);
+		}
+	});
+	
+	// open page
+	$.mobile.changePage($("#page_config_interface"));
+	
+	return true;
+}
+
+function config_interface_data_loaded(data)
+{
+	// toggle flipswitch
+	if(data.manual == 1)
+	{
+		$("#interface_select_auto").val('1').flipswitch('refresh');
+		$(".c_interface_manual").show();
+	}
+	else
+	{
+		$("#interface_select_auto").val('0').flipswitch('refresh');
+		$(".c_interface_manual").hide();
+	}
+	
+	// populate interfaces
+	var myhtml = "<fieldset data-role=\"controlgroup\" id=\"interface_selection\">";
+	$.each(data.interfaces, function(i,item)
+	{
+		myhtml += "<input type=\"checkbox\" name=\"if_" +item.name +"\" value=\"" +item.name +"\" id=\"if_" +item.name +"\" ";
+		if(item.selected == 1)
+			myhtml += "checked=\"checked\" ";
+		myhtml += "class=\"interface_select_checkbox\" />";
+		myhtml += "<label for=\"if_" +item.name +"\">" +item.ui_name +"</label>";
+	});
+	myhtml += "</fieldset>";
+	$("#c_interface_manual").empty().append(myhtml).trigger("create");
+}
+
+// show/hide interfaces when toggle flipswitch button
+function configInterfaceToggle()
+{
+	if($("#interface_select_auto").val() == 1)
+		$(".c_interface_manual").show();
+	else
+		$(".c_interface_manual").hide();
+}
+
+function send_interface()
+{
+	// check which interfaces to send
+	var interfaces = "";
+	$.each($(".interface_select_checkbox:checked"), function(i,item){
+		if(interfaces.length > 0)
+			interfaces += " ";
+		interfaces += $(item).val();
+	});
+	
+	// send user name
+	$.post(
+			'setinterface',
+			{"im": $("#interface_select_auto").val(), "if": interfaces, "e":1},
+			function(data){
 				// forward to loading
 				$.mobile.changePage($("#page_loading"));
 				// set timer to check which page to load

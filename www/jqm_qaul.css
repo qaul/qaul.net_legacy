@@ -80,39 +80,39 @@ abbr.timeago {
 	display:none;
 }
 
-.page_user_tab_blue {
-	background-color:#d5e4f2 !important;
-}
-
 .qaul_center {
 	text-align:center;
 }
 
+#page_pref_name {
+	font-weight: normal;
+}
+
 /* --- icons & buttons --- */
-.i_chat {
+.ui-footer div.ui-navbar ul.ui-grid-c li a.i_chat {
 	background-image: url('images/i_chat_64.png');
-	background-position: 50% -10px;
+	background-position: 50% +1px;
 	background-repeat: no-repeat; 
 	background-size: 64px 64px;	
 }
 
-.i_users {
+.ui-footer div.ui-navbar ul.ui-grid-c li a.i_users {
 	background-image: url('images/i_users_64.png'); 
-	background-position: 50% -10px;
+	background-position: 50% +1px;
 	background-repeat: no-repeat; 
 	background-size: 64px 64px;	
 }
 
-.i_filesharing {
+.ui-footer div.ui-navbar ul.ui-grid-c li a.i_filesharing {
 	background-image: url('images/i_files_64.png'); 
-	background-position: 50% -10px;
+	background-position: 50% +1px;
 	background-repeat: no-repeat; 
 	background-size: 64px 64px;	
 }
 
-.i_prefs {
+.ui-footer div.ui-navbar ul.ui-grid-c li a.i_prefs {
 	background-image: url('images/i_prefs_64.png'); 
-	background-position: 50% -10px;
+	background-position: 50% +1px;
 	background-repeat: no-repeat; 
 	background-size: 64px 64px;
 }
@@ -126,13 +126,19 @@ abbr.timeago {
 	top:-5px;
 	right:-25px;
 }
+.ui-footer .ui-li-count:empty {
+	visibility:hidden;
+}
 
+.ui-footer .ui-navbar a.ui-btn-b {
+	background-color:#3388cc !important;
+}
 
 /* --- chat --- */
 .msg {
 	padding:1px;
 	border-top:1px dotted #999999;
-	min-height:67px;
+	min-height:69px;
 	clear:both;
 }
 .msg_1, .msg_11 {
@@ -187,6 +193,10 @@ a.mail, a.link {
 /* --- users --- */
 a.unavailable {
 	color:#bbbbbb !important;
+}
+
+.ui-navbar ul.ui-grid-b li a.page_user_tab_active {
+	background-color:#3388cc;
 }
 
 /* --- files --- */
@@ -305,13 +315,6 @@ span.suffix {
 #page_call_content {
 	text-align:center;
 }
-.call_button_accept .ui-btn-inner {
-	/*background-color:#00ff00;*/
-}
-.call_button_deny .ui-btn-inner {
-	/*background-color:#ff0000;*/
-}
-
 .call_button_accept {
 	background-image: url('images/b_callaccept_64.png') !important;
 	background-repeat: no-repeat;
@@ -348,6 +351,18 @@ span.suffix {
 .c_init {
 	display:none;
 }
+.ui-listview li.c_interface {
+	display:none;
+}
+.c_interface_manual {
+	display:none;
+}
+.ui-listview li.c_internet {
+	display:none;
+}
+.ui-listview li.c_network {
+	display:none;
+}
 
 /* --- bugfixing elements --- */
 div#bugfix_footer {
@@ -371,6 +386,19 @@ iframe#bugfix_header_iframe {
 	margin:0;
 	padding:0;
 	border:none;
+}
+
+/* --- jquery mobile corrections --- */
+.ui-field-contain label {
+	width:auto !important;
+}
+
+.ui-page-theme-a {
+	background-color: #ffffff;
+}
+
+li.ui-li-divider, li.ui-first-child {
+	font-weight: normal !important;
 }
 
 /* --- media selection --- */

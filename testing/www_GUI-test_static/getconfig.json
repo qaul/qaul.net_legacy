@@ -4,5 +4,8 @@
 "is_mobile":true,
 "msg_max":20,
 "c_quit":true,
-"c_debug":true
+"c_debug":true,
+"c_interface":true,
+"c_internet":false,
+"c_network":false
 }

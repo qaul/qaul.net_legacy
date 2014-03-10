@@ -41,7 +41,9 @@ That software may have different licenses.
   source & more information: http://www.pjsip.org  
 * Android Wifi Tether (GPLv3)
   source & more information: http://code.google.com/p/android-wifi-tether
-* Android File Dialog by Alexander Ponomarev (New BSD License)
+* Android File Dialog by Alexander Ponomarev (new BSD license)
   source & more information: http://code.google.com/p/android-file-dialog
 * Portfwd by Everton Silva Marques (GPL)
   source & more information: http://sourceforge.net/projects/portfwd/
+* d3js by Michael Bostock (BSD license)
+  source & more information: http://d3js.org
