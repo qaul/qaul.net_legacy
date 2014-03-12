@@ -40,6 +40,7 @@ CFLAGS= $(OSX_CFLAGS) \
 SRC= qaullib.c qaullib_ipc.c qaullib_webserver.c qaullib_voip.c \
      qaullib_webclient.c qaullib_threads.c \
      qaullib_user.c qaullib_user_LL.c \
+     qaullib_topo_LL.c \
      qaullib_filesharing.c qaullib_file_LL.c \
      qaullib_exediscovery.c \
      qaullib_udp_communication.c \

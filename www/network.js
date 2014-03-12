@@ -8,7 +8,13 @@ function init_network()
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
-			draw_network(data);
+			if(data.available)
+				draw_network(data);
+			else
+			{
+				// data is not yet available schedule receive for later
+				setTimeout(function(){init_network();}, 500);
+			}
 		}
 	});
 }

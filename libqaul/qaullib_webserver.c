@@ -424,6 +424,7 @@ static void Qaullib_WwwGetTopology(struct mg_connection *conn, const struct mg_r
 	int add, request_type, first;
 	char request_type_char[MAX_INTSTR_LEN +1];
 	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
+	char dest_ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
 	first = 0;
 
 	if(QAUL_DEBUG)
@@ -432,42 +433,84 @@ static void Qaullib_WwwGetTopology(struct mg_connection *conn, const struct mg_r
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{");
 
-	// send topology
-	mg_printf(conn, "\"links\":[");
-	mg_printf(conn, "],");
-
-	// send all users
-	mg_printf(conn, "\"nodes\":[");
-	// loop through LL
-	first = 0;
-	struct qaul_user_LL_node mynode;
-	Qaullib_User_LL_InitNode(&mynode);
-	while(Qaullib_User_LL_NextNode(&mynode))
+	// check if topology has been received
+	if(qaul_ipc_topo_request == 2)
 	{
-		// send all users
-		if(mynode.item->type == QAUL_USERTYPE_KNOWN)
-		{
-			// make sure the user name is not empty
-			if(strlen(mynode.item->name) > 0)
-			{
-				if(!first)
-					first = 1;
-				else
-					mg_printf(conn, ",");
+		// set availability
+		mg_printf(conn, "\"available\":1,");
+		// send topology
+		mg_printf(conn, "\"links\":[");
 
-				// FIXME: ipv6
-				mg_printf(conn,
-						"%s:{\"name\":\"%s\",\"type\":\"name\"}",
-						mynode.item->name,
-						inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
-						Qaullib_UserLinkcost2Img(mynode.item->lq),
-						mynode.item->changed
-						);
+		// send link list
+		first = 0;
+		while(qaul_topo_LL_first)
+		{
+			if(!first)
+				first = 1;
+			else
+				mg_printf(conn, ",");
+
+			// FIXME: ipv6
+			mg_printf(conn,
+					"{\"source\":\"%s\",\"target\":\"%s\",\"lq\":\"%d\"}",
+					inet_ntop(AF_INET, &qaul_topo_LL_first->src_ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
+					inet_ntop(AF_INET, &qaul_topo_LL_first->dest_ip.v4.s_addr, (char *)&dest_ipbuf, sizeof(dest_ipbuf)),
+					qaul_topo_LL_first->lq
+					);
+
+			// delete this item
+			Qaullib_Topo_LL_Delete_Item ();
+		}
+		mg_printf(conn, "],");
+
+		// set topo to 0, as the list has been deleted
+		qaul_ipc_topo_request = 0;
+
+		// send all users
+		mg_printf(conn, "\"nodes\":{");
+		// print this user
+		mg_printf(conn,
+				"\"%s\":{\"name\":\"%s\",\"type\":\"name\"}",
+				qaul_ip_str,
+				qaul_username
+				);
+		// loop through LL
+		first = 0;
+		struct qaul_user_LL_node mynode;
+		Qaullib_User_LL_InitNode(&mynode);
+		while(Qaullib_User_LL_NextNode(&mynode))
+		{
+			// send all users
+			if(mynode.item->type == QAUL_USERTYPE_KNOWN)
+			{
+				// make sure the user name is not empty
+				if(strlen(mynode.item->name) > 0)
+				{
+					mg_printf(conn, ",");
+					// FIXME: ipv6
+					mg_printf(conn,
+							"\"%s\":{\"name\":\"%s\",\"type\":\"name\"}",
+							inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
+							mynode.item->name
+							);
+				}
 			}
 		}
+		mg_printf(conn, "}");
 	}
-	mg_printf(conn, "}");
+	// otherwise request data and send a wait response
+	else
+	{
+		// request data if not yet requested
+		if(qaul_ipc_topo_request == 0)
+		{
+			Qaullib_IpcSendCom(QAUL_IPCCOM_GETMESHTOPO);
+			qaul_ipc_topo_request = 1;
+		}
 
+		// wait until data is available
+		mg_printf(conn, "\"available\":0");
+	}
 	mg_printf(conn, "}");
 }
 

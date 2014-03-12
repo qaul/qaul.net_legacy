@@ -189,6 +189,9 @@ void Qaullib_IpcEvaluateMessage(union olsr_message *msg)
 		case QAUL_IPCTOPO_MESSAGE_TYPE:
 			Qaullib_IpcEvaluateTopo(msg);
 			break;
+		case QAUL_IPCMESHTOPO_MESSAGE_TYPE:
+			Qaullib_IpcEvaluateMeshtopo(msg);
+			break;
 		case QAUL_USERHELLO_MESSAGE_TYPE:
 			Qaullib_IpcEvaluateUserhello(msg);
 			break;
@@ -263,7 +266,8 @@ void Qaullib_IpcEvaluateCom(union olsr_message *msg)
 {
 	switch(msg->v4.message.ipc.type)
 	{
-		case 1:
+		case QAUL_IPCCOM_MESHTOPO_SENT:
+			qaul_ipc_topo_request = 2;
 			break;
 		default:
 			printf("not a known message type\n");
@@ -283,6 +287,16 @@ void Qaullib_IpcEvaluateTopo(union olsr_message *msg)
 	memcpy(&linkcost, &msg->v4.message.node.lq, sizeof(linkcost));
 	// check if user exists, create it if not
 	Qaullib_UserTouchIp(&msg->v4.message.node.ip, linkcost);
+}
+
+// ------------------------------------------------------------
+void Qaullib_IpcEvaluateMeshtopo(union olsr_message *msg)
+{
+	if(QAUL_DEBUG)
+		printf("Qaullib_IpcEvaluateMeshtopo\n");
+
+	// create new entry
+	Qaullib_Topo_LL_Add(&msg->v4.message.node.ip, &msg->v4.message.node.gateway, msg->v4.message.node.lq);
 }
 
 // ------------------------------------------------------------

@@ -37,6 +37,7 @@ extern "C" {
 #include "olsrd_types.h"
 #include "qaullib_defines.h"
 #include "qaullib_webclient.h"
+#include "qaullib_topo_LL.h"
 #include "qaullib_user_LL.h"
 #include "qaullib_user.h"
 #include "qaullib_threads.h"
@@ -88,6 +89,7 @@ int qaul_conf_internet;
 int qaul_conf_network;
 int qaul_web_localip_set;
 int qaul_exe_available;
+int qaul_ipc_topo_request;
 char qaullib_AppEventOpenURL[MAX_URL_LEN +1];
 
 char qaullib_FileDownloadFolderPath[MAX_PATH_LEN +1];

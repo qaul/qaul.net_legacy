@@ -50,6 +50,11 @@ void Qaullib_IpcEvaluateCom(union olsr_message *msg);
 void Qaullib_IpcEvaluateTopo(union olsr_message *msg);
 
 /**
+ * write network topology links into linked list
+ */
+void Qaullib_IpcEvaluateMeshtopo(union olsr_message *msg);
+
+/**
  * process user hello message
  *
  * fill in new user name to user LL

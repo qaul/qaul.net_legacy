@@ -35,6 +35,8 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_UDP_socket = -1;
 	qaul_UDP_started = 0;
 	qaul_exe_available = 0;
+	qaul_ipc_topo_request = 0;
+	qaul_topo_LL_first = 0;
 	qaul_conf_filedownloadfolder_set = 0;
 	sprintf(qaullib_AppEventOpenURL, "http://%s:%s/", IPC_ADDR, CHAT_PORT);
 	qaul_interface_configuring = 0;
