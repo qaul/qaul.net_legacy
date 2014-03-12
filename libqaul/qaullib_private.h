@@ -83,6 +83,9 @@ int qaul_conf_debug;
 int qaul_conf_voip;
 int qaul_conf_ios;
 int qaul_conf_wifi_set;
+int qaul_conf_interface;
+int qaul_conf_internet;
+int qaul_conf_network;
 int qaul_web_localip_set;
 int qaul_exe_available;
 char qaullib_AppEventOpenURL[MAX_URL_LEN +1];
@@ -108,6 +111,10 @@ int qaul_ip_set;
 char qaul_net_gateway[MAX_IP_LEN +1]; // string of the gateway IP
 char qaul_net_ibss[255 +1];           // string of the IBSS name
 char qaul_net_bssid[17 +1];           // string of the BSSID
+char qaul_net_interface[255 +1];      // string of the interface
+int  qaul_interface_configuring;
+char qaul_interface_json[MAX_JSON_LEN +1]; // json string of the actual interfaces
+
 // locale i18n
 int qaul_locale_set;
 char qaul_locale[MAX_LOCALE_LEN +1];

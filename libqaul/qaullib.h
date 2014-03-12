@@ -16,12 +16,16 @@ extern "C" {
 #define QAUL_EVENT_OPENURL    102
 #define QAUL_EVENT_NOTIFY     103
 #define QAUL_EVENT_RING       104
+#define QAUL_EVENT_GETINTERFACES 105
 
 #define QAUL_ERROR_NOWIFI       1
 #define QAUL_ERROR_NOROOT       2
 
 #define QAUL_CONF_QUIT          1
 #define QAUL_CONF_IOS           2
+#define QAUL_CONF_INTERFACE     3
+#define QAUL_CONF_INTERNET      4
+#define QAUL_CONF_NETWORK       5
 
 #define QAUL_CHECK_WIFI_SET     1
 
@@ -34,6 +38,8 @@ extern "C" {
  *   platform specific initializations
  *   @see Qaullib_SetConf()
  *   @see Qaullib_SetConfDownloadFolder()
+ *   @see Qaullib_GetConfInt()
+ *   @see Qaullib_GetConfString()
  *
  * invoke configuration functions
  *
@@ -46,6 +52,10 @@ extern "C" {
  *   request them if not
  *
  * startup configuration (20):
+ *   check if wifi is configured manullay
+ *   Qaullib_GetConfInt("net.interface.manual")
+ *   Qaullib_GetConfString("net.interface.name", config_interface_c)
+ *
  *   check if wifi interface is available
  *   start wifi interface
  *   configure address
@@ -106,8 +116,12 @@ void Qaullib_SetConfQuit(void);
 
 /**
  * platform specific configurations
- * QAUL_CONF_QUIT for a quit button
- * QAUL_CONF_IOS for the net configure screen on iOS
+ * QAUL_CONF_QUIT          for a quit button
+ * QAUL_CONF_IOS           for the net configure screen on iOS
+ * QAUL_CONF_INTERFACE     to be able to configure the network
+ *                         interfaces manually
+ * QAUL_CONF_INTERNET      to be able to configure Internet sharing
+ * QAUL_CONF_NETWORK       to be able to configure a custom network
  */
 void Qaullib_SetConf(int conf);
 
@@ -242,6 +256,32 @@ int Qaullib_GetWifiChannel(void);
  * @retval string of IP e.g. "10.33.234.12"
  */
 const char* Qaullib_GetIP(void);
+
+/**
+ * check if the interface is set manually
+ *
+ * @retval 1 interface is set manually
+ * @retval 0 interface is set autmatically
+ */
+int Qaullib_GetInterfaceManual(void);
+
+/**
+ * save interface configuration method as integer @value to DB
+ */
+void Qaullib_SetInterfaceManual(int value);
+
+/**
+ * get wifi ibss id
+ *
+ * @retval string of bss id e.g. "B6:B5:B3:F5:AB:E4"
+ */
+const char* Qaullib_GetInterface(void);
+
+/**
+ * set @json string of all available interfaces for the GUI
+ */
+void Qaullib_SetInterfaceJson(const char *json);
+
 
 /**
  * start captive portal

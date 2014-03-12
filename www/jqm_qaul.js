@@ -116,6 +116,9 @@ function init_start()
 	});
 	
 	// set interface
+	$("#page_config_interface").on("pagebeforeshow",function(event){
+		config_interface_load_data();
+	});
 	$("#config_interface_form").validate({
 		submitHandler: function(form){
 			send_interface();
@@ -282,10 +285,7 @@ function qaul_configure(data)
 
 function qaul_translate(dictionary)
 {
-	// TODO: is the following line needed? 
-	//       creates an error in firefox.
-	//       TypeError: $.i18n.setDictionary is not a function
-	$.i18n.setDictionary(dictionary);
+	$.i18n.load(dictionary);
 
 	// check for all i18n classes
 	$("a.i18n").each(function(){
@@ -1421,20 +1421,34 @@ function send_name()
 // interface configuration
 function show_config_interface()
 {
+	// request interface configuration
+	$.ajax({
+		url:   "setinterfaceloading",
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			$.mobile.changePage($("#page_loading"));
+			setTimeout(function(){loadingtimer();},500);
+		}
+	});
+	
+	// show loading page
+	$.mobile.changePage($("#page_loading"));
+	
+	return true;
+}
+
+function config_interface_load_data()
+{
 	// load configuration
 	$.ajax({
-		url:   "config_if.json",
+		url:   "getinterface.json",
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
 			config_interface_data_loaded(data);
 		}
 	});
-	
-	// open page
-	$.mobile.changePage($("#page_config_interface"));
-	
-	return true;
 }
 
 function config_interface_data_loaded(data)
@@ -1455,8 +1469,8 @@ function config_interface_data_loaded(data)
 	var myhtml = "<fieldset data-role=\"controlgroup\" id=\"interface_selection\">";
 	$.each(data.interfaces, function(i,item)
 	{
-		myhtml += "<input type=\"checkbox\" name=\"if_" +item.name +"\" value=\"" +item.name +"\" id=\"if_" +item.name +"\" ";
-		if(item.selected == 1)
+		myhtml += "<input type=\"radio\" name=\"if\" value=\"" +item.name +"\" id=\"if_" +item.name +"\" ";
+		if(item.name == data.selected)
 			myhtml += "checked=\"checked\" ";
 		myhtml += "class=\"interface_select_checkbox\" />";
 		myhtml += "<label for=\"if_" +item.name +"\">" +item.ui_name +"</label>";
@@ -1484,15 +1498,13 @@ function send_interface()
 		interfaces += $(item).val();
 	});
 	
-	// send user name
+	// send configured interface
 	$.post(
 			'setinterface',
-			{"im": $("#interface_select_auto").val(), "if": interfaces, "e":1},
+			{"m": $("#interface_select_auto").val(), "if": interfaces, "e":1},
 			function(data){
-				// forward to loading
-				$.mobile.changePage($("#page_loading"));
-				// set timer to check which page to load
-				setTimeout(function(){loadingtimer();},1000);
+				// forward to restart page
+				$.mobile.changePage($("#page_restart"));
 		});
 };
 
@@ -1797,6 +1809,4 @@ function removeIFrame()
 
 //-----------------------------------------------------
 
-//alert('survived');
-//$(document).ready(my_init());
 $(init_start);

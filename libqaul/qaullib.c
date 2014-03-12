@@ -28,12 +28,16 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_conf_voip = 0;
 	qaul_conf_ios = 0;
 	qaul_conf_wifi_set = 0;
+	qaul_conf_interface = 0;
+	qaul_conf_internet = 0;
+	qaul_conf_network = 0;
 	qaul_web_localip_set = 0;
 	qaul_UDP_socket = -1;
 	qaul_UDP_started = 0;
 	qaul_exe_available = 0;
 	qaul_conf_filedownloadfolder_set = 0;
 	sprintf(qaullib_AppEventOpenURL, "http://%s:%s/", IPC_ADDR, CHAT_PORT);
+	qaul_interface_configuring = 0;
 
 	// -------------------------------------------------
 	// create buffers for socket communication
@@ -151,6 +155,12 @@ void Qaullib_SetConf(int conf)
 		qaul_conf_quit = 1;
 	else if(conf == QAUL_CONF_IOS)
 		qaul_conf_ios = 1;
+	else if(conf == QAUL_CONF_INTERFACE)
+		qaul_conf_interface = 1;
+	else if(conf == QAUL_CONF_INTERNET)
+		qaul_conf_internet = 1;
+	else if(conf == QAUL_CONF_NETWORK)
+		qaul_conf_network = 1;
 }
 
 int Qaullib_CheckConf(int conf)
@@ -646,7 +656,7 @@ void Qaullib_DbSetConfigValueInt(const char* key, int value)
 	char *error_exec=NULL;
 
 	if(QAUL_DEBUG)
-		printf("Qaullib_DbSetConfigValue\n");
+		printf("Qaullib_DbSetConfigValueInt\n");
 
 	// delete old entries (if exist)
 	sprintf(stmt, sql_config_delete, key);
@@ -942,6 +952,44 @@ const char* Qaullib_GetWifiBssId(void)
 int Qaullib_GetWifiChannel(void)
 {
 	return Qaullib_DbGetConfigValueInt("wifi.channel");
+}
+
+int Qaullib_GetInterfaceManual(void)
+{
+	return Qaullib_DbGetConfigValueInt("net.interface.manual");
+}
+
+void Qaullib_SetInterfaceManual(int value)
+{
+	Qaullib_DbSetConfigValueInt("net.interface.manual", value);
+}
+
+const char* Qaullib_GetInterface(void)
+{
+	if (Qaullib_DbGetConfigValue("net.interface.name", qaul_net_interface))
+	{
+		return qaul_net_interface;
+	}
+	return "";
+}
+
+void Qaullib_SetInterfaceJson(const char *json)
+{
+	if(QAUL_DEBUG)
+		printf("Qaullib_SetInterfaceJson\n");
+
+	if(strlen(json) <= MAX_JSON_LEN)
+	{
+		if(QAUL_DEBUG)
+				printf("strlen(json) <= MAX_JSON_LEN\n");
+
+		strncpy(qaul_interface_json, json, MAX_JSON_LEN);
+		memcpy(&qaul_interface_json[MAX_JSON_LEN], "\0", 1);
+	}
+	else
+		memcpy(&qaul_interface_json[0], "\0", 1);
+
+	qaul_interface_configuring = 2;
 }
 
 // ------------------------------------------------------------

@@ -89,20 +89,9 @@
 	<div data-role="content" >
 		<p>
 			<form action="interface" method="post" id="config_interface_form">
-				<!--
-				<fieldset data-role="controlgroup">
-					<legend>Select Network Interface</legend>
-					<input type="radio" name="im" id="interface_method_auto" value="0" checked="checked" />
-					<label for="interface_method_auto" class="i18n">Automatically</label>
-			
-					<input type="radio" name="im" id="interface_method_manual" value="1"  />
-					<label for="interface_method_manual" class="i18n">Manually</label>
-				</fieldset>
-				<label for="wifi_interface" class="i18n">Enter Interface Name</label>
-				<input type="text" name="if" id="interface_name" class="nospaces userlen"/>
-				-->
+				
 				<div class="ui-field-contain" style="width:100%;">
-					<label for="interface_select_auto" class="i18n" style="with:auto;">Select Network Interfaces Manually</label>
+					<label for="interface_select_auto" class="i18n" style="with:auto;">Select network interface manually</label>
 					<select name="im" id="interface_select_auto" data-role="flipswitch">
 						<option value="0" class="i18n" selected="selected">Off</option>
 						<option value="1" class="i18n">On</option>
@@ -110,18 +99,6 @@
 				</div>
 				
 				<div class="c_interface_manual" id="c_interface_manual">
-				<!--
-				<fieldset data-role="controlgroup" id="interface_selection">
-					<input type="checkbox" name="if" value="en0" id="interface_en0" />
-					<label for="interface_en0">Ethernet</label>
-			
-					<input type="checkbox" name="if" value="en1" id="interface_en1" checked="checked" />
-					<label for="interface_en1">Wi-Fi</label>
-			
-					<input type="checkbox" name="if" value="en10" id="interface_en10" />
-					<label for="interface_en10">ALFA AWUS036NHR</label>
-				</fieldset>
-				-->
 				</div>
 				
 				<input class="submit i18n" type="submit" value="Save" id="interface_submit"/>
@@ -135,21 +112,20 @@
 	<div data-role="content" >
 		<p>
 			<form action="internet" method="post" id="form_config_internet">
-				
-				
+				<div id="c_internet_interface">
 				<fieldset data-role="controlgroup">
-					<legend>Select Network Interface</legend>
+					<legend>Share Internet connection from</legend>
 					
-					<input type="checkbox" name="if" value="en0" id="interface_en0" />
+					<input type="radio" name="if" value="en0" id="interface_en0" />
 					<label for="interface_en0" class="i18n">Ethernet</label>
 			
-					<input type="checkbox" name="if" value="en1" id="interface_en1" checked="checked" />
+					<input type="radio" name="if" value="en1" id="interface_en1" checked="checked" />
 					<label for="interface_en1" class="i18n">Wi-Fi</label>
 			
-					<input type="checkbox" name="if" value="en10" id="interface_en10" />
-					<label for="interface_en10" class="i18n">ALFA AWUS036NHR</label>
+					<input type="radio" name="if" value="en10" id="interface_en10" />
+					<label for="interface_en10" class="i18n">Wi-Fi USB Stick</label>
 				</fieldset>
-				
+				</div>
 				<input class="submit i18n" type="submit" value="Start Internet Sharing" id="interface_submit"/>
 			</form>
 		</p>

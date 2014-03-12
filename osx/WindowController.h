@@ -18,10 +18,13 @@
 	
 	// wifi config
 	QaulConfigWifi *qaulConfigWifi;
-	NSArray * qaulInterfacesAll;
-	NSEnumerator *en;
+//	NSArray * qaulInterfacesAll;
+//	NSEnumerator *en;
+    BOOL qaulInterfaceManual;
+    NSString *qaulInterfaceName;
 	SCNetworkInterfaceRef qaulWifiInterface;
 	BOOL qaulWifiInterfaceSet;
+    BOOL qaulWifiInterfaceConfigurable;
 	SCNetworkServiceRef qaulServiceId;
 	BOOL qaulServiceFound;
 	BOOL qaulServiceConfigured;
@@ -59,6 +62,11 @@
 - (void)endAlert:(id)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
 - (void)init_app;
+
+/**
+ * create json of all interfaces for qaullib
+ */
+- (void)createInterfaceJson;
 
 /**
  * timers

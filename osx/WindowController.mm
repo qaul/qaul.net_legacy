@@ -37,7 +37,9 @@
 		qaulConfigWifi = [[QaulConfigWifi alloc] init];
 		qaulWifiInterface = nil;
 		qaulWifiInterfaceSet = FALSE;
+		qaulWifiInterfaceConfigurable = FALSE;
 		qaulServiceConfigured = FALSE;
+        qaulInterfaceManual = FALSE;
 	}
 	return self;
 }
@@ -149,8 +151,11 @@
 	
 	usleep(50000);
 	// stop wifi
-	if(![qaulConfigWifi stopAirport:qaulWifiInterface]) 
-		NSLog(@"airport not stopped");
+    if (qaulWifiInterfaceConfigurable)
+    {
+        if(![qaulConfigWifi stopAirport:qaulWifiInterface])
+            NSLog(@"airport not stopped");
+    }
 	
 	// change location
 	[qaulConfigWifi deleteNetworkProfile];
@@ -180,11 +185,14 @@
 		NSLog(@"initialize app");		
 		Qaullib_Init([qaulResourcePath UTF8String]);
 		
+        // set Configuration
+        Qaullib_SetConf(QAUL_CONF_INTERFACE);
+		
 		// set Download path
 		NSString *downloadPath = [NSHomeDirectory() stringByAppendingPathComponent:@"/Downloads"];
 		NSLog(@"path to download folder: %@", downloadPath);		
 		Qaullib_SetConfDownloadFolder([downloadPath UTF8String]);
-		
+        
 		qaulStarted = 1;
 	}
 	
@@ -202,6 +210,21 @@
 		
 		// start user configuration
 		Qaullib_ConfigStart();
+		
+		qaulStarted = 2;
+	}
+    
+	// get configuration
+	if(qaulStarted == 2)
+	{
+		// check saved interface configuration
+		if(Qaullib_GetInterfaceManual())
+		{
+			NSLog(@"interface is set manually");
+            qaulInterfaceName = [NSString stringWithFormat:@"%s", Qaullib_GetInterface()];
+            qaulInterfaceManual = true;
+            NSLog(@"interface name is %@", qaulInterfaceName);
+		}
 		
 		qaulStarted = 10;
 	}
@@ -229,35 +252,167 @@
 		NSLog(@"loop through interfaces");
 		// -----------------------------------
 		// configure & start up wifi
-		qaulInterfacesAll = (NSArray *) SCNetworkInterfaceCopyAll ();
-		en = [qaulInterfacesAll objectEnumerator];
+//		qaulInterfacesAll = (NSArray *) SCNetworkInterfaceCopyAll ();
+//		en = [qaulInterfacesAll objectEnumerator];
 		SCNetworkInterfaceRef inter;
 		SCPreferencesRef prefRef;
 		prefRef = SCPreferencesCreate(kCFAllocatorSystemDefault, (CFStringRef)@"XXX", NULL);
 		NSEnumerator *e = [(NSArray *)SCNetworkSetCopyServices(SCNetworkSetCopyCurrent(prefRef)) objectEnumerator];
 		SCNetworkServiceRef service;
 
-		// loop through interfaces
-		while ((inter = (SCNetworkInterfaceRef) [en nextObject])) 
+        // check if manually selected interface is present
+		if(qaulInterfaceManual)
 		{
-			//CFStringRef name = SCNetworkInterfaceGetBSDName (inter);
-			//NSLog(@"%@", name);
-			
-			// check if it is a Wifi
-			CFStringRef typesMy = SCNetworkInterfaceGetInterfaceType(inter);
-			if (typesMy == kSCNetworkInterfaceTypeIEEE80211)
+            NSLog(@"check if manually selected interface is present");
+            while (service = (SCNetworkServiceRef)[e nextObject])
+            {
+                inter = SCNetworkServiceGetInterface(service);
+                
+                NSString *myinterface = [NSString stringWithFormat:@"%@", SCNetworkInterfaceGetBSDName(inter)];
+                NSLog(@"%@ <=> %@", myinterface, qaulInterfaceName);
+                if([myinterface isEqualToString:qaulInterfaceName])
+                {
+                    NSLog(@"manual interface found: %@", myinterface);
+                    // TODO: multiple interfaces
+                    qaulServiceId = service;
+                    qaulServiceFound = TRUE;
+                    qaulWifiInterface = inter;
+                    qaulWifiInterfaceSet = TRUE;
+                    
+                    // check if it is a Wifi
+                    CFStringRef typesMy = SCNetworkInterfaceGetInterfaceType(inter);
+                    if (typesMy == kSCNetworkInterfaceTypeIEEE80211)
+                        qaulWifiInterfaceConfigurable = TRUE;
+
+                    // enable service if disabled
+                    if(!SCNetworkServiceGetEnabled(qaulServiceId))
+                    {
+                        NSLog(@"enable Service");
+                        if(!SCNetworkServiceSetEnabled(qaulServiceId, TRUE))
+                            NSLog(@"service couldn't be enabled");
+                        else
+                            qaulServiceConfigured = true;
+                    }
+                    else
+                        NSLog(@"SCNetworkServiceEnabled");
+                    
+                    // get Service Name
+                    qaulServiceName = SCNetworkServiceGetName(qaulServiceId);
+                    NSLog(@"service name: %@, interface: %@", qaulServiceName, SCNetworkInterfaceGetBSDName(inter));
+                    
+                    break;
+                }
+            }
+            
+            // fallback solution:
+            // set interface configuration to auto,
+            // if the interface was not found
+            if (!qaulWifiInterfaceSet)
+                Qaullib_SetInterfaceManual(0);
+        }
+        
+		// fallback: select interface automatically
+		if(!qaulWifiInterfaceSet)
+		{
+            NSLog(@"loop through services");
+            while (service = (SCNetworkServiceRef)[e nextObject])
+            {
+                inter = SCNetworkServiceGetInterface(service);
+
+                // check if it is a Wi-Fi interface
+                CFStringRef typesMy = SCNetworkInterfaceGetInterfaceType(inter);
+                if (typesMy == kSCNetworkInterfaceTypeIEEE80211)
+                {
+                    qaulServiceId = service;
+                    qaulServiceFound = TRUE;
+                    qaulWifiInterface = inter;
+                    qaulWifiInterfaceSet = TRUE;
+                    qaulWifiInterfaceConfigurable = TRUE;
+                    
+                    // enable service if disabled
+                    if(!SCNetworkServiceGetEnabled(qaulServiceId))
+                    {
+                        NSLog(@"enable Service");
+                        if(!SCNetworkServiceSetEnabled(qaulServiceId, TRUE))
+                            NSLog(@"service couldn't be enabled");
+                        else
+                            qaulServiceConfigured = true;
+                    }
+                    else
+                        NSLog(@"SCNetworkServiceEnabled");
+                    
+                    // get Service Name
+                    qaulServiceName = SCNetworkServiceGetName(qaulServiceId);
+                    NSLog(@"service name: %@, interface: %@", qaulServiceName, SCNetworkInterfaceGetBSDName(inter));
+                    
+                    break;                
+                }            
+            }
+        }
+
+
+/*
+        // TODO: interface loop not needed, this can all be done in service loop, see createInterfaceJson
+        // check manually configured interface
+		if(qaulInterfaceManual)
+		{
+			NSLog(@"check manual");
+			while ((inter = (SCNetworkInterfaceRef) [en nextObject]))
 			{
-				//NSLog(@"Its a Wifi!");
-				qaulWifiInterface = inter;
-				qaulWifiInterfaceSet = TRUE;
-				// TODO:
-				// put connection into array
-				//[qaulInterfacesWifi addObject:[qaulInterfacesAll objectAtIndex:i]];
-				//[qaulInterfacesWifi addObject:inter];
+				// manual configuration:
+				// check if this interface exists
+				NSString *myinterface = [NSString stringWithFormat:@"%@", SCNetworkInterfaceGetBSDName(inter)];
+				NSLog(@"%@ <=> %@", myinterface, qaulInterfaceName);
+				if([myinterface isEqualToString:qaulInterfaceName])
+				{
+					NSLog(@"manual interface found: %@", myinterface);
+					// TODO: multiple interfaces
+					qaulWifiInterface = inter;
+					qaulWifiInterfaceSet = TRUE;
+                    
+                    // check if it is a Wifi
+                    CFStringRef typesMy = SCNetworkInterfaceGetInterfaceType(inter);
+                    if (typesMy == kSCNetworkInterfaceTypeIEEE80211)
+                        qaulWifiInterfaceConfigurable = TRUE;
+
+					break;
+				}
+			}
+            
+            // fallback solution:
+            // set interface configuration to auto,
+            // if the interface was not found
+            if (!qaulWifiInterfaceSet)
+                Qaullib_SetInterfaceManual(0);
+		}
+        
+		// check for auto interfaces if the manually configured was not found
+		if(!qaulWifiInterfaceSet)
+		{
+			NSLog(@"check auto");
+            // loop through interfaces
+			while ((inter = (SCNetworkInterfaceRef) [en nextObject]))
+			{
+				// auto configuration:
+				// check if it is a Wifi
+				CFStringRef typesMy = SCNetworkInterfaceGetInterfaceType(inter);
+				if (typesMy == kSCNetworkInterfaceTypeIEEE80211)
+				{
+					qaulWifiInterface = inter;
+					qaulWifiInterfaceSet = TRUE;
+                    qaulWifiInterfaceConfigurable = TRUE;
+					break;
+					
+					// TODO:
+					// put connection into array
+					//[qaulInterfacesWifi addObject:[qaulInterfacesAll objectAtIndex:i]];
+					//[qaulInterfacesWifi addObject:inter];
+				}
 			}
 		}
-		
+        
 		// loop through services
+        NSLog(@"loop through services");
 		while (service = (SCNetworkServiceRef)[e nextObject]) 
 		{
 			inter = SCNetworkServiceGetInterface(service);
@@ -287,13 +442,7 @@
 				break;
 			}
 		}
-		
-		//success = [mysudo startAirport:authorizationRef interface:qaulWifiInterface];
-		//if(success) NSLog(@"startAirport success!!");
-		//else NSLog(@"startAirport no success");
-		
-		//if(qaulServiceFound) ;
-		//else 
+*/		
 		qaulStarted = 22;
 	}
 	
@@ -322,14 +471,14 @@
 	if(qaulStarted == 23)
 	{
 		NSLog(@"switch airport on");
-		// switch on airport via cli 
-		success = [qaulConfigWifi startAirport:qaulWifiInterface];
-		if(success) 
-			NSLog(@"startAirport success!!");
-		else 
-			NSLog(@"startAirport no success");
-		
-		// configure Address taken away from this place...
+		// switch on airport via cli
+        if (qaulWifiInterfaceConfigurable) {
+            success = [qaulConfigWifi startAirport:qaulWifiInterface];
+            if(success)
+                NSLog(@"startAirport success!!");
+            else
+                NSLog(@"startAirport no success");
+        }
 		
 		qaulStarted = 24;
 	}
@@ -359,16 +508,20 @@
 	// configure airport
 	if(qaulStarted == 26)
 	{
-		success = [qaulConfigWifi connect2network:@"qaul.net" channel:11 interface:qaulWifiInterface service:qaulServiceId]; // channel selection is buggy on many devices, default channel depends on OS, channel 1 usually works
-		if(success) 
-			NSLog(@"connect2network success!!");
-		else 
-			NSLog(@"connect2network no success");
+		if (qaulWifiInterfaceConfigurable)
+        {
+            // channel selection is buggy on many devices, default channel depends on OS, channel 1 usually works
+            success = [qaulConfigWifi connect2network:@"qaul.net" channel:11 interface:qaulWifiInterface service:qaulServiceId];
+            if(success)
+                NSLog(@"connect2network success!!");
+            else
+                NSLog(@"connect2network no success");
+        }
 		
 		qaulStarted = 29;
 	}
 	
-	//39 usleep(7000000);
+	// usleep(7000000);
 	if(qaulStarted == 29) 
 		[self startDelay: 3.0f];
 
@@ -440,6 +593,63 @@
 		
 		qaulStarted = 60;
 	}
+}
+
+// -------------------------------------------------------------------------
+// JSON files for configuration
+// -------------------------------------------------------------------------
+- (void)createInterfaceJson
+{
+    NSString* jsonString;
+    NSString* oldString;
+    NSString* newString;
+    int ifType, ifNum;
+    SCNetworkInterfaceRef inter_service;
+    SCPreferencesRef prefRef;
+    prefRef = SCPreferencesCreate(kCFAllocatorSystemDefault, (CFStringRef)@"XXX", NULL);
+    NSEnumerator *e = [(NSArray *)SCNetworkSetCopyServices(SCNetworkSetCopyCurrent(prefRef)) objectEnumerator];
+    SCNetworkServiceRef service;
+    
+    NSLog(@"createInterfaceJson");
+    
+    ifNum = 0;
+    jsonString = [NSString stringWithFormat:@""];
+
+    // loop through services
+    while (service = (SCNetworkServiceRef)[e nextObject])
+    {
+        ifType = 0;            
+        inter_service = SCNetworkServiceGetInterface(service);        
+
+        // check if this service has a BSD interface
+        if(SCNetworkInterfaceGetBSDName(inter_service))
+        {
+            // check if it is a Wi-Fi interface
+            CFStringRef typesMy = SCNetworkInterfaceGetInterfaceType(inter_service);
+            if (typesMy == kSCNetworkInterfaceTypeIEEE80211)
+                ifType = 1;
+            
+            newString = [NSString stringWithFormat:@"{\"name\":\"%@\",\"ui_name\":\"%@\",\"type\":%i}",
+                            SCNetworkInterfaceGetBSDName(inter_service),
+                            SCNetworkServiceGetName(service),
+                            ifType
+                         ];
+            
+            if(ifNum == 0)
+                jsonString = newString;
+            else
+            {
+                oldString = jsonString;
+                jsonString = [NSString stringWithFormat:@"%@,%@", oldString, newString];
+            }
+            
+            ifNum++;
+        }
+    }
+
+    // write interfaces to qaullib
+    NSLog(@"interface json UTF-8: %s", [jsonString UTF8String]);
+    Qaullib_SetInterfaceJson([jsonString UTF8String]);
 }
 
 // -------------------------------------------------------------------------
@@ -547,6 +757,11 @@
 		{
 			NSLog(@"QAUL_EVENT_NOTIFY or QAUL_EVENT_RING received\n");
 			NSBeep();
+		}
+		else if(appEvent == QAUL_EVENT_GETINTERFACES)
+		{
+			NSLog(@"QAUL_EVENT_GETINTERFACES received\n");
+            [self createInterfaceJson];            
 		}
 	}
 }

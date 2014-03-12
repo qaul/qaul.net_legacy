@@ -1,6 +1,0 @@
-{"manual":0,
-"interfaces":[
-{"name":"en0","ui_name":"Ethernet","type":0,"selected":0},
-{"name":"en1","ui_name":"Wi-Fi","type":1,"selected":1},
-{"name":"en20","ui_name":"ALFA AWUS036NHR","type":0,"selected":0}
-]}

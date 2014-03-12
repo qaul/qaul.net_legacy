@@ -4,7 +4,7 @@ var links, nodes, width, height, force, svg, path, circle, text;
 function init_network()
 {
 	$.ajax({
-		url:   "network.json",
+		url:   "gettopology.json",
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
@@ -18,10 +18,18 @@ function draw_network(data)
 	links = data.links;
 	nodes = data.nodes;
 	
-	// Compute the distinct nodes from the links.
+	// search nodes from links
+	// calculate link quality
 	links.forEach(function(link) {
 	  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source, type: "ip"});
 	  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target, type: "ip"});
+	  
+	  if(link.lq < 2)
+	  	link.type = "good";
+	  else if(link.lq < 5)
+	  	link.type = "ok";
+	  else
+	  	link.type = "bad";
 	});
 
 	width = $(window).width();
