@@ -315,20 +315,21 @@ span.suffix {
 #page_call_content {
 	text-align:center;
 }
-.call_button_accept {
-	background-image: url('images/b_callaccept_64.png') !important;
+
+#call_buttons .ui-btn.call_button_accept {
+	background-image: url('images/b_callaccept_64.png');
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
 	background-color:#36BB3E;
 }
-.call_button_reject {
-	background-image: url('images/b_callend_64.png') !important;
+#call_buttons .ui-btn.call_button_reject {
+	background-image: url('images/b_callend_64.png');
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
 	background-color:#EA2A2A;
 }
-.call_button_end {
-	background-image: url('images/b_callend_64.png') !important;
+#call_buttons .ui-btn.call_button_end {
+	background-image: url('images/b_callend_64.png');
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
 	background-color:#EA2A2A;
