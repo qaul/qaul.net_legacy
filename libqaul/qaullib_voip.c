@@ -354,9 +354,13 @@ int Qaullib_VoipStart(void)
 
 	// modify account information
 	pjsua_acc_config myconfig;
-	pjsua_acc_get_config(qaul_voip_acc_id, &myconfig);
+	pj_pool_t *mypool = pjsua_pool_create("tmp-pjsua", 1000, 1000);
+
+	pjsua_acc_get_config(qaul_voip_acc_id, mypool, &myconfig);
 	myconfig.contact_params = pj_str(";qaulname=XYZ"); // set additional custom headers of struct pjsua_acc_config
 	status = pjsua_acc_modify(qaul_voip_acc_id, &myconfig);
+
+	pj_pool_release(mypool);
 
     return 1;
 }

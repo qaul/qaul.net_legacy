@@ -6,6 +6,7 @@ qaul.net works on:
 * OSX 1.6 Snow Leopard
 * OSX 1.7 Lion
 * OSX 1.8 Mountain Lion
+* OSX 1.9 Mavericks
 
 
 Installation and Compile Instructions
@@ -13,7 +14,7 @@ Installation and Compile Instructions
 
 Compile pjsip library for VoIP
 
-    cd pjproject-2.1.0
+    cd pjproject-2.2.1
     ./aconfigure --disable-ssl --disable-ffmpeg CFLAGS='-Wno-unused-label -m32' LDFLAGS='-m32'
     make dep
     make

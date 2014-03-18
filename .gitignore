@@ -130,8 +130,6 @@ config_auto.mak
 */pjsip/bin/
 */pjsip/include/pjsip/sip_autoconf.h
 
-
-
 # exclude other versioning systems
 CVS
 .svn

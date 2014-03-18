@@ -2,7 +2,7 @@
 # File:  Makefile (for library)
 #
 TOP:=$(dir $(lastword $(MAKEFILE_LIST)))
-PJBASE=$(TOP)/../pjproject-2.1.0
+PJBASE=$(TOP)/../pjproject-2.2.1
 
 CC=gcc
 LIBDEST=.
