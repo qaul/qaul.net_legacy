@@ -116,18 +116,19 @@ os-auto.mak
 os-auto.h
 config_auto.h
 config_auto.mak
-pjproject_android/build.mak
-pjproject_android/build/cc-auto.mak
-pjproject_android/config.status
-pjproject_android/pjlib-util/bin/
-pjproject_android/pjlib/bin/
-pjproject_android/pjlib/include/pj/compat/m_auto.h
-pjproject_android/pjlib/include/pj/compat/os_auto.h
-pjproject_android/pjmedia/bin/
-pjproject_android/pjnath/bin/
-pjproject_android/pjsip-apps/bin/
-pjproject_android/pjsip/bin/
-pjproject_android/pjsip/include/pjsip/sip_autoconf.h
+pjproject*/build.mak
+pjproject*/build/cc-auto.mak
+pjproject*/config.status
+pjproject*/pjlib-util/bin/
+pjproject*/pjlib/bin/
+pjproject*/pjlib/include/pj/compat/m_auto.h
+pjproject*/pjlib/include/pj/compat/os_auto.h
+pjproject*/pjlib/include/pj/config_site.h
+pjproject*/pjmedia/bin/
+pjproject*/pjnath/bin/
+pjproject*/pjsip-apps/bin/
+pjproject*/pjsip/bin/
+pjproject*/pjsip/include/pjsip/sip_autoconf.h
 
 # exclude other versioning systems
 CVS

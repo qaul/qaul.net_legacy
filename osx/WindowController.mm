@@ -197,25 +197,35 @@
 	}
 	
 	// start web server
-	// set tab to web view
 	if(qaulStarted == 1)
 	{
 		// start web server
 		Qaullib_WebserverStart();
-		
-		// change to chat view	
-		NSString *myUrl = @"http://127.0.0.1:8081/jqm_qaul.html";
-		[qaulWebView setMainFrameURL:myUrl];
+        NSLog(@"qaullib web server start");
+        
+        qaulStarted = 2;
+    }
+    
+	// set tab to web view
+	if(qaulStarted == 2)
+	{
+		// change to chat view
+		// BUG: does not work anymor if URL is:
+        //      http://127.0.0.1:8081/jqm_qaul.html
+        //      it has to be "localhost"
+        NSString *myUrl = @"http://localhost:8081/jqm_qaul.html";
+        NSLog(@"set URL %@", myUrl);
 		[qaulTabView selectTabViewItemWithIdentifier:@"chat"];
+		[qaulWebView setMainFrameURL:myUrl];
 		
 		// start user configuration
 		Qaullib_ConfigStart();
 		
-		qaulStarted = 2;
+		qaulStarted = 3;
 	}
     
 	// get configuration
-	if(qaulStarted == 2)
+	if(qaulStarted == 3)
 	{
 		// check saved interface configuration
 		if(Qaullib_GetInterfaceManual())

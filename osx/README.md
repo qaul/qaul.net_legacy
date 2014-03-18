@@ -13,17 +13,11 @@ Installation and Compile Instructions
 
 Compile pjsip library for VoIP
 
-    cd pjproject-2.0.1
-    ./aconfigure --disable-ssl CFLAGS='-Wno-unused-label -m32' LDFLAGS='-m32'
+    cd pjproject-2.1.0
+    ./aconfigure --disable-ssl --disable-ffmpeg CFLAGS='-Wno-unused-label -m32' LDFLAGS='-m32'
     make dep
     make
     cd ../
-
-    # if the build goes wrong, one has to clean the directory to be able to rebuild 
-    # it sucessfully
-    make clean
-    find . | grep depend$ | xargs rm
-    find . | grep darwin10.8.0.a$ | xargs rm
 
 Compile static qaullib. 
 You may need to fix the file pjproject-2.0.1/pjlib/include/pj/compat/os_darwinos.h manually.
