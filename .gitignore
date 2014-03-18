@@ -116,19 +116,21 @@ os-auto.mak
 os-auto.h
 config_auto.h
 config_auto.mak
-build.mak
-build/cc-auto.mak
-config.status
-pjlib-util/bin/
-pjlib/bin/
-pjlib/include/pj/compat/m_auto.h
-pjlib/include/pj/compat/os_auto.h
-pjlib/include/pj/config_site.h
-pjmedia/bin/
-pjnath/bin/
-pjsip-apps/bin/
-pjsip/bin/
-pjsip/include/pjsip/sip_autoconf.h
+*/build.mak
+*/build/cc-auto.mak
+*/config.status
+*/pjlib-util/bin/
+*/pjlib/bin/
+*/pjlib/include/pj/compat/m_auto.h
+*/pjlib/include/pj/compat/os_auto.h
+*/pjlib/include/pj/config_site.h
+*/pjmedia/bin/
+*/pjnath/bin/
+*/pjsip-apps/bin/
+*/pjsip/bin/
+*/pjsip/include/pjsip/sip_autoconf.h
+
+
 
 # exclude other versioning systems
 CVS
