@@ -32,6 +32,12 @@
 "Configuration":"Ayarlar",
 "Change Language":"Dili Değiştir",
 "Change User Name":"Kullanıcı İsmini Değiştir",
+"Change Network Interface":"Change Network Interface",
+"Show Network":"Show Network",
+
+"Select network interface manually":"Select network interface manually",
+"On":"On",
+"Off":"Off",
 
 "Connecting":"Bağlanıyor",
 "Ringing":"Çalıyor",

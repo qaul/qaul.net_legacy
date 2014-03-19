@@ -32,6 +32,12 @@
 "Configuration":"Konfiguration",
 "Change Language":"Sprache ändern",
 "Change User Name":"Benutzername ändern",
+"Change Network Interface":"Netzwerk Interface ändern",
+"Show Network":"Netzwerktopologie anzeigen",
+
+"Select network interface manually":"Netzwerk Interface manuell wählen",
+"On":"Ja",
+"Off":"Nein",
 
 "Connecting":"Verbinden",
 "Ringing":"Klingeln",

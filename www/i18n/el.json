@@ -33,6 +33,12 @@
 "Configuration":"Διαμόρφωση",
 "Change Language":"Αλλαγή Γλώσσας",
 "Change User Name":"Αλλαγή ονόματος χρήστη",
+"Change Network Interface":"Change Network Interface",
+"Show Network":"Show Network",
+
+"Select network interface manually":"Select network interface manually",
+"On":"On",
+"Off":"Off",
 
 "Connecting":"Σύνδεση",
 "Ringing":"Klingeln",

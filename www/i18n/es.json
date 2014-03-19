@@ -32,6 +32,12 @@
 "Configuration":"Configuración",
 "Change Language":"Cambiar idioma",
 "Change User Name":"Cambiar nombre de usuario",
+"Change Network Interface":"Change Network Interface",
+"Show Network":"Show Network",
+
+"Select network interface manually":"Select network interface manually",
+"On":"On",
+"Off":"Off",
 
 "Connecting":"Conectando",
 "Ringing":"Llamando",
