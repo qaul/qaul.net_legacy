@@ -18,7 +18,6 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_locale_set = 0;
 	qaul_ip_set = 0;
 	qaul_gui_pagename_set = 0;
-	app_event = 0;
 	pickFileCheck = 0;
 	qaul_chunksize = 2000000000; // todo: smaller chunk size
 	qaul_configured = 0;
@@ -37,6 +36,8 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_exe_available = 0;
 	qaul_ipc_topo_request = 0;
 	qaul_topo_LL_first = 0;
+	qaul_appevent_LL_first = 0;
+	qaul_appevent_LL_last = 0;
 	qaul_conf_filedownloadfolder_set = 0;
 	sprintf(qaullib_AppEventOpenURL, "http://%s:%s/", IPC_ADDR, CHAT_PORT);
 	qaul_interface_configuring = 0;
@@ -242,9 +243,7 @@ void Qaullib_TimedSocketReceive(void)
 
 int Qaullib_TimedCheckAppEvent(void)
 {
-	int tmp_event = app_event;
-	app_event = 0;
-	return tmp_event;
+	return Qaullib_Appevent_LL_Get();
 }
 
 void Qaullib_TimedDownload(void)

@@ -52,7 +52,7 @@ extern "C" {
  *   request them if not
  *
  * startup configuration (20):
- *   check if wifi is configured manullay
+ *   check if wifi is configured manually
  *   Qaullib_GetConfInt("net.interface.manual")
  *   Qaullib_GetConfString("net.interface.name", config_interface_c)
  *
@@ -314,10 +314,13 @@ void Qaullib_ConfigurationFinished(void);
  * check if an event has occurred that needs action from the qaul application
  * to be called every 10ms / 100ms
  *
- * @retval QAUL_EVENT_QUIT       quit app
- * @retval QAUL_EVENT_CHOOSEFILE open file picker
- * @retval QAUL_EVENT_OPENFILE   open file
- * @retval QAUL_EVENT_OPENURL    open url in external web browser
+ * @retval QAUL_EVENT_QUIT          quit app
+ * @retval QAUL_EVENT_CHOOSEFILE    open file picker
+ * @retval QAUL_EVENT_OPENFILE      open file
+ * @retval QAUL_EVENT_OPENURL       open url in external web browser
+ * @retval QAUL_EVENT_NOTIFY        notify user about incoming message
+ * @retval QAUL_EVENT_RING          play ring tone
+ * @retval QAUL_EVENT_GETINTERFACES inform qaullib about all available network interfaces
  */
 int  Qaullib_TimedCheckAppEvent(void);
 

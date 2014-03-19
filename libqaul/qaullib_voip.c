@@ -148,7 +148,7 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 
 	// send ring
 	qaul_voip_ringing = 1;
-	app_event = QAUL_EVENT_RING;
+	Qaullib_Appevent_LL_Add(QAUL_EVENT_RING);
 }
 
 /**
@@ -174,7 +174,7 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
     	{
     		qaul_voip_event = 1;
     		qaul_voip_ringing = 1;
-    		app_event = QAUL_EVENT_RING;
+    		Qaullib_Appevent_LL_Add(QAUL_EVENT_RING);
     	}
     }
     else

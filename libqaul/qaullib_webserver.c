@@ -350,7 +350,7 @@ static void Qaullib_WwwSetInterfaceLoading(struct mg_connection *conn, const str
 	if(qaul_interface_configuring == 0)
 	{
 		qaul_interface_configuring = 1;
-		app_event = QAUL_EVENT_GETINTERFACES;
+		Qaullib_Appevent_LL_Add(QAUL_EVENT_GETINTERFACES);
 	}
 }
 
@@ -539,7 +539,7 @@ static void Qaullib_WwwSetOpenUrl(struct mg_connection *conn, const struct mg_re
 	mg_get_var(post, strlen(post == NULL ? "" : post), "url", qaullib_AppEventOpenURL+22, sizeof(qaullib_AppEventOpenURL)-22);
 
 	printf("set event url to open: %s\n", qaullib_AppEventOpenURL);
-	app_event = QAUL_EVENT_OPENURL;
+	Qaullib_Appevent_LL_Add(QAUL_EVENT_OPENURL);
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
@@ -563,7 +563,7 @@ static void Qaullib_WwwSetWifiSet(struct mg_connection *conn, const struct mg_re
 // ------------------------------------------------------------
 static void Qaullib_WwwQuit(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
-	app_event = QAUL_EVENT_QUIT;
+	Qaullib_Appevent_LL_Add(QAUL_EVENT_QUIT);
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
@@ -581,7 +581,7 @@ static void Qaullib_WwwCallEvent(struct mg_connection *conn, const struct mg_req
 	// set ring
 	if(qaul_voip_ringing > 0)
 	{
-		app_event = QAUL_EVENT_RING;
+		Qaullib_Appevent_LL_Add(QAUL_EVENT_RING);
 	}
 
 	qaul_voip_event = 0;
@@ -1278,7 +1278,7 @@ static void Qaullib_WwwFilePick(struct mg_connection *conn, const struct mg_requ
 
 	// open file picker
 	pickFileCheck = 1;
-	app_event = QAUL_EVENT_CHOOSEFILE;
+	Qaullib_Appevent_LL_Add(QAUL_EVENT_CHOOSEFILE);
 
 	// deliver answer
 	mg_printf(conn, "{");
@@ -1360,7 +1360,7 @@ static void Qaullib_WwwFileOpen(struct mg_connection *conn, const struct mg_requ
 				if(Qaullib_FileExists(qaullib_AppEventOpenPath))
 				{
 					// open file
-					app_event = QAUL_EVENT_OPENFILE;
+					Qaullib_Appevent_LL_Add(QAUL_EVENT_OPENFILE);
 				}
 				else
 				{
@@ -1369,7 +1369,7 @@ static void Qaullib_WwwFileOpen(struct mg_connection *conn, const struct mg_requ
 					if(Qaullib_FileCopy(old_path, qaullib_AppEventOpenPath))
 					{
 						// open file
-						app_event = QAUL_EVENT_OPENFILE;
+						Qaullib_Appevent_LL_Add(QAUL_EVENT_OPENFILE);
 					}
 				}
 			}
@@ -1377,7 +1377,7 @@ static void Qaullib_WwwFileOpen(struct mg_connection *conn, const struct mg_requ
 			{
 				Qaullib_FileCreatePath(qaullib_AppEventOpenPath, file_item->hashstr, file_item->suffix);
 				// open file
-				app_event = QAUL_EVENT_OPENFILE;
+				Qaullib_Appevent_LL_Add(QAUL_EVENT_OPENFILE);
 			}
 		}
 	}

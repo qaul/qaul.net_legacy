@@ -21,6 +21,7 @@ extern "C" {
 
 pthread_mutex_t qaullib_mutex_userLL;
 pthread_mutex_t qaullib_mutex_topoLL;
+pthread_mutex_t qaullib_mutex_appeventLL;
 pthread_mutex_t qaullib_mutex_fileLL;
 pthread_mutex_t qaullib_mutex_filediscoveryLL;
 pthread_mutex_t qaullib_mutex_DhcpLL;

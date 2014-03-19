@@ -38,6 +38,7 @@ extern "C" {
 #include "qaullib_defines.h"
 #include "qaullib_webclient.h"
 #include "qaullib_topo_LL.h"
+#include "qaullib_appevent_LL.h"
 #include "qaullib_user_LL.h"
 #include "qaullib_user.h"
 #include "qaullib_threads.h"
@@ -76,7 +77,6 @@ char qaullib_GuiPageName[MAX_PAGE_LEN +1];
 struct sockaddr_in pin;
 int ipc_socket, ipc_conn;
 int qaul_new_msg;
-int app_event;
 int ipc_connected;
 int qaul_loading_wait;
 int qaul_conf_quit;
