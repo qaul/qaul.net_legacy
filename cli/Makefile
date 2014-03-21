@@ -3,7 +3,7 @@
 #
 
 TOP:=$(dir $(lastword $(MAKEFILE_LIST)))
-PJBASE=$(TOP)../pjproject-2.0.1
+PJBASE=$(TOP)../pjproject-2.2.1
 
 CC=gcc
 LIBDEST=./
@@ -12,26 +12,27 @@ LIBDEST=./
 ifeq ($(OS),osx)
 OSX_CFLAGS=-arch i386
 LFLAGS=-arch i386
+PJSIPTYPE=i386-apple-darwin10.8.0
 LIBS= \
-	-lpjsua-i386-apple-darwin10.8.0 \
-	-lpjsip-ua-i386-apple-darwin10.8.0 \
-	-lpjsip-simple-i386-apple-darwin10.8.0 \
-	-lpjsip-i386-apple-darwin10.8.0 \
-	-lpjmedia-codec-i386-apple-darwin10.8.0 \
-	-lpjmedia-videodev-i386-apple-darwin10.8.0 \
-	-lpjmedia-i386-apple-darwin10.8.0 \
-	-lpjmedia-audiodev-i386-apple-darwin10.8.0 \
-	-lpjnath-i386-apple-darwin10.8.0 \
-	-lpjlib-util-i386-apple-darwin10.8.0 \
-	-lresample-i386-apple-darwin10.8.0 \
-	-lmilenage-i386-apple-darwin10.8.0 \
-	-lsrtp-i386-apple-darwin10.8.0 \
-	-lgsmcodec-i386-apple-darwin10.8.0 \
-	-lspeex-i386-apple-darwin10.8.0 \
-	-lilbccodec-i386-apple-darwin10.8.0 \
-	-lg7221codec-i386-apple-darwin10.8.0 \
-	-lportaudio-i386-apple-darwin10.8.0 \
-	-lpj-i386-apple-darwin10.8.0 \
+	-lpjsua-$(PJSIPTYPE) \
+	-lpjsip-ua-$(PJSIPTYPE) \
+	-lpjsip-simple-$(PJSIPTYPE) \
+	-lpjsip-$(PJSIPTYPE) \
+	-lpjmedia-codec-$(PJSIPTYPE) \
+	-lpjmedia-videodev-$(PJSIPTYPE) \
+	-lpjmedia-$(PJSIPTYPE) \
+	-lpjmedia-audiodev-$(PJSIPTYPE) \
+	-lpjnath-$(PJSIPTYPE) \
+	-lpjlib-util-$(PJSIPTYPE) \
+	-lresample-$(PJSIPTYPE) \
+	-lmilenage-$(PJSIPTYPE) \
+	-lsrtp-$(PJSIPTYPE) \
+	-lgsmcodec-$(PJSIPTYPE) \
+	-lspeex-$(PJSIPTYPE) \
+	-lilbccodec-$(PJSIPTYPE) \
+	-lg7221codec-$(PJSIPTYPE) \
+	-lportaudio-$(PJSIPTYPE) \
+	-lpj-$(PJSIPTYPE) \
 	\
 	-lm \
 	-lpthread \
@@ -76,26 +77,27 @@ endif
 
 # linux
 ifeq ($(OS),linux)
+PJSIPTYPE=i686-pc-linux-gnu
 LIBS= \
-    -lpjsua-i686-pc-linux-gnu \
-    -lpjsip-ua-i686-pc-linux-gnu \
-    -lpjsip-simple-i686-pc-linux-gnu \
-    -lpjsip-i686-pc-linux-gnu \
-    -lpjmedia-codec-i686-pc-linux-gnu \
-    -lpjmedia-videodev-i686-pc-linux-gnu \
-    -lpjmedia-i686-pc-linux-gnu \
-    -lpjmedia-audiodev-i686-pc-linux-gnu \
-    -lpjnath-i686-pc-linux-gnu \
-    -lpjlib-util-i686-pc-linux-gnu \
-    -lresample-i686-pc-linux-gnu \
-    -lmilenage-i686-pc-linux-gnu \
-    -lsrtp-i686-pc-linux-gnu \
-    -lgsmcodec-i686-pc-linux-gnu \
-    -lspeex-i686-pc-linux-gnu \
-    -lilbccodec-i686-pc-linux-gnu \
-    -lg7221codec-i686-pc-linux-gnu \
-    -lportaudio-i686-pc-linux-gnu \
-    -lpj-i686-pc-linux-gnu \
+    -lpjsua-$(PJSIPTYPE) \
+    -lpjsip-ua-$(PJSIPTYPE) \
+    -lpjsip-simple-$(PJSIPTYPE) \
+    -lpjsip-$(PJSIPTYPE) \
+    -lpjmedia-codec-$(PJSIPTYPE) \
+    -lpjmedia-videodev-$(PJSIPTYPE) \
+    -lpjmedia-$(PJSIPTYPE) \
+    -lpjmedia-audiodev-$(PJSIPTYPE) \
+    -lpjnath-$(PJSIPTYPE) \
+    -lpjlib-util-$(PJSIPTYPE) \
+    -lresample-$(PJSIPTYPE) \
+    -lmilenage-$(PJSIPTYPE) \
+    -lsrtp-$(PJSIPTYPE) \
+    -lgsmcodec-$(PJSIPTYPE) \
+    -lspeex-$(PJSIPTYPE) \
+    -lilbccodec-$(PJSIPTYPE) \
+    -lg7221codec-$(PJSIPTYPE) \
+    -lportaudio-$(PJSIPTYPE) \
+    -lpj-$(PJSIPTYPE) \
     \
     -L/usr/local/lib \
     -lavformat \
@@ -114,26 +116,27 @@ endif
 
 # raspberry pi
 ifeq ($(OS),raspberry)
+PJSIPTYPE=armv6l-unknown-linux-gnu
 LIBS= \
-    -lpjsua-armv6l-unknown-linux-gnu \
-    -lpjsip-ua-armv6l-unknown-linux-gnu \
-    -lpjsip-simple-armv6l-unknown-linux-gnu \
-    -lpjsip-armv6l-unknown-linux-gnu \
-    -lpjmedia-codec-armv6l-unknown-linux-gnu \
-    -lpjmedia-videodev-armv6l-unknown-linux-gnu \
-    -lpjmedia-armv6l-unknown-linux-gnu \
-    -lpjmedia-audiodev-armv6l-unknown-linux-gnu \
-    -lpjnath-armv6l-unknown-linux-gnu \
-    -lpjlib-util-armv6l-unknown-linux-gnu \
-    -lresample-armv6l-unknown-linux-gnu \
-    -lmilenage-armv6l-unknown-linux-gnu \
-    -lsrtp-armv6l-unknown-linux-gnu \
-    -lgsmcodec-armv6l-unknown-linux-gnu \
-    -lspeex-armv6l-unknown-linux-gnu \
-    -lilbccodec-armv6l-unknown-linux-gnu \
-    -lg7221codec-armv6l-unknown-linux-gnu \
-    -lportaudio-armv6l-unknown-linux-gnu \
-    -lpj-armv6l-unknown-linux-gnu \
+    -lpjsua-$(PJSIPTYPE) \
+    -lpjsip-ua-$(PJSIPTYPE) \
+    -lpjsip-simple-$(PJSIPTYPE) \
+    -lpjsip-$(PJSIPTYPE) \
+    -lpjmedia-codec-$(PJSIPTYPE) \
+    -lpjmedia-videodev-$(PJSIPTYPE) \
+    -lpjmedia-$(PJSIPTYPE) \
+    -lpjmedia-audiodev-$(PJSIPTYPE) \
+    -lpjnath-$(PJSIPTYPE) \
+    -lpjlib-util-$(PJSIPTYPE) \
+    -lresample-$(PJSIPTYPE) \
+    -lmilenage-$(PJSIPTYPE) \
+    -lsrtp-$(PJSIPTYPE) \
+    -lgsmcodec-$(PJSIPTYPE) \
+    -lspeex-$(PJSIPTYPE) \
+    -lilbccodec-$(PJSIPTYPE) \
+    -lg7221codec-$(PJSIPTYPE) \
+    -lportaudio-$(PJSIPTYPE) \
+    -lpj-$(PJSIPTYPE) \
     \
     -L/usr/local/lib \
     -lavformat \

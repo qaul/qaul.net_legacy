@@ -29,10 +29,11 @@ Compile olsrd_qaul plugin
 
 Compile pjsip library for VoIP
 
-    cd pjproject-2.0.1
+    cd pjproject-2.2.1
     ./configure
     make dep
     make
+    cd ../
 
 Compile static qaullib
 

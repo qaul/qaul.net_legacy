@@ -1,7 +1,7 @@
 CLI (Command Line Interface Client) Instructions
 ================================================
 
-The CLI client is mainly for testing purposes.
+The CLI client is for server and testing purposes.
 
 builds and runs on the following platforms:
 * Linux
