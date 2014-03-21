@@ -13,6 +13,9 @@ Installation and Compile Instructions
 
 Compile olsrd
 
+    # install required package
+    sudo apt-get install bison flex
+    # compile olsrd
     cd olsrd_0.6.2
     make
     cp olsrd ../linux/qaul-build-desktop/
@@ -29,6 +32,9 @@ Compile olsrd_qaul plugin
 
 Compile pjsip library for VoIP
 
+	# install required libraries
+	sudo apt-get install g++
+	# compile pjsip
     cd pjproject-2.2.1
     ./configure
     make dep
