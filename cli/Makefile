@@ -178,6 +178,8 @@ CFLAGS= \
 SRC= ../libqaul/qaullib.c ../libqaul/qaullib_ipc.c ../libqaul/qaullib_webserver.c ../libqaul/qaullib_voip.c \
      ../libqaul/qaullib_webclient.c ../libqaul/qaullib_threads.c \
      ../libqaul/qaullib_user.c ../libqaul/qaullib_user_LL.c \
+     ../libqaul/qaullib_topo_LL.c \
+     ../libqaul/qaullib_appevent_LL.c \
      ../libqaul/qaullib_filesharing.c ../libqaul/qaullib_file_LL.c \
      ../libqaul/qaullib_exediscovery.c \
      ../libqaul/qaullib_udp_communication.c \
