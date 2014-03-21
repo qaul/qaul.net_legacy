@@ -101,7 +101,8 @@ LIBS= \
     \
     -lpthread \
     -ldl \
-    -lm
+    -lm \
+    -lrt
 endif
 
 # raspberry pi
