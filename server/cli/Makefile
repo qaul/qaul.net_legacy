@@ -101,7 +101,6 @@ LIBS= \
     \
     -lpthread \
     -ldl \
-    -luuid \
     -lm
 endif
 
