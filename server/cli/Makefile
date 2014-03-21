@@ -171,7 +171,7 @@ SRC= ../../libqaul/qaullib.c ../../libqaul/qaullib_ipc.c ../../libqaul/qaullib_w
      ../../libqaul/qaullib_user.c ../../libqaul/qaullib_user_LL.c \
      ../../libqaul/qaullib_topo_LL.c \
      ../../libqaul/qaullib_appevent_LL.c \
-     ../../libqaul/qaullib_filesharing.c ../libqaul/qaullib_file_LL.c \
+     ../../libqaul/qaullib_filesharing.c ../../libqaul/qaullib_file_LL.c \
      ../../libqaul/qaullib_exediscovery.c \
      ../../libqaul/qaullib_udp_communication.c \
      ../../libqaul/captive/qaullib_captive.c ../../libqaul/captive/qaullib_captive_dhcp.c ../../libqaul/captive/qaullib_captive_dns.c \
