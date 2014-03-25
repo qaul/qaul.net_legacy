@@ -940,7 +940,8 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 	char buffer[1024];
 	char *stmt;
 	char *error_exec;
-	char local_msg[MAX_MESSAGE_LEN +1];
+	//char local_msg[MAX_MESSAGE_LEN +1];
+	char local_msg[1024];
 	char local_name[MAX_USER_LEN +1];
 	char msg_protected[MAX_MESSAGE_LEN +1];
 	char name_protected[MAX_USER_LEN +1];
@@ -969,11 +970,13 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 	// get type
 	mg_get_var(post, strlen(post == NULL ? "" : post), "t", local_type, sizeof(local_type));
 	type = atoi(local_type);
-	printf("[qaullib] msg-type: %i\n",type);
 	// get msg
 	mg_get_var(post, strlen(post == NULL ? "" : post), "m", local_msg, sizeof(local_msg));
 	Qaullib_StringMsgProtect(msg_protected, local_msg, sizeof(msg_protected));
 	Qaullib_StringDbProtect(msg_dbprotected, msg_protected, sizeof(msg_dbprotected));
+
+	if(QAUL_DEBUG)
+		printf("[qaullib] msg-type: %i, size: %i, m = %s\n", type, (int) strlen(local_msg), local_msg);
 
 	// get name
 	if(type == 12)
@@ -982,7 +985,8 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 		Qaullib_StringNameProtect(name_protected, local_name, sizeof(name_protected));
 		Qaullib_StringDbProtect(name_dbprotected, name_protected, sizeof(name_dbprotected));
 	}
-	else memcpy(&local_name[0], "\0", 1);
+	else
+		memcpy(&local_name[0], "\0", 1);
 
 	time(&timestamp);
 	// todo: ipv6

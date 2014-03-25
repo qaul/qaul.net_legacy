@@ -829,7 +829,8 @@ void Qaullib_FilePicked(int check, const char* path)
 const char* Qaullib_GetIP(void)
 {
 	// if IP is set return it
-	if (qaul_ip_set) return qaul_ip_str;
+	if (qaul_ip_set)
+		return qaul_ip_str;
 
 	qaul_ip_version = AF_INET;
 	qaul_ip_size = sizeof(struct in_addr);
