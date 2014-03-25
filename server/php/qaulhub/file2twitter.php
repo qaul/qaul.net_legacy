@@ -9,11 +9,12 @@
  * Put the file information into data base and advertise it on twitter.
  * 
  * invoke this script regularly via cron or cli:
- * php file2db.php
+ * php file2twitter.php
  */
 
 // include needed configuration & libraries
 require_once('config.php');
+require_once('twitter_functions.php');
 
 // load json file update list from qaul app
 // variable r (0=just updates, 1=all, 2=all and don't update gui_notify)
@@ -45,7 +46,13 @@ foreach($data->files as $item)
 			$file->setStatus($item->status);
 			$file->save();
 		
-			// advertise it via twitter
+			// advertise this file via twitter
+			// TODO: send images < 3MB directly to twitter
+			$txt = $file->getDescription() ." " .twitter_file_link($file);
+			twitter_send2twitter($txt);
+			
+			if(get_debug())
+				echo "advertised file on twitter: $txt\n";
 		}
 	}
 	// check if file has been delete

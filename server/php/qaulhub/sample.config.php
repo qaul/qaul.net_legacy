@@ -15,7 +15,7 @@ function get_debug()
 
 
 /// autoloading of all classes
-require_once '../vendor/autoload.php';
+require_once(dirname(__FILE__) .'../vendor/autoload.php');
 use Propel\Runtime\Propel;
 use Propel\Runtime\Connection\ConnectionManagerSingle;
 $serviceContainer = Propel::getServiceContainer();
@@ -46,7 +46,8 @@ $twitter_settings = array(
 $qaul_settings = array(
 	"ip" => "10.67.33.81",
 	"name" => "i_qaul",
-	"domain" => "i.qaul.net"
+	"domain" => "i.qaul.net",
+	"download_folder" => "/PATH/TO/YOUR/QAUL/DOWNLOAD/FOLDER/"
 );
 
 function get_qaul_setting($key)

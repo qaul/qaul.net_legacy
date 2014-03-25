@@ -10,12 +10,13 @@
  * Analyze file advertisements and schedule them in qaul app for downloading.
  * 
  * invoke this script regularly via cron or cli:
- * php msg2db.php
+ * php msg2twitter.php
  */
 
 // include needed configuration & libraries
 require_once('config.php');
 require_once('file_schedule.php');
+require_once('twitter_functions.php');
 
 
 // load json file with unchecked messages from qaul app
@@ -55,6 +56,10 @@ foreach($data->messages as $message)
 		$msg->save();
 		
 		// send message via twitter
-
+		$txt = twitter_message_string_utf8($msg->getMsg(), $msg->getName());
+		twitter_send2twitter($txt);
+		
+		// wait before sending the next message
+		sleep(1);
 	}
 }

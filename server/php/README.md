@@ -13,6 +13,18 @@ This is the web server part.
   Copy everything from the www directory in it.
   Make the index.php file the default access page.
   
+Configure
+---------
+
+* Create and configure the following two files with your twitter key and data base 
+  information: 
+  qaulhub/config.php ,
+  qaulhub/build.properties
+* Create a symbolic link to your qaul app files download folder in the web directory:
+
+    cd web
+    ln -s PATH-TO-QAUL-APP/www/files files
+
 
 Cron Tasks
 ----------
@@ -23,11 +35,10 @@ interval is once a minute.
     # edit your cron tasks
     crontab -e
 
-    # automatically schedule advertised files in the qaul.net for download to the
-    # web server.
-    php PATH_TO_YOUR_HOST_DIRECTORY/qaulhub/file2db.php
-    # send messages from qaul.net to twitter
-    php PATH_TO_YOUR_HOST_DIRECTORY/qaulhub/qaul2twitter.php
+    # send twitter messages with links to downloadable files from qaul.net.
+    php PATH_TO_YOUR_HOST_DIRECTORY/qaulhub/file2twitter.php
+    # send messages from qaul.net to twitter and schedule advertised files for download.
+    php PATH_TO_YOUR_HOST_DIRECTORY/qaulhub/msg2twitter.php
     # send twitter messages to qaul.net
     php PATH_TO_YOUR_HOST_DIRECTORY/qaulhub/twitter2qaul.php
 

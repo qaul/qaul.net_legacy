@@ -66,8 +66,66 @@ function twitter_send2qaul($msg)
 }
 
 /**
+ * send @a message to twitter
+ */
+function twitter_send2twitter($message)
+{
+	global $twitter_settings;
+	
+	// Documentation see: 
+	// https://dev.twitter.com/docs/api/1.1/post/statuses/update
+	$url = 'https://api.twitter.com/1.1/statuses/update.json';
+	$requestMethod = 'POST'; 
+
+	// POST fields
+	$postfields = array(
+		'status' => $message,
+		'lat'  => '41.02',
+		'long' => '28.97',
+		'display_coordinates' => false
+	);
+
+	// Perform a POST request and echo the response
+	$twitter = new TwitterAPIExchange($twitter_settings);
+	$result = $twitter->buildOauth($url, $requestMethod)->setPostfields($postfields)->performRequest();
+	
+	if(get_debug())
+		echo $result;
+}
+
+/**
+ * send @a message with @a picture to twitter.
+ * Supported image formats are PNG, JPG and GIF (Animated GIFs are not supported).
+ */
+function twitter_pic2twitter($message, $picture)
+{
+	// Documentation see: 
+	// https://dev.twitter.com/docs/api/1.1/post/statuses/update_with_media
+	$url = 'https://api.twitter.com/1.1/statuses/update_with_media.json ';
+	$requestMethod = 'POST'; 
+
+	// POST fields
+	$postfields = array(
+		'status' => $txt,
+		'media' => array(
+			
+		),
+		'lat'  => '41.02',
+		'long' => '28.97',
+		'display_coordinates' => false
+	);
+
+	// Perform a POST request and echo the response
+	$twitter = new TwitterAPIExchange($settings);
+	$result = $twitter->buildOauth($url, $requestMethod)->setPostfields($postfields)->performRequest();
+	
+	if(get_debug())
+		echo $result;
+}
+
+/**
  * creates a message string that includes the sender name in the message text. 
- * The string is not longer than 140 UTF-8 characters.
+ * The string is limited to 140 UTF-8 characters max.
  * 
  * @retval message text
  */
@@ -105,7 +163,7 @@ function twitter_message_string_utf8($text, $name)
 
 /**
  * creates a message string that includes the sender name in the message text.
- * The string is not longer than 140 bytes.
+ * The string is limited to 140 bytes max.
  * 
  * @retval message text
  */
@@ -151,6 +209,6 @@ function twitter_message_string_byte($text, $name)
  */
 function twitter_file_link($file)
 {
-	$link = "http://" .get_qaul_setting('domain') ."/f/" .$file->id;
+	$link = "http://" .get_qaul_setting('domain') ."/f/" .$file->getId();
 	return $link;
 }
