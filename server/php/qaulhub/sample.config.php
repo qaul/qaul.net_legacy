@@ -15,7 +15,7 @@ function get_debug()
 
 
 /// autoloading of all classes
-require_once(dirname(__FILE__) .'../vendor/autoload.php');
+require_once(dirname(__FILE__) .'/../vendor/autoload.php');
 use Propel\Runtime\Propel;
 use Propel\Runtime\Connection\ConnectionManagerSingle;
 $serviceContainer = Propel::getServiceContainer();
