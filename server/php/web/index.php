@@ -9,3 +9,4 @@
  * default public access page of qaulhub VPN
  */
 
+header("Location: qaulhub.html";
