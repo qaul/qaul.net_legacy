@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 	if (!Qaullib_DbGetConfigValue("ip", qaul_ip_str))
 	{
 		// set IP
-		Qaullib_SetIP(qaul_ip_str);
+		Qaullib_SetIP(QaulServerIP);
 	}
 	// load the IP otherwise
 	printf("IP: %s\n", Qaullib_GetIP());
