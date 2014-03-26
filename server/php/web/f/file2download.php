@@ -29,7 +29,10 @@ if(!$file)
 	exit();
 }
 
-//header("Location: ../files/" .$file->getHash() ."." .$file->getSuffix());
+header("Location: ../files/" .$file->getHash() ."." .$file->getSuffix());
+exit();
+
+/*
 $path = get_qaul_setting('download_folder') .$file->getHash() ."." .$file->getSuffix();
 
 if (file_exists($path) && is_readable($path))
@@ -43,3 +46,5 @@ if (file_exists($path) && is_readable($path))
 	}
 }
 exit();
+*/
+
