@@ -1003,6 +1003,33 @@ void Qaullib_ConfigurationFinished(void)
 // ------------------------------------------------------------
 int Qaullib_Timestamp2Isostr(char *str_buffer, int timestamp, int str_buffer_size)
 {
+   	// Attention dirty cover for 64 bit systems.
+   	// TODO: problem with 64 bit implementation
+   	//       we need to convert int timestamp to time_t. otherwise we get a segmentation
+   	//       fault. 
+   	// 
+   	// using example http://en.wikipedia.org/w/index.php?title=Time_t&oldid=450752800
+    time_t     now;
+    struct tm *ts;
+ 
+	if(QAUL_DEBUG)
+		printf("Qaullib_Timestamp2Isostr timestamp: %i buf: %i\n", timestamp, str_buffer_size);
+	if(QAUL_DEBUG)
+		printf("sizes int: %lu, size time_t: %lu\n", sizeof(timestamp), sizeof(now));
+
+    // Get the current time
+    now = time(NULL);
+
+    // Format and print the time, "yyyy-mm-dd hh:mm:ss"
+    //ts = localtime((time_t *)&timestamp);
+    ts = localtime(&now);
+	strftime(str_buffer, str_buffer_size, "%Y-%m-%d %H:%M:%S", ts);
+
+	if(QAUL_DEBUG)
+		printf("str_buffer %s\n", str_buffer);
+
+    return 1;
+/*
 	size_t local_timestr_len;
 	//time_t now;
 	struct tm ts;
@@ -1036,4 +1063,5 @@ int Qaullib_Timestamp2Isostr(char *str_buffer, int timestamp, int str_buffer_siz
 		printf("str_buffer %s\n", str_buffer);
 
 	return 1;
+*/
 }
