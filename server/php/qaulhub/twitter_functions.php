@@ -5,6 +5,8 @@
  */
 
 require_once('config.php');
+require_once('helper_functions.php');
+
 
 /**
  * loop through twitter messages, put them to database and send them to qaul app
@@ -45,7 +47,7 @@ function twitter_send2qaul($msg)
 	$url = 'http://localhost:8081/sendmsg';
 	$post_data = array(
 					't' => 11, 
-					'm' => twitter_message_string_byte($msg->getMsg(), $msg->getName()),
+					'm' => twitter_message_string_byte(protect_message($msg->getMsg()), $msg->getName()),
 					'e' => 1
 					);
 	$content = http_build_query($post_data);

@@ -18,6 +18,6 @@ function protect_message($message)
 {
 	$str1 = str_replace("\n", " ", $message); 
 	$str2 = str_replace('"', "'", $str1);
-	$str3 = str_replace("\\", "\\\\", $str2); 
-	return $str2; 
+	$str3 = str_replace("\\", "/", $str2); 
+	return $str3; 
 }
