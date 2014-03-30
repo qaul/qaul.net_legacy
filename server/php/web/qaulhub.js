@@ -22,6 +22,8 @@ var file_last_id = 0;
 var qaul_config;
 var node_count = 0;
 var user_count = 0;
+var page_timer_active = "";
+var page_timer_wait = 10000;
 
 var qaulfiles = [];
 var qaulusers = [];
@@ -895,7 +897,10 @@ function send_direct_msg()
 
 function get_msgs()
 {
-	var path = "qaulhub_msg.php?t=1&id=" +msg_last_id;
+	if(page_timer_active!="page_chat")
+		return;
+	
+	var path = "qaulhub_msg.php?t=1&id=" +msg_last_id +"&e=1";
 	$.ajax({
 		url:   path,
 		cache: false, // needed for IE
@@ -908,13 +913,23 @@ function get_msgs()
 				if(item.id > msg_last_id) 
 					msg_last_id = item.id;
 				insert_msg(chat, item, inverse);
-			})
-		} 
+			});
+			// reschedule timer
+			if(page_timer_active=="page_chat")
+				setTimeout(function(){get_msgs();},page_timer_wait);
+		}
+	}).error(function(){
+			// reschedule timer
+			if(page_timer_active=="page_chat")
+				setTimeout(function(){get_msgs();},page_timer_wait);
 	});
 }
 
 function get_user_msgs()
 {
+	if(page_timer_active!="page_user")
+		return;
+	
 	var path = 'qaulhub_msg.php?t=5&id=' +user_last_id +'&v=' +encodeURIComponent($("#user_chat_name").val()) +'&e=1';
 	$.ajax({
 		url:   path,
@@ -928,13 +943,23 @@ function get_user_msgs()
 					if(item.id > user_last_id) 
 						user_last_id = item.id;
 					insert_msg($("#page_user_msgs"), item, inverse);
-			})
+			});
+			// reschedule timer
+			if(page_timer_active=="page_user")
+				setTimeout(function(){get_user_msgs();},page_timer_wait);			
 		} 
+	}).error(function(){
+			// reschedule timer
+			if(page_timer_active=="page_user")
+				setTimeout(function(){get_user_msgs();},page_timer_wait);
 	});
 }
 
 function get_tag_msgs()
 {
+	if(page_timer_active!="page_tag")
+		return;
+		
 	var path = 'qaulhub_msg.php?t=6&id=' +tag_last_id +'&v=' +encodeURIComponent(tag_name) +'&e=1';
 	$.ajax({
 		url:   path,
@@ -948,8 +973,15 @@ function get_tag_msgs()
 					if(item.id > tag_last_id) 
 						tag_last_id = item.id;
 					insert_msg($("#page_tag_msgs"), item, inverse);
-			})
+			});
+			// reschedule timer
+			if(page_timer_active=="page_tag")
+				setTimeout(function(){get_tag_msgs();},page_timer_wait);
 		} 
+	}).error(function(){
+			// reschedule timer
+			if(page_timer_active=="page_tag")
+				setTimeout(function(){get_tag_msgs();},page_timer_wait);
 	});
 }
 
@@ -968,23 +1000,43 @@ var updatetimer=function()
 {
 	if($.mobile.activePage.attr("id")=="page_chat")
 	{
-		get_msgs();
+		if(page_timer_active!="page_chat")
+		{
+			page_timer_active="page_chat";
+			get_msgs();
+		}
 	}
 	else if($.mobile.activePage.attr("id")=="page_users")
 	{
-		get_users();
+		if(page_timer_active!="page_users")
+		{
+			page_timer_active="page_users";
+			get_users();
+		}	
 	}
 	else if($.mobile.activePage.attr("id")=="page_user")
 	{
-		get_user_msgs();
+		if(page_timer_active!="page_user")
+		{
+			page_timer_active="page_user";
+			get_user_msgs();
+		}
 	}
 	else if($.mobile.activePage.attr("id")=="page_tag")
 	{
-		get_tag_msgs();
+		if(page_timer_active!="page_tag")
+		{
+			page_timer_active="page_tag";
+			get_tag_msgs();
+		}
 	}
 	else if($.mobile.activePage.attr("id")=="page_file")
 	{
-		file_update();
+		if(page_timer_active!="page_file")
+		{
+			page_timer_active="page_file";
+			file_update();
+		}
 	}
 	
 	setTimeout(function(){updatetimer();},3000);
@@ -1150,6 +1202,9 @@ function file_check(hash, suffix)
 
 function file_update()
 {
+	if(page_timer_active!="page_file")
+		return;
+		
 	var path = "qaulhub_file.php?id=" +file_last_id;
 	var files = $("#page_file_list");
 	$.ajax({
@@ -1162,9 +1217,13 @@ function file_update()
 					file_last_id = item.id;
 				file_update_check(item);
 			});
+			if(page_timer_active=="page_file")
+				setTimeout(function(){file_update();},60000);
 		} 
 	}).error(function(){
-		// fail silently
+		// reschedule file_update
+		if(page_timer_active=="page_file")
+			setTimeout(function(){file_update();},60000);
 	});
 }
 

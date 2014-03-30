@@ -29,7 +29,7 @@ if($id)
 	$msgs = MsgQuery::create()
   			->filterById(array('min' => $id +1))
   			->orderById('asc')
-  			->limit(2)
+  			->limit(10)
   			->find();
 }
 else
