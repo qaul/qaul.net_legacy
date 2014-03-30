@@ -2,9 +2,9 @@ qaul.net Server
 ===============
 
 The server is a passive participant in a qaul.net that provides interfaces to the outside
-world.
+world. 
 
-Interfaces:
+The server offers the following services:
 * qaul2twitter: 
   Sends all messages from the qaul.net to twitter.
 * twitter2qaul: 
@@ -16,27 +16,6 @@ Interfaces:
 Installation and Compile Instructions
 --------------------------------------
 
-The install and compile instructions are for 
-
-Compile pjsip library for Server, without any sound or video
-
-    # install needed packages
-    sudo apt-get install gcc g++
-    # compile pjsip
-    cd pjproject-2.2.1
-    ./configure --disable-ssl --disable-sound --disable-video --disable-oss --enable-ext-sound --disable-ffmpeg --disable-v4l2
-    make dep
-    make
-    cd ../
-
-Compile qaul.net cli executable
-
-    cd server/cli
-    make OS=linux
-
-
-Web part
---------
-
-Install the web Server
+How to compile the qaul cli program read cli/README.md
+How to install the php web part read php/README.md
 

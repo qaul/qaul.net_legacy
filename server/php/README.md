@@ -1,8 +1,7 @@
-qaul.net VPN Server hub
-========================
+qaul.net PHP Server Services
+============================
 
-This server can bridge qaul.net networks together.
-This is the web server part.
+This is the qaul web server part.
 
 * qaulhub directory
   application logic of the web server.
@@ -12,7 +11,12 @@ This is the web server part.
   Make this directory the access directory of your web server. 
   Copy everything from the www directory in it.
   Make the index.php file the default access page.
-  
+
+
+This software has run successfully on
+* PHP 5.3, 5.4
+
+
 Configure
 ---------
 
@@ -52,6 +56,8 @@ Composer instructions
     php composer.phar install
     # updating libraries and installing new ones
     php composer.phar update
+    # create autoloader for classes
+    php composer.phar dump-autoload
 
 
 Data Base
@@ -67,6 +73,4 @@ Data base instructions
     vendor/propel/propel/bin/propel sql:build
     # load sql into data base
     vendor/propel/propel/bin/propel sql:insert
-    # create autoloader for classes
-    php composer.phar dump-autoload
 
