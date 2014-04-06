@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="qaulhub" defaultIdMethod="native">
+  <table name="msg" phpName="Msg">
+    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+    <column name="type" type="integer" required="true" />
+    <column name="name" type="varchar" size="255" required="true" />
+    <column name="msg" type="varchar" size="255" required="true" />
+    <column name="ip" type="varchar" size="255" required="true" />
+    <column name="time" type="varchar" size="255" required="true" />
+    <column name="status" type="integer" required="true" />
+    <column name="twitterid" type="varchar" size="255" />
+    <behavior name="timestampable" />
+    <index name="twitterid">
+		<index-column name="twitterid" />
+	</index>
+  </table>
+  <table name="file" phpName="File">
+    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+    <column name="hash" type="varchar" size="255" required="true" />
+    <column name="suffix" type="varchar" size="255" required="true" />
+    <column name="description" type="varchar" size="255" required="true" />
+    <column name="size" type="integer" required="true" />
+    <column name="time" type="varchar" size="255" required="true" />
+    <column name="status" type="integer" required="true" />
+    <behavior name="timestampable" />
+    <index name="hash">
+		<index-column name="hash" />
+	</index>
+  </table>
+</database>

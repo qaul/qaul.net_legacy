@@ -1,0 +1,73 @@
+/* --- qaulhub elements --- */
+img#qaulhub_chat_img {
+	margin-right:25px;
+	margin-bottom:15px;
+	float:left;
+	position:relative;
+	top:-10px;
+}
+
+div#qaulhub_chat_teaser {
+	margin: 25px auto;
+	float:center;
+	width:500px;
+	font-size:bigger;
+	text-align:center;
+}
+
+img#qaulhub_pref_img {
+	margin: 50px 0;
+	width:100%;
+}
+
+h2#qaulhub_pref_title {
+	font-weight:normal;
+	text-align:center;
+	margin: 25px 0;
+}
+
+/* --- parts to hide --- */
+li.nav_users {
+	display:none;
+}
+
+p a#file_addbutton {
+	display:none;
+}
+
+form#chat_form {
+	display:none;
+}
+
+.file .filebutton.ui-link {
+	display:none;
+}
+
+/* --- footer icons --- */
+.ui-footer div.ui-navbar ul.ui-grid-b li a.i_chat {
+	background-image: url('images/i_chat_64.png');
+	background-position: 50% +1px;
+	background-repeat: no-repeat; 
+	background-size: 64px 64px;	
+}
+
+.ui-footer div.ui-navbar ul.ui-grid-b li a.i_users {
+	background-image: url('images/i_users_64.png'); 
+	background-position: 50% +1px;
+	background-repeat: no-repeat; 
+	background-size: 64px 64px;	
+}
+
+.ui-footer div.ui-navbar ul.ui-grid-b li a.i_filesharing {
+	background-image: url('images/i_files_64.png'); 
+	background-position: 50% +1px;
+	background-repeat: no-repeat; 
+	background-size: 64px 64px;	
+}
+
+.ui-footer div.ui-navbar ul.ui-grid-b li a.i_prefs {
+	background-image: url('images/i_info_64.png'); 
+	background-position: 50% +1px;
+	background-repeat: no-repeat; 
+	background-size: 64px 64px;
+}

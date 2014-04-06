@@ -1,0 +1,9 @@
+{
+    "require": {
+        "propel/propel": "dev-master",
+        "j7mbo/twitter-api-php": "dev-master"
+    },
+    "autoload":{
+    	"classmap": ["qaulhub/generated-classes/"]
+    }
+}

@@ -3,7 +3,7 @@
 #
 
 TOP:=$(dir $(lastword $(MAKEFILE_LIST)))
-PJBASE=$(TOP)../pjproject-2.2.1
+PJBASE=$(TOP)../../pjproject-2.2.1
 
 CC=gcc
 LIBDEST=./
@@ -77,7 +77,7 @@ endif
 
 # linux
 ifeq ($(OS),linux)
-PJSIPTYPE=i686-pc-linux-gnu
+PJSIPTYPE=x86_64-unknown-linux-gnu
 LIBS= \
     -lpjsua-$(PJSIPTYPE) \
     -lpjsip-ua-$(PJSIPTYPE) \
@@ -90,28 +90,19 @@ LIBS= \
     -lpjnath-$(PJSIPTYPE) \
     -lpjlib-util-$(PJSIPTYPE) \
     -lresample-$(PJSIPTYPE) \
-    -lmilenage-$(PJSIPTYPE) \
     -lsrtp-$(PJSIPTYPE) \
     -lgsmcodec-$(PJSIPTYPE) \
     -lspeex-$(PJSIPTYPE) \
     -lilbccodec-$(PJSIPTYPE) \
     -lg7221codec-$(PJSIPTYPE) \
-    -lportaudio-$(PJSIPTYPE) \
     -lpj-$(PJSIPTYPE) \
     \
     -L/usr/local/lib \
-    -lavformat \
-    -lavcodec \
-    -lswscale \
-    -lavutil \
-    -lasound \
-    -lcrypto \
-    -lssl \
     \
     -lpthread \
     -ldl \
-    -luuid \
-    -lm
+    -lm \
+    -lrt
 endif
 
 # raspberry pi
@@ -175,18 +166,18 @@ CFLAGS= \
 	-I$(PJBASE)/third_party/srtp/crypto/include \
 	-I$(PJBASE)/third_party/srtp/include	
 
-SRC= ../libqaul/qaullib.c ../libqaul/qaullib_ipc.c ../libqaul/qaullib_webserver.c ../libqaul/qaullib_voip.c \
-     ../libqaul/qaullib_webclient.c ../libqaul/qaullib_threads.c \
-     ../libqaul/qaullib_user.c ../libqaul/qaullib_user_LL.c \
-     ../libqaul/qaullib_topo_LL.c \
-     ../libqaul/qaullib_appevent_LL.c \
-     ../libqaul/qaullib_filesharing.c ../libqaul/qaullib_file_LL.c \
-     ../libqaul/qaullib_exediscovery.c \
-     ../libqaul/qaullib_udp_communication.c \
-     ../libqaul/captive/qaullib_captive.c ../libqaul/captive/qaullib_captive_dhcp.c ../libqaul/captive/qaullib_captive_dns.c \
-     ../libqaul/mongoose/mongoose.c ../libqaul/sqlite/sqlite3.c \
-     ../libqaul/urlcode/urlcode.c ../libqaul/polarssl/sha1.c \
-     ../libqaul/olsrd/mantissa.c ../libqaul/olsrd/hashing.c \
+SRC= ../../libqaul/qaullib.c ../../libqaul/qaullib_ipc.c ../../libqaul/qaullib_webserver.c ../../libqaul/qaullib_voip.c \
+     ../../libqaul/qaullib_webclient.c ../../libqaul/qaullib_threads.c \
+     ../../libqaul/qaullib_user.c ../../libqaul/qaullib_user_LL.c \
+     ../../libqaul/qaullib_topo_LL.c \
+     ../../libqaul/qaullib_appevent_LL.c \
+     ../../libqaul/qaullib_filesharing.c ../../libqaul/qaullib_file_LL.c \
+     ../../libqaul/qaullib_exediscovery.c \
+     ../../libqaul/qaullib_udp_communication.c \
+     ../../libqaul/captive/qaullib_captive.c ../../libqaul/captive/qaullib_captive_dhcp.c ../../libqaul/captive/qaullib_captive_dns.c \
+     ../../libqaul/mongoose/mongoose.c ../../libqaul/sqlite/sqlite3.c \
+     ../../libqaul/urlcode/urlcode.c ../../libqaul/polarssl/sha1.c \
+     ../../libqaul/olsrd/mantissa.c ../../libqaul/olsrd/hashing.c \
      $(SRC_WIN) \
      main.c
 
@@ -211,42 +202,27 @@ all: $(OBJS)
 ifeq ($(OS),osx)
 	@echo application Makefile - linking qaul
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul $(LFLAGS)
-	@echo copy olsrd executable into this directory
-	@cp ../olsrd-0.6.0/olsrd ./
-	@echo copy olsrd_qaul plugin into this directory
-	@cp ../olsrd-0.6.0/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
 	@echo copy www folder into this directory
-	@cp -R ../www ./
+	@cp -R ../../www ./
 endif
 ifeq ($(OS),linux)
 	@echo application Makefile - linking qaul
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul $(LFLAGS)
-	@echo copy olsrd executable into this directory
-	@cp ../olsrd_0.6.2/olsrd ./
-	@echo copy olsrd_qaul plugin into this directory
-	@cp ../olsrd_0.6.2/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
 	@echo copy www folder into this directory
-	@cp -R ../www ./
+	@cp -R ../../www ./
 endif
 ifeq ($(OS),raspberry)
 	@echo application Makefile - linking qaul
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul $(LFLAGS)
 	@echo copy www folder into this directory
-	@cp -R ../www ./
+	@cp -R ../../www ./
 endif
 ifeq ($(OS),win)
 	@echo application Makefile - linking qaul.exe
 	@cp ../libqaul/libqaul.dll ./
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul.exe $(CFLAGS) $(LIBDEST_WIN)
-	@echo copy olsrd executable into this directory
-	@cp ../olsrd-0.6.0/olsrd.exe ./
-# todo: copy these files (set correct paths & suffixes)
-#	@echo copy olsrd_qaul plugin into this directory
-#	@cp ../olsrd-0.6.0/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
-#	@echo copy qaullib into this directory
-#	@cp ../qaullib/qaullib.dll ./
 	@echo copy www folder into this directory
-	@cp -R ../www ./
+	@cp -R ../../www ./
 endif
 endif
 

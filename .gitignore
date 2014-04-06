@@ -140,6 +140,11 @@ www/files/*.apk
 www/files/*.deb
 www/files/*.exe
 
+# server folder
+server/php/qaulhub/build.properties
+server/php/qaulhub/config.php
+server/php/qaulhub/test*
+
 # binary creation
 binary_release/qaul.net/
 binary_release/mof/

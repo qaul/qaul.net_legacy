@@ -1,0 +1,11 @@
+{
+"locale":"tr",
+"name":"bla",
+"is_mobile":false,
+"msg_max":50,
+"c_quit":false,
+"c_debug":false,
+"c_interface":false,
+"c_internet":false,
+"c_network":false
+}

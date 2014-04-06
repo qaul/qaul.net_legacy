@@ -1003,23 +1003,21 @@ void Qaullib_ConfigurationFinished(void)
 // ------------------------------------------------------------
 int Qaullib_Timestamp2Isostr(char *str_buffer, int timestamp, int str_buffer_size)
 {
-	//time_t now;
-	struct tm ts;
-	//char buf[80];
+    time_t     now;
+    struct tm *ts;
+ 
+	if(QAUL_DEBUG)
+		printf("sizes int: %lu, size time_t: %lu\n", sizeof(timestamp), sizeof(now));
+
+    // convert integer to time_t
+    now = 1 * timestamp;
+
+    // Format and print the time, "yyyy-mm-dd hh:mm:ss"
+    ts = localtime(&now);
+	strftime(str_buffer, str_buffer_size, "%Y-%m-%d %H:%M:%S", ts);
 
 	if(QAUL_DEBUG)
-		printf("Qaullib_Timestamp2Isostr timestamp: %i buf: %i\n", timestamp, str_buffer_size);
+		printf("str_buffer %s\n", str_buffer);
 
-	// Get current time
-	//time(&now);
-
-	ts = *localtime((time_t *)&timestamp);
-	// Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
-	//strftime(str_buffer, str_buffer_size, "%a %Y-%m-%d %H:%M:%S %Z", &ts);
-	strftime(str_buffer, str_buffer_size, "%Y-%m-%d %H:%M:%S", &ts);
-
-	if(QAUL_DEBUG)
-		printf("%s\n", str_buffer);
-
-	return 1;
+    return 1;
 }
