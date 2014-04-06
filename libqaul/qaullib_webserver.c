@@ -290,7 +290,7 @@ static void Qaullib_WwwSetName(struct mg_connection *conn, const struct mg_reque
 {
 	char *content_length;
 	int length;
-	char username[1024];
+	char username[3*MAX_USER_LEN +1];
 	char protected_username[MAX_USER_LEN +1];
 
 	// Fetch user name
@@ -299,11 +299,11 @@ static void Qaullib_WwwSetName(struct mg_connection *conn, const struct mg_reque
 	char *post = (char *)malloc(length+length/8+1);
 	mg_read(conn, post, length); //read post data
 	// extract variable
-	mg_get_var(post, strlen(post == NULL ? "" : post), "n", username, 1024);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "n", username, sizeof(username));
 	printf("user name len: %i\n", (int)strlen(username));
 	memcpy(&username[MAX_USER_LEN], "\0", 1);
 
-	if(Qaullib_StringNameProtect(protected_username, username, MAX_USER_LEN +1) > 0)
+	if(Qaullib_StringNameProtect(protected_username, username, sizeof(protected_username)) > 0)
 	{
 		printf("save user name len %i: ", (int)strlen(protected_username));
 		printf("%s  \n", protected_username);
@@ -940,9 +940,8 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 	char buffer[1024];
 	char *stmt;
 	char *error_exec;
-	//char local_msg[MAX_MESSAGE_LEN +1];
-	char local_msg[1024];
-	char local_name[MAX_USER_LEN +1];
+	char local_msg[3*MAX_MESSAGE_LEN +1];
+	char local_name[3*MAX_USER_LEN +1];
 	char msg_protected[MAX_MESSAGE_LEN +1];
 	char name_protected[MAX_USER_LEN +1];
 	char msg_dbprotected[2*MAX_MESSAGE_LEN +1];
@@ -1435,8 +1434,8 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	struct qaul_file_LL_item *existing_file;
 	char local_size[MAX_INTSTR_LEN +1];
 	char local_ip[MAX_IP_LEN +1];
-	char local_description[MAX_DESCRIPTION_LEN +1];
-	char local_adv_name[MAX_USER_LEN +1];
+	char local_description[3*MAX_DESCRIPTION_LEN +1];
+	char local_adv_name[3*MAX_USER_LEN +1];
 
 	stmt = buffer;
 	error_exec = NULL;
@@ -1450,23 +1449,23 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	mg_read(conn, post, length); //read post data
 
 	// get hash
-	mg_get_var(post, strlen(post == NULL ? "" : post), "hash", file_item.hashstr, MAX_HASHSTR_LEN +1);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "hash", file_item.hashstr, sizeof(file_item.hashstr));
 	Qaullib_StringToHash(file_item.hashstr, file_item.hash);
 	// get suffix
-	mg_get_var(post, strlen(post == NULL ? "" : post), "suffix", file_item.suffix, MAX_SUFFIX_LEN +1);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "suffix", file_item.suffix, sizeof(file_item.suffix));
 	// get description
-	mg_get_var(post, strlen(post == NULL ? "" : post), "description", local_description, MAX_DESCRIPTION_LEN +1);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "description", local_description, sizeof(local_description));
 	Qaullib_StringMsgProtect(file_item.description, local_description, sizeof(file_item.description));
 	// get size
-	mg_get_var(post, strlen(post == NULL ? "" : post), "size", local_size, MAX_INTSTR_LEN +1);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "size", local_size, sizeof(local_size));
 	file_item.size = atoi(local_size);
 	if(file_item.size <= 0)
 		file_item.size = 1024;
 	// get advertised by
-	mg_get_var(post, strlen(post == NULL ? "" : post), "ip", local_ip, MAX_IP_LEN +1);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "ip", local_ip, sizeof(local_ip));
 
 
-	mg_get_var(post, strlen(post == NULL ? "" : post), "name", local_adv_name, MAX_USER_LEN +1);
+	mg_get_var(post, strlen(post == NULL ? "" : post), "name", local_adv_name, sizeof(local_adv_name));
 	Qaullib_StringNameProtect(file_item.adv_name, local_adv_name, sizeof(file_item.adv_name));
 
 	// add file

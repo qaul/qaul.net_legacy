@@ -1003,25 +1003,16 @@ void Qaullib_ConfigurationFinished(void)
 // ------------------------------------------------------------
 int Qaullib_Timestamp2Isostr(char *str_buffer, int timestamp, int str_buffer_size)
 {
-   	// Attention dirty cover for 64 bit systems.
-   	// TODO: problem with 64 bit implementation
-   	//       we need to convert int timestamp to time_t. otherwise we get a segmentation
-   	//       fault. 
-   	// 
-   	// using example http://en.wikipedia.org/w/index.php?title=Time_t&oldid=450752800
     time_t     now;
     struct tm *ts;
  
 	if(QAUL_DEBUG)
-		printf("Qaullib_Timestamp2Isostr timestamp: %i buf: %i\n", timestamp, str_buffer_size);
-	if(QAUL_DEBUG)
 		printf("sizes int: %lu, size time_t: %lu\n", sizeof(timestamp), sizeof(now));
 
-    // Get the current time
-    now = time(NULL);
+    // convert integer to time_t
+    now = 1 * timestamp;
 
     // Format and print the time, "yyyy-mm-dd hh:mm:ss"
-    //ts = localtime((time_t *)&timestamp);
     ts = localtime(&now);
 	strftime(str_buffer, str_buffer_size, "%Y-%m-%d %H:%M:%S", ts);
 
@@ -1029,39 +1020,4 @@ int Qaullib_Timestamp2Isostr(char *str_buffer, int timestamp, int str_buffer_siz
 		printf("str_buffer %s\n", str_buffer);
 
     return 1;
-/*
-	size_t local_timestr_len;
-	//time_t now;
-	struct tm ts;
-	//char buf[80];
-
-	if(QAUL_DEBUG)
-		printf("Qaullib_Timestamp2Isostr timestamp: %i buf: %i\n", timestamp, str_buffer_size);
-
-	// Get current time
-	//time(&now);
-
-	ts = *localtime((time_t *)&timestamp);
-	
-	if(QAUL_DEBUG)
-		printf("ts created\n");
-	
-	
-	// Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
-	//strftime(str_buffer, str_buffer_size, "%a %Y-%m-%d %H:%M:%S %Z", &ts);
-	local_timestr_len = strftime(str_buffer, str_buffer_size, "%Y-%m-%d %H:%M:%S", &ts);
-	
-	if(QAUL_DEBUG)
-		printf("local_timestr_len %u\n", (unsigned int) local_timestr_len);
-	
-	if(local_timestr_len > 0)
-		memcpy(&str_buffer[str_buffer_size -1], "\0", 1);
-	else
-		memcpy(&str_buffer, "\0", 1);
-
-	if(QAUL_DEBUG)
-		printf("str_buffer %s\n", str_buffer);
-
-	return 1;
-*/
 }

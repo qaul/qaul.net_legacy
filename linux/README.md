@@ -2,8 +2,8 @@ Linux Instructions
 ==================
 
 qaul.net has been tested on:
-* Ubuntu 11.10: Oneiric Ocelot
-* Ubuntu 12.04: Precise Pangolin
+* Ubuntu 11.10: Oneiric Ocelot 32-Bit
+* Ubuntu 12.04: Precise Pangolin 32-Bit
 
 It should run on all recent Debian & Ubuntu distributions.
 
@@ -53,3 +53,14 @@ qaul.net is implemented in C++ in QT.
 * Open QT project and run the software.
 
 
+Troubleshooting
+---------------
+
+On Ubuntu 12.04 64-Bit pjsip failed compiling because it could't find the 
+following program and library: cc1plus, libstdc++
+They had to be linked manually to the standard directories:
+
+    # link executable cc1plus
+    sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/4.6/cc1plus /usr/bin/cc1plus
+    # link library stdc++
+    sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/4.6/libstdc++.a /usr/lib/libstdc++.a
