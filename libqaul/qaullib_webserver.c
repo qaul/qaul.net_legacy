@@ -340,7 +340,7 @@ static void Qaullib_WwwSetLocale(struct mg_connection *conn, const struct mg_req
 // ------------------------------------------------------------
 static void Qaullib_WwwSetInterfaceLoading(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
-	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
 
 	if(QAUL_DEBUG)
@@ -412,7 +412,7 @@ static void Qaullib_WwwSetInterface(struct mg_connection *conn, const struct mg_
 			printf("set interface automatically set\n");
 	}
 
-	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
 
 	free(post);
@@ -541,7 +541,7 @@ static void Qaullib_WwwSetOpenUrl(struct mg_connection *conn, const struct mg_re
 	printf("set event url to open: %s\n", qaullib_AppEventOpenURL);
 	Qaullib_Appevent_LL_Add(QAUL_EVENT_OPENURL);
 
-	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
 
 	free(post);
@@ -556,7 +556,7 @@ static void Qaullib_WwwSetWifiSet(struct mg_connection *conn, const struct mg_re
 	qaul_conf_wifi_set = 1;
 	qaul_gui_pagename_set = 0;
 
-	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{\"ok\":1}");
 }
 
