@@ -47,12 +47,17 @@ $qaul_settings = array(
 	"ip" => "10.67.33.81",
 	"name" => "i_qaul",
 	"domain" => "i.qaul.net",
-	"download_folder" => "/PATH/TO/YOUR/QAUL/DOWNLOAD/FOLDER/"
+	"download_folder" => "/PATH/TO/YOUR/QAUL/DOWNLOAD/FOLDER/",
+	//"twitter_search_language" => "en",
+	"twitter_search_term" => "#HASHTAG"
 );
 
 function get_qaul_setting($key)
 {
 	global $qaul_settings;
-	return $qaul_settings[$key];
+	if(isset($qaul_settings[$key]))
+		return $qaul_settings[$key];
+	
+	return NULL;
 }
 

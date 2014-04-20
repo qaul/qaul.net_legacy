@@ -5,7 +5,7 @@
  */
 
 /**
- * Check a locally running qaul app if new messages arrived. 
+ * Check a locally running qaul app if new private messages or file advertisements arrived. 
  * Put these messages into data base and forward them to twitter.
  * Analyze file advertisements and schedule them in qaul app for downloading.
  * 
@@ -43,7 +43,13 @@ foreach($data->messages as $message)
 		// schedule file
 		file_schedule($message);
 	}
-	else
+	// check if message is public messages
+	elseif($message->type == 1)
+	{
+		// don't do anything
+	}	
+	// check if message is private message
+	elseif($message->type == 2)
 	{
 		// put message into data base
 		$msg = new Msg();
