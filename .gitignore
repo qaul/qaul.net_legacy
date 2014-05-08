@@ -50,6 +50,11 @@ linux/qaul-build-desktop
 linux/qaul/qaul.pro.user
 *.lintian
 
+# Linux GTK
+linux/qaul_gtk/www
+linux/qaul_gtk/qaul
+linux/qaul_gtk/olsrd
+
 # Android
 android/bin
 android/libs
