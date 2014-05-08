@@ -7,8 +7,10 @@
  * qaul helper functions running as root user
  *
  * For this executable the suid bit needs to be set, to be
- * callable from userspace. This is done by qaul.net on the first 
- * program start. 
+ * callable from userspace. This is done by the qaul.net installer. 
+ * The path of the installed qaulhelper binary is:
+ *   /Library/qaul.net/qaulhelper
+ * 
  * To set the suid bit manually for testing, open a Terminal, navigate
  * to the qaulhelper executable binary and type:
  *   sudo chown root qaulhelper
@@ -122,12 +124,12 @@ int delete_networkprofile (int argc, const char * argv[]);
 int create_ibss (int argc, const char * argv[]);
 
 /**
- * configure static IP for wifi
+ * configure static IP
  */
 int set_ip (int argc, const char * argv[]);
 
 /**
- * configure DHCP for wifi
+ * configure DHCP
  */
 int set_dhcp (int argc, const char * argv[]);
 
@@ -400,7 +402,7 @@ int start_portforwarding (int argc, const char * argv[])
             printf("fork for pid0 failed\n");
         else if(pid0 == 0)
         {
-            // redirect standart output and error to /dev/null
+            // redirect standard output and error to /dev/null
             // the program otherwise often didn't return correctly
             fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
             dup2(fd, STDOUT_FILENO);
@@ -418,7 +420,7 @@ int start_portforwarding (int argc, const char * argv[])
             printf("fork for pid1 failed\n");
         else if(pid1 == 0)
         {
-            // redirect standart output and error to /dev/null
+            // redirect standard output and error to /dev/null
             // the program otherwise often didn't return correctly
             fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
             dup2(fd, STDOUT_FILENO);
@@ -436,7 +438,7 @@ int start_portforwarding (int argc, const char * argv[])
             printf("fork for pid2 failed\n");
         else if(pid2 == 0)
         {
-            // redirect standart output and error to /dev/null
+            // redirect standard output and error to /dev/null
             // the program otherwise often didn't return correctly
             fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
             dup2(fd, STDOUT_FILENO);
@@ -453,7 +455,7 @@ int start_portforwarding (int argc, const char * argv[])
             printf("fork for pid3 failed\n");
         else if(pid3 == 0)
         {
-            // redirect standart output and error to /dev/null
+            // redirect standard output and error to /dev/null
             // the program otherwise often didn't return correctly
             fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
             dup2(fd, STDOUT_FILENO);
@@ -907,7 +909,7 @@ int start_gateway (int argc, const char * argv[])
             printf("fork for pid1 failed\n");
         else if(pid1 == 0)
         {
-            // redirect standart output and error to /dev/null
+            // redirect standard output and error to /dev/null
             // the program otherwise often didn't return correctly
             fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
             dup2(fd, STDOUT_FILENO);
@@ -925,7 +927,7 @@ int start_gateway (int argc, const char * argv[])
             printf("fork for pid2 failed\n");
         else if(pid2 == 0)
         {
-            // redirect standart output and error to /dev/null
+            // redirect standard output and error to /dev/null
             // the program otherwise often didn't return correctly
             fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
             dup2(fd, STDOUT_FILENO);
@@ -943,7 +945,7 @@ int start_gateway (int argc, const char * argv[])
             printf("fork for pid3 failed\n");
         else if(pid3 == 0)
         {
-            // redirect standart output and error to /dev/null
+            // redirect standard output and error to /dev/null
             // the program otherwise often didn't return correctly
             fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
             dup2(fd, STDOUT_FILENO);
