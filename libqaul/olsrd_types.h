@@ -50,8 +50,9 @@ typedef int16_t olsr_16_t;
 typedef int32_t olsr_32_t;
 #endif
 
+#undef  MAX
+#define MAX(x,y)	(((x) > (y)) ? (x) : (y))
 
-#define MAX(x,y)	((x) > (y) ? (x) : (y))
 #define CLOSE(fd)  do { close(fd); (fd) = -1; } while (0)
 
 
