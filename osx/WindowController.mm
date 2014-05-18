@@ -521,7 +521,13 @@
 		if (qaulWifiInterfaceConfigurable)
         {
             // channel selection is buggy on many devices, default channel depends on OS, channel 1 usually works
-            success = [qaulConfigWifi connect2network:@"qaul.net" channel:11 interface:qaulWifiInterface service:qaulServiceId];
+            
+            // get bssid and channel
+            char config_ibss_c[32 +1];
+            Qaullib_GetConfString("wifi.ibss", config_ibss_c);
+            NSString *myibss = [NSString stringWithFormat:@"%s", config_ibss_c];
+            
+            success = [qaulConfigWifi connect2network:myibss channel:Qaullib_GetConfInt("wifi.channel") interface:qaulWifiInterface service:qaulServiceId];
             if(success)
                 NSLog(@"connect2network success!!");
             else
