@@ -6,9 +6,9 @@
 #ifndef _OLSRD_QAUL_MESSAGES
 #define _OLSRD_QAUL_MESSAGES
 
-// ------------------------------------------------------------
-// defines
-// ------------------------------------------------------------
+/**
+ * buffer length definition
+ */
 #define MAX_USER_LEN      20
 #define MAX_MESSAGE_LEN  140
 #define MAX_IP_LEN        40
@@ -18,9 +18,9 @@
 #define MAX_HASHSTR_LEN   40
 #define MAX_SUFFIX_LEN     4
 
-// -------------------------------------------------------
-// message definitions
-// -------------------------------------------------------
+/**
+ * message definitions
+ */
 #define QAUL_CHAT_MESSAGE_TYPE 	        222
 #define QAUL_CHAT_PARSER_TYPE	        QAUL_CHAT_MESSAGE_TYPE
 #define QAUL_IPCCOM_MESSAGE_TYPE        223
@@ -35,6 +35,15 @@
 #define QAUL_EXEDISCOVER_PARSER_TYPE    QAUL_EXEDISCOVER_MESSAGE_TYPE
 #define QAUL_EXEAVAILABLE_MESSAGE_TYPE  229
 #define QAUL_EXEAVAILABLE_PARSER_TYPE   QAUL_EXEAVAILABLE_MESSAGE_TYPE
+#define QAUL_IPCMESHTOPO_MESSAGE_TYPE   230
+
+/**
+ * IPC messages
+ */
+#define QAUL_IPCCOM_QUIT                0
+#define QAUL_IPCCOM_GETTOPO             1
+#define QAUL_IPCCOM_GETMESHTOPO         2
+#define QAUL_IPCCOM_MESHTOPO_SENT       3
 
 // message to send
 struct qaul_chat_msg
@@ -78,7 +87,6 @@ struct qaul_exeavailable_msg
 
 union qaul_ipc
 {
-	//char string[250];
 	int integer;
 };
 

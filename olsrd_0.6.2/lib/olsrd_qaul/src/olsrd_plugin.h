@@ -30,7 +30,9 @@
 #include "routing_table.h"
 
 
-// qaul chat message
+/**
+ * qaul message types
+ */
 #define QAUL_CHAT_MESSAGE_TYPE 	        222
 #define QAUL_CHAT_PARSER_TYPE	        QAUL_CHAT_MESSAGE_TYPE
 #define QAUL_IPCCOM_MESSAGE_TYPE        223
@@ -45,6 +47,16 @@
 #define QAUL_EXEDISCOVER_PARSER_TYPE    QAUL_EXEDISCOVER_MESSAGE_TYPE
 #define QAUL_EXEAVAILABLE_MESSAGE_TYPE  229
 #define QAUL_EXEAVAILABLE_PARSER_TYPE   QAUL_EXEAVAILABLE_MESSAGE_TYPE
+#define QAUL_IPCMESHTOPO_MESSAGE_TYPE   230
+
+/**
+ * IPC messages
+ */
+#define QAUL_IPCCOM_QUIT                0
+#define QAUL_IPCCOM_GETTOPO             1
+#define QAUL_IPCCOM_GETMESHTOPO         2
+#define QAUL_IPCCOM_MESHTOPO_SENT        3
+
 
 #define PLUGIN_NAME    "qaul.net mesh plugin"
 #define PLUGIN_VERSION "0.1"

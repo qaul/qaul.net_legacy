@@ -1,6 +1,8 @@
-# 
-# written by contact@wachter-jud.net
-# LICENCE GPL
+#
+# qaul.net olsrd plugin Makefile
+#
+# qaul.net is free software
+# licensed under GPL (version 3)
 #
 
 OLSRD_PLUGIN =	true

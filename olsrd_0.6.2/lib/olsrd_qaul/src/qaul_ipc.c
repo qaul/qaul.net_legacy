@@ -204,14 +204,18 @@ void qaul_ipc_evaluate_com(union olsr_message *msg)
 	struct qaul_ipc_msg *ipcCom = ( struct qaul_ipc_msg *)ARM_NOWARN_ALIGN(&msg->v4.message);
 	switch(ipcCom->type)
 	{
-		case 0:
+		case QAUL_IPCCOM_QUIT:
 			// exit olsrd
 			OLSR_PRINTF(1, "[Qaul] ipc EXIT command received!\n");
 			olsr_exit("[Qaul] exit message received", EXIT_FAILURE);
 			break;
-		case 1:
-			OLSR_PRINTF(1, "[Qaul] ipc command received: 1\n");
+		case QAUL_IPCCOM_GETTOPO:
+			OLSR_PRINTF(1, "[Qaul] ipc GET TOPO command received: 1\n");
 			qaul_net_topo2gui();
+			break;
+		case QAUL_IPCCOM_GETMESHTOPO:
+			OLSR_PRINTF(1, "[Qaul] ipc GET MESHTOPO command received: 2\n");
+			qaul_net_meshtopo2gui();
 			break;
 		default:
 			OLSR_PRINTF(1, "[Qaul] not a known ipc command: %i\n", ipcCom->type);
