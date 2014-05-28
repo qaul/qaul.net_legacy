@@ -1,5 +1,8 @@
 #
-# File:  Makefile for application
+# qaul.net GTK Linux application Makefile
+#
+# qaul.net is free software
+# licensed under GPL (version 3)
 #
 
 TOP:=$(dir $(lastword $(MAKEFILE_LIST)))

@@ -16,6 +16,9 @@
 
 // ------------------------------------------------------------
 
+/// GUI
+GtkWidget *qaulMainWindow;
+
 static void destroyWindowCb(GtkWidget* widget, GtkWidget* window);
 static gboolean closeWebViewCb(WebKitWebView* webView, GtkWidget* window);
 GdkPixbuf *create_pixbuf(const gchar * filename);
@@ -31,6 +34,16 @@ int qaulConfigureCounter;
 gint qaulConfigureTimer;
 gboolean qaul_configure(gpointer data);
 
+/// configuration tasks
+void qaul_olsrdStart(void);
+void qaul_olsrdStop(void);
+void qaul_startPortForwarding(void);
+void qaul_stopPortForwarding(void);
+void qaul_configFindWifiInterface(void);
+void qaul_configFindInterfaces(void);
+void qaul_configWifi(void);
+void qaul_configIP(void);
+
 /// timers
 gint qaulTimerEvents;
 gint qaulTimerSockets;
@@ -44,8 +57,7 @@ gboolean qaul_timerTopology(gpointer data);
 int main(int argc, char *argv[])
 {
 	char cCurrentPath[FILENAME_MAX];
-	GtkWidget *window;
-	
+
 	qaulConfigureCounter = 0;
 	qaulTimerEvents = 0;
 	qaulTimerSockets = 0;
@@ -67,18 +79,18 @@ int main(int argc, char *argv[])
 	if(!Qaullib_WebserverStart())
 		printf("Webserver startup failed\n");
 	Qaullib_ConfigStart();
-	
+
 	// start configuration timer
 	qaulConfigureTimer = g_timeout_add(500, qaul_configure, NULL);
-	
+
 	// open window
 	gtk_init(&argc,&argv);
 
     // Create a window that will contain the browser instance
-    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_default_size(GTK_WINDOW(window), 400, 592);
-    gtk_window_set_title(GTK_WINDOW(window), "qaul.net - قول");
-    gtk_window_set_icon(GTK_WINDOW(window), create_pixbuf("app_icon.png"));
+    qaulMainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_default_size(GTK_WINDOW(qaulMainWindow), 400, 592);
+    gtk_window_set_title(GTK_WINDOW(qaulMainWindow), "qaul.net - قول");
+    gtk_window_set_icon(GTK_WINDOW(qaulMainWindow), create_pixbuf("app_icon.png"));
 
     // Create a browser instance
     WebKitWebView *webView = WEBKIT_WEB_VIEW(webkit_web_view_new());
@@ -91,11 +103,11 @@ int main(int argc, char *argv[])
 
     // Set up callbacks so that if either the main window or the browser instance is
     // closed, the program will exit
-    g_signal_connect(window, "destroy", G_CALLBACK(destroyWindowCb), NULL);
-    g_signal_connect(webView, "close-web-view", G_CALLBACK(closeWebViewCb), window);
+    g_signal_connect(qaulMainWindow, "destroy", G_CALLBACK(destroyWindowCb), NULL);
+    g_signal_connect(webView, "close-web-view", G_CALLBACK(closeWebViewCb), qaulMainWindow);
 
     // Put the scrollable area into the main window
-    gtk_container_add(GTK_CONTAINER(window), scrolledWindow);
+    gtk_container_add(GTK_CONTAINER(qaulMainWindow), scrolledWindow);
 
     // Load a web page into the browser instance
     webkit_web_view_load_uri(webView, "http://127.0.0.1:8081/jqm_qaul.html");
@@ -105,13 +117,13 @@ int main(int argc, char *argv[])
     gtk_widget_grab_focus(GTK_WIDGET(webView));
 
     // Make sure the main window and all its contents are visible
-    gtk_widget_show_all(window);
+    gtk_widget_show_all(qaulMainWindow);
 
     // Run the main GTK+ event loop
     gtk_main();
 
     return 0;
-	
+
 /*
 	printf("----------------------------------------------------\n");
 	printf(" config started \n");
@@ -247,9 +259,9 @@ gboolean qaul_configure(gpointer data)
     if(qaulConfigureCounter == 20)
     {
         // TODO: configure network interface
-        
+
         //printf("[configure] search wifi interface \n");
-        //if(QaulWifiGetInterface()) 
+        //if(QaulWifiGetInterface())
 			//qaulConfigureCounter = 21;
         //else
         //{
@@ -277,7 +289,7 @@ gboolean qaul_configure(gpointer data)
     if(qaulConfigureCounter == 30)
     {
         printf("[configure] check username \n");
-        if(Qaullib_ExistsUsername()) 
+        if(Qaullib_ExistsUsername())
 			qaulConfigureCounter = 40;
         else
         {
@@ -290,11 +302,10 @@ gboolean qaul_configure(gpointer data)
     if(qaulConfigureCounter == 40)
     {
         printf("[configure] start olsrd \n");
-        
+
         // TODO: start olsrd
-        //qaulConfigureCounter = 41;
-        //QaulOlsrdStart();
-        
+        qaul_olsrdStart();
+
         qaulConfigureCounter = 44;
     }
 
@@ -309,13 +320,14 @@ gboolean qaul_configure(gpointer data)
     // start captive portal
     if(qaulConfigureCounter == 46)
     {
-        Qaullib_SetConfVoIP();
+    	printf("[configure] start captive portal \n");
+    	Qaullib_SetConfVoIP();
         Qaullib_UDP_StartServer();
         Qaullib_CaptiveStart();
-        
+
         // TODO: configure firewall
-        //QaulConfigureFirewall();
-        
+        //qaul_startPortForwarding();
+
         qaulConfigureCounter = 50;
     }
 
@@ -323,10 +335,10 @@ gboolean qaul_configure(gpointer data)
     if(qaulConfigureCounter == 50)
     {
         printf("[configure] timers \n");
-        
+
 		// start timers
 		qaulTimerEvents = g_timeout_add(10, qaul_timerSocket, NULL);
-		qaulTimerSockets = g_timeout_add(100, qaul_timerSocket, NULL);
+		qaulTimerSockets = g_timeout_add(100, qaul_timerEvent, NULL);
 		qaulTimerTopology = g_timeout_add(5000, qaul_timerTopology, NULL);
 
         Qaullib_ConfigurationFinished();
@@ -340,65 +352,149 @@ gboolean qaul_configure(gpointer data)
 		printf("[configure] finished \n");
 		return FALSE;
 	}
-	
+
 	qaulConfigureCounter++;
 	return TRUE;
 }
 
+
+void qaul_olsrdStart(void)
+{
+	system("/usr/share/qaul/qaulhelper startolsrd no wlan0");
+}
+
+void qaul_olsrdStop(void)
+{
+	system("/usr/share/qaul/qaulhelper stopolsrd");
+}
+
+void qaul_startPortForwarding(void)
+{
+
+}
+
+void qaul_stopPortForwarding(void)
+{
+
+}
+
+void qaul_configFindWifiInterface(void)
+{
+
+}
+
+void qaul_configFindInterfaces(void)
+{
+
+}
+
+void qaul_configWifi(void)
+{
+
+}
+
+void qaul_configIP(void)
+{
+
+}
+
+
 gboolean qaul_timerEvent(gpointer data)
 {
-    int myEvent = Qaullib_TimedCheckAppEvent();
-/*
+    int myEvent;
+    gchar myFilePath[MAX_URL_LEN +8];
+	GError *myError;
+	GtkWidget *myDialog;
+	char *myFileChoose;
+
+    myEvent = Qaullib_TimedCheckAppEvent();
+
     if(myEvent > 0)
     {
-        if(myEvent == QAUL_EVENT_CHOOSEFILE)
-        {
-            // open file selection
-            QString fileName = QFileDialog::getOpenFileName(
-                        this,
-                        tr("Add File"),
-                        "/home",
-                        tr("Files (*.*)"));
-            // file was selected
-            if(fileName != NULL)
-            {
-                qDebug() << "file selected " << fileName;
-                Qaullib_FilePicked(2, fileName.toLocal8Bit().data());
-            }
-            else
-            {
-                qDebug() << "file selection canceld ";
-            }
+		printf("qaul_timerEvent: event [%i] found \n", myEvent);
 
+    	if(myEvent == QAUL_EVENT_CHOOSEFILE)
+        {
+			printf("QAUL_EVENT_CHOOSEFILE \n");
+    		myDialog = gtk_file_chooser_dialog_new("Choose File",
+								  GTK_WINDOW(qaulMainWindow),
+								  GTK_FILE_CHOOSER_ACTION_OPEN,
+								  GTK_STOCK_CANCEL,
+								  GTK_RESPONSE_CANCEL,
+								  GTK_STOCK_OPEN,
+								  GTK_RESPONSE_ACCEPT,
+								  NULL);
+			if (gtk_dialog_run(GTK_DIALOG(myDialog)) == GTK_RESPONSE_ACCEPT)
+			{
+				myFileChoose = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(myDialog));
+				Qaullib_FilePicked(2, myFileChoose);
+				g_free(myFileChoose);
+			}
+			gtk_widget_destroy(myDialog);
         }
         else if(myEvent == QAUL_EVENT_OPENFILE)
         {
-            // open file in default application
-            QString filepath = "file://";
-            filepath += Qaullib_GetAppEventOpenPath();
-            qDebug() << filepath;
-            QDesktopServices::openUrl(QUrl(filepath));
+			printf("QAUL_EVENT_OPENFILE \n");
+
+        	// open file in default program
+            myError = NULL;
+            g_snprintf(myFilePath, MAX_URL_LEN +8, "file://%s", Qaullib_GetAppEventOpenPath());
+            if(gtk_show_uri(gdk_screen_get_default(), myFilePath, gtk_get_current_event_time(), &myError))
+				printf("Open file %s\n", myFilePath);
+			else
+				printf("Error opening file %s\n", myFilePath);
+
+        	if(myError != NULL)
+        	{
+        		g_printerr("Error QAUL_EVENT_OPENFILE: %s\n", myError->message);
+        		g_error_free(myError);
+        	}
         }
         else if(myEvent == QAUL_EVENT_OPENURL)
         {
-            // open URL in browser
-            QString urlpath = Qaullib_GetAppEventOpenURL();
-            qDebug() << urlpath;
-            QDesktopServices::openUrl(QUrl(urlpath));
+			printf("QAUL_EVENT_OPENURL \n");
+
+        	// open URL in default browser
+        	myError = NULL;
+//            if(gtk_show_uri(
+//					gdk_screen_get_default(),
+//					Qaullib_GetAppEventOpenURL(),
+//					gtk_get_current_event_time(),
+//					&myError
+//				))
+            if(gtk_show_uri(
+					NULL,
+					Qaullib_GetAppEventOpenURL(),
+					GDK_CURRENT_TIME,
+					&myError
+				))
+				printf("Open URL %s\n", Qaullib_GetAppEventOpenURL());
+			else
+				printf("Error opening URL %s\n", Qaullib_GetAppEventOpenURL());
+
+        	if(myError != NULL)
+        	{
+        		g_printerr("Error QAUL_EVENT_OPENURL: %s\n", myError->message);
+        		g_error_free(myError);
+        	}
         }
         else if(myEvent == QAUL_EVENT_QUIT)
         {
+			printf("QAUL_EVENT_QUIT \n");
+
             // quit application
-            QApplication::quit();
+			qaul_onquit();
+			gtk_main_quit();
         }
-        else if(myEvent == QAUL_EVENT_NOTIFY && myEvent == QAUL_EVENT_RING)
+        else if(myEvent == QAUL_EVENT_NOTIFY || myEvent == QAUL_EVENT_RING)
         {
+			printf("QAUL_EVENT_NOTIFY || QAUL_EVENT_RING \n");
+
             // play beep
-            // does not work under linux
-            QApplication::beep();
+            gdk_beep();
         }
     }
-*/
+
 	return TRUE;
 }
 
