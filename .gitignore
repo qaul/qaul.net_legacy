@@ -54,6 +54,7 @@ linux/qaul/qaul.pro.user
 linux/qaul_gtk/www
 linux/qaul_gtk/qaul
 linux/qaul_gtk/olsrd
+linux/qaulhelper/qaulhelper
 
 # Android
 android/bin
