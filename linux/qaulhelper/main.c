@@ -7,10 +7,10 @@
  * qaul helper functions running as root user
  *
  * For this executable the suid bit needs to be set, to be
- * callable from userspace. This is done by the qaul.net installer. 
+ * callable from userspace. This is done by the qaul.net installer.
  * The path of the installed qaulhelper binary is:
  *   /usr/share/qaul/qaulhelper
- * 
+ *
  * To set the suid bit manually for testing, open a Terminal, navigate
  * to the qaulhelper executable binary and type:
  *   sudo chown root qaulhelper
@@ -19,7 +19,7 @@
  *
  *
  * usage:
- *   qaulhelper startolsrd <ISGATEWAY yes|no> <INTERFACE> 
+ *   qaulhelper startolsrd <ISGATEWAY yes|no> <INTERFACE>
  *   qaulhelper startolsrd yes wlan0
  *   qaulhelper stopolsrd
  *   qaulhelper stopolsrd
@@ -109,7 +109,7 @@ int set_dns (int argc, const char * argv[]);
 
 /**
  * start gateway
- * 
+ *
  * this function needs to be called as root
  */
 int start_gateway (int argc, const char * argv[]);
@@ -200,15 +200,11 @@ int main (int argc, const char * argv[])
         }
         else if(strncmp(argv[1], "configurewifi", 10) == 0)
         {
-            create_ibss(argc, argv);
+            configure_wifi(argc, argv);
         }
         else if(strncmp(argv[1], "setip", 5) == 0)
         {
             set_ip(argc, argv);
-        }
-        else if(strncmp(argv[1], "setdhcp", 7) == 0)
-        {
-            set_dhcp(argc, argv);
         }
         else if(strncmp(argv[1], "setdns", 6) == 0)
         {
@@ -259,7 +255,7 @@ int main (int argc, const char * argv[])
         printf("  qaulhelper setdns wlan0\n");
         printf("\n");
     }
-    
+
     return 0;
 }
 
@@ -270,7 +266,7 @@ int start_olsrd (int argc, const char * argv[])
     int status, fd;
     char s[256];
     printf("start olsrd\n");
-    
+
     if(argc >= 4)
     {
         // validate arguments
@@ -278,16 +274,16 @@ int start_olsrd (int argc, const char * argv[])
             sprintf(s,"/usr/share/qaul/olsrd_linux_gw.conf");
         else
             sprintf(s,"/usr/share/qaul/olsrd_linux.conf");
-        
+
         if (validate_interface(argv[3]) == 0)
         {
             printf("argument 2 not valid\n");
             return 0;
         }
-        
+
         // become root
         setuid(0);
-        
+
         // start olsrd
         pid1 = fork();
         if (pid1 < 0)
@@ -303,7 +299,7 @@ int start_olsrd (int argc, const char * argv[])
         }
         else
             waitpid(pid1, &status, 0);
-        
+
         printf("olsrd started\n");
     }
     else
@@ -317,7 +313,7 @@ int stop_olsrd (int argc, const char * argv[])
     pid_t pid1;
     int status;
     printf("stop olsrd\n");
-    
+
     // become root
     setuid(0);
 
@@ -326,10 +322,10 @@ int stop_olsrd (int argc, const char * argv[])
     if (pid1 < 0)
         printf("fork for pid1 failed\n");
     else if(pid1 == 0)
-        execl("/usr/bin/killall", "killall", "olsrd", (char*)0); //execl("/usr/bin/killall", "killall", "olsrd", (char*)0);
+        execl("/usr/bin/killall", "killall", "olsrd", (char*)0);
     else
         waitpid(pid1, &status, 0);
-    
+
     printf("olsrd stopped\n");
 	return 0;
 }
@@ -339,7 +335,7 @@ int start_portforwarding (int argc, const char * argv[])
     pid_t pid1, pid2, pid3;
     int fd, status;
     printf("start portforwarding\n");
-    
+
     if(argc >= 4)
     {
         // validate arguments
@@ -348,7 +344,7 @@ int start_portforwarding (int argc, const char * argv[])
             printf("argument 1 not valid\n");
             return 0;
         }
-        
+
         // become root
         setuid(0);
 
@@ -387,7 +383,7 @@ int start_portforwarding (int argc, const char * argv[])
         }
         else
             printf("udp port 53 forwarded\n");
-               
+
         // forward DHCP port via portfwd
         pid3 = fork();
         if (pid3 < 0)
@@ -410,7 +406,7 @@ int start_portforwarding (int argc, const char * argv[])
     }
     else
         printf("missing argument\n");
-    
+
     return 0;
 }
 
@@ -419,7 +415,7 @@ int stop_portforwarding (int argc, const char * argv[])
     pid_t pid1, pid2;
     int status;
     printf("stop port forwarding\n");
-    
+
     // become root
     setuid(0);
 
@@ -431,7 +427,7 @@ int stop_portforwarding (int argc, const char * argv[])
         execl("/sbin/iptables", "iptables", "-t", "nat", "-D", "PREROUTING", "1", (char*)0);
     else
         printf("tcp port 80 forwarding stopped\n");
-    
+
     // stop portfwd
     pid2 = fork();
     if (pid2 < 0)
@@ -450,7 +446,7 @@ int start_networkmanager (int argc, const char * argv[])
     pid_t pid1;
     int status;
     printf("start network manager\n");
-    
+
 	// become root
 	setuid(0);
 
@@ -464,7 +460,7 @@ int start_networkmanager (int argc, const char * argv[])
 		waitpid(pid1, &status, 0);
 
 	printf("network manager started\n");
-    
+
     return 0;
 }
 
@@ -473,7 +469,7 @@ int stop_networkmanager (int argc, const char * argv[])
     pid_t pid1;
     int status;
     printf("stop network manager\n");
-    
+
     // become root
     setuid(0);
 
@@ -492,46 +488,38 @@ int stop_networkmanager (int argc, const char * argv[])
 
 int enable_wifi (int argc, const char * argv[])
 {
-    pid_t pid1;
+    pid_t pid1, pid2;
     int status;
     printf("enable wifi\n");
-    
-    if(argc >= 4)
-    {
-        // validate arguments
-        if (validate_number(argv[2]) == 0)
-        {
-            printf("argument 1 not valid\n");
-            return 0;
-        }
-        if (validate_interface(argv[3]) == 0)
-        {
-            printf("argument 2 not valid\n");
-            return 0;
-        }
-        
-        // become root
-        setuid(0);
 
-        // enable wifi
-        pid1 = fork();
-        if (pid1 < 0)
-            printf("fork for pid1 failed\n");
-        else if(pid1 == 0)
-        {
-            if(atoi(argv[2]) <= NSAppKitVersionNumber10_5)
-                execl("/usr/sbin/networksetup", "networksetup", "-setairportpower", "on", (char*)0);
-            else
-                execl("/usr/sbin/networksetup", "networksetup", "-setairportpower", argv[3], "on", (char*)0);
-        }
-        else
-            waitpid(pid1, &status, 0);
-        
-        printf("wifi enabled\n");
-    }
-    else
-        printf("missing argument\n");
-    
+	// become root
+	setuid(0);
+
+	// deblock wifi
+	pid1 = fork();
+	if (pid1 < 0)
+		printf("fork for pid1 failed\n");
+	else if(pid1 == 0)
+	{
+		execl("rfkill", "unblock", "all", (char*)0);
+	}
+	else
+		waitpid(pid1, &status, 0);
+
+	// enable wifi
+	pid2 = fork();
+	if (pid2 < 0)
+		printf("fork for pid1 failed\n");
+	else if(pid2 == 0)
+	{
+		execl("nmcli", "nm", "wifi", "on", (char*)0);
+	}
+	else
+		waitpid(pid2, &status, 0);
+
+
+	printf("wifi enabled\n");
+
 	return 0;
 }
 
@@ -539,8 +527,9 @@ int configure_wifi (int argc, const char * argv[])
 {
     pid_t pid1, pid2, pid3, pid4, pid5, pid6;
     int status;
+    char s[256];
     printf("create or join ibss\n");
-    
+
     if(argc >= 5)
     {
         // validate arguments
@@ -559,7 +548,7 @@ int configure_wifi (int argc, const char * argv[])
             printf("argument 3 not valid\n");
             return 0;
         }
-        
+
         // become root
         setuid(0);
 
@@ -573,9 +562,9 @@ int configure_wifi (int argc, const char * argv[])
         }
         else
             waitpid(pid1, &status, 0);
-		
+
 		printf("wifi interface down\n");
-		
+
         // set adhoc mode
         pid2 = fork();
         if (pid2 < 0)
@@ -586,7 +575,7 @@ int configure_wifi (int argc, const char * argv[])
         }
         else
             waitpid(pid2, &status, 0);
-        
+
         printf("adhoc mode set\n");
 
         // set channel
@@ -599,11 +588,11 @@ int configure_wifi (int argc, const char * argv[])
         }
         else
             waitpid(pid3, &status, 0);
-		
+
 		printf("channel set\n");
-		
+
         // set essid
-        pid1 = fork();
+        pid4 = fork();
         if (pid4 < 0)
             printf("fork for pid4 failed\n");
         else if(pid4 == 0)
@@ -625,7 +614,7 @@ int configure_wifi (int argc, const char * argv[])
 				printf("argument 4 not valid\n");
 				return 0;
 			}
-			
+
 			// take wifi interface down
 			pid5 = fork();
 			if (pid5 < 0)
@@ -636,7 +625,7 @@ int configure_wifi (int argc, const char * argv[])
 			}
 			else
 				waitpid(pid5, &status, 0);
-			
+
 			printf("BSSID set\n");
 		}
 
@@ -655,7 +644,7 @@ int configure_wifi (int argc, const char * argv[])
     }
     else
         printf("missing argument\n");
-    
+
 	return 0;
 }
 
@@ -665,7 +654,7 @@ int set_ip (int argc, const char * argv[])
     int status;
     char s[256];
     printf("configure ip\n");
-    
+
     if(argc >= 6)
     {
         // validate arguments
@@ -689,7 +678,7 @@ int set_ip (int argc, const char * argv[])
             printf("argument 4 not valid\n");
             return 0;
         }
-        
+
         // become root
         setuid(0);
 
@@ -709,7 +698,7 @@ int set_ip (int argc, const char * argv[])
     }
     else
         printf("missing argument\n");
-    
+
 	return 0;
 }
 
@@ -718,57 +707,45 @@ int set_dns (int argc, const char * argv[])
     pid_t pid1, pid2, pid3;
     int status;
     printf("set DNS\n");
-    
-    if(argc >= 3)
-    {
-        // validate arguments
-        if (validate_service(argv[2]) == 0)
-        {
-            printf("argument 1 not valid\n");
-            return 0;
-        }
 
-        // set root rights
-        setuid(0);
+	// set root rights
+	setuid(0);
 
-        // remove tail
-        pid1 = fork();
-        if (pid1 < 0)
-            printf("fork for pid1 failed\n");
-        else if(pid1 == 0)
-        {
-            execl("/bin/rm", "rm", "/etc/resolvconf/resolv.conf.d/tail", (char*)0);
-		}
-        else
-            waitpid(pid1, &status, 0);
+	// remove tail
+	pid1 = fork();
+	if (pid1 < 0)
+		printf("fork for pid1 failed\n");
+	else if(pid1 == 0)
+	{
+		execl("/bin/rm", "rm", "/etc/resolvconf/resolv.conf.d/tail", (char*)0);
+	}
+	else
+		waitpid(pid1, &status, 0);
 
-        // set dns
-        pid2 = fork();
-        if (pid2 < 0)
-            printf("fork for pid2 failed\n");
-        else if(pid2 == 0)
-        {
-            execl("/bin/cp", "/usr/share/qaul/tail", "/etc/resolvconf/resolv.conf.d/tail", (char*)0);
-		}
-        else
-            waitpid(pid2, &status, 0);
-        
-        // reload resolv file
-        pid1 = fork();
-        if (pid3 < 0)
-            printf("fork for pid3 failed\n");
-        else if(pid3 == 0)
-        {
-            execl("/sbin/resolvconf", "resolvconf", "-u", (char*)0);
-		}
-        else
-            waitpid(pid3, &status, 0);
+	// set dns
+	pid2 = fork();
+	if (pid2 < 0)
+		printf("fork for pid2 failed\n");
+	else if(pid2 == 0)
+	{
+		execl("/bin/cp", "/usr/share/qaul/tail", "/etc/resolvconf/resolv.conf.d/tail", (char*)0);
+	}
+	else
+		waitpid(pid2, &status, 0);
 
-        printf("DNS set\n");
-    }
-    else
-        printf("missing argument\n");
-    
+	// reload resolv file
+	pid3 = fork();
+	if (pid3 < 0)
+		printf("fork for pid3 failed\n");
+	else if(pid3 == 0)
+	{
+		execl("/sbin/resolvconf", "resolvconf", "-u", (char*)0);
+	}
+	else
+		waitpid(pid3, &status, 0);
+
+	printf("DNS set\n");
+
     return 0;
 }
 
@@ -777,7 +754,7 @@ int start_gateway (int argc, const char * argv[])
     pid_t pid1, pid2, pid3;
     int fd, status;
     printf("start gateway\n");
-    
+
     if(argc >= 3)
     {
         // validate arguments
@@ -786,13 +763,13 @@ int start_gateway (int argc, const char * argv[])
             printf("argument 1 not valid\n");
             return 0;
         }
-        
-        // NOTE: don't do that withsetuid, for that the user 
+
+        // NOTE: don't do that withsetuid, for that the user
         //       has to enter password for this service
         //
         // become root
         //setuid(0);
-        
+
         // set gateway variable
         pid1 = fork();
         if (pid1 < 0)
@@ -810,7 +787,7 @@ int start_gateway (int argc, const char * argv[])
         }
         else
             waitpid(pid1, &status, 0);
-        
+
         // start natd
         pid2 = fork();
         if (pid2 < 0)
@@ -828,8 +805,8 @@ int start_gateway (int argc, const char * argv[])
         }
         else
             waitpid(pid2, &status, 0);
-        
-        // set 
+
+        // set
         pid3 = fork();
         if (pid3 < 0)
             printf("fork for pid3 failed\n");
@@ -846,12 +823,12 @@ int start_gateway (int argc, const char * argv[])
         }
         else
             printf("NAT activated\n");
-        
+
         printf("gateway started\n");
     }
     else
         printf("missing argument\n");
-    
+
     return 0;
 }
 
@@ -859,10 +836,10 @@ int stop_gateway (int argc, const char * argv[])
 {
     pid_t pid1, pid2;
     printf("stop gateway\n");
-    
+
     // become root
     setuid(0);
-    
+
     // remove firewall rules
     pid1 = fork();
     if (pid1 < 0)
@@ -871,7 +848,7 @@ int stop_gateway (int argc, const char * argv[])
         execl("/sbin/ipfw", "ipfw", "delete", "1055", (char*)0);
     else
         printf("firewall rules removed\n");
-    
+
     // stop port forwarding
     pid2 = fork();
     if (pid2 < 0)
@@ -880,7 +857,7 @@ int stop_gateway (int argc, const char * argv[])
         execl("/usr/bin/killall", "killall", "natd", (char*)0);
     else
         printf("natd stopped\n");
-    
+
     printf("gateway stopped\n");
     return 0;
 }
@@ -893,14 +870,14 @@ int stop_gateway (int argc, const char * argv[])
 int validate_ip (const char* str)
 {
     int i;
-    
+
     // check length
     if(strlen(str)>15)
     {
         printf("argument too long\n");
         return 0;
     }
-    
+
     // check numbers and dots
     for(i=0; i<strlen(str); i++)
     {
@@ -916,14 +893,14 @@ int validate_ip (const char* str)
 int validate_interface (const char* str)
 {
     int i;
-    
+
     // check length
     if(strlen(str)>20)
     {
         printf("argument too long\n");
         return 0;
     }
-    
+
     // check numbers and dots
     for(i=0; i<strlen(str); i++)
     {
@@ -941,14 +918,14 @@ int validate_interface (const char* str)
 int validate_number (const char* str)
 {
     int i;
-    
+
     // check length
     if(strlen(str)>10)
     {
         printf("argument too long\n");
         return 0;
     }
-    
+
     // check numbers and dots
     for(i=0; i<strlen(str); i++)
     {
@@ -964,21 +941,21 @@ int validate_number (const char* str)
 int validate_path (const char* str)
 {
     int i;
-    
+
     // check length
     if(strlen(str)>200)
     {
         printf("argument too long\n");
         return 0;
     }
-    
+
     // check if it is a valid path
     if(strncmp(&str[0], "/", 1) != 0)
     {
         printf("not an absolute path\n");
         return 0;
     }
-    
+
     for(i=0; i<strlen(str); i++)
     {
         if(
@@ -989,21 +966,21 @@ int validate_path (const char* str)
             return 0;
         }
     }
-        
+
     return 1;
 }
 
 int validate_essid (const char* str)
 {
     int i;
-    
+
     // check length
     if(strlen(str)>50)
     {
         printf("argument too long\n");
         return 0;
     }
-    
+
     // check numbers and dots
     for(i=0; i<strlen(str); i++)
     {
@@ -1024,14 +1001,14 @@ int validate_essid (const char* str)
 int validate_bssid (const char* str)
 {
     int i;
-    
+
     // check length
     if(strlen(str)!=17)
     {
         printf("BSSID not correct\n");
         return 0;
     }
-    
+
     // check validity of positions
     for(i=0; i<strlen(str); i++)
     {
@@ -1079,7 +1056,7 @@ int validate_char_number (char mychar)
         return 1;
     if(strncmp(&mychar, "9", 1)==0)
         return 1;
-    
+
     return 0;
 }
 
@@ -1137,7 +1114,7 @@ int validate_char_letter (char mychar)
         return 1;
     if(strncmp(&mychar, "z", 1)==0 || strncmp(&mychar, "Z", 1)==0)
         return 1;
-    
+
     return 0;
 }
 
@@ -1185,6 +1162,6 @@ int validate_char_problematic (char mychar)
         return 0;
     if(strncmp(&mychar, "^", 1) == 0)
         return 0;
-    
+
     return 1;
 }
