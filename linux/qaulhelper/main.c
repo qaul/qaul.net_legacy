@@ -182,6 +182,15 @@ int main (int argc, const char * argv[])
         {
             start_portforwarding(argc, argv);
         }
+        else if(strncmp(argv[1], "startgateway", 12) == 0)
+        {
+            start_gateway(argc, argv);
+        }
+        else if(strncmp(argv[1], "stopgateway", 11) == 0)
+        {
+            stop_gateway(argc, argv);
+        }
+#ifdef WITHOUT_NETWORKMANAGER
         else if(strncmp(argv[1], "stopportforwarding", 18) == 0)
         {
             stop_portforwarding(argc, argv);
@@ -210,14 +219,7 @@ int main (int argc, const char * argv[])
         {
             set_dns(argc, argv);
         }
-        else if(strncmp(argv[1], "startgateway", 12) == 0)
-        {
-            start_gateway(argc, argv);
-        }
-        else if(strncmp(argv[1], "stopgateway", 11) == 0)
-        {
-            stop_gateway(argc, argv);
-        }
+#endif // WITHOUT_NETWORKMANAGER
         else
         {
             printf("unknown command ...\n");
@@ -241,6 +243,7 @@ int main (int argc, const char * argv[])
         printf("  qaulhelper startgateway wlan0\n");
         printf("  qaulhelper stopgateway\n");
         printf("  qaulhelper stopgateway\n");
+#ifdef WITHOUT_NETWORKMANAGER
         printf("  qaulhelper startnetworkmanager\n");
         printf("  qaulhelper startnetworkmanager\n");
         printf("  qaulhelper stopnetworkmanager\n");
@@ -253,6 +256,7 @@ int main (int argc, const char * argv[])
         printf("  qaulhelper setip wlan0 10.213.28.55 8 10.255.255.255\n");
         printf("  qaulhelper setdns <INTERFACE>\n");
         printf("  qaulhelper setdns wlan0\n");
+#endif // WITHOUT_NETWORKMANAGER
         printf("\n");
     }
 
@@ -440,6 +444,121 @@ int stop_portforwarding (int argc, const char * argv[])
     printf("port forwarding stopped\n");
 	return 0;
 }
+
+int start_gateway (int argc, const char * argv[])
+{
+    pid_t pid1, pid2, pid3;
+    int fd, status;
+    printf("start gateway\n");
+
+    if(argc >= 3)
+    {
+        // validate arguments
+        if (validate_interface(argv[2]) == 0)
+        {
+            printf("argument 1 not valid\n");
+            return 0;
+        }
+
+        // NOTE: don't do that withsetuid, for that the user
+        //       has to enter password for this service
+        //
+        // become root
+        //setuid(0);
+
+        // set gateway variable
+        pid1 = fork();
+        if (pid1 < 0)
+            printf("fork for pid1 failed\n");
+        else if(pid1 == 0)
+        {
+            // redirect standart output and error to /dev/null
+            // the program otherwise often didn't return correctly
+            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+            // execute program
+            execl("/usr/sbin/sysctl", "sysctl", "-w", "net.inet.ip.forwarding=1", (char*)0);
+        }
+        else
+            waitpid(pid1, &status, 0);
+
+        // start natd
+        pid2 = fork();
+        if (pid2 < 0)
+            printf("fork for pid2 failed\n");
+        else if(pid2 == 0)
+        {
+            // redirect standart output and error to /dev/null
+            // the program otherwise often didn't return correctly
+            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+            // execute program
+            execl("/usr/sbin/natd", "natd", "-interface", argv[2], (char*)0);
+        }
+        else
+            waitpid(pid2, &status, 0);
+
+        // set
+        pid3 = fork();
+        if (pid3 < 0)
+            printf("fork for pid3 failed\n");
+        else if(pid3 == 0)
+        {
+            // redirect standart output and error to /dev/null
+            // the program otherwise often didn't return correctly
+            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+            // execute program
+            execl("/sbin/ipfw", "ipfw", "add", "1055", "divert", "natd", "all", "from", "any", "to", "any", "via", argv[2], (char*)0);
+        }
+        else
+            printf("NAT activated\n");
+
+        printf("gateway started\n");
+    }
+    else
+        printf("missing argument\n");
+
+    return 0;
+}
+
+int stop_gateway (int argc, const char * argv[])
+{
+    pid_t pid1, pid2;
+    printf("stop gateway\n");
+
+    // become root
+    setuid(0);
+
+    // remove firewall rules
+    pid1 = fork();
+    if (pid1 < 0)
+        printf("fork for pid1 failed\n");
+    else if(pid1 == 0)
+        execl("/sbin/ipfw", "ipfw", "delete", "1055", (char*)0);
+    else
+        printf("firewall rules removed\n");
+
+    // stop port forwarding
+    pid2 = fork();
+    if (pid2 < 0)
+        printf("fork for pid2 failed\n");
+    else if(pid2 == 0)
+        execl("/usr/bin/killall", "killall", "natd", (char*)0);
+    else
+        printf("natd stopped\n");
+
+    printf("gateway stopped\n");
+    return 0;
+}
+
+#ifdef WITHOUT_NETWORKMANAGER
 
 int start_networkmanager (int argc, const char * argv[])
 {
@@ -749,118 +868,7 @@ int set_dns (int argc, const char * argv[])
     return 0;
 }
 
-int start_gateway (int argc, const char * argv[])
-{
-    pid_t pid1, pid2, pid3;
-    int fd, status;
-    printf("start gateway\n");
-
-    if(argc >= 3)
-    {
-        // validate arguments
-        if (validate_interface(argv[2]) == 0)
-        {
-            printf("argument 1 not valid\n");
-            return 0;
-        }
-
-        // NOTE: don't do that withsetuid, for that the user
-        //       has to enter password for this service
-        //
-        // become root
-        //setuid(0);
-
-        // set gateway variable
-        pid1 = fork();
-        if (pid1 < 0)
-            printf("fork for pid1 failed\n");
-        else if(pid1 == 0)
-        {
-            // redirect standart output and error to /dev/null
-            // the program otherwise often didn't return correctly
-            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
-            dup2(fd, STDOUT_FILENO);
-            dup2(fd, STDERR_FILENO);
-            close(fd);
-            // execute program
-            execl("/usr/sbin/sysctl", "sysctl", "-w", "net.inet.ip.forwarding=1", (char*)0);
-        }
-        else
-            waitpid(pid1, &status, 0);
-
-        // start natd
-        pid2 = fork();
-        if (pid2 < 0)
-            printf("fork for pid2 failed\n");
-        else if(pid2 == 0)
-        {
-            // redirect standart output and error to /dev/null
-            // the program otherwise often didn't return correctly
-            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
-            dup2(fd, STDOUT_FILENO);
-            dup2(fd, STDERR_FILENO);
-            close(fd);
-            // execute program
-            execl("/usr/sbin/natd", "natd", "-interface", argv[2], (char*)0);
-        }
-        else
-            waitpid(pid2, &status, 0);
-
-        // set
-        pid3 = fork();
-        if (pid3 < 0)
-            printf("fork for pid3 failed\n");
-        else if(pid3 == 0)
-        {
-            // redirect standart output and error to /dev/null
-            // the program otherwise often didn't return correctly
-            fd = open("/dev/null", O_WRONLY | O_CREAT | O_APPEND);
-            dup2(fd, STDOUT_FILENO);
-            dup2(fd, STDERR_FILENO);
-            close(fd);
-            // execute program
-            execl("/sbin/ipfw", "ipfw", "add", "1055", "divert", "natd", "all", "from", "any", "to", "any", "via", argv[2], (char*)0);
-        }
-        else
-            printf("NAT activated\n");
-
-        printf("gateway started\n");
-    }
-    else
-        printf("missing argument\n");
-
-    return 0;
-}
-
-int stop_gateway (int argc, const char * argv[])
-{
-    pid_t pid1, pid2;
-    printf("stop gateway\n");
-
-    // become root
-    setuid(0);
-
-    // remove firewall rules
-    pid1 = fork();
-    if (pid1 < 0)
-        printf("fork for pid1 failed\n");
-    else if(pid1 == 0)
-        execl("/sbin/ipfw", "ipfw", "delete", "1055", (char*)0);
-    else
-        printf("firewall rules removed\n");
-
-    // stop port forwarding
-    pid2 = fork();
-    if (pid2 < 0)
-        printf("fork for pid2 failed\n");
-    else if(pid2 == 0)
-        execl("/usr/bin/killall", "killall", "natd", (char*)0);
-    else
-        printf("natd stopped\n");
-
-    printf("gateway stopped\n");
-    return 0;
-}
+#endif // WITHOUT_NETWORKMANAGER
 
 
 /**

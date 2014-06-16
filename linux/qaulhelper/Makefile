@@ -15,6 +15,9 @@ LIBS= \
 
 SRC=main.c
 
+ifdef WITHOUT_NETWORKMANAGER
+CFLAGS= -D WITHOUT_NETWORKMANAGER
+endif
 			
 OBJS=$(SRC:.c=.o)
 
@@ -29,6 +32,7 @@ $(EXE): $(OBJS)
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o $@ $(LFLAGS)
 	
 .c.o:
+	@echo "make [WITHOUT_NETWORKMANAGER=1]"
 	@echo lib Makefile - compiling $<
 	@$(CC) $(CFLAGS) -c $< -o $@
 
