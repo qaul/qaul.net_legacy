@@ -49,6 +49,7 @@ LIBS= \
     -luuid \
     -lm \
     \
+    `pkg-config --libs dbus-1` \
 	`pkg-config --libs webkitgtk-3.0`
 #    `pkg-config --libs gtk+-3.0`
 #    `pkg-config --libs glib-2.0`
@@ -70,6 +71,7 @@ CFLAGS= \
 	-I$(PJBASE)/third_party/srtp/crypto/include \
 	-I$(PJBASE)/third_party/srtp/include \
 	\
+	`pkg-config --cflags dbus-1` \
 	`pkg-config --cflags webkitgtk-3.0`
 #	`pkg-config --cflags gtk+-3.0`
 #	`pkg-config --cflags glib-2.0`
@@ -86,7 +88,7 @@ SRC= $(DISTBASE)/libqaul/qaullib.c $(DISTBASE)/libqaul/qaullib_ipc.c $(DISTBASE)
      $(DISTBASE)/libqaul/mongoose/mongoose.c $(DISTBASE)/libqaul/sqlite/sqlite3.c \
      $(DISTBASE)/libqaul/urlcode/urlcode.c $(DISTBASE)/libqaul/polarssl/sha1.c \
      $(DISTBASE)/libqaul/olsrd/mantissa.c $(DISTBASE)/libqaul/olsrd/hashing.c \
-     main.c
+     network.c main.c
 
 LIBDIR= \
 	-L$(PJBASE)/pjlib/lib \

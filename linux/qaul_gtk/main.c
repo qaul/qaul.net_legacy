@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include "../../libqaul/qaullib.h"
 #include "../../libqaul/qaullib_private.h"
+#include "network.h"
 
 #include <gtk/gtk.h>
 #include <webkit/webkit.h>
@@ -33,16 +34,17 @@ void qaul_onquit(void);
 int qaulConfigureCounter;
 gint qaulConfigureTimer;
 gboolean qaul_configure(gpointer data);
+DBusConnection*	network_dbus_connection;
+qaul_dbus_connection_settings network_settings;
+qaul_dbus_device_properties network_device;
+int network_interface_found;
+char network_json_txt[MAX_JSON_LEN +1];
 
 /// configuration tasks
 void qaul_olsrdStart(void);
 void qaul_olsrdStop(void);
 void qaul_startPortForwarding(void);
 void qaul_stopPortForwarding(void);
-void qaul_configFindWifiInterface(void);
-void qaul_configFindInterfaces(void);
-void qaul_configWifi(void);
-void qaul_configIP(void);
 
 /// timers
 gint qaulTimerEvents;
@@ -62,6 +64,7 @@ int main(int argc, char *argv[])
 	qaulTimerEvents = 0;
 	qaulTimerSockets = 0;
 	qaulTimerTopology = 0;
+	network_interface_found = 0;
 
 
 	if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath)))
@@ -73,13 +76,16 @@ int main(int argc, char *argv[])
 	printf ("The current working directory is %s\n", cCurrentPath);
 
 	Qaullib_Init(cCurrentPath);
+	// set configuration
+	Qaullib_SetConf(QAUL_CONF_INTERFACE);
 	// enable debug menu
 	qaul_conf_debug = 1;
 
 	if(!Qaullib_WebserverStart())
 		printf("Webserver startup failed\n");
-	Qaullib_ConfigStart();
 
+	// initialize dbus connection
+	qaul_dbus_init(&network_dbus_connection);
 	// start configuration timer
 	qaulConfigureTimer = g_timeout_add(500, qaul_configure, NULL);
 
@@ -123,81 +129,6 @@ int main(int argc, char *argv[])
     gtk_main();
 
     return 0;
-
-/*
-	printf("----------------------------------------------------\n");
-	printf(" config started \n");
-	printf("----------------------------------------------------\n");
-	// The invoking of Qaullib_GetIP() is mandatory to load the IP.
-	printf("IP: %s\n", Qaullib_GetIP());
-
-	// wait until user name is set
-	int username_flag = 0;
-	while(Qaullib_ExistsUsername() == 0)
-	{
-		if(username_flag == 0)
-		{
-			username_flag = 1;
-			printf("waiting until user name is set ...\n");
-			printf("open web browser with http://localhost:8081/jqm_qaul.html to set it ...\n");
-		}
-		sleep(1);
-	}
-	printf("user name successfully set!\n");
-
-	if(!Qaullib_IpcConnect())
-		printf("Ipc connection failed\n");
-	Qaullib_SetConfVoIP();
-	if(!Qaullib_UDP_StartServer())
-		printf("UDP server failed\n");
-	if(!Qaullib_CaptiveStart())
-		printf("Captive portal failed\n");
-	Qaullib_ConfigurationFinished();
-
-	// test config
-	printf("IP: %s\n", Qaullib_GetIP());
-	printf("Qaul started\n");
-
-	// loop variables
-	int socketCounter = 0;
-	int ipcCounter = 0;
-
-	printf("kill app to exit!\n");
-
-	// main loop
-	while (1) {
-		usleep(10000);
-
-		// get event
-		int event = Qaullib_TimedCheckAppEvent();
-		if(event == QAUL_EVENT_QUIT)
-			printf("quit app\n");
-		else if(event == QAUL_EVENT_CHOOSEFILE)
-			printf("open file chooser\n");
-		else if(event == QAUL_EVENT_OPENFILE)
-			printf("open file\n");
-
-		// check sockets
-		if(socketCounter >= 10)
-		{
-			Qaullib_TimedSocketReceive();
-			socketCounter = 0;
-		}
-		else
-			socketCounter++;
-
-		// get network node IPs
-		// schedule downloads
-		if(ipcCounter >= 500)
-		{
-			Qaullib_IpcSendCom(1);
-			Qaullib_TimedDownload();
-			ipcCounter = 0;
-		}
-		else
-			ipcCounter++;
-	}
-*/
 }
 
 static void destroyWindowCb(GtkWidget* widget, GtkWidget* window)
@@ -230,6 +161,26 @@ void qaul_onquit(void)
 	// stop configuration
 	if(qaulConfigureCounter < 60)
 		g_source_remove(qaulConfigureTimer);
+	else
+	{
+		// stop services
+		qaul_stopPortForwarding();
+		qaul_olsrdStop();
+
+		// stop network
+		// deactivate connection
+		if(qaul_network_connection_deactivate(network_dbus_connection, &network_settings))
+			printf("[quit] connection deactivated\n");
+		else
+			printf("[quit] connection not deactivated\n");
+
+		// delete connection settings
+		if(qaul_network_settings_delete(network_dbus_connection, &network_settings))
+			printf("[quit] connection settings deleted\n");
+		else
+			printf("[quit] connection settings not deleted\n");
+	}
+
 	// stop timers
 	if(qaulTimerEvents)
 		g_source_remove(qaulTimerEvents);
@@ -241,54 +192,86 @@ void qaul_onquit(void)
 
 gboolean qaul_configure(gpointer data)
 {
-    // init
+    // initialize qaul library
     if(qaulConfigureCounter == 0)
     {
         // everything is fine
         Qaullib_ConfigStart();
-        qaulConfigureCounter = 10;
+        qaulConfigureCounter = 3;
     }
 
-    // check autorization
+    // check authorization
     if(qaulConfigureCounter == 10)
     {
-        qaulConfigureCounter = 20;
+        // nothing to be done here
+    	qaulConfigureCounter = 20;
+    }
+
+    // TODO: enable networking
+
+    // get network interface
+    if(qaulConfigureCounter == 20)
+    {
+        // check if interface has been configured manually
+    	if(Qaullib_GetInterfaceManual())
+    	{
+    		printf("[configure] interface manually configured\n");
+    		if(qaul_network_device_get_by_interface(Qaullib_GetInterface(), network_dbus_connection, &network_device))
+    			network_interface_found = 1;
+    		else
+    			printf("[configure] manually configured interface \"%s\" not found\n", Qaullib_GetInterface());
+    	}
+    	// find wifi interface
+    	else
+    	{
+    		if(qaul_network_find_wifi(network_dbus_connection, &network_device))
+    			network_interface_found = 1;
+    		else
+    			printf("[configure] no wifi interface found\n");
+    	}
+
+    	// TODO: enable wifi
+
+    	qaulConfigureCounter = 21;
     }
 
     // configure network interface
-    if(qaulConfigureCounter == 20)
+    if(qaulConfigureCounter == 21)
     {
-        // TODO: configure network interface
+        if(network_interface_found)
+        {
+        	printf("[configure] network interface %s\n", network_device.interface);
 
-        //printf("[configure] search wifi interface \n");
-        //if(QaulWifiGetInterface())
-			//qaulConfigureCounter = 21;
-        //else
-        //{
-			//printf("[configure] no wifi interface found \n");
-            //// TODO: display error screen
-        //}
-        qaulConfigureCounter = 29;
+        	// get network configuration
+        	strncpy(network_settings.ipv4_address, Qaullib_GetIP(), sizeof(network_settings.ipv4_address));
+        	Qaullib_GetConfString("net.gateway", network_settings.ipv4_gateway);
+        	network_settings.ipv4_netmask = Qaullib_GetConfInt("net.mask");
+        	strncpy(network_settings.ipv4_dns1, "178.254.31.11", sizeof(network_settings.ipv4_dns1));
+        	strncpy(network_settings.ipv4_dns2, "77.67.33.81", sizeof(network_settings.ipv4_dns2));
+        	network_settings.wifi_channel = Qaullib_GetConfInt("wifi.channel");
+        	Qaullib_GetConfString("wifi.ibss", network_settings.wifi_ssid);
+
+        	// add network configuration
+        	if(qaul_network_settings_add(network_dbus_connection, &network_settings, &network_device))
+        	{
+        		printf("[configure] network connection setting added: %s\n", network_settings.dbus_connection_path);
+
+        		// activate configuration
+        		if(qaul_network_connection_activate(network_dbus_connection, &network_settings, &network_device))
+        			printf("[configure] network connection activated: %s\n", network_settings.dbus_active_connection_path);
+        		else
+        			printf("[configure] network connection not activated\n");
+        	}
+        	else
+        		printf("[configure] network connection settings not added\n");
+        }
+
+    	qaulConfigureCounter = 29;
     }
-
-    //// configure interface
-    //if(qaulConfigureCounter == 21)
-    //{
-        ////printf("[configure] configure interface \n");
-        ////qaulConfigureCounter = 22;
-        ////// open console with sudo
-        ////printf("[configure] open console \n");
-        ////qaulConfigProcess = new QProcess(this);
-        ////connect(qaulConfigProcess, SIGNAL(started()), this, SLOT(QaulWifiConfigure()));
-        ////connect(qaulConfigProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(QaulConfigureProcessRead()));
-        ////qaulConfigProcess->start("pkexec /bin/bash");
-        //qaulConfigureCounter = 29;
-    //}
 
     // check if username is set
     if(qaulConfigureCounter == 30)
     {
-        printf("[configure] check username \n");
         if(Qaullib_ExistsUsername())
 			qaulConfigureCounter = 40;
         else
@@ -303,7 +286,7 @@ gboolean qaul_configure(gpointer data)
     {
         printf("[configure] start olsrd \n");
 
-        // TODO: start olsrd
+        // start olsrd
         qaul_olsrdStart();
 
         qaulConfigureCounter = 44;
@@ -325,8 +308,8 @@ gboolean qaul_configure(gpointer data)
         Qaullib_UDP_StartServer();
         Qaullib_CaptiveStart();
 
-        // TODO: configure firewall
-        //qaul_startPortForwarding();
+        // configure firewall
+        qaul_startPortForwarding();
 
         qaulConfigureCounter = 50;
     }
@@ -360,7 +343,9 @@ gboolean qaul_configure(gpointer data)
 
 void qaul_olsrdStart(void)
 {
-	system("/usr/share/qaul/qaulhelper startolsrd no wlan0");
+	char command[255];
+	sprintf(command, "/usr/share/qaul/qaulhelper startolsrd no %s", network_device.interface);
+	system(command);
 }
 
 void qaul_olsrdStop(void)
@@ -370,34 +355,15 @@ void qaul_olsrdStop(void)
 
 void qaul_startPortForwarding(void)
 {
-
+	char command[255];
+	sprintf(command, "/usr/share/qaul/qaulhelper startportforwarding %s %s", network_device.interface, network_settings.ipv4_address);
+	system(command);
 }
 
 void qaul_stopPortForwarding(void)
 {
-
+	system("/usr/share/qaul/qaulhelper stopportforwarding");
 }
-
-void qaul_configFindWifiInterface(void)
-{
-
-}
-
-void qaul_configFindInterfaces(void)
-{
-
-}
-
-void qaul_configWifi(void)
-{
-
-}
-
-void qaul_configIP(void)
-{
-
-}
-
 
 gboolean qaul_timerEvent(gpointer data)
 {
@@ -492,6 +458,17 @@ gboolean qaul_timerEvent(gpointer data)
 
             // play beep
             gdk_beep();
+        }
+        else if(myEvent == QAUL_EVENT_GETINTERFACES)
+        {
+			printf("QAUL_EVENT_GETINTERFACES \n");
+
+            // search for Interfaces
+            if(qaul_network_devices_json(network_dbus_connection, network_json_txt))
+            {
+            	// set Interfaces
+            	Qaullib_SetInterfaceJson(network_json_txt);
+            }
         }
     }
 
