@@ -3,6 +3,9 @@ Windows Instructions
 
 qaul.net works on:
 * Windows 7
+* Windows 8
+
+qaul.net does not work on Windows XP.
 
 
 Installation and Compile Instructions
