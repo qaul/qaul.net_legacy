@@ -47,7 +47,7 @@ qaul.net.app
 
 # QT
 linux/qaul-build-desktop
-linux/qaul/qaul.pro.user
+linux/qaul_qt/qaul.pro.user
 *.lintian
 
 # Linux GTK
