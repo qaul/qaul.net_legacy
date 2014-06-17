@@ -16,6 +16,9 @@
 #include <webkit/webkit.h>
 
 // ------------------------------------------------------------
+#define QAUL_ROOT_PATH "/usr/share/qaul"
+#define QAUL_VERSION   "1.0b2"
+#define MAX_PATH_LEN   PATH_MAX
 
 /// GUI
 GtkWidget *qaulMainWindow;
@@ -23,6 +26,9 @@ GtkWidget *qaulMainWindow;
 static void destroyWindowCb(GtkWidget* widget, GtkWidget* window);
 static gboolean closeWebViewCb(WebKitWebView* webView, GtkWidget* window);
 GdkPixbuf *create_pixbuf(const gchar * filename);
+
+/// utilities
+int qaul_copyDirectory(char* source, char* target);
 
 /// runs on start up after opening the window
 void qaul_onstartup(void);
@@ -58,7 +64,9 @@ gboolean qaul_timerTopology(gpointer data);
 
 int main(int argc, char *argv[])
 {
-	char cCurrentPath[FILENAME_MAX];
+	char qaulUserPath[MAX_PATH_LEN];
+	char qaulTmpPath[MAX_PATH_LEN];
+	char qaulTmpPath2[MAX_PATH_LEN];
 
 	qaulConfigureCounter = 0;
 	qaulTimerEvents = 0;
@@ -66,16 +74,44 @@ int main(int argc, char *argv[])
 	qaulTimerTopology = 0;
 	network_interface_found = 0;
 
+	// initialize glib types
+	g_type_init();
 
-	if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath)))
+	// set paths
+	sprintf(qaulUserPath, "%s/.qaul", (char*)g_get_home_dir());
+	printf ("qaul.net home directory is %s\n", qaulUserPath);
+
+	// create qaul user directory
+	if(!g_file_test(qaulUserPath, G_FILE_TEST_EXISTS))
 	{
-		printf ("ERROR: couldn't get directory\n");
-		return EXIT_FAILURE;
+		// create directory
+		// http://www.gnu.org/software/libc/manual/html_node/Permission-Bits.html
+		if(g_mkdir(qaulUserPath, S_IRUSR|S_IWUSR|S_IXUSR)== -1)
+			printf("qaul.net home directory %s creation error.\n", qaulUserPath);
 	}
-	cCurrentPath[sizeof(cCurrentPath) - 1] = '\0';
-	printf ("The current working directory is %s\n", cCurrentPath);
+	// check if we have to update
+	sprintf(qaulTmpPath, "%s/%s", qaulUserPath, QAUL_VERSION);
+	if(!g_file_test(qaulTmpPath, G_FILE_TEST_EXISTS))
+	{
+		// copy www folder
+		sprintf(qaulTmpPath, "%s/www", QAUL_ROOT_PATH);
+		sprintf(qaulTmpPath2, "%s/www", qaulUserPath);
+		if(!qaul_copyDirectory(qaulTmpPath, qaulTmpPath2))
+			printf("qaul copy directory error. source: %s target: %s\n", qaulTmpPath, qaulTmpPath2);
+		// TODO: update data base
+		// remove old data base if it exists
+		sprintf(qaulTmpPath, "%s/qaullib.db", qaulUserPath, QAUL_VERSION);
+		if(g_file_test(qaulTmpPath, G_FILE_TEST_EXISTS))
+			if(g_remove(qaulTmpPath) == -1)
+				printf("qaul.net database %s removal error\n", qaulTmpPath);
+		// create qaul version file
+		sprintf(qaulTmpPath, "%s/%s", qaulUserPath, QAUL_VERSION);
+		if(!g_file_test(qaulTmpPath, G_FILE_TEST_EXISTS))
+			if(!g_creat(qaulTmpPath, S_IRUSR|S_IWUSR) == -1)
+				printf("qaul.net version file %s creation error\n", qaulTmpPath);
+	}
 
-	Qaullib_Init(cCurrentPath);
+	Qaullib_Init(qaulUserPath);
 	// set configuration
 	Qaullib_SetConf(QAUL_CONF_INTERFACE);
 	// enable debug menu
@@ -154,6 +190,87 @@ GdkPixbuf *create_pixbuf(const gchar * filename)
    }
 
    return pixbuf;
+}
+
+int qaul_copyDirectory(char* source, char* target)
+{
+	// g_file_copy: https://developer.gnome.org/gio/stable/GFile.html#g-file-copy
+	// Permissions: http://www.gnu.org/software/libc/manual/html_node/Permission-Bits.html
+	// glib-file-utilities: https://developer.gnome.org/glib/2.37/glib-File-Utilities.html
+	const gchar *fileName;
+	char sourcePath[MAX_PATH_LEN], targetPath[MAX_PATH_LEN];
+	GFile *sourceFile, *targetFile;
+	GFileEnumerator* enumerator;
+	GFileInfo *fileInfo;
+	GError *error = NULL;
+
+	printf("qaul_copyDirectory: %s -> %s\n", source, target);
+
+	// test if source path is a directory
+	if(g_file_test(source, G_FILE_TEST_IS_DIR))
+	{
+		// create directory
+		if(g_mkdir(target, S_IRUSR|S_IWUSR|S_IXUSR)== -1)
+		{
+			printf("qaul.net home directory %s creation error.\n", target);
+			return 0;
+		}
+		else
+		{
+			// get directories files
+			sourceFile = g_file_new_for_path(source);
+			enumerator = g_file_enumerate_children(sourceFile, "*", G_FILE_QUERY_INFO_NONE, NULL, &error);
+
+			// loop through the directories files
+			fileInfo = g_file_enumerator_next_file(enumerator, NULL, &error);
+			while(fileInfo != NULL)
+			{
+				// copy regular files
+				if(g_file_info_get_file_type(fileInfo) == G_FILE_TYPE_REGULAR)
+				{
+					// get source file
+					fileName = g_file_info_get_name(fileInfo);
+					sourceFile = g_file_get_child(g_file_enumerator_get_container(enumerator), fileName);
+					// create target path
+					sprintf(targetPath, "%s/%s", target, fileName);
+					targetFile = g_file_new_for_path(targetPath);
+					if(!g_file_copy(sourceFile, targetFile, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error))
+					{
+						printf("qaul_copyDirectory copy file error: %s\n", (char*)error->message);
+					}
+				}
+				// recursively copy directories
+				else if(g_file_info_get_file_type(fileInfo) == G_FILE_TYPE_DIRECTORY)
+				{
+					fileName = g_file_info_get_name(fileInfo);
+					sprintf(sourcePath, "%s/%s", source, fileName);
+					sprintf(targetPath, "%s/%s", target, fileName);
+					if(!qaul_copyDirectory(sourcePath, targetPath))
+						printf("qaul_copyDirectory error copying %s -> %s", sourcePath, targetPath);
+				}
+
+				// free file info
+				g_object_unref(fileInfo);
+				fileInfo = g_file_enumerator_next_file(enumerator, NULL, &error);
+			}
+		}
+		return 1;
+	}
+	else
+		printf("qaul_copyDirectoryRecursively source is not a directory error: %s\n", source);
+/*
+	else
+	{
+		sourcefile = g_file_new_for_path(source);
+		targetfile = g_file_new_for_path(target);
+		if(!g_file_copy(sourcefile, targetfile, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error))
+		{
+			printf("qaul_copyDirectory error: %s\n", (char*)error->message);
+			return 0;
+		}
+	}
+*/
+	return 0;
 }
 
 void qaul_onquit(void)
@@ -344,25 +461,29 @@ gboolean qaul_configure(gpointer data)
 void qaul_olsrdStart(void)
 {
 	char command[255];
-	sprintf(command, "/usr/share/qaul/qaulhelper startolsrd no %s", network_device.interface);
+	sprintf(command, "%s/qaulhelper startolsrd no %s", QAUL_ROOT_PATH, network_device.interface);
 	system(command);
 }
 
 void qaul_olsrdStop(void)
 {
-	system("/usr/share/qaul/qaulhelper stopolsrd");
+	char command[255];
+	sprintf(command, "%s/qaulhelper stopolsrd", QAUL_ROOT_PATH);
+	system(command);
 }
 
 void qaul_startPortForwarding(void)
 {
 	char command[255];
-	sprintf(command, "/usr/share/qaul/qaulhelper startportforwarding %s %s", network_device.interface, network_settings.ipv4_address);
+	sprintf(command, "%s/qaulhelper startportforwarding %s %s", QAUL_ROOT_PATH, network_device.interface, network_settings.ipv4_address);
 	system(command);
 }
 
 void qaul_stopPortForwarding(void)
 {
-	system("/usr/share/qaul/qaulhelper stopportforwarding");
+	char command[255];
+	sprintf(command, "%s/qaulhelper stopportforwarding", QAUL_ROOT_PATH);
+	system(command);
 }
 
 gboolean qaul_timerEvent(gpointer data)

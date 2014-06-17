@@ -131,17 +131,12 @@ static dbus_bool_t qaul_dbus_append_device_mac(DBusMessageIter* iter, qaul_dbus_
 	// check if MAC address is set
 	if(strlen(device->mac) == 17)
 	{
-		printf("Set MAC address\n");
-
 		// convert mac address to string
 		for(i=0; i<=6; i++)
 		{
 			sprintf(buf, "0x%c%c", device->mac[i*3], device->mac[(i*3)+1]);
-			printf("buf: %s\n", buf);
 			mac[i] = strtol(buf, NULL, 0);
 		}
-
-		printf("MAC string: '%s' binary: '%02X:%02X:%02X:%02X:%02X:%02X'\n", device->mac, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
 		if(!(
 			   dbus_message_iter_open_container(iter, DBUS_TYPE_DICT_ENTRY, NULL, &iter_dict)

@@ -51,13 +51,6 @@ LIBS= \
     \
     `pkg-config --libs dbus-1` \
 	`pkg-config --libs webkitgtk-3.0`
-#    `pkg-config --libs gtk+-3.0`
-#    `pkg-config --libs glib-2.0`
-
-#	-lmilenage-$(PJSIPTYPE) \
-#
-#
-#
 
 CFLAGS= \
 	-I$(PJBASE)/pjlib/include \
@@ -73,8 +66,6 @@ CFLAGS= \
 	\
 	`pkg-config --cflags dbus-1` \
 	`pkg-config --cflags webkitgtk-3.0`
-#	`pkg-config --cflags gtk+-3.0`
-#	`pkg-config --cflags glib-2.0`
 
 SRC= $(DISTBASE)/libqaul/qaullib.c $(DISTBASE)/libqaul/qaullib_ipc.c $(DISTBASE)/libqaul/qaullib_webserver.c $(DISTBASE)/libqaul/qaullib_voip.c \
      $(DISTBASE)/libqaul/qaullib_webclient.c $(DISTBASE)/libqaul/qaullib_threads.c \
@@ -104,12 +95,6 @@ OBJS=$(SRC:.c=.o)
 all: $(OBJS)
 	@echo application Makefile - linking qaul
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul $(LFLAGS)
-	@echo copy olsrd executable into this directory
-	@cp ../../olsrd_0.6.2/olsrd ./
-	@echo copy olsrd_qaul plugin into this directory
-	@cp ../../olsrd_0.6.2/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
-	@echo copy www folder into this directory
-	@cp -R ../../www ./
 
 $(EXE): $(OBJS)
 	@echo application Makefile - linking $<
@@ -125,3 +110,4 @@ clean:
 	@echo rm $(OBJS)
 	@rm $(OBJS)
 	@rm qaul
+
