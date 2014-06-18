@@ -804,10 +804,13 @@ function format_msg(item)
 function insert_msg(insert, item, inverse)
 {
 	var new_item = format_msg(item);
-	if(!qaul_config.is_mobile) new_item = $(new_item).hide();
+	if(!qaul_config.is_mobile) 
+		new_item = $(new_item).hide();
 	var myitem;
-	if(inverse) myitem = insert.append(new_item);
-	else myitem = insert.prepend(new_item);
+	if(inverse) 
+		myitem = insert.append(new_item);
+	else 
+		myitem = insert.prepend(new_item);
 	myitem.trigger('create');
 	if(!qaul_config.is_mobile)
 	{
@@ -1318,7 +1321,8 @@ var loadingtimer=function()
 					// display page
 					$.mobile.changePage($(data.page));
 				}
-				else setTimeout(function(){loadingtimer();},500);
+				else 
+					setTimeout(function(){loadingtimer();},500);
 			}
 		} 
 	}).error(function(){
@@ -1785,7 +1789,7 @@ function createIFrame()
 			myheight = myfooter.height();
 			myposition = myfooter.position();
 			// create iframe
-			$.mobile.activePage.append('<div id="bugfix_footer" style="width:100%;height:' +myheight +'px;top:' +myposition.top +'px;left:0px;"><iframe src="blank.html" id="bugfix_footer_iframe" style="width:100%;' +myheight +';"></iframe></div>');
+			$.mobile.activePage.append('<div id="bugfix_footer" style="width:100%;height:' +myheight +'px;top:' +myposition.top +'px;left:0px;"><iframe src="blank.html" id="bugfix_footer_iframe" style="width:100%;height:' +myheight +'px;"></iframe></div>');
 		}
 		var myheader = $("#" +activepage +" .ui-header-fixed");
 		if(myheader.length > 0)
@@ -1793,7 +1797,7 @@ function createIFrame()
 			myheight = myheader.height();
 			myposition = myheader.position();
 			// create iframe
-			$.mobile.activePage.append('<div id="bugfix_header" style="width:100%;height:' +myheight +'px;top:' +myposition.top +'px;left:0px;"><iframe src="blank.html" id="bugfix_header_iframe" style="width:100%;' +myheight +';"></iframe></div>');
+			$.mobile.activePage.append('<div id="bugfix_header" style="width:100%;height:' +myheight +'px;top:' +myposition.top +'px;left:0px;"><iframe src="blank.html" id="bugfix_header_iframe" style="width:100%;height:' +myheight +'px;"></iframe></div>');
 		}
 	}
 }
