@@ -44,7 +44,7 @@ Compile libqaul.dll with MinGw
 
 Compile olsrd
 
-    cd olsrd-0.6.3
+    cd olsrd-0.6.6.2
     make
 	cp olsrd.exe ../win/Debug/
 	cp olsrd.exe ../win/Release/
@@ -52,8 +52,9 @@ Compile olsrd
 
 Compile olsrd_qaul plugin
 
-    cd olsrd-0.6.3/lib/olsrd_qaul
+    cd olsrd-0.6.6.2/lib/olsrd_qaul
     make
 	cp olsrd_qaul.dll ../../../win/Debug/
 	cp olsrd_qaul.dll ../../../win/Release/
 	cd ../../../
+

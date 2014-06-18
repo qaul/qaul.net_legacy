@@ -1,0 +1,132 @@
+#
+# Steps to compile for Android:
+#
+# 1) Download and extract the Android NDK from
+#    http://developer.android.com/sdk/ndk/index.html
+#    (e.g. into to /opt, otherwise call 'make NDK_BASE=')
+#
+# 2) Compile olsrd with the make command:
+#    make OS=android DEBUG=0 NDK_BASE=/opt/android-ndk-r8
+#
+# 3) Install olsrd on your local PC, e.g.
+#    sudo make OS=android DEBUG=0 install_all
+#    which creates a /data directory on your PC.
+#
+# 4) Change /data/local/etc/olsrd.conf. You need
+#    to adapt the 'Interfaces' line, e.g. to use
+#    the eth0 on your android mobile. Also, the
+#    LoadPlugin lines needs adaption, e.g. you
+#    need "/data/local/lib/olsrd_txtinfo.so.0.1"
+#
+# 5) Copy all file from /data to your mobile, e.g.
+#    by pushing the files with the 'adb' tool.
+#
+
+#
+# LINUX SPECIFIC CONFIGURATION
+#
+
+DESTDIR ?=
+prefix ?=
+sbindir ?= $(prefix)/bin
+etcdir ?= $(prefix)/etc
+libdir ?= $(prefix)/lib
+datarootdir ?= $(prefix)/usr/share
+
+# the rest are defined in Makefile.inc, but we don't need to override defaults
+SBINDIR = $(DESTDIR)$(sbindir)
+ETCDIR = $(DESTDIR)$(etcdir)
+LIBDIR = $(DESTDIR)$(libdir)
+SHAREDIR = $(DESTDIR)$(datarootdir)
+
+# there probably should be an Android log.c and misc.c to support
+# Logcat, but this works for now
+SRCS += $(wildcard src/unix/*.c src/linux/*.c)
+HDRS += $(wildcard src/unix/*.h src/linux/*.h)
+
+CPPFLAGS +=	-DOLSRD_GLOBAL_CONF_FILE=\"$(CFGFILE)\"
+# bionic libc: missing declarations
+CPPFLAGS +=	-DINET_ADDRSTRLEN=16
+CPPFLAGS +=	-D'IPTOS_PREC(tos)=((tos)&0xe0)'
+CPPFLAGS +=	-D'IPTOS_TOS(tos)=((tos)&0x1e)'
+# Android NDK is missing some Linux headers and regex, we have them here:
+CPPFLAGS += -I$(TOPDIR)/android
+
+# Compilation flags from build/toolchains/arm-eabi-4.2.1/setup.mk
+#  * removed -fstrict-aliasing since the code has a lot of type-punning
+CPPFLAGS +=  \
+	-march=armv5te -mtune=xscale \
+	-msoft-float -fpic \
+	-mthumb-interwork \
+	-ffunction-sections \
+	-funwind-tables \
+	-fstack-protector \
+	-fno-short-enums \
+	-D__ARM_ARCH_5__ -D__ARM_ARCH_5T__ \
+	-D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__
+ifeq ($(DEBUG),0)
+CPPFLAGS +=  \
+	-fomit-frame-pointer \
+	-funswitch-loops \
+	-finline-limit=300
+else
+CPPFLAGS += \
+	-fno-omit-frame-pointer
+endif
+
+ifdef OLSRD_PLUGIN
+GENERATE_PIC = true
+endif
+
+LDFLAGS += -llog
+
+ifdef GENERATE_PIC
+CFLAGS +=	-fPIC
+LDFLAGS +=	-fPIC
+endif
+
+PLUGIN_SONAME ?= $(PLUGIN_NAME)
+PLUGIN_FULLNAME ?= $(PLUGIN_NAME).so.$(PLUGIN_VER)
+INSTALL_LIB =	install -D -m 755 $(PLUGIN_FULLNAME) $(LIBDIR)/$(PLUGIN_FULLNAME); \
+		/sbin/ldconfig -n $(LIBDIR)
+UNINSTALL_LIB =	rm -f $(LIBDIR)/$(PLUGIN_FULLNAME); \
+		/sbin/ldconfig -n $(LIBDIR)
+
+# Android NDK setup
+HOST = arm-linux-androideabi
+NDK_BASE ?= /opt/android-ndk
+NDK_PLATFORM_LEVEL ?= 4
+NDK_ABI=arm
+NDK_SYSROOT=$(NDK_BASE)/platforms/android-$(NDK_PLATFORM_LEVEL)/arch-$(NDK_ABI)
+NDK_UNAME=$(shell uname -s | tr '[A-Z]' '[a-z]')
+# if you are using NDK older than r8, you must use 4.4.3:
+#NDK_COMPILER_VERSION=4.4.3
+NDK_COMPILER_VERSION=4.6
+NDK_TOOLCHAIN=$(NDK_BASE)/toolchains/$(NDK_ABI)-linux-androideabi-$(NDK_COMPILER_VERSION)/prebuilt/$(NDK_UNAME)-x86
+CROSS_COMPILE = $(NDK_TOOLCHAIN)/bin/$(HOST)-
+
+CC = $(CROSS_COMPILE)gcc --sysroot="$(NDK_SYSROOT)"
+LD = $(CROSS_COMPILE)ld
+AR = $(CROSS_COMPILE)ar
+ifeq ($(DEBUG),0)
+STRIP = $(CROSS_COMPILE)strip
+endif
+
+# Android didn't add regex until android-8 so include this one
+REGEX_LIB = $(TOPDIR)/android/regex/libregex.a
+REGEX_CLEAN = regex_clean
+$(REGEX_LIB):
+	$(MAKECMDPREFIX)$(MAKE) MAKECMDPREFIX="$(MAKECMDPREFIX)" -C $(TOPDIR)/android/regex/ REGEX_LIB=$(REGEX_LIB) VERBOSE=$(VERBOSE) \
+		NDK_TOOLCHAIN_BASE="$(NDK_TOOLCHAIN_BASE)" \
+		NDK_PLATFORM_VERSION="$(NDK_PLATFORM_VERSION)" \
+		NDK_SYSROOT="$(NDK_SYSROOT)" \
+		CROSS_COMPILE="$(CROSS_COMPILE)" \
+		CC="$(CC)" LD="$(LD)" AR="$(AR)" STRIP="$(STRIP)" \
+		CPPFLAGS="$(CPPFLAGS)"
+
+$(REGEX_CLEAN):
+	$(MAKECMDPREFIX)$(MAKE) MAKECMDPREFIX="$(MAKECMDPREFIX)" -C $(TOPDIR)/android/regex/ clean REGEX_LIB=$(REGEX_LIB)
+
+# Local Variables:
+# mode: makefile
+# End:
