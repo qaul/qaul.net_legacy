@@ -34,10 +34,10 @@ Compile olsrd_qaul plugin
 Compile pjsip library for VoIP
 
 	# install required libraries
-	sudo apt-get install g++
+	sudo apt-get install g++ libasound2-dev
 	# compile pjsip
     cd pjproject-2.2.1
-    ./configure --disable-ffmpeg
+    ./configure --disable-ffmpeg --disable-ssl --disable-video
     make dep
     make
     cd ../
