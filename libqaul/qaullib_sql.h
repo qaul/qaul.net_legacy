@@ -174,12 +174,14 @@ static struct qaul_populate_config_struct qaul_populate_config[MAX_POPULATE_CONF
  * populate file sharing
  ***********************************************
  * configuration keys, flags
- * exe.1 : ubuntu & debian 32 Bit
- * exe.2 : OSX 10.5
- * exe.4 : OSX 10.7 - 10.9
- * exe.8 : Windows 7 / 8
- * exe.16: Android
- * exe.32: iOS
+ * exe.1  : ubuntu & debian 32 Bit (QT client)
+ * exe.2  : OSX 10.5
+ * exe.4  : OSX 10.7 - 10.9
+ * exe.8  : Windows 7 / 8
+ * exe.16 : Android
+ * exe.32 : iOS
+ * exe.64 : Ubuntu & Debian 32 Bit (GTK client)
+ * exe.128: Ubuntu & Debian 64 Bit (GTK client)
  ***********************************************/
 
 struct qaul_populate_file_struct
@@ -194,14 +196,17 @@ struct qaul_populate_file_struct
 };
 
 
-#define MAX_POPULATE_FILE 4
+#define MAX_POPULATE_FILE 5
 
 static struct qaul_populate_file_struct qaul_populate_file[MAX_POPULATE_FILE] = {
-	{1,  4, 0, "0000000000000000000000000000000000000000", "gz",  "ubuntu & debian 32 Bit", 10000000},
+//	{1,  4, 0, "0000000000000000000000000000000000000000", "gz",  "ubuntu & debian 32 Bit", 10000000},
 //  {2,  4, 0, "0000000000000000000000000000000000000000", "zip", "OSX 10.5",               4000000},
 	{4,	 4, 0, "0000000000000000000000000000000000000000", "dmg", "OSX 10.7 - 10.9",        10000000},
 	{8,  4, 0, "0000000000000000000000000000000000000000", "exe", "Windows 7 / 8",          8000000},
-	{16, 4, 0, "0000000000000000000000000000000000000000", "apk", "Android",                5000000}
+	{16, 4, 0, "0000000000000000000000000000000000000000", "apk", "Android",                5000000},
+//	{32, 4, 0, "0000000000000000000000000000000000000000", "deb", "iOS",                    5000000},
+	{64, 4, 0, "0000000000000000000000000000000000000000", "deb", "Ubuntu & Debian 32 Bit", 5000000},
+	{128,4, 0, "0000000000000000000000000000000000000000", "deb", "Ubuntu & Debian 64 Bit", 5000000}
 };
 
 
