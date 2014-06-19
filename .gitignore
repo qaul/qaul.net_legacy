@@ -91,6 +91,7 @@ oscan.c
 
 # olsrd
 olsrd-0.6.0/olsrd
+olsrd-0.6.0/lib/olsrd_qaul/olsrd_qaul.so.0.1
 
 # tools & testing
 *.log
