@@ -32,7 +32,10 @@ $(EXE): $(OBJS)
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o $@ $(LFLAGS)
 	
 .c.o:
-	@echo "make [WITHOUT_NETWORKMANAGER=1]"
+	@echo "make qaulhelper"
+	@echo "usage:"
+	@echo "   make [WITHOUT_NETWORKMANAGER=1]"
+	@echo ""
 	@echo lib Makefile - compiling $<
 	@$(CC) $(CFLAGS) -c $< -o $@
 

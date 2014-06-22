@@ -1,12 +1,13 @@
 Linux Instructions
 ==================
 
-qaul.net has been tested on:
+qaul.net GTK client has been tested on:
 * Ubuntu 12.04: Precise Pangolin, 32-Bit & 64-Bit
 * Ubuntu 14.04: Precise Pangolin, 32-Bit & 64-Bit
-* Debian 7: Wheezy, 64-Bit
+* Debian 7: Wheezy, 32-Bit & 64-Bit
+* Linux Mint Cinnamon 2
 
-It should run on all recent Debian & Ubuntu distributions.
+It should run on all recent Debian & Ubuntu based distributions.
 
 
 Installation and Compile Instructions
@@ -19,17 +20,30 @@ Compile olsrd
     # compile olsrd
     cd olsrd-0.6.6.2
     make
-    cp olsrd ../linux/qaul-build-desktop/
+    # copy the executable to the qaul installation directory
+    sudo mkdir -p /usr/share/qaul
+    sudo cp olsrd /usr/share/qaul/
     cd ../
 
 Compile olsrd_qaul plugin
 
     cd olsrd-0.6.6.2/lib/olsrd_qaul
     make
-    cp olsrd_qaul.so.0.1 ../../../linux/qaul-build-desktop/
-    # you need to install the shared library
-    sudo make install
+    # copy the shared library to the qaul installation directory
+    sudo cp olsrd_qaul.so.0.1 /usr/share/qaul/
+    # link it from the library directory
+    sudo ln -fs /usr/share/qaul/olsrd_qaul.so.0.1 /usr/lib/olsrd_qaul.so.0.1
     cd ../../../
+
+Compile qaulhelper
+
+	cd linux/qaulhelper
+	make
+	# copy the executable to the qaul installation directory
+	sudo cp qaulhelper /usr/share/qaul/
+	# set SUID rights
+	sudo chmod 6755 /usr/share/qaul/qaulhelper
+	cd ../../
 
 Compile pjsip library for VoIP
 
@@ -45,28 +59,78 @@ Compile pjsip library for VoIP
 Compile qaul.net
 
     # install gtk develper libraries
-    sudo apt-get install libgtk-3-dev libwebkit-dev
+    sudo apt-get install libgtk-3-dev libwebkitgtk-3.0-dev libdbus-1-dev
     # change into directory and compile
     cd linux/qaul_gtk
     make
+	# copy the executable to the qaul installation directory
+	sudo cp qaul /usr/share/qaul/
+    # link it from the program directory
+    sudo ln -fs /usr/share/qaul/qaul /usr/bin/qaul
     cd ../../
 
-Compile qaulhelper
+Copy all the needed files 
 
-    cd linux/qaulhelper_gtk
+    sudo cp linux/usr_share_qaul/* /usr/share/qaul/
+    sudo cp -R www /usr/share/qaul/
+
+Now you can run qaul.net from the command line
+
+    qaul
+
+
+Installer
+---------
+
+To build a qaul.net debian installer you may download and install the 
+application "Debreate":
+http://debreate.sourceforge.net/
+
+Copy the binaries and files to the /usr/share/qaul directory
+
+    /usr/share/qaul
+        app_icon.png
+        olsrd
+        olsrd_linux.conf
+        olsrd_qaul.so.0.1
+        portfwd
+        portfwd.conf
+        qaul
+        qaulhelper
+        tail
+        www
+
+Strip the binaries from 
+
+    cd /usr/share/qaul
+    sudo strip -s olsrd olsrd_qaul.so.0.1 portfwd qaul qaulhelper
+
+Create the debian installer:
+* Start the Debreate application
+* Open the Debreate configuration file linux/qaul_Debreate-Installer.dbp
+  in Debrate
+  file > open > linux/qaul_Debreate-Installer.dbp
+* Navigate to the "Control" page and select the correct processor 
+  "Architecture".
+* Navigation to the "Build" page and click the gree build button to
+  build the installer.
+
+
+Additional Software
+-------------------
+portfwd
+Build "portfwd" to be able to forward the DHCP packages to qaul.
+
+* Download latest version from sourceforge: 
+  http://sourceforge.net/projects/portfwd/ 
+  http://portfwd.sourceforge.net/
+
+    # install required libraries
+    sudo apt-get install automake1.4
+    # compile software
+    cd portfwd-0.29
+    ./configure
     make
-    cd ../../
-
-
-
-Troubleshooting
----------------
-
-On Ubuntu 12.04 64-Bit pjsip failed compiling because it could't find the 
-following program and library: cc1plus, libstdc++
-They had to be linked manually to the standard directories:
-
-    # link executable cc1plus
-    sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/4.6/cc1plus /usr/bin/cc1plus
-    # link library stdc++
-    sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/4.6/libstdc++.a /usr/lib/libstdc++.a
+    # copy binary to qaul location
+    sudo cp src/portfwd /usr/share/qaul/
+    cd ../
