@@ -14,7 +14,9 @@ LIBDEST=./
 
 
 # linux
-PJSIPTYPE=i686-pc-linux-gnu
+ARCH:=$(shell uname -m)
+HARDW:=$(shell uname -i)
+PJSIPTYPE=$(ARCH)-$(HARDW)-linux-gnu
 LIBS= \
     -lpjsua-$(PJSIPTYPE) \
     -lpjsip-ua-$(PJSIPTYPE) \
