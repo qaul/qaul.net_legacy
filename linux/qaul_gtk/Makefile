@@ -36,21 +36,31 @@ LIBS= \
     -lpj-$(PJSIPTYPE) \
     \
     -L/usr/local/lib \
-    -lavformat \
-    -lavcodec \
-    -lswscale \
-    -lavutil \
     -lasound \
-    -lcrypto \
-    -lssl \
     \
     -lpthread \
     -ldl \
-    -luuid \
     -lm \
     \
     `pkg-config --libs dbus-1` \
-	`pkg-config --libs webkitgtk-3.0`
+    `pkg-config --libs webkitgtk-3.0`
+
+## libraries for pjsip
+## for audio: (installed by default in Debian stable)
+#    -lasound \
+## for video: (are they installed by default?)
+#    -lavformat \
+#    -lavcodec \
+#    -lavutil \
+#    -lswscale \
+## for cryptography: (are they installed by default?)
+#    -lcrypto \
+#    -lssl \
+#
+#    -luuid \
+
+
+
 
 CFLAGS= \
 	-I$(PJBASE)/pjlib/include \

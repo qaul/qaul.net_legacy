@@ -17,14 +17,14 @@ Compile olsrd
     # install required package
     sudo apt-get install bison flex
     # compile olsrd
-    cd olsrd-0.6.3
+    cd olsrd-0.6.6.2
     make
     cp olsrd ../linux/qaul-build-desktop/
     cd ../
 
 Compile olsrd_qaul plugin
 
-    cd olsrd-0.6.3/lib/olsrd_qaul
+    cd olsrd-0.6.6.2/lib/olsrd_qaul
     make
     cp olsrd_qaul.so.0.1 ../../../linux/qaul-build-desktop/
     # you need to install the shared library
@@ -34,10 +34,10 @@ Compile olsrd_qaul plugin
 Compile pjsip library for VoIP
 
 	# install required libraries
-	sudo apt-get install g++
+	sudo apt-get install g++ libasound2-dev
 	# compile pjsip
     cd pjproject-2.2.1
-    ./configure --disable-ffmpeg
+    ./configure --disable-ffmpeg --disable-ssl --disable-video
     make dep
     make
     cd ../

@@ -543,12 +543,6 @@ gboolean qaul_timerEvent(gpointer data)
 
         	// open URL in default browser
         	myError = NULL;
-//            if(gtk_show_uri(
-//					gdk_screen_get_default(),
-//					Qaullib_GetAppEventOpenURL(),
-//					gtk_get_current_event_time(),
-//					&myError
-//				))
             if(gtk_show_uri(
 					NULL,
 					Qaullib_GetAppEventOpenURL(),
