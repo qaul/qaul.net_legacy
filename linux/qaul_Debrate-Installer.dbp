@@ -355,7 +355,7 @@ Description: tools for the next revolution
 /usr/share/qaul/www/jquery.progressbar.min.js -> jquery.progressbar.min.js -> /usr/share/qaul/www
 /usr/share/qaul/www/jquery.i18n.min.js -> jquery.i18n.min.js -> /usr/share/qaul/www
 /usr/share/qaul/www/string2byte.js -> string2byte.js -> /usr/share/qaul/www
-/usr/share/qaul/www/favicon.ico* -> favicon.ico -> /usr/share/qaul/www
+/usr/share/qaul/www/favicon.ico -> favicon.ico -> /usr/share/qaul/www
 /usr/share/qaul/www/jqm_qaul.html -> jqm_qaul.html -> /usr/share/qaul/www
 /usr/share/qaul/www/jqm_qaul.js -> jqm_qaul.js -> /usr/share/qaul/www
 /usr/share/qaul/www/jqm_qaul.css -> jqm_qaul.css -> /usr/share/qaul/www
@@ -369,7 +369,7 @@ Description: tools for the next revolution
 /usr/share/qaul/tail -> tail -> /usr/share/qaul
 /usr/share/qaul/olsrd* -> olsrd -> /usr/share/qaul
 /usr/share/qaul/olsrd_linux.conf -> olsrd_linux.conf -> /usr/share/qaul
-/usr/share/qaul/olsrd_qaul.so.0.1* -> olsrd_qaul.so.0.1 -> /usr/share/qaul
+/usr/share/qaul/olsrd_qaul.so.0.1 -> olsrd_qaul.so.0.1 -> /usr/share/qaul
 /usr/share/qaul/portfwd* -> portfwd -> /usr/share/qaul
 /usr/share/qaul/qaul* -> qaul -> /usr/share/qaul
 /usr/share/qaul/app_icon.png -> app_icon.png -> /usr/share/qaul
@@ -382,7 +382,7 @@ Description: tools for the next revolution
 1
 #! /bin/bash -e
 
-# set sUID rights for qaulhelper
+# set SUID rights for qaulhelper
 chmod 6755 "/usr/share/qaul/qaulhelper"
 
 # make links to files
