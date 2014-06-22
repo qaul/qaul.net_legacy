@@ -190,6 +190,11 @@ a.mail, a.link {
 	top:1px;
 }
 
+/* bugfix webkit gtk debian 7 */
+#chat_msg {
+	background-color:#ffffff;
+}
+
 /* --- users --- */
 a.unavailable {
 	color:#bbbbbb !important;
