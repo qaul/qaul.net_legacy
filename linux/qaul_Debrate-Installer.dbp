@@ -6,8 +6,8 @@ Section: web
 Maintainer: qaul.net community <contact@qaul.net>
 Homepage: http://qaul.net
 Priority: optional
-Architecture: i386
-Depends: 
+Architecture: amd64
+Depends: libwebkitgtk-3.0-0
 Description: tools for the next revolution
  independent networking, 
  wifi mesh network, 
