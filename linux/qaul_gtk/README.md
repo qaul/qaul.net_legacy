@@ -1,13 +1,14 @@
 Linux Instructions
 ==================
 
-qaul.net GTK client has been tested on:
+qaul.net GTK client has been successfully tested on:
 * Ubuntu 12.04: Precise Pangolin, 32-Bit & 64-Bit
 * Ubuntu 14.04: Precise Pangolin, 32-Bit & 64-Bit
 * Debian 7: Wheezy, 32-Bit & 64-Bit
-* Linux Mint Cinnamon 2
+* Linux Mint 16 Cinnamon: 32-Bit & 64-Bit
 
 It should run on all recent Debian & Ubuntu based distributions.
+Please feel free to add your tested distribution.
 
 
 Installation and Compile Instructions
