@@ -1,5 +1,5 @@
-INSERT INTO "config" ('key','type','value') VALUES('exe.4',1,'259d23a926de79897c69613bad81abd3c1ddda80');
-INSERT INTO "file" ('type','hash','suffix','description','size','status','created_at') VALUES(4,'259d23a926de79897c69613bad81abd3c1ddda80','dmg','OSX 10.6 - 10.9',8046519,5,1389912303);
+INSERT INTO "config" ('key','type','value') VALUES('exe.4',1,'c53968b99ec31129ccb7dc5f3f90030e4648dfb1');
+INSERT INTO "file" ('type','hash','suffix','description','size','status','created_at') VALUES(4,'c53968b99ec31129ccb7dc5f3f90030e4648dfb1','dmg','OSX 10.8 - 10.9',7599441,5,1403641108);
 
 INSERT INTO "config" ('key','type','value') VALUES('exe.8',1,'68655ebdbc03dda9898a6aa7acfbe0946bef981a');
 INSERT INTO "file" ('type','hash','suffix','description','size','status','created_at') VALUES(4,'68655ebdbc03dda9898a6aa7acfbe0946bef981a','exe','Windows 7 / 8',4971151,5,1389912303);
