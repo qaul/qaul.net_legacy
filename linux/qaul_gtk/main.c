@@ -17,7 +17,7 @@
 
 // ------------------------------------------------------------
 #define QAUL_ROOT_PATH "/usr/share/qaul"
-#define QAUL_VERSION   "1.0b2"
+#define QAUL_VERSION   "1.0b3"
 #define MAX_PATH_LEN   PATH_MAX
 
 /// GUI
