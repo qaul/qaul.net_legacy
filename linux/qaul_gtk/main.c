@@ -93,6 +93,7 @@ int main(int argc, char *argv[])
 	sprintf(qaulTmpPath, "%s/%s", qaulUserPath, QAUL_VERSION);
 	if(!g_file_test(qaulTmpPath, G_FILE_TEST_EXISTS))
 	{
+		printf("Update user folder to qaul.net version %s\n", QAUL_VERSION);
 		// copy www folder
 		sprintf(qaulTmpPath, "%s/www", QAUL_ROOT_PATH);
 		sprintf(qaulTmpPath2, "%s/www", qaulUserPath);
@@ -132,7 +133,8 @@ int main(int argc, char *argv[])
     qaulMainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size(GTK_WINDOW(qaulMainWindow), 400, 592);
     gtk_window_set_title(GTK_WINDOW(qaulMainWindow), "qaul.net - قول");
-    gtk_window_set_icon(GTK_WINDOW(qaulMainWindow), create_pixbuf("app_icon.png"));
+    sprintf(qaulTmpPath, "%s/app_icon.png", QAUL_ROOT_PATH);
+    gtk_window_set_icon(GTK_WINDOW(qaulMainWindow), create_pixbuf(qaulTmpPath));
 
     // Create a browser instance
     WebKitWebView *webView = WEBKIT_WEB_VIEW(webkit_web_view_new());
@@ -209,8 +211,8 @@ int qaul_copyDirectory(char* source, char* target)
 	// test if source path is a directory
 	if(g_file_test(source, G_FILE_TEST_IS_DIR))
 	{
-		// create directory
-		if(g_mkdir(target, S_IRUSR|S_IWUSR|S_IXUSR)== -1)
+		// check if directory exists & create it otherwise
+		if(!g_file_test(target, G_FILE_TEST_EXISTS) && g_mkdir(target, S_IRUSR|S_IWUSR|S_IXUSR)==-1)
 		{
 			printf("qaul.net home directory %s creation error.\n", target);
 			return 0;
