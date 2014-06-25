@@ -978,6 +978,7 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 		printf("[qaullib] msg-type: %i, size: %i, m = %s\n", type, (int) strlen(local_msg), local_msg);
 
 	// get name
+	memcpy(&local_name[0], "\0", 1);
 	if(type == 12)
 	{
 		mg_get_var(post, strlen(post == NULL ? "" : post), "n", local_name, sizeof(local_name));
@@ -985,7 +986,9 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 		Qaullib_StringDbProtect(name_dbprotected, name_protected, sizeof(name_dbprotected));
 	}
 	else
-		memcpy(&local_name[0], "\0", 1);
+	{
+		Qaullib_StringDbProtect(name_dbprotected, qaul_username, sizeof(name_dbprotected));
+	}
 
 	time(&timestamp);
 	// todo: ipv6
