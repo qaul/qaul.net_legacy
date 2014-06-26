@@ -405,6 +405,7 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 void Qaullib_UserFavoriteAdd(char *name, char *ipstr)
 {
 	char buffer[1024];
+	char name_dbprotected[MAX_USER_LEN +1];
 	char *stmt = buffer;
 	char *error_exec=NULL;
 	union olsr_ip_addr myip;
@@ -424,7 +425,8 @@ void Qaullib_UserFavoriteAdd(char *name, char *ipstr)
 
 	// add it to DB
 	memcpy(&myipint, &myip.v4, sizeof(int));
-	sprintf(stmt, sql_user_set_ipv4, name, "", myipint);
+	Qaullib_StringDbProtect(name_dbprotected, name, sizeof(name_dbprotected));
+	sprintf(stmt, sql_user_set_ipv4, name_dbprotected, "", myipint);
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		printf("SQLite error: %s\n",error_exec);

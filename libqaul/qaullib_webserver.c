@@ -655,7 +655,7 @@ static void Qaullib_WwwFavoriteAdd(struct mg_connection *conn, const struct mg_r
 	// get variables
 	char *content_length;
 	int  length;
-	char myname[MAX_USER_LEN +1];
+	char myname[3*MAX_USER_LEN +1];
 	char myipstr[MAX_IP_LEN +1];
 
 	content_length = (char *)mg_get_header(conn, "Content-Length");
