@@ -1007,7 +1007,7 @@ int Qaullib_Timestamp2Isostr(char *str_buffer, int timestamp, int str_buffer_siz
     struct tm *ts;
 
 	if(QAUL_DEBUG)
-		printf("sizes int: %i, size time_t: %i\n", sizeof(timestamp), sizeof(now));
+		printf("sizes int: %lu, size time_t: %lu\n", sizeof(timestamp), sizeof(now));
 
     // convert integer to time_t
     now = 1 * timestamp;
