@@ -17,3 +17,8 @@ table.description {
 img {
 	max-width:100%;
 }
+
+.ui-bar-d {
+	background-color:#ffffff;
+	opacity: 0.9
+}
