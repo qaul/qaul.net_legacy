@@ -7,6 +7,7 @@
 
 // ----------------------------------------------
 // definitions
+// ----------------------------------------------
 #ifndef NSAppKitVersionNumber10_4
 #define NSAppKitVersionNumber10_4 824
 #else
@@ -34,7 +35,9 @@
 
 - (id)init 
 { 
-	if( self = [super init] ) 
+	NSLog(@"QaulConfigWifi init");
+    
+    if( self = [super init] ) 
 	{ 
         [self setPaths];
     }
@@ -43,7 +46,9 @@
 
 - (void)setPaths
 {
-	if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_4) 
+	NSLog(@"QaulConfigWifi setPaths");
+    
+    if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_4) 
 		networksetupPath=[NSString stringWithFormat:@"/usr/sbin/networksetup"];
 	else 
 		networksetupPath=[NSString stringWithFormat:@"/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Support/networksetup"];	
@@ -184,7 +189,7 @@
 				NSLog(@"Network qaul.net not found!");
 				created = false;
 			}
-
+            
 		}
 	}
 #endif
@@ -255,7 +260,7 @@
 	
 	NSLog (@"current networkProfile: '%@'", networkProfile);
     [self runTask:qaulhelperPath arguments:[NSArray arrayWithObjects:@"createnetworkprofile",@"new",nil]];
-
+    
 	[task release];
 	
 	// ----------------------------------------------------------------

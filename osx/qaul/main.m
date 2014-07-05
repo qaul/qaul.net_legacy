@@ -5,9 +5,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-
-@interface QaulView : NSView {
-	int counter;
+int main(int argc, char *argv[])
+{
+    return NSApplicationMain(argc, (const char **)argv);
 }
-
-@end

@@ -12,6 +12,35 @@ qaul.net works on:
 Installation and Compile Instructions
 --------------------------------------
 
+Copy helper binaries, libraries & configuration files to needed locations
+
+    # create location
+    sudo mkdir /Library/qaul.net
+    # copy olsrd, socat & configuration files
+    cd osx
+    sudo cp olsrd /Library/qaul.net/
+    sudo cp olsrd_qaul.so.0.1 /Library/qaul.net/
+    sudo cp olsrd_dyn_gw.so.0.5 /Library/qaul.net/
+    sudo cp olsrd_osx.conf /Library/qaul.net/
+    sudo cp olsrd_osx_gw.conf /Library/qaul.net/
+    sudo cp socat /Library/qaul.net/
+    cd ../
+    # copy HTML5 GUI
+    sudo cp -R www /Library/qaul.net/
+
+
+Compile qaulhelper
+* Open the Xcode project qaulhelper.xcodeproj in Xcode to build the qaulhelper application.
+* Copy the qaulhelper binary to /Library/qaul.net/
+* Add the SUID flag to the qaulhelper binary
+
+    # change group and owner to root
+    sudo chown root /Library/qaul.net/qaulhelper
+    sudo chgrp wheel /Library/qaul.net/qaulhelper
+    # set SUID rights
+    sudo chmod 6755 /Library/qaul.net/qaulhelper
+    
+
 Compile pjsip library for VoIP
 
     cd pjproject-2.2.1
@@ -38,7 +67,8 @@ Now you should be able to successfully compile libqaul
     make OS=osx
     cd ../
 
-Open the OSX project in Xcode to run qaul.net
+Open the Xcode project "qaul_osx10.XY.xcodeproj" for your OS version in Xcode to build the qaul.net 
+application.
 
 
 ### Optional
@@ -58,7 +88,7 @@ Compile olsrd_qaul plugin
     # you need to install the shared library in /usr/lib/
     sudo make install
     cd ../../../
-
+    
 
 Installer
 ---------
