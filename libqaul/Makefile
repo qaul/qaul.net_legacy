@@ -71,7 +71,6 @@ LIBDEST_WIN= \
 			-lpjnath-i686-pc-mingw32 \
 			-lpjlib-util-i686-pc-mingw32 \
 			-lresample-i686-pc-mingw32 \
-			-lmilenage-i686-pc-mingw32 \
 			-lsrtp-i686-pc-mingw32 \
 			-lgsmcodec-i686-pc-mingw32 \
 			-lspeex-i686-pc-mingw32 \
