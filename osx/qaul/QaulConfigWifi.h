@@ -3,15 +3,11 @@
  * licensed under GPL (version 3)
  */
 
-#import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
-#import <CoreFoundation/CFArray.h>
-#import <AppKit/AppKit.h>
-#import <SecurityFoundation/SFAuthorization.h>
 
-
-@interface QaulConfigWifi : NSObject {
+@interface QaulConfigWifi : NSObject 
+{
 	NSString* networksetupPath; 
 	NSString* airportPath;
     NSString* qaulhelperPath;

@@ -38,7 +38,7 @@ DerivedData/
 !default.mode2v3
 !default.perspectivev3
 xcuserdata/**/*
-!xcuserdata/**/xcschemes/*
+#!xcuserdata/**/xcschemes/*
 UserInterfaceState.xcuserstate
 LatestBuild
 ios/Packages
