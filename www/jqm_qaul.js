@@ -119,10 +119,9 @@ function init_start()
 	$("#page_config_interface").on("pagebeforeshow",function(event){
 		config_interface_load_data();
 	});
-	$("#config_interface_form").validate({
-		submitHandler: function(form){
-			send_interface();
-		}
+	$("#interface_submit").click(function(){
+		send_interface();
+		return false;
 	});
 	
 	// files
@@ -195,13 +194,6 @@ function init_start()
 		$("#name_submit").click(function(){
 			if($("#name_form").valid())
 				send_name();
-			return false;
-		});
-		
-		// set network interface
-		$("#config_interface_form").click(function(){
-			if($("#config_interface_form").valid())
-				send_interface();
 			return false;
 		});
 		

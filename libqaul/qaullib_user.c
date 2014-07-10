@@ -405,7 +405,7 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 void Qaullib_UserFavoriteAdd(char *name, char *ipstr)
 {
 	char buffer[1024];
-	char name_dbprotected[MAX_USER_LEN +1];
+	char name_dbprotected[MAX_USER_LEN*2 +1];
 	char *stmt = buffer;
 	char *error_exec=NULL;
 	union olsr_ip_addr myip;

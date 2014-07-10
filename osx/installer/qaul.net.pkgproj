@@ -204,7 +204,7 @@
 																	<key>PATH_TYPE</key>
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>
-																	<integer>493</integer>
+																	<integer>420</integer>
 																	<key>TYPE</key>
 																	<integer>3</integer>
 																	<key>UID</key>
@@ -219,7 +219,103 @@
 																			<key>GID</key>
 																			<integer>80</integer>
 																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/files/68655ebdbc03dda9898a6aa7acfbe0946bef981a.exe</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/files/73a4c8c8340418e68d47c122b610103d3f05fa6f.deb</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/files/78f6362772319c2a0211a517480e30d6f138d5df.apk</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/files/7cf5eb369e28284db960985b17aa1a28a3b8bd30.dmg</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/files/d1b974b08282d60a9d5a2af3363b1f3821203358.deb</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
 																			<string>/Applications/qaul.app/Contents/Resources/www/files/fat.example.sql</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/files/fat.sql</string>
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
