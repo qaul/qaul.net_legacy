@@ -784,10 +784,12 @@ void Qaullib_DbPopulateConfig(void)
 char* Qaullib_GetUsername(void)
 {
 	// if username is set return it
-	if (qaul_username_set) return qaul_username;
+	if(qaul_username_set)
+		return qaul_username;
 
 	// check if username is in Database
-	if (Qaullib_DbGetConfigValue("username", qaul_username)) return qaul_username;
+	if(Qaullib_DbGetConfigValue("username", qaul_username))
+		return qaul_username;
 
 	// no username found
 	return "";
@@ -796,17 +798,19 @@ char* Qaullib_GetUsername(void)
 int Qaullib_ExistsUsername(void)
 {
 	// if username is set return it
-	if (qaul_username_set) return qaul_username_set;
+	if(qaul_username_set)
+		return qaul_username_set;
 
 	// check if username is in Database
 	qaul_username_set = Qaullib_DbGetConfigValue("username", qaul_username);
+
 	return qaul_username_set;
 }
 
 int Qaullib_SetUsername(char* name)
 {
 	int size;
-	char namebuf[128];
+	char namebuf[MAX_USER_LEN*2 +1];
 
 	Qaullib_StringDbProtect(namebuf, name, sizeof(namebuf));
 	Qaullib_DbSetConfigValue("username", name);
