@@ -15,9 +15,10 @@ namespace qaul
 	{
 	public:
 		// Interface
-		bool InterfaceFound;
+		bool  InterfaceFound;
 		DWORD InterfaceIndex;
-		GUID InterfaceGuid;
+		GUID  InterfaceGuid;
+		char  InterfaceName[256 +4]; // Friendly Name
 
 		// olsrd
 		STARTUPINFO StartInfo;
