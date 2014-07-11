@@ -4,6 +4,8 @@
  */
 
 #include "StdAfx.h"
+#include <winsock2.h> // to be included before winsock.h
+
 #include "formStart.h"
 #include "clix.h" // Marshaling managed strings to c++ strings
 
@@ -16,6 +18,14 @@
 #include <iphlpapi.h>
 #include <shlobj.h>//for knownFolder
 #include <winerror.h> //for HRESULT
+
+
+#define COMMAND_BUFFER_SIZE 5000
+#define WORKING_BUFFER_SIZE 15000
+#define MAX_TRIES 3
+#define MALLOC(x) HeapAlloc(GetProcessHeap(), 0, (x))
+#define FREE(x) HeapFree(GetProcessHeap(), 0, (x))
+#define MAX_JSON_LEN 2048
 
 
 #using <System.Xml.Dll>
@@ -37,7 +47,9 @@ namespace qaul
 void formStart::InitializeQaul(void)
 {
     qaulStartCounter = 0;
+	qaulIpcCounter = 0;
 	qaulTestError = false;
+	qaulInterfaceManual = false;
 
 	// configure firewall
 	ConfigureFirewall();
@@ -45,6 +57,9 @@ void formStart::InitializeQaul(void)
 	// initialize qaullib
 	Qaullib_Init((char*)(void*)Marshal::StringToHGlobalAnsi(qaulResourcePath));
 	Debug::WriteLine(L"Qaullib_Init initialized");
+	
+	// set qaullib configuration options
+	Qaullib_SetConf(QAUL_CONF_INTERFACE);
 
 	// set path to download folder
 	HRESULT hr;
@@ -58,14 +73,17 @@ void formStart::InitializeQaul(void)
 	}
 
 	// start webserver
-	if(!Qaullib_WebserverStart()) ErrorShow(L"error starting webserver");
+	if(!Qaullib_WebserverStart())
+		ErrorShow(L"error starting web server");
+	else
+		Debug::WriteLine(L"web server started");
 
 	// init wifi config values
-	if(!isXP) dwMaxClient = 2; //  for windows vista and higher  
-	else dwMaxClient = 1;      //  for windows XP  
+	if(!isXP)
+		dwMaxClient = 2; //  for windows vista and higher  
+	else
+		dwMaxClient = 1; //  for windows XP  
     dwCurVersion = 0;
-	//pin_ptr<DWORD> pdwCurVersion = &dwCurVersion;
-	//pdwCurVersion = &dwCurVersion;
     dwResult = 0;
 
 	// intitalize Backgroundworker
@@ -76,7 +94,6 @@ void formStart::InitializeQaul(void)
 	this->backgroundWorkerStart->DoWork += gcnew DoWorkEventHandler( this, &formStart::backgroundWorkerStart_DoWork );
     this->backgroundWorkerStart->RunWorkerCompleted += gcnew RunWorkerCompletedEventHandler( this, &formStart::backgroundWorkerStart_RunWorkerCompleted );
     //backgroundWorkerStart->ProgressChanged += gcnew ProgressChangedEventHandler( this, &formStart::backgroundWorkerStart_ProgressChanged );
-
 }
 
 void formStart::ExitQaul(void)
@@ -89,6 +106,9 @@ void formStart::ExitQaul(void)
 	StopOlsr();
 	// remove added firewall configuration
 	UnconfigureFirewall();
+	// set ip to dhcp
+	IpSetDhcp();
+	// TODO: disconnect from wifi network
 }
 
 void formStart::QaulStarting(void)
@@ -116,33 +136,53 @@ void formStart::QaulStarting(void)
 		qaulStartCounter = 20;
 	}
 	
-	// configure wifi
+	// configure network
 	if(qaulStartCounter >= 20 && qaulStartCounter <= 30)
 	{
-		Debug::WriteLine(L"QaulStarting: configure wifi");
+		Debug::WriteLine(L"QaulStarting: configure network");
 		
+		// check if network is configured manually
+		if(Qaullib_GetInterfaceManual())
+		{
+			qaulInterfaceManual = true;
+		}
+
+		// search for the first available wifi interface
 		if(qaulStartCounter == 20)
 		{
-			if(WifiFindInterface()) qaulStartCounter = 21;
-			else ErrorShow(L"No wifi interface found.");
-		}
+			// check if interface exists
+			if(
+				(qaulInterfaceManual && InterfaceInfo(Qaullib_GetInterface()))||
+				WifiFindInterface()
+				)
+			{
+				Debug::WriteLine(L"Wifi interface found.");
+				
+				// set wifi profile
+				if(WifiSetProfile())
+				{
+					Debug::WriteLine(L"Wifi profile set");
 
-		if(qaulStartCounter == 21)
-		{
-			if(WifiSetProfile()) qaulStartCounter = 22;
-			else ErrorShow(L"Error: Wasn't able to set wifi profile");
-		}
+					// activate wifi profile
+					if(!WifiConnectProfile())
+						ErrorShow(L"Error: Could not connect wifi profile");
+				}
+				else
+					ErrorShow(L"Error: Wasn't able to set wifi profile");
+			}
+			else
+				ErrorShow(L"No wifi interface found.");
 
-		if(qaulStartCounter == 22)
-		{
-			if(WifiConnectProfile()) qaulStartCounter = 23;
-			else ErrorShow(L"Error: Could not connect wifi profile");
+			qaulStartCounter = 23;
 		}
 		
+		// configure network address
 		if(qaulStartCounter == 23)
 		{
-			if(WifiSetIp()) qaulStartCounter = 29;
-			else ErrorShow(L"Error: Could not set IP");
+			if(WifiSetIp())
+				qaulStartCounter = 29;
+			else
+				ErrorShow(L"Error: Could not set IP");
 		}
 	}
 
@@ -171,12 +211,16 @@ void formStart::QaulStarting(void)
 	if(qaulStartCounter == 40)
 	{
 		Debug::WriteLine(L"start: 40");
-		if(!StartOlsr()) ErrorShow(L"olsrd startup failed");
-		else qaulStartCounter = 44;
+
+		if(!StartOlsr())
+			ErrorShow(L"olsrd startup failed");
+		else
+			qaulStartCounter = 44;
 	}
 	
 	// wait until olsrd started
-	if(qaulStartCounter == 44) this->backgroundWorkerStart->RunWorkerAsync( 1000 );
+	if(qaulStartCounter == 44)
+		this->backgroundWorkerStart->RunWorkerAsync( 1000 );
 
 	// connect ipc
 	if(qaulStartCounter == 45)
@@ -187,6 +231,20 @@ void formStart::QaulStarting(void)
 		{
 			Debug::WriteLine(System::String::Format("Qaullib_IpcConnect failed with error: {0} ",err)); 
 			qaulStartCounter = 44;
+
+			// try to restart olsrd after a while
+			if(
+				qaulIpcCounter == 5 || 
+				qaulIpcCounter == 10 || 
+				qaulIpcCounter == 15 || 
+				qaulIpcCounter == 20
+				)
+			{
+				StopOlsr();
+				StartOlsr();
+			}
+
+			qaulIpcCounter++;
 			this->backgroundWorkerStart->RunWorkerAsync( 1000 );
 		}
 		else
@@ -223,6 +281,7 @@ void formStart::QaulStarting(void)
 		// start port forward
 		if(!StartPortforward()) 
 			Debug::WriteLine(L"error starting port forward");
+
 		qaulStartCounter = 54;
 	}
 
@@ -242,6 +301,121 @@ void formStart::QaulStarting(void)
 	
 }
 
+
+/**
+ * check if wifi Interface is accessible
+ */
+bool formStart::InterfaceInfo(const char* interfaceIndex)
+{
+	int interfaceIndex_int;
+	
+	Debug::WriteLine(L"InterfaceInfo");
+
+	interfaceIndex_int = atoi(interfaceIndex);
+	//netInterface->InterfaceIndex = (DWORD)interfaceIndex_int;
+	netInterface->InterfaceIndex = static_cast<DWORD>(interfaceIndex_int);
+	netInterface->InterfaceFound = false;
+
+	// -----------------------------------------------------------
+	// search Network Interface Index
+	PIP_ADAPTER_INFO pAdapterInfo, pAdapt;
+	DWORD AdapterInfoSize = 0;
+	GetAdaptersInfo(NULL, &AdapterInfoSize);
+	pAdapterInfo = (PIP_ADAPTER_INFO) GlobalAlloc(GPTR, AdapterInfoSize);
+			
+	dwResult = GetAdaptersInfo(pAdapterInfo, &AdapterInfoSize);
+	if (dwResult == ERROR_SUCCESS)
+		Debug::WriteLine(L"GetAdaptersInfo Success");
+	else
+		Debug::WriteLine(System::String::Format("GetAdaptersInfo Error {0} ", (int)dwResult));
+			
+	pAdapt = pAdapterInfo;
+	while(pAdapt)
+	{
+		// compare interface index
+		if(pAdapt->Index == netInterface->InterfaceIndex)
+		{
+			Debug::WriteLine(System::String::Format("Interface found: {0}", (int)pAdapt->Index));
+
+			// search for Adapter
+			if(InterfaceGetGuid(pAdapt->AdapterName))
+				Debug::WriteLine("Interface available");
+			else
+				Debug::WriteLine("Interface not available");
+
+			strncpy_s(netInterface->InterfaceName, sizeof(netInterface->InterfaceName), pAdapt->Description, strlen(pAdapt->Description)+1);
+
+			break;
+		}
+
+		pAdapt = pAdapt->Next;
+	}
+
+	return netInterface->InterfaceFound;
+}
+
+
+/**
+ * search GUID from char
+ */
+bool formStart::InterfaceGetGuid(const char* guid_char)
+{
+	HANDLE hClient = NULL;
+    int iRet = 0;
+    WCHAR GuidString[40] = {0};
+	char buf[40] = "";
+	char *charGuid = buf;
+    int i;
+
+	Debug::WriteLine("InterfaceGetGuid");
+
+    // variables used for WlanEnumInterfaces 
+    PWLAN_INTERFACE_INFO_LIST pIfList = NULL;
+    PWLAN_INTERFACE_INFO pIfInfo = NULL;
+	
+	pin_ptr<DWORD> pdwCurVersion = &dwCurVersion;
+    dwResult = WlanOpenHandle(dwMaxClient, NULL, pdwCurVersion, &hClient); 
+    if (dwResult != ERROR_SUCCESS)
+	{
+		Debug::WriteLine(System::String::Format("WlanOpenHandle failed with error: {0}", dwResult));
+        // FormatMessage can be used to find out why the function failed
+        return false;
+    }
+    
+    dwResult = WlanEnumInterfaces(hClient, NULL, &pIfList); 
+    if (dwResult != ERROR_SUCCESS)
+	{
+		Debug::WriteLine(System::String::Format("WlanEnumInterfaces failed with error: {0}", dwResult));
+        // FormatMessage can be used to find out why the function failed
+        return false;
+    }
+    else
+	{
+		for (i = 0; i < (int) pIfList->dwNumberOfItems; i++)
+		{
+            pIfInfo = (WLAN_INTERFACE_INFO *) &pIfList->InterfaceInfo[i];
+			if(StringFromGUID2(pIfInfo->InterfaceGuid, (LPOLESTR) &GuidString, 39) > 0)
+			{
+				sprintf_s(buf, "%ws", GuidString);
+
+				// compare GUIDs
+				if(strcmp(guid_char, charGuid) == 0)
+				{
+					Debug::WriteLine("GUID Matched");
+
+					netInterface->InterfaceGuid = pIfInfo->InterfaceGuid;
+					netInterface->InterfaceFound = true;
+					return true;
+				}
+			}
+			else
+				Debug::WriteLine("StringFromGUID2 failed");
+		}
+	}
+
+	return false;
+}
+
 /**
  * configure wifi
  */
@@ -249,11 +423,9 @@ bool formStart::WifiFindInterface(void)
 {
 	HANDLE hClient = NULL;
     int iRet = 0;
-    
     WCHAR GuidString[40] = {0};
 	char buf[40] = "";
 	char*charGuid = buf;
-     
     int i;
 
     // variables used for WlanEnumInterfaces 
@@ -262,22 +434,26 @@ bool formStart::WifiFindInterface(void)
 
     pin_ptr<DWORD> pdwCurVersion = &dwCurVersion;
     dwResult = WlanOpenHandle(dwMaxClient, NULL, pdwCurVersion, &hClient); 
-    if (dwResult != ERROR_SUCCESS)  {
-		Debug::WriteLine(System::String::Format("WlanOpenHandle failed with error: {0} ",dwResult));
+    if (dwResult != ERROR_SUCCESS)
+	{
+		Debug::WriteLine(System::String::Format("WlanOpenHandle failed with error: {0}", dwResult));
         // FormatMessage can be used to find out why the function failed
         return false;
     }
     
     dwResult = WlanEnumInterfaces(hClient, NULL, &pIfList); 
-    if (dwResult != ERROR_SUCCESS)  {
+    if (dwResult != ERROR_SUCCESS)
+	{
 		Debug::WriteLine(System::String::Format("WlanEnumInterfaces failed with error: {0}", dwResult));
         // FormatMessage can be used to find out why the function failed
         return false;
     }
-    else {
+    else
+	{
 		Debug::WriteLine(System::String::Format("Num Entries: {0}", pIfList->dwNumberOfItems));
 		Debug::WriteLine(System::String::Format("Current Index: {0}", pIfList->dwIndex));
-        for (i = 0; i < (int) pIfList->dwNumberOfItems; i++) {
+        for (i = 0; i < (int) pIfList->dwNumberOfItems; i++)
+		{
             pIfInfo = (WLAN_INTERFACE_INFO *) &pIfList->InterfaceInfo[i];
 			Debug::WriteLine(System::String::Format("Interface Index[{0}]: {1}", i, i));
             iRet = StringFromGUID2(pIfInfo->InterfaceGuid, (LPOLESTR) &GuidString, 39); 
@@ -285,7 +461,8 @@ bool formStart::WifiFindInterface(void)
             // iRet = StringFromGUID2(&pIfInfo->InterfaceGuid, (LPOLESTR) &GuidString, 39); 
             if (iRet == 0)
 				Debug::WriteLine("StringFromGUID2 failed");
-            else {
+            else
+			{
 				sprintf_s(buf,"%ws",GuidString);
 				System::String^ str = gcnew String(buf);
 				Debug::WriteLine(str);
@@ -334,8 +511,10 @@ bool formStart::WifiFindInterface(void)
 			pAdapterInfo = (PIP_ADAPTER_INFO) GlobalAlloc(GPTR, AdapterInfoSize);
 			
 			dwResult = GetAdaptersInfo(pAdapterInfo, &AdapterInfoSize);
-			if (dwResult == ERROR_SUCCESS) Debug::WriteLine(L"GetAdaptersInfo Success");
-			else Debug::WriteLine(System::String::Format("GetAdaptersInfo Error  {0} ",(int)dwResult));
+			if (dwResult == ERROR_SUCCESS)
+				Debug::WriteLine(L"GetAdaptersInfo Success");
+			else
+				Debug::WriteLine(System::String::Format("GetAdaptersInfo Error  {0} ",(int)dwResult));
 			
 			pAdapt = pAdapterInfo;
 			while(pAdapt)
@@ -345,17 +524,20 @@ bool formStart::WifiFindInterface(void)
 				System::String^ guid2 = gcnew String(charGuid);
 				Debug::WriteLine(System::String::Format("compare names: {0}, {1}", guid1, guid2));
 				
-				if(strcmp(pAdapt->AdapterName,charGuid)==0)
+				if(strcmp(pAdapt->AdapterName, charGuid) == 0)
 				{
-					Debug::WriteLine(System::String::Format("GUID Match, Index: {0}", (int)pAdapt->Index));
-
 					netInterface->InterfaceGuid = pIfInfo->InterfaceGuid;
 					netInterface->InterfaceIndex = pAdapt->Index;
+					//strncpy_s(netInterface->InterfaceName, sizeof(netInterface->InterfaceName), pAdapt->Description, strlen(pAdapt->Description));
 					netInterface->InterfaceFound = true;
+					break;
 				}
-				if(netInterface->InterfaceFound)break;
+
 				pAdapt = pAdapt->Next;
 			}
+
+			if(netInterface->InterfaceFound)
+				break;
         }
     }
 	return netInterface->InterfaceFound;
@@ -379,8 +561,10 @@ bool formStart::WifiSetProfile(void)
 	// netsh wlan add profile filename=PATH interface=INTERFACENAME user=curent
 	DWORD dwFlags;
 	DWORD dwErrorCode = 0;
-	if(!isXP) dwFlags = 0x00000002; // Windows Vista and newer (WLAN_PROFILE_USER)
-	else dwFlags = 0;               // Windows XP
+	if(!isXP)
+		dwFlags = 0x00000002; // Windows Vista and newer (WLAN_PROFILE_USER)
+	else
+		dwFlags = 0;          // Windows XP
 	LPCWSTR lpcwstrProfile = _T(qaulWifiProfile);
 
 	dwResult = WlanSetProfile(
@@ -394,8 +578,10 @@ bool formStart::WifiSetProfile(void)
 					&dwErrorCode
 				);
 			
-	if (dwResult == ERROR_SUCCESS) success = true;
-	else Debug::WriteLine(System::String::Format("WlanSetProfile Error {0}, {1}",(int)dwResult, (int)dwErrorCode));
+	if (dwResult == ERROR_SUCCESS)
+		success = true;
+	else 
+		Debug::WriteLine(System::String::Format("WlanSetProfile Error {0}, {1}",(int)dwResult, (int)dwErrorCode));
 
 	WlanCloseHandle(hClient2, NULL);
 	return success;
@@ -431,8 +617,11 @@ bool formStart::WifiConnectProfile(void)
 		&netInterface->InterfaceGuid,
 		&sWLANConnParam,
 		NULL);
-	if (dwResult == ERROR_SUCCESS) success = true;
-	else Debug::WriteLine(System::String::Format("WlanConnect Error {0}",(int)dwResult));
+
+	if (dwResult == ERROR_SUCCESS)
+		success = true;
+	else
+		Debug::WriteLine(System::String::Format("WlanConnect Error {0}",(int)dwResult));
 
 	WlanCloseHandle(hClient3, NULL);
 	return success;
@@ -451,11 +640,12 @@ bool formStart::WifiSetIp(void)
 
 	System::String^ ip = Marshal::PtrToStringAnsi((IntPtr) (char *) Qaullib_GetIP());
 	pin_ptr<const TCHAR> ipTchar = PtrToStringChars(ip);
-	TCHAR cCmdBuf[5000];
+
+	TCHAR cCmdBuf[COMMAND_BUFFER_SIZE];
 
 	// --------------------------------------------------------------
 	// set ip
-	_stprintf(cCmdBuf,_T("netsh interface ip set address %i static %s 255.0.0.0 0.0.0.0 1"),
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("netsh interface ip set address %i static %s 255.0.0.0 0.0.0.0 1"),
 							(int)netInterface->InterfaceIndex,
 							ipTchar
 							);
@@ -463,8 +653,9 @@ bool formStart::WifiSetIp(void)
 	System::String^ strCmd = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("{0}", strCmd));
 
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
-		Debug::WriteLine(System::String::Format("ip configuration error: {0}",GetLastError()));
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
+		Debug::WriteLine(System::String::Format("ip configuration error: {0}", GetLastError()));
 		return false;
 	}
 	else
@@ -479,14 +670,38 @@ bool formStart::WifiSetIp(void)
 
 	// --------------------------------------------------------------
 	// set DNS
-	_stprintf(cCmdBuf,_T("netsh interface ip add dns %i static none"),
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("netsh interface ip add dns %i static none"),
 							(int)netInterface->InterfaceIndex
 							);
 
 	strCmd = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("{0}", strCmd));
 
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
+		Debug::WriteLine(System::String::Format("dns configuration error: {0}", GetLastError()));
+		return false;
+	}
+	else
+	{
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, INFINITE );
+
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );
+	}
+
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE,
+							_T("netsh interface ip add dns %i 178.254.31.11 1"),
+							(int)netInterface->InterfaceIndex
+							);
+
+	strCmd = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("{0}", strCmd));
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
 		Debug::WriteLine(System::String::Format("dns configuration error: {0}",GetLastError()));
 		return false;
 	}
@@ -500,36 +715,17 @@ bool formStart::WifiSetIp(void)
 		CloseHandle( pi.hThread );
 	}
 
-	_stprintf(cCmdBuf,_T("netsh interface ip add dns %i 178.254.31.11 1"),
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE,
+							_T("netsh interface ip add dns %i 77.67.33.81 2"),
 							(int)netInterface->InterfaceIndex
 							);
 
 	strCmd = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("{0}", strCmd));
 
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
-		Debug::WriteLine(System::String::Format("dns configuration error: {0}",GetLastError()));
-		return false;
-	}
-	else
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
 	{
-		// Wait until child process exits.
-		WaitForSingleObject( pi.hProcess, INFINITE );
-
-		// Close process and thread handles. 
-		CloseHandle( pi.hProcess );
-		CloseHandle( pi.hThread );
-	}
-
-	_stprintf(cCmdBuf,_T("netsh interface ip add dns %i 77.67.33.81 2"),
-							(int)netInterface->InterfaceIndex
-							);
-
-	strCmd = gcnew System::String(cCmdBuf);
-	Debug::WriteLine(System::String::Format("{0}", strCmd));
-
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
-		Debug::WriteLine(System::String::Format("dns configuration error: {0}",GetLastError()));
+		Debug::WriteLine(System::String::Format("dns configuration error: {0}", GetLastError()));
 		return false;
 	}
 	else
@@ -544,14 +740,16 @@ bool formStart::WifiSetIp(void)
 
 	// --------------------------------------------------------------
 	// remove bogous default gateway
-	_stprintf(cCmdBuf,_T("route delete 0.0.0.0 0.0.0.0 if %i"),
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE,
+							_T("route delete 0.0.0.0 0.0.0.0 if %i"),
 							(int)netInterface->InterfaceIndex
 							);
 
 	strCmd = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("{0}", strCmd));
 
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
 		Debug::WriteLine(System::String::Format("gateway delete error: {0}",GetLastError()));
 		return false;
 	}
@@ -569,20 +767,92 @@ bool formStart::WifiSetIp(void)
 	return true;
 }
 
+bool formStart::IpSetDhcp(void)
+{
+	Debug::WriteLine(L"IpSetDHCP");
+
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+
+	TCHAR cCmdBuf[COMMAND_BUFFER_SIZE];
+
+	// --------------------------------------------------------------
+	// set ip
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("netsh interface ip set address %i dhcp"),
+							(int)netInterface->InterfaceIndex
+							);
+
+	System::String^ strCmd = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("{0}", strCmd));
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
+		Debug::WriteLine(System::String::Format("ip configuration error: {0}", GetLastError()));
+		return false;
+	}
+	else
+	{
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, INFINITE );
+
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );
+	}
+
+	// --------------------------------------------------------------
+	// set DNS to DHCP
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("netsh interface ip set dns %i dhcp"),
+							(int)netInterface->InterfaceIndex
+							);
+
+	strCmd = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("{0}", strCmd));
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
+		Debug::WriteLine(System::String::Format("dns configuration error: {0}", GetLastError()));
+		return false;
+	}
+	else
+	{
+		// Wait until child process exits.
+		WaitForSingleObject( pi.hProcess, INFINITE );
+
+		// Close process and thread handles. 
+		CloseHandle( pi.hProcess );
+		CloseHandle( pi.hThread );
+	}
+
+	return true;
+}
+
 /**
  * start olsr
  */
 bool formStart::StartOlsr(void)
 {
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+
 	// start olsrd
 	// Interfaces: Olsrd recognizes the interfaces from its index
 	//             in hexadecimal notation:
 	//             12 -> if0c
-	Debug::WriteLine(System::String::Format("Adapter Index: {0} ",netInterface->InterfaceIndex));
+	Debug::WriteLine(System::String::Format("Adapter Index: {0} ", netInterface->InterfaceIndex));
 
-	TCHAR cCmdBuf[5000];
+	TCHAR cCmdBuf[COMMAND_BUFFER_SIZE];
 	pin_ptr<const TCHAR> tcResourcePath = PtrToStringChars(qaulResourcePath);
-	_stprintf(cCmdBuf,_T("\"%s\\olsrd.exe\" -i if%02x -f \"%s\\olsrd_app.conf\" -d 0"), 
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE,
+		_T("\"%s\\olsrd\" -i \"if%02x\" -d 0 -f \"%s\\olsrd_app.conf\""), 
 							tcResourcePath,
 							netInterface->InterfaceIndex,
 							tcResourcePath);
@@ -590,15 +860,9 @@ bool formStart::StartOlsr(void)
 	System::String^ strCmd = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("olsrd cmd: {0}", strCmd));
 
-
-	int i;
-	for(i = 0; i < sizeof(STARTUPINFO); i++)
-		((char *)&netInterface->StartInfo)[i] = 0;
-	netInterface->StartInfo.cb = sizeof(STARTUPINFO);
-
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &netInterface->StartInfo, &netInterface->ProcInfo)) {
-		//printf("Olsrd Startup Error: %d\n", GetLastError());
-		Debug::WriteLine(System::String::Format("Olsrd Startup Error: {0}",GetLastError()));
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
+		Debug::WriteLine(System::String::Format("Olsrd Startup Error: {0}", GetLastError()));
 		return false;
 	}
 
@@ -623,12 +887,14 @@ bool formStart::StopOlsr(void)
 
 	Debug::WriteLine(L"create cmd");
 
-	TCHAR cCmdBuf[5000];
-	_stprintf(cCmdBuf,_T("Taskkill /IM olsrd.exe /F"));
+	TCHAR cCmdBuf[COMMAND_BUFFER_SIZE];
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("Taskkill /IM olsrd.exe /F"));
 
-	Debug::WriteLine(L"create process");
+	System::String^ strCmd = gcnew System::String(cCmdBuf);
+	Debug::WriteLine(System::String::Format("run cmd: {0}", strCmd));
 
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
 		Debug::WriteLine(System::String::Format("Olsrd Kill Error 2: {0}",GetLastError()));
 		return false;
 	}
@@ -643,6 +909,7 @@ bool formStart::StopOlsr(void)
 		CloseHandle( pi.hProcess );
 		CloseHandle( pi.hThread );
 	}
+
 	Debug::WriteLine(L"olsrd killed");
 
 	return true;
@@ -663,13 +930,14 @@ bool formStart::StartPortforward(void)
     si.cb = sizeof(si);
     ZeroMemory( &pi, sizeof(pi) );
 
-	TCHAR cCmdBuf[5000];
+	TCHAR cCmdBuf[COMMAND_BUFFER_SIZE];
 	pin_ptr<const TCHAR> tcResourcePath = PtrToStringChars(qaulResourcePath);
-	_stprintf(cCmdBuf,_T("\"%s\\socat.exe\" \"TCP4-Listen:80,fork,reuseaddr\" \"TCP4:localhost:8081\""),tcResourcePath);
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("\"%s\\socat.exe\" \"TCP4-Listen:80,fork,reuseaddr\" \"TCP4:localhost:8081\""), tcResourcePath);
 	System::String^ strCmd = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("port forward cmd: {0}", strCmd));
 
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
 		Debug::WriteLine(System::String::Format("Port forward Startup Error: {0}",GetLastError()));
 		return false;
 	}
@@ -690,11 +958,12 @@ bool formStart::StopPortforward(void)
     si.cb = sizeof(si);
     ZeroMemory( &pi, sizeof(pi) );
 
-	TCHAR cCmdBuf[5000];
+	TCHAR cCmdBuf[COMMAND_BUFFER_SIZE];
 	pin_ptr<const TCHAR> tcResourcePath = PtrToStringChars(qaulResourcePath);
-	_stprintf(cCmdBuf,_T("Taskkill /IM socat.exe /F"));
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("Taskkill /IM socat.exe /F"));
 
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
 		Debug::WriteLine(System::String::Format("Port Forward Kill Error 2: {0}",GetLastError()));
 		return false;
 	}
@@ -709,9 +978,157 @@ bool formStart::StopPortforward(void)
 		CloseHandle( pi.hProcess );
 		CloseHandle( pi.hThread );
 	}
+
 	Debug::WriteLine(L"port forward killed");
 
 	return true;
+}
+
+/**
+ * JSON file for interface configuration
+ */
+bool formStart::CreateInterfaceJson(void)
+{
+	int if_type, if_num, json_pos, tmp_len;
+	char json_txt[MAX_JSON_LEN +1], tmp_txt[MAX_JSON_LEN +1], tmp_comma[2];
+	bool success;
+	
+	Debug::WriteLine(L"Create Interface JSON");
+
+	// Declare and initialize variables
+    DWORD dwSize = 0;
+    DWORD dwRetVal = 0;
+
+    unsigned int i = 0;
+
+    // Set the flags to pass to GetAdaptersAddresses
+    ULONG flags = GAA_FLAG_INCLUDE_PREFIX;
+
+    // default to unspecified address family (both)
+    ULONG family = AF_UNSPEC;
+
+    LPVOID lpMsgBuf = NULL;
+
+    PIP_ADAPTER_ADDRESSES pAddresses = NULL;
+    ULONG outBufLen = 0;
+    ULONG Iterations = 0;
+
+    PIP_ADAPTER_ADDRESSES pCurrAddresses = NULL;
+    PIP_ADAPTER_UNICAST_ADDRESS pUnicast = NULL;
+    PIP_ADAPTER_ANYCAST_ADDRESS pAnycast = NULL;
+    PIP_ADAPTER_MULTICAST_ADDRESS pMulticast = NULL;
+    IP_ADAPTER_DNS_SERVER_ADDRESS *pDnServer = NULL;
+    IP_ADAPTER_PREFIX *pPrefix = NULL;
+
+    // Allocate a 15 KB buffer to start with.
+    outBufLen = WORKING_BUFFER_SIZE;
+
+    do 
+	{
+        pAddresses = (IP_ADAPTER_ADDRESSES *) MALLOC(outBufLen);
+        if (pAddresses == NULL) 
+		{
+            Debug::WriteLine(L"Memory allocation failed for IP_ADAPTER_ADDRESSES struct\n");
+            exit(1);
+        }
+
+        dwRetVal = GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen);
+
+        if (dwRetVal == ERROR_BUFFER_OVERFLOW) 
+		{
+            FREE(pAddresses);
+            pAddresses = NULL;
+        } 
+		else 
+		{
+            break;
+        }
+
+        Iterations++;
+    } while ((dwRetVal == ERROR_BUFFER_OVERFLOW) && (Iterations < MAX_TRIES));
+
+	// initialize json string
+	json_pos = 0;
+	strncpy_s(json_txt +json_pos, MAX_JSON_LEN -json_pos, "", MAX_JSON_LEN -json_pos);
+
+    if (dwRetVal == NO_ERROR) 
+	{
+        if_num = 0;
+		
+		// If successful, output some information from the data we received
+        pCurrAddresses = pAddresses;
+        while (pCurrAddresses) 
+		{
+            if_type = 0;
+			
+			if(
+					// check if interface is of wanted type
+					(
+					//pCurrAddresses->IfType == IF_TYPE_ETHERNET_CSMACD  ||
+					pCurrAddresses->IfType == IF_TYPE_IEEE80211
+					) &&
+					// check if interface is available
+					(
+					pCurrAddresses->OperStatus != IfOperStatusNotPresent &&
+					pCurrAddresses->OperStatus != IfOperStatusLowerLayerDown
+					)
+				)
+			{
+				tmp_len = 0;
+				strncpy_s(tmp_txt +tmp_len, MAX_JSON_LEN -tmp_len, "", MAX_JSON_LEN -tmp_len);
+				if(if_num > 0)
+					strncpy_s(tmp_comma, sizeof(tmp_comma), ",", sizeof(tmp_comma));
+				else
+					strncpy_s(tmp_comma, sizeof(tmp_comma), "", sizeof(tmp_comma));
+				
+				if(pCurrAddresses->IfType == IF_TYPE_IEEE80211)
+					if_type = 1;
+				else
+					if_type = 0;
+
+				// write to json
+				tmp_len = sprintf_s(
+						tmp_txt,
+						sizeof(tmp_txt),
+						"%s{\"name\":\"%u\",\"ui_name\":\"%wS (%wS)\",\"type\":\"%i\"}",
+						tmp_comma,
+						pCurrAddresses->IfIndex,
+						pCurrAddresses->FriendlyName,
+						pCurrAddresses->Description,
+						if_type
+						);
+
+				if(json_pos + tmp_len <= MAX_JSON_LEN)
+				{
+					json_pos = strlen(json_txt);
+					strncpy_s(json_txt +json_pos, MAX_JSON_LEN -json_pos, tmp_txt, MAX_JSON_LEN -json_pos);
+					json_pos = strlen(json_txt);
+					if_num++;
+				}
+			}
+
+            pCurrAddresses = pCurrAddresses->Next;
+        }
+		
+		success = true;
+    } 
+	else 
+	{
+        Debug::WriteLine(L"Create Interface JSON failed");
+		success = false;
+    }
+
+	// write interface JSON to qaullib
+	System::String^ json_txt_str = gcnew System::String(json_txt);
+	Debug::WriteLine(json_txt_str);
+	Qaullib_SetInterfaceJson(json_txt);
+
+    if (pAddresses) 
+	{
+        FREE(pAddresses);
+    }
+
+    return success;
 }
 
 /**
@@ -727,14 +1144,16 @@ bool formStart::ConfigureFirewall(void)
     si.cb = sizeof(si);
     ZeroMemory( &pi, sizeof(pi) );
 
-	TCHAR cCmdBuf[5000];
+	TCHAR cCmdBuf[COMMAND_BUFFER_SIZE];
 	pin_ptr<const TCHAR> tcResourcePath = PtrToStringChars(qaulResourcePath);
 
-	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=in action=allow enable=yes program=\"%s\\qaul.exe\""),tcResourcePath);
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("netsh advfirewall firewall add rule name=\"qaul\" dir=in action=allow enable=yes program=\"%s\\qaul.exe\""), tcResourcePath);
 	System::String^ strCmd5 = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd5));
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
-		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
+		Debug::WriteLine(System::String::Format("firewall configuration error: {0}", GetLastError()));
 	}
 	else
 	{
@@ -746,10 +1165,14 @@ bool formStart::ConfigureFirewall(void)
 		CloseHandle( pi.hThread );	
 	}
 
-	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=out action=allow enable=yes program=\"%s\\qaul.exe\""),tcResourcePath);
+	Debug::WriteLine(L"ConfigureFirewall 3");
+
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("netsh advfirewall firewall add rule name=\"qaul\" dir=out action=allow enable=yes program=\"%s\\qaul.exe\""), tcResourcePath);
 	System::String^ strCmd6 = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd6));
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
 		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
 	}
 	else
@@ -762,10 +1185,14 @@ bool formStart::ConfigureFirewall(void)
 		CloseHandle( pi.hThread );	
 	}
 
-	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=in action=allow enable=yes program=\"%s\\socat.exe\""),tcResourcePath);
+	Debug::WriteLine(L"ConfigureFirewall 4");
+
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("netsh advfirewall firewall add rule name=\"qaul\" dir=in action=allow enable=yes program=\"%s\\socat.exe\""), tcResourcePath);
 	System::String^ strCmd = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd));
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
 		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
 	}
 	else
@@ -778,10 +1205,12 @@ bool formStart::ConfigureFirewall(void)
 		CloseHandle( pi.hThread );	
 	}
 
-	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=out action=allow enable=yes program=\"%s\\socat.exe\""),tcResourcePath);
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("netsh advfirewall firewall add rule name=\"qaul\" dir=out action=allow enable=yes program=\"%s\\socat.exe\""), tcResourcePath);
 	System::String^ strCmd2 = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd2));
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
 		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
 	}
 	else
@@ -794,11 +1223,13 @@ bool formStart::ConfigureFirewall(void)
 		CloseHandle( pi.hThread );	
 	}
 
-	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=in action=allow enable=yes program=\"%s\\olsrd.exe\""),tcResourcePath);
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("netsh advfirewall firewall add rule name=\"qaul\" dir=in action=allow enable=yes program=\"%s\\olsrd.exe\""), tcResourcePath);
 	System::String^ strCmd3 = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd3));
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
-		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
+		Debug::WriteLine(System::String::Format("firewall configuration error: {0}", GetLastError()));
 	}
 	else
 	{
@@ -810,10 +1241,12 @@ bool formStart::ConfigureFirewall(void)
 		CloseHandle( pi.hThread );	
 	}
 
-	_stprintf(cCmdBuf,_T("netsh advfirewall firewall add rule name=\"qaul\" dir=out action=allow enable=yes program=\"%s\\olsrd.exe\""),tcResourcePath);
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("netsh advfirewall firewall add rule name=\"qaul\" dir=out action=allow enable=yes program=\"%s\\olsrd.exe\""), tcResourcePath);
 	System::String^ strCmd4 = gcnew System::String(cCmdBuf);
 	Debug::WriteLine(System::String::Format("add firewall rule: {0}", strCmd4));
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
 		Debug::WriteLine(System::String::Format("firewall configuration error: {0}",GetLastError()));
 	}
 	else
@@ -843,11 +1276,12 @@ bool formStart::UnconfigureFirewall(void)
     si.cb = sizeof(si);
     ZeroMemory( &pi, sizeof(pi) );
 
-	TCHAR cCmdBuf[5000];
+	TCHAR cCmdBuf[COMMAND_BUFFER_SIZE];
 	pin_ptr<const TCHAR> tcResourcePath = PtrToStringChars(qaulResourcePath);
-	_stprintf(cCmdBuf,_T("netsh advfirewall firewall delete rule name=\"qaul\""));
+	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE, _T("netsh advfirewall firewall delete rule name=\"qaul\""));
 
-	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+	if(!CreateProcess(NULL, cCmdBuf, NULL, NULL, TRUE, CREATE_NEW_PROCESS_GROUP|CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	{
 		Debug::WriteLine(System::String::Format("Error firewall unconfiguration: {0}",GetLastError()));
 		return false;
 	}
@@ -862,6 +1296,7 @@ bool formStart::UnconfigureFirewall(void)
 		CloseHandle( pi.hProcess );
 		CloseHandle( pi.hThread );
 	}
+
 	Debug::WriteLine(L"firewall unconfigured");
 
 	return true;
@@ -887,6 +1322,7 @@ void formStart::CheckIpcTopology( Object^ myObject, EventArgs^ myEventArgs)
 void formStart::CheckAppEvents( Object^ myObject, EventArgs^ myEventArgs)
 {
 	int appEvent = Qaullib_TimedCheckAppEvent();
+
 	if(appEvent > 0)
 	{
 		// show file picker
@@ -949,6 +1385,11 @@ void formStart::CheckAppEvents( Object^ myObject, EventArgs^ myEventArgs)
 		else if(appEvent == QAUL_EVENT_NOTIFY || appEvent == QAUL_EVENT_RING)
 		{
 			Beep(750, 300);
+		}
+		else if(appEvent == QAUL_EVENT_GETINTERFACES)
+		{
+			// search interfaces and write JSON
+			CreateInterfaceJson();
 		}
 	}
 }

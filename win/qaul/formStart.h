@@ -38,6 +38,7 @@ namespace qaul {
 		// variables
 		System::String^ qaulResourcePath;
 		int qaulStartCounter;
+		int qaulIpcCounter;
 		bool isXP;
 		// wifi config
 		DWORD dwResult;
@@ -49,16 +50,22 @@ namespace qaul {
 		//DWORD netInterfaceIndex;
 		//GUID netInterfaceGuid;
 		qaulInterface* netInterface;
+		bool qaulInterfaceManual;
 
 		// functions
 		void InitializeQaul(void);
 		void ExitQaul(void);
 		void QaulStarting(void);
 
+		static bool CreateInterfaceJson(void);
+		bool InterfaceInfo(const char* interfaceIndex);
+		bool InterfaceGetGuid(const char* guid_char);
+		//bool InterfaceGetName(void);
 		bool WifiFindInterface(void);
 		bool WifiSetProfile(void);
 		bool WifiConnectProfile(void);
 		bool WifiSetIp(void);
+		bool IpSetDhcp(void);
 		bool StartOlsr(void);
 		bool StopOlsr(void);
 		bool StartPortforward(void);
@@ -243,7 +250,7 @@ private: System::Void formStart_FormClosing(System::Object^  sender, System::Win
 			this->webBrowser1->ScrollBarsEnabled = false;
 			this->webBrowser1->Size = System::Drawing::Size(400, 600);
 			this->webBrowser1->TabIndex = 5;
-			this->webBrowser1->Url = (gcnew System::Uri(L"http://127.0.0.1:8081/jqm_qaul.html", System::UriKind::Absolute));
+			this->webBrowser1->Url = (gcnew System::Uri(L"http://localhost:8081/jqm_qaul.html", System::UriKind::Absolute));
 			// 
 			// Form1
 			// 
@@ -301,10 +308,16 @@ private: System::Void formStart_FormClosing(System::Object^  sender, System::Win
 
 		void ErrorShow(System::String^ strError)
 		{
-			if(startFormActive) StartHide();
-			if(chatFormActive) ChatHide();
+			Debug::WriteLine(L"ErrorShow");
+			Debug::WriteLine(strError);
+			
+			if(startFormActive) 
+				StartHide();
+			if(chatFormActive) 
+				ChatHide();
 
-			if(!errorFormInitialized) ErrorInitialize();
+			if(!errorFormInitialized) 
+				ErrorInitialize();
 			else if(!errorFormActive)
 			{
 				this->Controls->Add(this->lblError);
