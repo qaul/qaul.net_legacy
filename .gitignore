@@ -159,3 +159,8 @@ binary_release/qaul.net/
 binary_release/mof/
 binary_release/*.tar.gz
 
+# openwrt
+openwrt/OpenWrt*
+openwrt/Attitude-Adjustment*
+openwrt/*.tar.bz2
+openwrt/*.bin
