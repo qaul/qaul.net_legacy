@@ -15,9 +15,10 @@ LIBDEST=./
 
 # linux
 ARCH=$(shell uname -m)
-HARDW=$(shell uname -i)
 ifeq ($(ARCH),i686)
 HARDW=pc
+else
+HARDW=unknown
 endif
 PJSIPTYPE=$(ARCH)-$(HARDW)-linux-gnu
 LIBS= \
