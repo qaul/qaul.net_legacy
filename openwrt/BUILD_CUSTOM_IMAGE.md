@@ -42,8 +42,9 @@ Preparations
     # configure the making (everything was fine on default)
     make menuconfig
     
-    # build firmware
-    make
+    # build firmware 
+    # (the -q option defines the number of threads used)
+    make -q 4 V=s
 
 * The builded images, the ImageBuilder and the SDK are located in: 
   bin/ar71xx
