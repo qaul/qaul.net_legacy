@@ -1210,7 +1210,7 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 		// add file
 		file_item.type = QAUL_FILETYPE_FILE;
 		file_item.status = QAUL_FILESTATUS_MYFILE;
-		sprintf(file_item.adv_name, "");
+		sprintf(file_item.adv_name, "%s", "");
 		memset(&file_item.adv_ip, 0, sizeof(file_item.adv_ip));
 		file_item.adv_validip = 0;
 		file_item.downloaded = 0;
