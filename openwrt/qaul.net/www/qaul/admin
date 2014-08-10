@@ -53,15 +53,20 @@ function load_config()
 			else
 				$('#storage').removeClass('selected');
 				
-			if(data.eth == 'qaul')
+			if(data.eth_config)
 			{
-				$('#eth_qaul').addClass('selected');
-				$('#eth_wan').removeClass('selected');
-			}
-			else
-			{
-				$('#eth_wan').addClass('selected');
-				$('#eth_qaul').removeClass('selected');
+				$("#eth_config").show();
+				
+				if(data.eth == 'qaul')
+				{
+					$('#eth_qaul').addClass('selected');
+					$('#eth_wan').removeClass('selected');
+				}
+				else
+				{
+					$('#eth_wan').addClass('selected');
+					$('#eth_qaul').removeClass('selected');
+				}
 			}
 		}
 		
@@ -118,6 +123,11 @@ function back()
 
 function submit_login()
 {
+	if(event.preventDefault)
+		event.preventDefault();
+    else
+        event.returnValue = false;
+
 	loading_show();
 	var formdata = {pw:$("#login_password").val()};
 	$.ajax({
@@ -138,12 +148,17 @@ function submit_login()
 
 function submit_newpassword()
 {
+	if(event.preventDefault)
+		event.preventDefault();
+    else
+        event.returnValue = false;
+        
 	if($("#new_password").val() == $("#new_password2").val())
 	{
 		loading_show();
 		var formdata = {pw:$("#new_password").val(),pin:$("#mobile_pin").val(),un:$("#mobile_un").val(),pw:$("#mobile_pw").val()};
 		$.ajax({
-			url: "/cgi-bin/qaul/newpasswd",
+			url: "/cgi-bin/qaul/newpassword",
 			type: "POST",
 			data: formdata,
 			cache: false,
@@ -163,6 +178,11 @@ function submit_newpassword()
 
 function submit_mobile()
 {
+	if(event.preventDefault)
+		event.preventDefault();
+    else
+        event.returnValue = false;
+        
 	loading_show();	
 	var formdata = {apn:$("#mobile_apn").val(),pin:$("#mobile_pin").val(),un:$("#mobile_un").val(),pw:$("#mobile_pw").val()};
 	$.ajax({
@@ -199,7 +219,7 @@ function submit_mobile()
 	<img src="/qaul/3g.jpg"/>
 </div>
 </div>
-<div class="section switch">
+<div id="eth_config" class="section switch">
 <div onclick="config('eth_wan')" id="eth_wan" class="choice selected">
 	<img src="/qaul/wi-q_et-i.jpg"/>
 </div>

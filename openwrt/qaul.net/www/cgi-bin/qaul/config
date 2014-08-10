@@ -26,6 +26,9 @@ echo "\"storage\":$qaul_storage,\n"
 qaul_mobile=`cat /qaul/config/mobile`
 echo "\"mobile\":$qaul_mobile,\n"
 
+qaul_eth_config=`cat /qaul/config/eth_config`
+echo "\"eth_config\":\"$qaul_eth_config\"\n"
+
 qaul_eth=`cat /qaul/config/eth`
 echo "\"eth\":\"$qaul_eth\"\n"
 
