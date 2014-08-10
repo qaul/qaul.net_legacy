@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "Content-type: text/json"
+echo ""
+
+# authenticate
+#echo "{'s':0}"
+
+# switch internet on
+/qaul/bin/internet_off.sh
+
+echo "{\"s\":1}"

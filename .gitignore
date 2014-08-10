@@ -164,3 +164,6 @@ openwrt/OpenWrt*
 openwrt/Attitude-Adjustment*
 openwrt/*.tar.bz2
 openwrt/*.bin
+*.test
+*.bak
+tmp_qaul.net

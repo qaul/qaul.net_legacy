@@ -31,7 +31,7 @@ Preparations
     protobuf-compiler
     
     # clone git repository
-    git clone git://nbd.name/openwrt.git
+    git clone git://git.openwrt.org/14.07/openwrt.git
     cd openwrt
     
     # get latest feeds
@@ -43,8 +43,8 @@ Preparations
     make menuconfig
     
     # build firmware 
-    # (the -q option defines the number of threads used)
-    make -q 4 V=s
+    # (the -j option defines the number of simultaneous jobs)
+    make V=s -j 5 
 
 * The builded images, the ImageBuilder and the SDK are located in: 
   bin/ar71xx
@@ -95,8 +95,8 @@ can therefore store an image with all convenient packages.
     # for TL-WR842ND
     make image PROFILE=TLWR842 \
     FILES=../WR84X_qaul.net \
-    PACKAGES="olsrd kmod-ipip ip \
-    uhttpd \
+    PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip ip \
+    uhttpd lua liblua \
     tinc \
     kmod-usb-storage block-mount kmod-fs-ext4 \
     openssh-sftp-server horst" 

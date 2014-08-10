@@ -1,0 +1,52 @@
+/* qaul.net openwrt admin */
+
+body  { 
+	background:#ffffff; 
+	font-size:18px; 
+	font-family:LucidaGrande,helvetica,sans-serif; 
+	color:#bbb; 
+	margin:0;
+	padding:0;
+	text-align:center;
+}
+a { 
+	text-decoration:none; 
+	color:#6399cc; 
+}
+a:hover {
+	text-decoration:underline;
+}
+img {
+	border:none;
+}
+
+.choice {
+	background-color: #ffffff;
+	background: linear-gradient(to bottom, #ffffff, #eaeaea);
+	border: 1px solid #e3e3e3;
+	border-radius: 10px;
+	margin: 5px;
+	padding:10px;
+}
+.choice:hover {
+	background-color: #eaeaea;
+	background: linear-gradient(to bottom, #ffffff, #dadada);
+	color:#436fa1;
+}
+
+.choice.selected {
+	background-color: #dadada;
+	background: linear-gradient(to bottom, #ffffff, #cacaca);
+	color:#000;
+} 
+
+.choice.toggle:hover {
+	background-color: #eaeaea;
+	background: linear-gradient(to bottom, #ffffff, #daffda);
+	color:#436fa1;
+}
+.choice.toggle.selected {
+	background-color: #dadada;
+	background: linear-gradient(to bottom, #ffffff, #caffca);
+	color:#000;
+} 

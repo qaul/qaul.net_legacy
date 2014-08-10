@@ -1,0 +1,9 @@
+#!/bin/sh
+
+echo "Content-type: text/html"
+echo ""
+
+# authenticate
+
+# show page
+cat /qaul/html/admin

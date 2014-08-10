@@ -1,0 +1,32 @@
+#!/bin/sh
+
+## json configuration file
+
+# send configuration
+echo "Content-type: text/json"
+echo ""
+
+echo "{\n"
+
+# check authentication
+echo "\"auth\":1,\n"
+
+echo '"internet":'
+qaul_internet=`uci show olsrd.dyn_gw.ignore`
+if ["$qaul_internet" = "0"]
+then
+	echo "1,\n"
+else
+	echo "0,\n"
+fi
+
+qaul_storage=`cat /qaul/config/storage`
+echo "\"storage\":$qaul_storage,\n"
+
+qaul_mobile=`cat /qaul/config/mobile`
+echo "\"mobile\":$qaul_mobile,\n"
+
+qaul_eth=`cat /qaul/config/eth`
+echo "\"eth\":\"$qaul_eth\"\n"
+
+echo "}"

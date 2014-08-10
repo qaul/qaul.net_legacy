@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "Content-type: text/json"
+echo ""
+
+# authenticate
+#echo "{'s':0}"
+
+# switch internet on
+/qaul/bin/eth_wan.sh
+
+echo "{\"s\":1}"

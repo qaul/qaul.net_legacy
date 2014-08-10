@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# generate random MD5 sum from 
+random=`head -c256 /dev/urandom`
+MD5=`echo -n '$random'  | md5sum | awk '{print $1}'`
+
+echo "Content-type: text/html"
+echo "Set-Cookie: s=$MD5"
+echo ""
+
+# receive POST variables
+if [ "$REQUEST_METHOD" = POST ]; then
+	read -n $CONTENT_LENGTH QUERY_STRING_POST
+fi
+IFS="&="
+set -- $QUERY_STRING_POST
+
+# login
+/qaul/bin/login.sh "$2"
+
+echo "{\"s\":1}"
