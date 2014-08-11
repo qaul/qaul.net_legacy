@@ -4,9 +4,13 @@ echo "Content-type: text/json"
 echo ""
 
 # authenticate
-#echo "{'s':0}"
+qaul_auth=`/qaul/bin/authenticate.sh`
 
-# logout
-/qaul/bin/logout.sh
-
-echo "{\"s\":1}"
+if ["$qaul_auth" = "1"]
+then
+	# logout
+	/qaul/bin/logout.sh
+	echo "{\"s\":1}"
+else
+	echo "{\"s\":0}"
+fi

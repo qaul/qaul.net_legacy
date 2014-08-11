@@ -4,7 +4,10 @@ echo "Content-type: text/json"
 echo ""
 
 # authenticate
+qaul_auth=`/qaul/bin/authenticate.sh`
 
+if ["$qaul_auth" = "1"]
+then
 # receive POST variables
 if [ "$REQUEST_METHOD" = POST ]; then
 	read -n $CONTENT_LENGTH QUERY_STRING_POST
@@ -16,3 +19,6 @@ set -- $QUERY_STRING_POST
 /qaul/bin/mobile_config.sh "$2" "$4" "$6" "$8"
 
 echo "{\"s\":1}"
+else
+	echo "{\"s\":0}"
+fi
