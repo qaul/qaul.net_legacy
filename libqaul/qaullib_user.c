@@ -94,15 +94,9 @@ void Qaullib_UserTouchIp(union olsr_ip_addr *ip, float linkcost)
 {
 	struct qaul_user_LL_item *user;
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_UserTouchIp \n");
-
 	// check if user exists in LL
 	if(Qaullib_User_LL_IpSearch (ip, &user))
 	{
-		if(QAUL_DEBUG)
-			printf("user exists \n");
-
 		// if user exists: update lastseen_at
 		if(user->changed >= QAUL_USERCHANGED_DELETED)
 		{
@@ -150,8 +144,6 @@ void Qaullib_UserTouchIp(union olsr_ip_addr *ip, float linkcost)
 // ------------------------------------------------------------
 void Qaullib_UserCheckNonames(void)
 {
-	//printf("[LL next] Qaullib_UserCheckNonames\n");
-
 	struct qaul_user_LL_node mynode;
 	Qaullib_User_LL_InitNode(&mynode);
 	while(Qaullib_User_LL_NextNode(&mynode))
@@ -210,12 +202,9 @@ int Qaullib_UserDownloadProcess(struct qaul_user_connection *userconnection, int
 
 	if(bytes >= sizeof(struct qaul_userinfo_msg))
 	{
-		printf("Qaullib_UserDownloadProcess received\n");
 		// check for first info (usually requested user)
 		if(memcmp(&userconnection->user->ip, &userconnection->conn.buf.userinfo.ip, sizeof(union olsr_ip_addr)) == 0)
 		{
-			printf("Qaullib_UserDownloadProcess first is asked client\n");
-
 			strncpy(userconnection->user->name, userconnection->conn.buf.userinfo.name, MAX_USER_LEN);
 			memcpy(&userconnection->user->name[MAX_USER_LEN], "\0", 1);
 
@@ -240,9 +229,6 @@ int Qaullib_UserDownloadProcess(struct qaul_user_connection *userconnection, int
 		bufpos = sizeof(struct qaul_userinfo_msg);
 		while(bytes -bufpos >= sizeof(struct qaul_userinfo_msg))
 		{
-			if(QAUL_DEBUG)
-				printf("Qaullib_UserDownloadProcess further user info\n");
-
 			// process information
 			Qaullib_UserAddInfo((struct qaul_userinfo_msg *)&userconnection->conn.buf.buf[bufpos]);
 			// set new bufpos
@@ -357,17 +343,12 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 {
 	struct qaul_user_LL_item *myuseritem;
 
-	printf("Qaullib_UserAdd\n");
-
 	// search for user
 	if(Qaullib_User_LL_IpSearch (ip, &myuseritem))
 	{
-		printf("Qaullib_UserAddInfo user found in LL\n");
-
 		// check if it is already known
 		if(myuseritem->type < QAUL_USERTYPE_KNOWN)
 		{
-			printf("Qaullib_UserAddInfo name not known yet\n");
 			// set type
 			myuseritem->type = QAUL_USERTYPE_KNOWN;
 			if(myuseritem->changed == QAUL_USERCHANGED_UNCHANGED)
@@ -378,7 +359,6 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 	}
 	else
 	{
-		printf("Qaullib_UserAddInfo user not found in LL: create it\n");
 		// create the user if it doesn't exist
 		myuseritem = Qaullib_User_LL_Add (ip);
 		// set user to cache
@@ -390,7 +370,6 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 	memcpy(&myuseritem->name[MAX_USER_LEN], "\0", 1);
 	// todo: add icon info
 	memcpy(&myuseritem->icon[0], "\0", 1);
-	printf("Qaullib_User survived\n");
 
 	if(strlen(myuseritem->name) > 0)
 		myuseritem->type = QAUL_USERTYPE_KNOWN;

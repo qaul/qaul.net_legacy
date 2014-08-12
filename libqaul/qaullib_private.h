@@ -90,6 +90,7 @@ int qaul_conf_network;
 int qaul_web_localip_set;
 int qaul_exe_available;
 int qaul_ipc_topo_request;
+int qaul_ipc_connected;
 char qaullib_AppEventOpenURL[MAX_URL_LEN +1];
 
 char qaullib_FileDownloadFolderPath[MAX_PATH_LEN +1];

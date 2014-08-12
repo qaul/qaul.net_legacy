@@ -35,6 +35,7 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_UDP_started = 0;
 	qaul_exe_available = 0;
 	qaul_ipc_topo_request = 0;
+	qaul_ipc_connected = 1;
 	qaul_topo_LL_first = 0;
 	qaul_appevent_LL_first = 0;
 	qaul_appevent_LL_last = 0;
@@ -425,9 +426,6 @@ int Qaullib_StringMsgProtect(char *protected_string, char *unprotected_string, i
 {
 	int i, j;
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_StringMsgControl\n");
-
 	j=0;
 	for(i=0; i<strlen(unprotected_string); i++)
 	{
@@ -539,9 +537,6 @@ int Qaullib_StringDbProtect(char *protected_string, char *unprotected_string, in
 {
 	int i, j;
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_StringDbProtect\n");
-
 	j=0;
 	for(i=0; i<strlen(unprotected_string); i++)
 	{
@@ -575,9 +570,6 @@ int Qaullib_StringDbProtect(char *protected_string, char *unprotected_string, in
 	}
 
 	memcpy(protected_string +j, "\0", 1);
-
-	if(QAUL_DEBUG)
-		printf("Qaullib_StringDbProtect protected string: %s\n", protected_string);
 
 	return j;
 }

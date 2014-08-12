@@ -83,9 +83,6 @@ void Qaullib_ExeScheduleDiscovery(void)
 	m = (union olsr_message *)buffer;
 	OS_flag = 0;
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_ExeScheduleDiscovery\n");
-
 	for(i=0; i<MAX_POPULATE_FILE; i++)
 	{
 		if(
