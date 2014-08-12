@@ -35,10 +35,48 @@ then
 		echo "\"mobile\":$qaul_mobile,\n"
 
 		qaul_eth_config=`cat /qaul/config/eth_config`
-		echo "\"eth_config\":\"$qaul_eth_config\"\n"
+		echo "\"eth_config\":\"$qaul_eth_config\",\n"
 
 		qaul_eth=`cat /qaul/config/eth`
-		echo "\"eth\":\"$qaul_eth\"\n"
+		echo "\"eth\":\"$qaul_eth\",\n"
+		
+		# display ip's
+		echo "\"config\":[\n"
+		comma="0"
+		value=`uci get network.qaulwifi.ipaddr`
+		if ["$value" = "uci: Entry not found"]; then
+		else
+			echo "\"WLAN: $value\""
+			comma="1"
+		fi
+		value=`uci get network.wan.ipaddr`
+		if ["$value" = "uci: Entry not found"]; then
+		else
+			if ["$comma" = "1"]; then
+				echo ","
+			fi
+			echo "\"WAN: $value\""
+			comma="1"
+		fi
+		value=`uci get network.qauleth.ipaddr`
+		if ["$value" = "uci: Entry not found"]; then
+		else
+			if ["$comma" = "1"]; then
+				echo ","
+			fi
+			echo "\"ETH qaul: $value\""
+			comma="1"
+		fi
+		value=`uci get network.lan.ipaddr`
+		if ["$value" = "uci: Entry not found"]; then
+		else
+			if ["$comma" = "1"]; then
+				echo ","
+			fi
+			echo "\"LAN: $value\""
+			comma="1"
+		fi
+		echo "\"config\":]\n"
 	else
 		echo "\"auth\":2\n"
 	fi
