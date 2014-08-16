@@ -31,7 +31,7 @@ cd OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64
 # 
 make image PROFILE=TLWR842 FILES=../tmp_qaul.net \
     PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip ip \
-    uhttpd libpam empty \
+    uhttpd empty \
 	libubus-lua liblua lua libuci-lua \
     luci-ssl libpolarssl px5g \
     tinc \
