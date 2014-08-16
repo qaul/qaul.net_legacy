@@ -4,9 +4,10 @@
 ## TL-WR842ND, TL-WR842N
 
 
-# check if build directory already exists
-
-# extract archive
+# prepare files to include
+rm -R tmp_qaul.net
+cp -R qaul.net tmp_qaul.net
+cp -R WR842/* tmp_qaul.net/
 
 # change into build directory
 cd OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64
@@ -15,6 +16,7 @@ cd OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64
 #
 # http maybe needed: 
 # uhttpd uhttpd-mod-lua liblua lua libuci-lua libubus-lua \
+# e2fsprogs
 # 
 # https: 
 # maybe further packages needed: libpolarssl libustream-polarssl uhttpd-mod-tls px5g
@@ -27,13 +29,13 @@ cd OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64
 # kmod-usb-net    # for tethering and rndis support (new 4G dongles)
 # kmod-usb-serial # for dongles with serial support (most common)
 # 
-make image PROFILE=TLWR842 FILES=../WR84X_qaul.net \
+make image PROFILE=TLWR842 FILES=../tmp_qaul.net \
     PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip ip \
-    uhttpd liblua lua libuci-lua \
-	luci-ssl libubus-lua \
-    libpolarssl px5g \
+    uhttpd libpam empty \
+	libubus-lua liblua lua libuci-lua \
+    luci-ssl libpolarssl px5g \
     tinc \
-    kmod-usb-storage block-mount kmod-fs-ext4 e2fsprogs \
+    kmod-usb-storage block-mount kmod-fs-ext4 \
     comgt kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm kmod-usb-net usb-modeswitch \
     openssh-sftp-server horst"
 

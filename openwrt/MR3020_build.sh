@@ -29,11 +29,16 @@ cd OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64
 # kmod-usb-serial # for dongles with serial support (most common)
 # 
 make image PROFILE=TLMR3020 FILES=../tmp_qaul.net \
-    PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip ip \
+    PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip \
     uhttpd \
-    kmod-usb-storage block-mount kmod-fs-ext4 e2fsprogs \
+    kmod-usb-storage block-mount kmod-fs-ext4 \
     comgt kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm kmod-usb-net usb-modeswitch \
     "
+#    PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip ip \
+#    uhttpd \
+#    kmod-usb-storage block-mount kmod-fs-ext4 e2fsprogs \
+#    comgt kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm kmod-usb-net usb-modeswitch \
+#    "
 
 cd ../
 
