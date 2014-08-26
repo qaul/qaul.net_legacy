@@ -8,6 +8,7 @@
 // ------------------------------------------------------
 var chat_form;
 var msg;
+var msg_last_id = 0;
 var user_name = "";
 var starting;
 var chat;
@@ -17,9 +18,10 @@ var count = 0;
 var tag_last_id = 0;
 var tag_name = "";
 var user_last_id = 0;
-var qaul_config;
+var qaul_config = {is_mobile:1,msg_max:20};
 var node_count = 0;
 var user_count = 0;
+var qaul_locale = null;
 
 var qaulfiles = [];
 var qaulusers = [];
@@ -29,7 +31,9 @@ var qaulinitialized = false;
 var chat_initialized = false;
 var is_chrome = false;
 var call_page_origin = "page_chat";
-var user_page_origin = "pager_users";
+var user_page_origin = "page_users";
+
+var web_update_timeout = 5000;
 
 var QAUL_FILESTATUS_DELETED     = -2;
 var QAUL_FILESTATUS_ERROR       = -1;
@@ -47,7 +51,6 @@ var QAUL_FILESTATUS_MYFILE      =  5;
 function init_start()
 {
 	$.mobile.changePage('#page_loading');
-	setTimeout(function(){loadingtimer();}, 1000);
 	
 	// bugfix check if browser is chrome
 	is_chrome = /chrome/.test(navigator.userAgent.toLowerCase());
@@ -63,8 +66,6 @@ function init_start()
 	// events
 	$(document).bind("pagechange", onPageChange);
 	$(document).bind("pagebeforechange", onPageBeforeChange);
-	
-	$("#interface_select_auto").change(configInterfaceToggle);
 	
 	// add custom validation method
 	jQuery.validator.addMethod("nospaces", function(value, element) { 
@@ -104,14 +105,16 @@ function init_start()
 	
 	// set locale
 	$("#locale_submit").click(function(){
-		send_locale();
+		set_locale($("input[name='l']:checked").val());
+		$.mobile.changePage($("#page_config_name"));
 		return false;
 	});
 	
 	// set username
 	name_form.validate({
 		submitHandler: function(form){
-			send_name();
+			set_username($("#name_name").val());
+			$.mobile.changePage($("#page_chat"));
 		}
 	});
 	
@@ -186,21 +189,23 @@ function init_start()
 			if(e.which == 13)
 			{
 				if($("#name_form").valid())
-					send_name();
+				{
+					set_username($("#name_name").val());
+					$.mobile.changePage($("#page_chat"));
+				}
 				e.preventDefault();
 				return false;
 			}
 		});
 		$("#name_submit").click(function(){
 			if($("#name_form").valid())
-				send_name();
+			{
+				set_username($("#name_name").val());
+				$.mobile.changePage($("#page_chat"));
+			}
 			return false;
 		});
 		
-		// TODO: start/stop internet sharing
-		
-		// TODO: configure custom network
-	
 		// files
 		$("#file_add_form input").keypress(function(e){
 			if(e.which == 13)
@@ -219,60 +224,7 @@ function init_start()
 	}
 	
 	qaul_initialized = true;
-	init_config();
-}
-
-function init_config()
-{
-	// load configuration
-	$.ajax({
-		url:   "getconfig.json",
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			qaul_configure(data);
-		}
-	});
-}
-
-function qaul_configure(data)
-{
-	qaul_config = data;
-	
-	// set up everything
-	if(qaul_config.c_quit) 
-		$(".c_quit").show();
-	if(qaul_config.c_debug) 
-		$(".c_debug").show();
-	if(qaul_config.c_interface) 
-		$(".c_interface").css("display","block");
-	if(qaul_config.c_internet) 
-		$(".c_internet").css("display","block");
-	if(qaul_config.c_network) 
-		$(".c_network").css("display","block");
-	
-	if(qaul_config.locale)
-	{
-		// load locale
-		$.ajax({
-			url:   "i18n/" +qaul_config.locale +".json",
-			cache: false, // needed for IE
-			dataType: "json",
-			success: function(data){
-				qaul_translate(data);
-			}
-		}).error(function(){
-			alert("i18n download error");
-		});
-		
-		// download language specific css
-		if (document.createStyleSheet){
-			document.createStyleSheet('i18n/' +qaul_config.locale +'.css');
-		}
-		else {
-			$("head").append($("<link rel=\"stylesheet\" href=\"i18n/" +qaul_config.locale +".css\" type=\"text/css\" media=\"screen\" />"));
-		}
-	}
+	web_getcookie();
 }
 
 function qaul_translate(dictionary)
@@ -336,28 +288,19 @@ function init_chat()
 
 function init_favorites()
 {
-	var path = "fav_get.json";
-	$.ajax({
-		url:   path,
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			favorites_append(data);
-		} 
-	}).error(function(){
-			// todo: show error page
-	});	
 }
 
 function set_username(name)
 {
-	user_name = name;
+	user_name = name +"[WEB]";
 	$("#chat_name").val(user_name);
 	$("#page_pref_name").text(user_name);
 }
 
 function set_wifiset()
 {
+	alert("set_wifiset()");
+/*
 	var path = "set_wifiset.json";
 	$.ajax({
 		url:   path,
@@ -367,7 +310,8 @@ function set_wifiset()
 			$.mobile.changePage($("#page_loading"));
 			setTimeout(function(){loadingtimer();},1000);
 		} 
-	});		
+	});
+*/
 }
 
 // ======================================================
@@ -376,32 +320,7 @@ function set_wifiset()
 
 function show_user(name, ip)
 {
-	user_last_id = 0;
-
-	// open page
-	if(
-		$.mobile.activePage.attr('id') != "page_call" &&
-		$.mobile.activePage.attr('id') != "page_user" &&
-		$.mobile.activePage.attr('id') != "page_tag" 
-	) 
-	{
-	 	user_page_origin = $.mobile.activePage.attr('id');
-	}
-	$.mobile.changePage($("#page_user"),"slide");
-	
-	// set page
-	$("#page_user_name").empty().append("@" +name);
-	$("#user_chat_name").val(name);
-	$("#user_chat_ip").val(ip);
-	$("#page_user_msgs").empty();
-	$("#page_user_files").empty();
-	$("#page_user_queue").empty();
-	$("#user_chat_msg").val("");
-	
-	// load messages
-	get_user_msgs();
-    // get info from remote user
-    load_remote_userinfo(name, ip);
+	alert("show_user()");
 }
 
 function load_remote_userinfo(name, ip)
@@ -421,7 +340,7 @@ function load_remote_userinfo(name, ip)
 			{
 				nofiles = false;
 				var file = "<div class=\"file\">";
-				file    += file_button_schedule(item.hash, item.suffix, item.size, item.description, name, ip);
+				file    += web_file_button_schedule(item.hash, item.suffix, item.size, item.description, name, ip);
 				file    += "<div class=\"filename\">" +format_msg_txt(item.description) +"</div>";
 				file    += "<div class=\"filemeta\"><span class=\"suffix\">" +item.suffix +"</span> <span class=\"size\">" +file_filesize(item.size) +"</span> ";
 				file    += '<abbr class="timeago" title="' +item.time +'">' +time2str(item.time) +'</abbr>';
@@ -492,210 +411,14 @@ function onPageChange(event, data)
 
 function update_pageid()
 {
-	if(qaul_initialized && $.mobile.activePage.attr("id") != "page_loading" && !/page_config*/.test($.mobile.activePage.attr("id")))
-	{
-		$.get('setpagename?p=' +$.mobile.activePage.attr("id") +'&e=1');
-	}
-}
-
-function quit_qaul()
-{
-	$.mobile.changePage('#page_goodbye');
-	$.ajax({
-		url: "quit",
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data){
-		}
-	}).error(function(){
-		$.mobile.changePage('#page_pref');
-	});
+	// deactivated in web gui
 }
 
 function qaul_openurl(url)
 {
-	$.post(
-		"setopenurl.json",
-		{"url": url, "e":1}
-	).error(function(){
-		alert("error qaul_openurl");
-	});
+	window.open(url, '_blank');
 }
 
-// ======================================================
-// VoIP
-// ------------------------------------------------------
-var call_button_accept = '<a href="javascript:call_accept();" data-role="button" class="call_button_accept">&nbsp;</a>';
-var call_button_reject = '<a href="javascript:call_end();" data-role="button" class="call_button_reject">&nbsp;</a>';
-var call_button_end = '<a href="javascript:call_end();" data-role="button" class="call_button_end">&nbsp;</a>';
-
-function call_start()
-{
-	var name = $("#user_chat_name").val();
-	var ip = $("#user_chat_ip").val();
-	// change page
-	$("#call_info").html($.i18n._("Connecting") +'<br/><img src="images/i_loading_15.gif"/>');
-	call_show_page(name);
-	call_setButtonEnd();
-	// start call
-	var path = 'call_start?ip=' +ip +'&e=1';
-	$.ajax({
-		url: path,
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data){
-		}
-	}).error(function(){
-		$("#call_buttons").empty();
-		call_goback();
-	});
-}
-
-function call_end()
-{
-	$.ajax({
-		  url: "call_end",
-		  cache: false, // needed for IE
-		  dataType: "json",
-		  success: function(data){
-			  $("#call_buttons").empty();
-			  call_goback();
-		  }
-	});
-}
-
-function call_accept()
-{
-	$.ajax({
-		  url: "call_accept",
-		  cache: false, // needed for IE
-		  dataType: "json",
-		  success: function(data){
-			  // nothing to be done here
-		  }
-	});
-}
-
-function call_show_page(name)
-{
-	 if($.mobile.activePage.attr('id') != "page_call") 
-	 {
-	 	call_page_origin = $.mobile.activePage.attr('id');
-	 	$.mobile.changePage($("#page_call"));
-	 }
-	 // set name
-	 $("#call_user").text(name);
-	 callchecktimer();
-}
-
-function call_schedule_end(reason)
-{
-	// remove buttons
-	var mybutton = $("#call_buttons").empty().append('<a href="javascript:call_goback();" data-icon="arrow-l" data-inline="true" data-role="button">' +$.i18n._("Back") +'</a>');
-	mybutton.trigger('create');
-	// set text
-	$("#call_info").text(reason);
-	// set time before going back
-	setTimeout(function(){call_goback();},2000);
-}
-
-function call_setButtonEnd()
-{
-	var mybutton = $("#call_buttons").empty().append(call_button_end);
-	mybutton.trigger('create');
-}
-
-function call_setButtonsIncoming()
-{
-	var mybutton = $("#call_buttons").empty().append(call_button_accept +call_button_reject);
-	mybutton.trigger('create');
-}
-
-function call_goback()
-{
-	$.mobile.changePage($("#" +call_page_origin));
-}
-
-function call_setRinging()
-{
-	$("#call_info").html($.i18n._("Ringing") +'<br/><img src="images/i_loading_15.gif"/>');
-	call_setButtonEnd();
-}
-
-function call_setCalling()
-{
-	$("#call_info").text($.i18n._("Is calling"));
-	call_setButtonsIncoming();
-}
-
-function call_setConnecting()
-{
-	$("#call_info").html($.i18n._("Establishing connection") +'<br/><img src="images/i_loading_15.gif"/>');
-	call_setButtonEnd();
-}
-
-function call_setConnected()
-{
-	$("#call_info").html($.i18n._("Connected") +'<br/><img src="images/i_call_32.png"/>');
-	call_setButtonEnd();
-}
-
-function call_setEnded(code)
-{
-	var reason;
-	if(code == 486)
-		reason = $.i18n._("Is busy");
-	else if(code == 487)
-		reason = $.i18n._("Call ended");
-	else
-		reason = $.i18n._("Not reachable");
-		
-	call_schedule_end(reason);
-}
-
-var callchecktimer = function()
-{
-	// check call status
-	$.ajax({
-		url:   "call_event",
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			if($.mobile.activePage.attr('id')=="page_call")
-			{
-				if(data.event == 0); // nothing new happend
-				else if(data.event == 1)
-				{
-					call_setRinging();
-				}
-				else if(data.event == 2)
-				{
-					call_setCalling();
-				}
-				else if(data.event == 3)
-				{
-					call_setConnecting();
-				}
-				else if(data.event == 4)
-				{
-					call_setConnected();
-				}
-				else if(data.event == 5)
-				{
-					call_setEnded(data.code);
-				}
-				else return;
-				// rescheduled
-				setTimeout(function(){callchecktimer();},500);
-			}
-		} 
-	}).error(function(){
-			if($.mobile.activePage.attr('id')=="page_file_add")
-			{
-				setTimeout(function(){callchecktimer();},500);
-			}
-	});		
-}
 
 // ======================================================
 // Chat
@@ -706,7 +429,7 @@ function format_msg_txt(msg)
 	// @user
 	msg = msg.replace(/(^|\s)(@[^\s]+)/g,"$1<span class=\"user\">$2</span>");
 	// #tags
-	msg = msg.replace(/(^|\s)(#[^\s]+)/g,"$1<a href=\"#page_tag\" onClick=\"javascript:show_tag('$2');\" class=\"tag\">$2</a>");
+	msg = msg.replace(/(^|\s)(#[^\s]+)/g,"$1<span class=\"tag\">$2</span>");
 	// files
 	//msg = msg.replace(/(^|\s)([a-zA-Z0-9]{40}\.([a-zA-Z0-9]{1,5}))/g,"$1<a href=\"\" class=\"file\">[$3]</a>");
 	// emails
@@ -735,7 +458,7 @@ function format_msg_file(msg, desc, name, ip)
 	// with button
 	var button = "";
 	msg = msg.replace(/(^|\s)([a-zA-Z0-9]{40})\.([a-zA-Z0-9]{1,5})/g, function(a,b,c,d){
-				button = file_button_schedule( c, d, 0, desc, name, ip);
+				button = web_file_button_schedule( c, d, 0, desc, name, ip);
 				return "<span class=\"suffix\">" +d +"</span> <span class=\"size\">" +b +"</span>";
 		});
 	return {"msg":msg,"button":button};
@@ -761,8 +484,7 @@ function format_msg_voip(item)
 
 function format_msg_userlink(name, ip)
 {
-	return '<a href="#page_user" onClick="javascript:show_user(\'' +name +'\',\'' +ip 
-					+'\');">' +name +'</a>';
+	return '<span class="user">@' +name +'</a>';
 }
 
 function format_msg(item)
@@ -826,62 +548,10 @@ function send_msg()
 		});
 };
 
-function send_tag_msg()
-{
-	$.post(
-			"sendmsg",
-			{"t": 11, "m": $("#tag_chat_msg").val(), "n": user_name, "e":1},
-			function(){
-				insert_msg($("#page_tag_msgs"), {id:0,type:11,name:user_name,msg:$("#tag_chat_msg").val(),time:isoDateString(new Date())});
-				insert_msg(chat, {id:0,type:11,name:user_name,msg:$("#tag_chat_msg").val(),time:isoDateString(new Date())});
-				$("#tag_chat_msg").val('');
-			}
-		).error(function(){
-			// show alert
-			$.mobile.changePage($("#page_dialog"),{role:"dialog"});
-		});
-}
-
-function send_direct_msg()
-{
-    // set loading info
-    //$.mobile.pageLoading();
-    $("#page_user_queue").empty().append("<p class=\"user_msg_loading\"><img src=\"images/i_loading_15.gif\"/></p>");
-
-    // send data to remote user
-    $.jsonp({
-      url: "http://" +$("#user_chat_ip").val() +":8081/pub_msg",
-      callback: "abc",
-      data: {
-			"n": user_name,
-			"m": $("#user_chat_msg").val(),
-			"e": 1
-      },
-      dataType: "jsonp",
-	  timeout: 4000,
-      success: function(userProfile) {
-          	// clear loading info
-          	$("#page_user_queue").empty();
-          	
-          	// send message to db
-			$.post(
-					'sendmsg',
-					{"t": 12, "m": $("#user_chat_msg").val(), "n": user_name, "e":1}
-				);
-          	// put message into chat
-			insert_msg($("#page_user_msgs"), {id:0,type:12,name:user_name,to:$("#user_chat_name").val(),msg:$("#user_chat_msg").val(),time:isoDateString(new Date())});
-          	insert_msg(chat, {id:0,type:12,name:user_name,to:$("#user_chat_name").val(),msg:$("#user_chat_msg").val(),time:isoDateString(new Date())});
-            // clear message input
-            $("#user_chat_msg").val('');
-      },
-      error: function(d,msg) {
-      		$("#page_user_queue").empty().append("<p class=\"user_msg_failed\">" +$.i18n._("User not reachable") +"</p>");
-      }
-    });
-}
-
 function get_msgs()
 {
+	alert("get_msgs()");
+/*
 	var path = "getmsgs.json?t=1&e=1";
 	$.ajax({
 		url:   path,
@@ -893,10 +563,13 @@ function get_msgs()
 			})
 		} 
 	});
+*/
 }
 
 function get_user_msgs()
 {
+	alert("get_user_msgs()");
+/*
 	var path = 'getmsgs.json?t=5&id=' +user_last_id +'&v=' +encodeURIComponent($("#user_chat_name").val()) +'&e=1';
 	$.ajax({
 		url:   path,
@@ -911,10 +584,13 @@ function get_user_msgs()
 			})
 		} 
 	});
+*/
 }
 
 function get_tag_msgs()
 {
+	alert("get_tag_msgs()")
+/*
 	var path = 'getmsgs.json?t=6&id=' +tag_last_id +'&v=' +encodeURIComponent(tag_name) +'&e=1';
 	$.ajax({
 		url:   path,
@@ -929,6 +605,7 @@ function get_tag_msgs()
 			})
 		} 
 	});
+*/
 }
 
 function time2str(timestr)
@@ -946,26 +623,26 @@ var updatetimer=function()
 {
 	if($.mobile.activePage.attr("id")=="page_chat")
 	{
-		get_msgs();
+		web_getmsgs();
 	}
 	else if($.mobile.activePage.attr("id")=="page_users")
 	{
-		get_users();
+		//get_users();
 	}
 	else if($.mobile.activePage.attr("id")=="page_user")
 	{
-		get_user_msgs();
+		//get_user_msgs();
 	}
 	else if($.mobile.activePage.attr("id")=="page_tag")
 	{
-		get_tag_msgs();
+		//get_tag_msgs();
 	}
 	else if($.mobile.activePage.attr("id")=="page_file")
 	{
-		file_update();
+		//file_update();
 	}
 	
-	setTimeout(function(){updatetimer();},3000);
+	setTimeout(function(){updatetimer();},web_update_timeout);
 };
 
 // ======================================================
@@ -977,73 +654,10 @@ function show_page_file()
 	$.mobile.changePage($("#page_file"));
 }
 
-function send_file_add()
-{
-	// check if file was selected
-	if($("#file_add_path").val() == "")
-	{
-		// open file select again
-		open_filepicker();
-		return;
-	}
-	
-	// validate entries
-	var advertise = ($("#file_add_advertise").attr('checked'))? 1 : 0;
-	
-	// send it to webserver
-	$.ajax({
-			type:'POST',
-			url:"file_add.json",
-			data:{"p": $("#file_add_path").val(), "m": $("#file_add_msg").val(), "a": advertise, "e": 1},
-			cache: false, // needed for IE
-			success: function(data){
-				// TODO: insert message
-				// configure message
-				//var message = data.hash +"." +data.suffix +" " +$("#file_add_msg").val();
-				//insert_msg(chat, {id:0,type:11,name:user_name,msg:message});
-				// cleanup
-				$("#file_add_msg").val('');
-				$("#file_add_advertise").attr('checked',true).checkboxradio("refresh");
-				$("#file_add_path").val('');
-				$("#file_add_filename").empty();
-				$("#file_add_addbutton .ui-btn-text").text("choose file");
-				$("#file_add_addbutton .ui-icon").addClass("ui-icon-plus").removeClass("ui-icon-refresh");
-				
-				// go to file page
-				show_page_file();
-			},
-			dataType:"json"
-	}).error(function(){
-			show_page_file();
-	});
-}
-
-function show_addfile_page()
-{
-	// reset message field
-	$("#file_add_msg").val('');
-	// show page
-	$.mobile.changePage($("#page_file_add"));
-	open_filepicker();
-}
-
-function open_filepicker()
-{
-	// send message / open socket to show filepicker
-	var path = "file_pick.json";
-	$.ajax({
-		url:   path,
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			// set timer to check if a file was picked
-			setTimeout(function(){filepickertimer();},1000);
-		} 
-	});
-}
-
 function open_file(hash)
 {
+	alert("open_file(hash)");
+/*
 	// send message / open socket to show filepicker
 	var path = "file_open.json?f=" +hash;
 	$.ajax({
@@ -1054,21 +668,7 @@ function open_file(hash)
 			// success
 		} 
 	});
-}
-
-function file_delete(hash)
-{
-	// delete file by id
-	var path = "file_delete.json?hash=" +hash;
-	$.ajax({
-		url:   path,
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			// reload files
-			file_update();
-		} 
-	});
+*/
 }
 
 function file_advertise(hash, suffix, size, description)
@@ -1128,20 +728,7 @@ function file_check(hash, suffix)
 
 function file_update()
 {
-	var path = "file_list.json?r=0&e=1";
-	var files = $("#page_file_list");
-	$.ajax({
-		url:   path,
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			$.each(data.files, function(i,item){
-				file_update_check(item);
-			});
-		} 
-	}).error(function(){
-		// fail silently
-	});
+	web_getfiles();
 }
 
 // update file list & entries
@@ -1251,47 +838,10 @@ function file_create_html(item)
 	return file;
 }
 
-var filepickertimer=function()
-{
-	// check if file was selected
-	var path = "file_pickcheck.json";
-	$.ajax({
-		url:   path,
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			if($.mobile.activePage.attr('id')=="page_file_add")
-			{
-				if(data.picked == 0); // picking was canceld
-				else if(data.picked == 2)
-				{
-					// display picked file
-					$("#file_add_path").val(data.path);
-					$("#file_add_filename").text(data.name);
-					
-					// take filename as message if message is empty
-					if($("#file_add_msg").val()=="")
-					{
-						var name = data.name;
-						name = name.replace(/\.[a-zA-Z0-9]+$/g,"");
-						$("#file_add_msg").val(name.replace(/[._-]+/g," "));
-					}
-				}
-				else setTimeout(function(){filepickertimer();},400);
-			}
-		} 
-	}).error(function(){
-			if($.mobile.activePage.attr('id')=="page_file_add")
-			{
-				// show alert
-				//alert("error filepickertimer");
-				setTimeout(function(){filepickertimer();},400);
-			}
-	});	
-};
-
 var loadingtimer=function()
 {
+	alert("loadingtimer");
+/*
 	// check if file was selected
 	var path = "loading.json";
 	$.ajax({
@@ -1322,29 +872,9 @@ var loadingtimer=function()
 			{
 				setTimeout(function(){loadingtimer();},500);
 			}
-	});	
-};
-
-function file_schedule(hash, suffix, description, size, ip, name)
-{
-	// send message / open socket to show filepicker
-	var path = "file_schedule.json";
-	$.ajax({
-		type: 'POST',
-		url:   path,
-		data:  {"hash": hash, "suffix": suffix, "description": description, "size": size, "ip": ip, "name": name, "e":1},
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			// go to file page
-			show_page_file();
-		} 
-	}).error(function(){
-		// show alert
-		alert("error scheduling file");
 	});
-	
-}
+*/
+};
 
 function file_filesize(size)
 {
@@ -1374,138 +904,173 @@ function isoDateString(d)
 // ======================================================
 // configuration
 // ------------------------------------------------------
-
-function send_locale()
+function web_getcookie()
 {
-	// send locale
-	$.post(
-			'setlocale',
-			{"l": $("input[name='l']:checked").val(), "e":1},
-			function(data){
-				if(chat_initialized)
-				{
-					$.mobile.changePage($("#page_restart"));
-				}
-				else
-				{
-					// forward to loading
-					$.mobile.changePage($("#page_loading"));
-					// set timer to check which page to load
-					setTimeout(function(){loadingtimer();},1000);
-					// update configuration
-					init_config();
-				}
-		});
-};
-
-function send_name()
-{
-	// send user name
-	$.post(
-			'setname',
-			{"n": $("#name_name").val(), "e":1},
-			function(data){
-				// update username
-				set_username($("#name_name").val());
-				// forward to loading
-				$.mobile.changePage($("#page_loading"));
-				// set timer to check which page to load
-				setTimeout(function(){loadingtimer();},1000);
-		});
-};
-
-// interface configuration
-function show_config_interface()
-{
-	// request interface configuration
+/*
+	// check if locale & username have been set
 	$.ajax({
-		url:   "setinterfaceloading",
+		url:   'weg_getcookie',
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
-			$.mobile.changePage($("#page_loading"));
-			setTimeout(function(){loadingtimer();},500);
-		}
+			if(data.locale)
+			{
+				// if data is set go directly to chat
+				set_locale(data.locale);
+				user_name = data.name;
+				$.mobile.changePage($("#page_chat"));
+			}
+			else
+			{
+				// otherwise go to language settings
+				$.mobile.changePage($("#page_config_locale"));
+			}
+		} 
+	}).error(function(){
+		// go to language settings
+		$.mobile.changePage($("#page_chat"));
 	});
-	
-	// show loading page
-	$.mobile.changePage($("#page_loading"));
+*/
+	$.mobile.changePage($("#page_config_locale"));
+}
+
+function web_setcookie()
+{
+	// send locale & username
+	$.post(
+			'web_setcookie',
+			{"n": user_name, "l": qaul_locale, "e":1},
+			function(data){
+				$.mobile.changePage($("#page_chat"));
+	}).error(function(){
+		// go to language settings
+		$.mobile.changePage($("#page_chat"));
+	});
 	
 	return true;
 }
 
-function config_interface_load_data()
+function web_getfiles()
 {
-	// load configuration
+	var path = "web_getfiles";
 	$.ajax({
-		url:   "getinterface.json",
+		url:   path,
+		cache: false, // needed for IE
+		dataType: "json",
+		timeout: 5000,
+		success: function(data){
+			$("#page_file_list").empty();
+			var nofiles = true;
+			$.each(data.files, function(i,item)
+			{
+				nofiles = false;
+				var file = "<div class=\"file\">";
+				file    += web_file_button_download(item.hash, item.suffix, item.size, item.description);
+				file    += "<div class=\"filename\">" +format_msg_txt(item.description) +"</div>";
+				file    += "<div class=\"filemeta\"><span class=\"suffix\">" +item.suffix +"</span> <span class=\"size\">" +file_filesize(item.size) +"</span> ";
+				file    += '<abbr class="timeago" title="' +item.time +'">' +time2str(item.time) +'</abbr>';
+				file    += "</div>";
+				file    += "</div>";
+				var myfile = $("#page_file_list").append(file);
+				myfile.trigger('create');
+			});
+			
+			if(nofiles)
+			{
+				$("#page_user_files").empty().append("<p class=\"user-file_info\">" +$.i18n._("%s has no shared files", [name]) +"</p>");
+			}
+      },
+      error: function(d,msg){
+          // show info
+    	  var myfile = $("#page_file_list").empty().append("<p class=\"user-file_info\">" +$.i18n._("No network connection.") +"<br/><br/> " +"<a onclick=\"javascript:load_remote_userinfo('" +name +"', '" +ip +"')\" data-role=\"button\" data-iconpos=\"notext\" data-icon=\"refresh\" style=\"margin:0 auto !important;\">&nbsp;</a>" +"</p>");
+    	  myfile.trigger('create');
+      }
+    });
+}
+
+function web_getusers()
+{
+	var path = "web_getusers";
+	$.ajax({
+		url:   path,
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
-			config_interface_data_loaded(data);
+			users_append(data);
+		} 
+	});	
+}
+
+function web_getmsgs()
+{
+	var path = "web_getmsgs?id=" +msg_last_id +"&e=1";
+	$.ajax({
+		url:   path,
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			$.each(data.messages, function(i,item){
+				if(item.id > msg_last_id)
+					msg_last_id = item.id;
+				insert_msg(chat, item);
+			})
+		} 
+	});
+}
+
+function web_file_button_download(hash, suffix, size, description)
+{
+	var button = "";
+	button += "<div class=\"msg_filebutton " +hash +suffix +" " +file_suffix2filetype(suffix) +"\"><a href=\"files/" +hash +"." +suffix +"\" target=\"_blank\" download><img src=\"images/f_add_64.png\"/></a></div>";
+	return button;
+}
+
+function web_file_button_schedule(hash, suffix, size, description)
+{
+	var button = "";
+	button += "<div class=\"msg_filebutton " +hash +suffix +" " +file_suffix2filetype(suffix) +"\"><a href=\"#\" onClick=\"javascript:web_file_schedule()\"><img src=\"images/f_add_64.png\"/></a></div>";
+	return button;
+}
+
+function web_file_schedule()
+{
+	web_getfiles();
+	$.mobile.changePage($("#page_file"));
+}
+
+function web_info_page()
+{
+	
+}
+
+function set_locale(locale)
+{
+	qaul_locale = locale;
+	// load locale
+	$.ajax({
+		url:   "i18n/" +qaul_locale +".json",
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data){
+			qaul_translate(data);
 		}
-	});
-}
-
-function config_interface_data_loaded(data)
-{
-	// toggle flipswitch
-	if(data.manual == 1)
-	{
-		$("#interface_select_auto").val('1').flipswitch('refresh');
-		$(".c_interface_manual").show();
-	}
-	else
-	{
-		$("#interface_select_auto").val('0').flipswitch('refresh');
-		$(".c_interface_manual").hide();
-	}
-	
-	// populate interfaces
-	var myhtml = "<fieldset data-role=\"controlgroup\" id=\"interface_selection\">";
-	$.each(data.interfaces, function(i,item)
-	{
-		myhtml += "<input type=\"radio\" name=\"if\" value=\"" +item.name +"\" id=\"if_" +item.name +"\" ";
-		if(item.name == data.selected)
-			myhtml += "checked=\"checked\" ";
-		myhtml += "class=\"interface_select_checkbox\" />";
-		myhtml += "<label for=\"if_" +item.name +"\">" +item.ui_name +"</label>";
-	});
-	myhtml += "</fieldset>";
-	$("#c_interface_manual").empty().append(myhtml).trigger("create");
-}
-
-// show/hide interfaces when toggle flipswitch button
-function configInterfaceToggle()
-{
-	if($("#interface_select_auto").val() == 1)
-		$(".c_interface_manual").show();
-	else
-		$(".c_interface_manual").hide();
-}
-
-function send_interface()
-{
-	// check which interfaces to send
-	var interfaces = "";
-	$.each($(".interface_select_checkbox:checked"), function(i,item){
-		if(interfaces.length > 0)
-			interfaces += " ";
-		interfaces += $(item).val();
+	}).error(function(){
+		alert("i18n download error");
 	});
 	
-	// send configured interface
-	$.post(
-			'setinterface',
-			{"m": $("#interface_select_auto").val(), "if": interfaces, "e":1},
-			function(data){
-				// forward to restart page
-				$.mobile.changePage($("#page_restart"));
-		});
-};
+	// download language specific css
+	if (document.createStyleSheet){
+		document.createStyleSheet('i18n/' +qaul_locale +'.css');
+	}
+	else {
+		$("head").append($("<link rel=\"stylesheet\" href=\"i18n/" +qaul_locale +".css\" type=\"text/css\" media=\"screen\" />"));
+	}	
+}
 
 var eventstimer=function()
 {
+	alert("eventstimer");
+/*
 	// check if file was selected
 	var path = "getevents.json";
 	$.ajax({
@@ -1543,25 +1108,13 @@ var eventstimer=function()
 		} 
 	}).error(function(){
 			setTimeout(function(){eventstimer();},1000);
-	});	
+	});
+*/
 };
 
 // ======================================================
 // Users
 // ------------------------------------------------------
-
-function get_users()
-{
-	var path = "getusers.json?r=0&e=1";
-	$.ajax({
-		url:   path,
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			users_append(data);
-		} 
-	});
-};
 
 function users_append(data)
 {
@@ -1608,9 +1161,7 @@ function user_append(name, ip, conn)
 			$("<li></li>")
 				.prop('id',id)
 				.data('connection', conn)
-				.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
-					+'\')">' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
-					//+'<span class="ui-li-count msg_in">↑4 ↓3</span>' 
+				.html('<a href="#popup_users" data-rel="popup">' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					+'</a>'
 					+'<a href="javascript:favorite_add(\'' +name +'\',\'' +ip +'\');" data-icon="plus">add</a>'
 					)
@@ -1696,9 +1247,7 @@ function favorite_append(name, ip, conn, online)
 	$("<li></li>")
 		.prop('id',ip2id(ip))
 		.data('connection', conn)
-		.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
-					+'\')" ' +attr +'>' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
-					//+'<span class="ui-li-count msg_in">↑4 ↓3</span>' 
+		.html('<a href="#popup_users" data-rel="popup">' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					+'</a>'
 					+'<a href="javascript:favorite_del(\'' +name +'\',\'' +ip 
 					+'\');" data-icon="minus">remove</a>'
@@ -1715,20 +1264,8 @@ function favorite_add(name, ip)
 	// remove user
 	usr.remove();
 	
-	var path = "fav_add.json";
-	$.ajax({
-		type:'POST',
-		url: path,
-		data:{"ip":ip,"name":name,"e":1},
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			favorite_append(name, ip, conn, true);
-			$("#favorites").listview('refresh');
-		} 
-	}).error(function(){
-		user_append(name, ip, conn);
-	});
+	favorite_append(name, ip, conn, true);
+	$("#favorites").listview('refresh');
 }
 
 function favorite_del(name, ip)
@@ -1740,21 +1277,9 @@ function favorite_del(name, ip)
 	if(fav.find("a.offline").length)
 		online = false;
 	fav.remove();
-	var path = "fav_del.json";
-	$.ajax({
-		type:'POST',
-		url: path,
-		data:{"ip":ip,"e":1},
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			if(online)
-				user_append(name, ip, conn);
-		} 
-	}).error(function(){
-		favorite_append(name, ip, conn, online);
-		$("#favorites").listview('refresh');
-	});
+	
+	if(online)
+		user_append(name, ip, conn);
 }
 
 function ip2id(ip)

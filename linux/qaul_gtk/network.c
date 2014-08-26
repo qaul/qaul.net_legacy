@@ -482,16 +482,21 @@ static int networkmanager_device_properties(DBusConnection* dbus_connection, qau
 	}
 	dbus_message_unref(msg);
 
-	// retrieve Hardware address property
+	// store dbus path
 	device_property.dbus_path = device->dbus_device_path;
-	device_property.dbus_property_name = "PermHwAddress";
-	device_property.value_string = device->mac;
-	device_property.value_string_len = sizeof(device->mac);
 
 	if(device->type == 2)
 		device_property.dbus_interface = "org.freedesktop.NetworkManager.Device.Wireless";
 	else if(device->type == 1)
 		device_property.dbus_interface = "org.freedesktop.NetworkManager.Device.Wired";
+
+	// retrieve Hardware address property only for known device types
+	if(device->type == 1 || device->type == 2)
+	{
+		device_property.dbus_property_name = "PermHwAddress";
+		device_property.value_string = device->mac;
+		device_property.value_string_len = sizeof(device->mac);
+	}
 
 	if(strlen(device_property.dbus_interface)>0)
 	{

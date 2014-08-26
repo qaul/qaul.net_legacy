@@ -10,5 +10,5 @@ sleep 30
 sleep 1
 
 # download site to be registered as local host
-wget http://127.0.0.1:8081/jqm_qaul.html
-rm jqm_qaul.html
+wget http://127.0.0.1:8081/qaul.html
+rm qaul.html

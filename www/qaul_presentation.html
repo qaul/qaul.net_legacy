@@ -8,7 +8,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>qaul.net</title>
 	<link rel="stylesheet" type="text/css" href="jquery.mobile.min.css" />
-	<link rel="stylesheet" type="text/css" href="jqm_qaul.css"/> 
+	<link rel="stylesheet" type="text/css" href="qaul.css"/> 
+	<link rel="stylesheet" type="text/css" href="qaul_presentation.css"/> 
 	<script type="text/javascript" src="jquery.min.js"></script>
 	<script type="text/javascript" src="jquery.jsonp.min.js"></script>
 	<script type="text/javascript" src="jquery.validate.min.js"></script>
@@ -16,17 +17,17 @@
 	<script type="text/javascript" src="jquery.i18n.min.js"></script>
 	<script type="text/javascript" src="jquery.mobile.min.js"></script>
 	<script type="text/javascript" src="string2byte.js"></script>
-	<script type="text/javascript" src="jqm_qaul.js"></script>
+	<script type="text/javascript" src="qaul.js"></script>
 </head>
 <body>
 
-<div data-role="page" id="page_loading" data-theme="a">
+<div data-role="page" id="page_loading" data-theme="d">
 	<div data-role="content">
 		&nbsp;
 	</div>
 </div>
 
-<div data-role="page" id="page_config_locale" data-theme="a">
+<div data-role="page" id="page_config_locale" data-theme="d">
 	<div data-role="content" >
 		<p>
 			<form action="locale" method="post" id="locale_form">
@@ -34,10 +35,7 @@
 					<legend>&nbsp;</legend>
 					<input type="radio" name="l" id="locale_en" value="en" checked="checked"/>
 					<label for="locale_en">English</label>
-<!--
-					<input type="radio" name="l" id="locale_cn" value="cn"/>
-					<label for="locale_cn">中文</label>
--->			
+			
 					<input type="radio" name="l" id="locale_es" value="es"/>
 					<label for="locale_es">Español</label>
 
@@ -55,9 +53,6 @@
 
 					<input type="radio" name="l" id="locale_tr" value="tr"/>
 					<label for="locale_tr">Türkçe</label>
-					
-					<input type="radio" name="l" id="locale_it" value="it"/>
-					<label for="locale_it">Italiano</label>
 
 					<input type="radio" name="l" id="locale_nl" value="nl"/>
 					<label for="locale_nl">Nederlands</label>
@@ -72,7 +67,7 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_config_name" data-theme="a">
+<div data-role="page" id="page_config_name" data-theme="d">
 	<div data-role="content" >
 		<p>
 			<form action="chat" method="post" id="name_form">
@@ -85,122 +80,7 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_config_interface" data-theme="a">
-	<div data-role="content" >
-		<p>
-			<form action="interface" method="post" id="config_interface_form">
-				
-				<div class="ui-field-contain" style="width:100%;">
-					<label for="interface_select_auto" class="i18n" style="with:auto;">Select network interface manually</label>
-					<select name="im" id="interface_select_auto" data-role="flipswitch">
-						<option value="0" class="i18n" selected="selected">Off</option>
-						<option value="1" class="i18n">On</option>
-					</select>
-				</div>
-				
-				<div class="c_interface_manual" id="c_interface_manual">
-				</div>
-				
-				<input class="submit i18n" type="submit" value="Save" id="interface_submit"/>
-			</form>
-		</p>
-		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
-	</div>
-</div>
-
-<div data-role="page" id="page_config_internet-sharing" data-theme="a">
-	<div data-role="content" >
-		<p>
-			<form action="internet" method="post" id="form_config_internet">
-				<div id="c_internet_interface">
-				<fieldset data-role="controlgroup">
-					<legend>Share Internet connection from</legend>
-					
-					<input type="radio" name="if" value="en0" id="interface_en0" />
-					<label for="interface_en0" class="i18n">Ethernet</label>
-			
-					<input type="radio" name="if" value="en1" id="interface_en1" checked="checked" />
-					<label for="interface_en1" class="i18n">Wi-Fi</label>
-			
-					<input type="radio" name="if" value="en10" id="interface_en10" />
-					<label for="interface_en10" class="i18n">Wi-Fi USB Stick</label>
-				</fieldset>
-				</div>
-				<input class="submit i18n" type="submit" value="Start Internet Sharing" id="interface_submit"/>
-			</form>
-		</p>
-		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
-	</div>
-</div>
-
-<div data-role="page" id="page_config_custom-network" data-theme="a">
-	<div data-role="content" >
-		<p>
-			<form action="custom-network" method="post" id="form_config_custom-network">
-				<div class="ui-field-contain">
-					<label for="custom-network_profile">Select Network Profile</label>
-					<select name="profile" id="custom-network_profile">
-						<option value="qaul">qaul.net</option>
-						<option value="ff_berlin">Freifunk Berlin</option>
-						<option value="custom">custom</option>
-					</select>
-				</div>
-				
-				<div id="custom-network_config-info">
-					qaul.net is completly self configuring.<br/><br/>
-				</div>
-				<div id="custom-network_config">
-					<label for="custom-network_config_ip" class="i18n">IP Address</label>
-					<input type="text" name="ip" id="custom-network_config_ip" class="nospaces ipv4"/>
-					
-					<label for="network_config_mask" class="i18n">Network Mask</label>
-					<input type="text" name="mask" id="network_config_mask" class="nospaces ipv4"/>
-					
-					<label for="network_config_broadcast" class="i18n">Broadcast Address</label>
-					<input type="text" name="broadcast" id="network_config_broadcast" class="nospaces ipv4"/>
-
-					<label for="network_config_channel" class="i18n">Wifi Channel</label>
-					<select name="channel" id="network_config_channel">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="7">7</option>
-						<option value="8">8</option>
-						<option value="9">9</option>
-						<option value="10">10</option>
-						<option value="11">11</option>
-						<option value="12">12</option>
-						<option value="13">13</option>
-						<option value="14">14</option>
-					</select>
-
-					<label for="network_config_ssid" class="i18n">SSID (Network Name)</label>
-					<input type="text" name="ssid" id="network_config_ssid" class="nospaces"/>
-
-					<label for="network_config_bssid" class="i18n">BSSID (Cell-ID)</label>
-					<input type="text" name="bssid" id="network_config_bssid" class="nospaces"/>
-				</div>
-				
-				<input class="submit i18n" type="submit" value="Save" id="interface_submit"/>
-			</form>
-		</p>
-		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
-	</div>
-</div>
-
-<div data-role="page" id="page_config_show-network" data-theme="a">
-	<div data-role="content" >
-		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
-		<p>
-			show network structure, and all participants
-		</p>
-	</div>
-</div>
-
-<div data-role="page" id="page_chat" data-theme="a">
+<div data-role="page" id="page_chat" data-theme="d">
 	<div data-role="content" >
 		<p>
 			<form action="chat" method="post" id="chat_form">
@@ -223,13 +103,13 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_users" data-theme="a">
+<div data-role="page" id="page_users" data-theme="d">
 	<div data-role="content" >
 		<ul data-role="listview" data-inset="true" id="favorites">
 			<li id="favorites_divider" data-role="list-divider" class="i18n">Favorites / Friends</li>
 		</ul>
 		<br/>
-		<ul data-role="listview" data-inset="true" id="users" data-theme="a" data-filter="true" data-filter-placeholder="Filter items">
+		<ul data-role="listview" data-inset="true" id="users" data-theme="d" data-filter="true" data-filter-placeholder="Filter items">
 			<li id="users_divider" data-role="list-divider" class="i18n">Other Users</li>
 		</ul>
 	</div>
@@ -245,25 +125,38 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_pref" data-theme="a">
+<div data-role="page" id="page_pref" data-theme="d">
 	<div data-role="content" >
-		<p class="c_quit"><a href="javascript:quit_qaul()" data-role="button" class="i18n">Quit qaul.net</a></p>
-		<h2 id="page_pref_name">User</h2>
-		<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider" class="i18n">Configuration</li>
-			<li><a href="#page_config_locale" data-transition="none" class="i18n">Change Language</a></li>
-			<li><a href="#page_config_name" data-transition="none" class="i18n">Change User Name</a></li>
-			<li class="c_internet"><a href="#page_config_internet-sharing" data-transition="none" class="i18n">Share Internet Connection</a></li>
-			<li class="c_network"><a href="#page_config_custom-network" data-transition="none" class="i18n">Configure Custom Network</a></li>
-			<li class="c_interface"><a href="#" onclick="show_config_interface()" data-transition="none" class="i18n">Change Network Interface</a></li>
-		</ul>
-		<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider" class="i18n">Information</li>
-			<li data-icon="info"><a href="javascript:qaul_openurl('info/about.html')" data-transition="none" class="i18n">About qaul.net</a></li>
-			<li data-icon="info"><a href="javascript:qaul_openurl('info/howto.html')" data-transition="none" class="i18n">How To's</a></li>
-			<li data-icon="info"><a href="javascript:qaul_openurl('info/license.html')" data-transition="none" class="i18n">License</a></li>
-			<li data-icon="info"><a href="javascript:qaul_openurl('network.html')" data-transition="none" class="i18n">Show Network</a></li>
-		</ul>
+		<h1>About qaul.net</h1>
+		<h3>
+		qaul.net implements a redundant, open communication principle, in which wireless-enabled computers and mobile devices can directly form a spontaneous network. Text messaging, file sharing and voice calls are possible independent of internet and cellular networks. Qaul.net can spread like a virus, and an Open Source Community can modify it freely.
+		</h3><h3>
+		In a time of communication blackouts in places like Egypt, Burma, and Tibet, and given the large power outages often caused by natural disasters, qaul.net has taken on the challenge of critically examining existing communication pathways while simultaneously exploring new horizons.
+		</h3>
+		<p><img src="info/images/about_viral.png" style="width:100%;"/></p>
+		<p>The program is passed on like a virus: from user to user. When a new user discovers a wifi qaul.net access one can download the software from this very connection. After the installation one can use it immediately, and pass it on to others.</p>
+		<p>qaul.net connects different wireless devices directly to the mesh network, it works therefore without a mobile service provider or server.</p>
+		<h1>How To use qaul.net</h1>
+		<p>
+		At startup, qaul.net configures your device and the network automatically.
+		</p>
+		<p>
+		qaul.net offers many services:
+		</p>
+		<p><img src="info/images/howto_123.png" style="width:100%;"/></p>
+		<table class="description" width="100%">
+		<tr>
+		<td width="33%">
+		<p style="text-align:center;">cloud chat</p>
+		</td>
+		<td width="33%">
+		<p style="text-align:center;">private messaging</p>
+		</td>
+		<td width="34%">
+		<p style="text-align:center;">voice calls</p>
+		</td>
+		</tr>
+		</table>
 	</div>
 	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
 		<div data-role="navbar">
@@ -277,9 +170,9 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_file" data-theme="a">
+<div data-role="page" id="page_file" data-theme="d">
 	<div data-role="content" >
-		<p><a href="javascript:show_addfile_page()" id="file_addbutton" data-role="button" data-icon="plus" class="i18n">Add File</a></p>
+		<!--<p><a href="javascript:show_addfile_page()" id="file_addbutton" data-role="button" data-icon="plus" class="i18n">Add File</a></p>-->
 		<div id="page_file_list"></div>
 	</div>
 	<div data-role="footer" data-position="fixed" data-tap-toggle="false" class="ui-body-d">
@@ -294,8 +187,8 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_file_add" data-theme="a">
-	<div data-role="header" data-position="fixed" data-theme="a">
+<div data-role="page" id="page_file_add" data-theme="d">
+	<div data-role="header" data-position="fixed" data-theme="d">
 		<h1 class="i18n">Add File</h1>
 		<a href="#page_file" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a>
 	</div>
@@ -314,8 +207,8 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_user" data-theme="a">
-	<div data-role="header" data-position="fixed" data-theme="a">
+<div data-role="page" id="page_user" data-theme="d">
+	<div data-role="header" data-position="fixed" data-theme="d">
 		<div class="qaul_header">
 			<a href="javascript:user_goback()" data-role="button" data-icon="arrow-l" data-inline="true" data-direction="reverse" class="i18n" style="float:left;">Back</a>
 			<img src="images/i_conn0_30.png" style="float:right;width:50px;"/>
@@ -326,9 +219,9 @@
 		<div id="page_user_tab_chat">
 			<div data-role="navbar">
 				<ul>
-					<li><a onclick="javascript:user_changetochat('chat')" class="page_user_tab_active"><img src="images/i_chat_32.png"/></a></li>
-					<li><a onclick="javascript:user_changetofiles('files')"><img src="images/i_file_32.png"/></a></li>
-					<li><a onclick="javascript:call_start()"><img src="images/i_call_32.png"/></a></li>
+					<li><a onclick="javascript:user_changetochat('chat')" data-theme="b"><img src="images/i_chat_32.png"/></a></li>
+					<li><a onclick="javascript:user_changetofiles('files')" class="page_user_tab_blue"><img src="images/i_file_32.png"/></a></li>
+					<li><a onclick="javascript:call_start()" class="page_user_tab_blue"><img src="images/i_call_32.png"/></a></li>
 				</ul>
 			</div>
 			<p id="page_user_send">
@@ -345,9 +238,9 @@
 		<div id="page_user_tab_files">
 			<div data-role="navbar">
 				<ul>
-					<li><a onclick="javascript:user_changetochat('chat')"><img src="images/i_chat_32.png"/></a></li>
-					<li><a onclick="javascript:user_changetofiles('files')" class="page_user_tab_active"><img src="images/i_file_32.png"/></a></li>
-					<li><a onclick="javascript:call_start()"><img src="images/i_call_32.png"/></a></li>
+					<li><a onclick="javascript:user_changetochat('chat')" class="page_user_tab_blue"><img src="images/i_chat_32.png"/></a></li>
+					<li><a onclick="javascript:user_changetofiles('files')" data-theme="b"><img src="images/i_file_32.png"/></a></li>
+					<li><a onclick="javascript:call_start()" class="page_user_tab_blue"><img src="images/i_call_32.png"/></a></li>
 				</ul>
 			</div>
 			<div id="page_user_files"></div>
@@ -365,8 +258,8 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_tag" data-theme="a">
-	<div data-role="header" data-position="fixed" data-theme="a">
+<div data-role="page" id="page_tag" data-theme="d">
+	<div data-role="header" data-position="fixed" data-theme="d">
 		<h1 id="page_tag_name">#tag</h1>
 		<a href="javascript:user_goback()" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a>
 	</div>
@@ -386,14 +279,14 @@
 				<li><a href="#page_chat" onclick="javascript:get_msgs();" data-theme="b" data-transition="none" class="i_chat">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_users" onclick="javascript:get_users();" data-transition="none" class="i_users">&nbsp;<span class="ui-li-count"></span></a></li>
 				<li><a href="#page_file" onclick="javascript:file_update();" data-transition="none" class="i_filesharing">&nbsp;<span class="ui-li-count"></span></a></li>
-				<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>
+				<!--<li><a href="#page_pref" data-transition="none" class="i_prefs">&nbsp;<span class="ui-li-count"></span></a></li>-->
 			</ul>
 		</div>
 	</div>
 </div>
 
-<div data-role="page" id="page_call" data-theme="a">
-	<div id="page_call_header" data-role="header" data-position="fixed" data-theme="a">
+<div data-role="page" id="page_call" data-theme="d">
+	<div id="page_call_header" data-role="header" data-position="fixed" data-theme="d">
 		<h1 id="page_call_title"><img src="images/i_call_sign_32.png"/></h1>
 	</div>
 	<div data-role="content" id="page_call_content">
@@ -404,7 +297,7 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_iphone" data-theme="a">
+<div data-role="page" id="page_iphone" data-theme="d">
 	<div data-role="content">
 		<p class="i18n">Please turn on your wifi account and select the network: <strong>qaul.net</strong></p>
 		<p class="i18n">Then click <strong>next</strong></p>
@@ -412,23 +305,23 @@
 	</div>
 </div>
 
-<div data-role="page" id="page_restart" data-theme="a">
+<div data-role="page" id="page_restart" data-theme="d">
 	<div data-role="content">
 		<p class="qaul_center"><br/><img src="images/i_reboot_64.png"/><br/><br/></p>
-		<h2 class="i18n qaul_center">Your configuration has been saved</h2>
-		<h2 class="i18n qaul_center">You need to restart qaul.net to activate it</h2>
+		<h2 class="i18n qaul_center">This configuration requires a restart</h2>
+		<h2 class="i18n qaul_center">Please restart qaul.net</h2>
 		<p class="c_quit"><a href="javascript:quit_qaul()" data-role="button" class="i18n">Quit qaul.net</a></p>
 	</div>
 </div>
 
-<div data-role="page" id="page_goodbye" data-theme="a">
+<div data-role="page" id="page_goodbye" data-theme="d">
 	<div data-role="content">
 		<h1 class="i18n">Goodbye</h1>
 	</div>
 </div>
 
 <div data-role="page" id="page_dialog">
-	<div data-role="header" data-position="fixed" data-theme="a">
+	<div data-role="header" data-position="fixed" data-theme="d">
 		<h1 id="page_dialog_title" class="i18n">&nbsp;</h1>
 	</div>
 	<div data-role="content" id="page_dialog_content">

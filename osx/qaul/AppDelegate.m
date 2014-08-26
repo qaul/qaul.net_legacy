@@ -179,9 +179,9 @@
 	{
 		// change to chat view
 		// BUG: does not work anymore if URL is:
-        //      http://127.0.0.1:8081/jqm_qaul.html
+        //      http://127.0.0.1:8081/qaul.html
         //      it has to be "localhost"
-        NSString *myUrl = @"http://localhost:8081/jqm_qaul.html";
+        NSString *myUrl = @"http://localhost:8081/qaul.html";
         NSLog(@"set URL %@", myUrl);
 		//[qaulWebView setMainFrameURL:myUrl];
         [[qaulWebView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:myUrl]]];

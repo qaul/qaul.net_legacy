@@ -44,7 +44,7 @@
     </property>
     <property name="url">
      <url>
-      <string>http://localhost:8081/jqm_qaul.html</string>
+      <string>http://localhost:8081/qaul.html</string>
      </url>
     </property>
     <property name="renderHints">

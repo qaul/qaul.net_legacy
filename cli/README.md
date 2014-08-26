@@ -70,6 +70,6 @@ The following steps are needed to successfully run the CLI client
     ./qaul
 
 * Open the GUI in a web browser 
-  http://localhost:8081/jqm_qaul.html
+  http://localhost:8081/qaul.html
 
 
