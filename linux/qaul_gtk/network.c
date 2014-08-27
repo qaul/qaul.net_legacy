@@ -483,8 +483,10 @@ static int networkmanager_device_properties(DBusConnection* dbus_connection, qau
 	dbus_message_unref(msg);
 
 	// store dbus path
+	printf("networkmanager_device_properties device_property.dbus_path\n");
 	device_property.dbus_path = device->dbus_device_path;
 
+	printf("networkmanager_device_properties device_property.dbus_interface\n");
 	if(device->type == 2)
 		device_property.dbus_interface = "org.freedesktop.NetworkManager.Device.Wireless";
 	else if(device->type == 1)
@@ -493,6 +495,7 @@ static int networkmanager_device_properties(DBusConnection* dbus_connection, qau
 	// retrieve Hardware address property only for known device types
 	if(device->type == 1 || device->type == 2)
 	{
+		printf("networkmanager_device_properties device->mac\n");
 		device_property.dbus_property_name = "PermHwAddress";
 		device_property.value_string = device->mac;
 		device_property.value_string_len = sizeof(device->mac);
