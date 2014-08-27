@@ -9,7 +9,7 @@ config wifi-iface
 	option device      'radio0'
 	option ifname      'wlan0'
 	option encryption  'none'
-	option network     'qaul'
+	option network     'qaulwifi'
 	option ssid        'qaul.net'
 	option mode        'adhoc'
 	option bssid       '02:11:87:88:D6:FF'
