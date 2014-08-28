@@ -5741,7 +5741,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_presentation.css</string>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul_presentation.css</string>
 																	<key>PATH_TYPE</key>
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>
@@ -5757,7 +5757,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_presentation.fr.html</string>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul_presentation.fr.html</string>
 																	<key>PATH_TYPE</key>
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>
@@ -5773,7 +5773,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_presentation.html</string>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul_presentation.html</string>
 																	<key>PATH_TYPE</key>
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>
@@ -5789,7 +5789,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_qaul.css</string>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul.css</string>
 																	<key>PATH_TYPE</key>
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>
@@ -5805,7 +5805,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_qaul.html</string>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul.html</string>
 																	<key>PATH_TYPE</key>
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>
@@ -5821,7 +5821,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_qaul.js</string>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul.js</string>
 																	<key>PATH_TYPE</key>
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>

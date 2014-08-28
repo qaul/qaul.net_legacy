@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
     gtk_container_add(GTK_CONTAINER(qaulMainWindow), scrolledWindow);
 
     // Load a web page into the browser instance
-    webkit_web_view_load_uri(webView, "http://127.0.0.1:8081/jqm_qaul.html");
+    webkit_web_view_load_uri(webView, "http://127.0.0.1:8081/qaul.html");
 
     // Make sure that when the browser area becomes visible, it will get mouse
     // and keyboard events

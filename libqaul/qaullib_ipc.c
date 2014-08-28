@@ -49,12 +49,20 @@ int Qaullib_IpcConnect(void)
       return err;
   }
 
-  printf("Attempting connect...");
+  if(qaul_ipc_connected == 1)
+	  printf("[qaullib] IPC: Attempting connect...");
 
   // connect to PORT on HOST
   if ((ipc_conn = connect(ipc_socket, (struct sockaddr *)&saddr, sizeof(saddr))) < 0)
   {
-	  fprintf(stderr, "Error connecting %d - %s\n", errno, strerror(errno));
+	  if(qaul_ipc_connected == 1)
+	  {
+		  fprintf(stderr, "Error connecting %d - %s\n", errno, strerror(errno));
+		  qaul_ipc_connected = 0;
+	  }
+	  else if(QAUL_DEBUG)
+		  printf(".");
+
 	  // close socket if there was an error
 	  Qaullib_IpcClose();
 	  //return (int)errno;
@@ -62,6 +70,7 @@ int Qaullib_IpcConnect(void)
   else
   {
     printf("Connected!! socket: %i connection: %i\n",ipc_socket,ipc_conn);
+    qaul_ipc_connected = 1;
 
     // Setting socket non-blocking
 #ifdef WIN32
@@ -113,7 +122,9 @@ void Qaullib_IpcReceive(void)
 
 	if (!ipc_connected)
 	{
-		printf("Connection closed, try to reconnect ...\n");
+		if(qaul_ipc_connected == 1)
+			printf("Connection closed, try to reconnect ...\n");
+
 		// connect to the application
 		Qaullib_IpcConnect();
 	}
@@ -133,16 +144,14 @@ void Qaullib_IpcReceive(void)
 
 		if (bytes > 0)
 		{
-			printf("bytes: %i msg-size: %i type: %i\n", bytes, (int) ntohs(inbuf.msg.v4.olsr_msgsize), (int) inbuf.msg.v4.olsr_msgtype);
+			//printf("bytes: %i msg-size: %i type: %i\n", bytes, (int) ntohs(inbuf.msg.v4.olsr_msgsize), (int) inbuf.msg.v4.olsr_msgtype);
 
-		  tmp = (char *)&inbuf.msg;
-		  qaul_in_msg = &inbuf.msg;
+			tmp = (char *)&inbuf.msg;
+			qaul_in_msg = &inbuf.msg;
 
 			// do it as often as needed until all messages are out of the buffer.
 			if (bytes > 0 && ntohs(inbuf.msg.v4.olsr_msgsize) <= bytes)
 			{
-				printf("[qaullib] IPC: message received \n");
-
 				while (bytes > 0 && ntohs(qaul_in_msg->v4.olsr_msgsize) <= bytes)
 				{
 					//printf("read out bytes: %i %i\n", bytes, ntohs(qaul_in_msg->v4.olsr_msgsize));

@@ -154,9 +154,6 @@ int Qaullib_WgetConnect(struct qaul_wget_connection *myConn)
 // ------------------------------------------------------------
 int Qaullib_WgetClose(struct qaul_wget_connection *myConn)
 {
-	if(QAUL_DEBUG)
-		printf("Qaullib_WgetClose\n");
-
 	int success;
 	myConn->connected = 0;
 
@@ -176,9 +173,6 @@ int Qaullib_WgetSendHeader(struct qaul_wget_connection *myConn)
 {
 	int size;
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_WgetSendHeader ( type: %i ) %s\n", myConn->type, myConn->header);
-
 	size = (int) strlen(myConn->header);
 	if (send(myConn->socket, myConn->header, size, MSG_NOSIGNAL) < 0)
 	{
@@ -193,9 +187,6 @@ int Qaullib_WgetSendHeader(struct qaul_wget_connection *myConn)
 void Qaullib_WgetDownload(struct qaul_wget_connection *myConn)
 {
 	int bytes, first;
-
-	if(QAUL_DEBUG)
-		printf("Qaullib_WgetDownload ( type: %i ) \n", myConn->type);
 
 	first = 1;
 

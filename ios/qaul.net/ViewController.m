@@ -18,7 +18,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://127.0.0.1:8081/jqm_qaul.html"]]];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://127.0.0.1:8081/qaul.html"]]];
 }
 
 - (void)didReceiveMemoryWarning

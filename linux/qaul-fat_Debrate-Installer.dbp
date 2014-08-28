@@ -356,9 +356,12 @@ Description: tools for the next revolution
 /usr/share/qaul/www/jquery.i18n.min.js -> jquery.i18n.min.js -> /usr/share/qaul/www
 /usr/share/qaul/www/string2byte.js -> string2byte.js -> /usr/share/qaul/www
 /usr/share/qaul/www/favicon.ico -> favicon.ico -> /usr/share/qaul/www
-/usr/share/qaul/www/jqm_qaul.html -> jqm_qaul.html -> /usr/share/qaul/www
-/usr/share/qaul/www/jqm_qaul.js -> jqm_qaul.js -> /usr/share/qaul/www
-/usr/share/qaul/www/jqm_qaul.css -> jqm_qaul.css -> /usr/share/qaul/www
+/usr/share/qaul/www/qaul.html -> qaul.html -> /usr/share/qaul/www
+/usr/share/qaul/www/qaul.js -> qaul.js -> /usr/share/qaul/www
+/usr/share/qaul/www/qaul.css -> qaul.css -> /usr/share/qaul/www
+/usr/share/qaul/www/qaul_web.html -> qaul_web.html -> /usr/share/qaul/www
+/usr/share/qaul/www/qaul_web.js -> qaul_web.js -> /usr/share/qaul/www
+/usr/share/qaul/www/qaul_web.css -> qaul_web.css -> /usr/share/qaul/www
 /usr/share/qaul/www/network.html -> network.html -> /usr/share/qaul/www
 /usr/share/qaul/www/network.js -> network.js -> /usr/share/qaul/www
 /usr/share/qaul/www/network.css -> network.css -> /usr/share/qaul/www

@@ -215,9 +215,6 @@ int Qaullib_File_LL_HashSearch (char *filehash, struct qaul_file_LL_item **item)
 	struct qaul_file_LL_node mynode;
 	Qaullib_File_LL_InitNodeWithHash(&mynode, filehash);
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_File_LL_HashSearch\n");
-
 	while(Qaullib_File_LL_NextItem(&mynode))
 	{
 		if(memcmp(&mynode.item->hash, filehash, MAX_HASH_LEN) == 0)
@@ -269,7 +266,7 @@ static uint32_t Qaullib_File_LL_Hashing (unsigned char *filehash)
 {
 	uint32_t hash;
 	hash = jenkins_hash((const uint8_t *)filehash, MAX_HASH_LEN);
-	printf("Qaullib_File_LL_Hashing mask: %u u: %u\n", HASHMASK, hash & HASHMASK);
+	//printf("Qaullib_File_LL_Hashing mask: %u u: %u\n", HASHMASK, hash & HASHMASK);
 	return hash & HASHMASK;
 }
 

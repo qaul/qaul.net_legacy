@@ -160,13 +160,11 @@ void *Qaullib_DHCP_Server(void *server_ip)
 
 				   if(qaul_dhcp_LL_count < DHCP_MAX_LL)
 				   {
-					   printf("[DHCP] 1\n");
 					   // create new ip
 					   Qaullib_Captive_CreateIP((char *)&NewIP);
 					   // write ip into linked-list
 					   Qaullib_Dhcp_LL_Add ((char *)&NewIP, (char *)&DHCP_Buffer.dp_chaddr);
 
-					   printf("[DHCP] 2\n");
 					   DHCP_Buffer.dp_op = DHCPOFFER;
 					   memset( &DHCP_Buffer.dp_options, 0, sizeof( DHCP_Buffer.dp_options ));
 					   memcpy( &DHCP_Buffer.dp_yiaddr, NewIP, 4 );
@@ -190,7 +188,6 @@ void *Qaullib_DHCP_Server(void *server_ip)
 					   memcpy( option_ptr, dhcp_option_end, 1 );
 					   option_ptr += 1;
 
-					   printf("[DHCP] 3\n");
 					   destinationAddr.sin_port = htons(68);
 					   destinationAddr.sin_family = AF_INET;
 
@@ -207,8 +204,6 @@ void *Qaullib_DHCP_Server(void *server_ip)
 
 					   if(sendstatus < 0)
 						   perror("sendto error");
-
-					   printf("[DHCP] 4\n");
 				   }
 				   break;
 

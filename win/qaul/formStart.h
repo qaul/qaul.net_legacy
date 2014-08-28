@@ -250,7 +250,7 @@ private: System::Void formStart_FormClosing(System::Object^  sender, System::Win
 			this->webBrowser1->ScrollBarsEnabled = false;
 			this->webBrowser1->Size = System::Drawing::Size(400, 600);
 			this->webBrowser1->TabIndex = 5;
-			this->webBrowser1->Url = (gcnew System::Uri(L"http://localhost:8081/jqm_qaul.html", System::UriKind::Absolute));
+			this->webBrowser1->Url = (gcnew System::Uri(L"http://localhost:8081/qaul.html", System::UriKind::Absolute));
 			// 
 			// Form1
 			// 

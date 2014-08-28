@@ -299,9 +299,6 @@ void Qaullib_FileCheckScheduled(void)
 	struct qaul_file_LL_node mynode;
 	Qaullib_File_LL_InitNode(&mynode);
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_FileCheckScheduled\n");
-
 	// loop through files
 	while(Qaullib_File_LL_NextNode(&mynode))
 	{
@@ -1002,9 +999,6 @@ static int Qaullib_FileCreateHashStr(char *filename, char *hashstr)
 static int Qaullib_HashCreate(char *filename, unsigned char *hash)
 {
 	int ret;
-
-	if(QAUL_DEBUG)
-		printf("Qaullib_HashCreate\n");
 
 	ret = polarssl_sha1_file( filename, hash );
 	if(ret == 1)
