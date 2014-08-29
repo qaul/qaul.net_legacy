@@ -1,0 +1,94 @@
+<html>
+<head>
+	<meta http-equiv="content-type" content="text-html; charset=utf-8"/>
+	<link rel="shortcut icon" href="/qaul/favicon.ico" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+	<script type="text/javascript" src="/qaul/jquery.min.js"></script>
+	<script type="text/javascript" src="/qaul/admin.js"></script>
+	<link rel="stylesheet" type="text/css" href="/qaul/admin.css" />
+	<title>qaul.net – قول</title>
+</head>
+<body>
+<div id="page_main">
+	<div class="header">
+		<button onclick="config('logout')">logout</button>
+	</div>
+	<div class="content">
+		<div class="section">
+			<div onclick="config('internet_on')" id="internet" class="choice toggle">
+				Share Internet
+			</div>
+		</div>
+		<div class="section">
+			<div onclick="config('storage')" id="storage" class="choice button">
+				USB storage
+			</div>
+		</div>
+		<div class="section">
+			<div onclick="config_mobile()" id="mobile" class="choice button">
+				Mobile Internet Stick
+			</div>
+		</div>
+		<div id="eth_config">
+			<h2>Configure Ethernet</h2>
+			<div class="section switch">
+				<div onclick="config('eth_wan')" id="eth_wan" class="choice selected">
+					<strong>WAN</strong> connect to Internet
+				</div>
+				<div onclick="config('eth_qaul')" id="eth_qaul" class="choice">
+					<strong>qaul</strong> connect to other Antenna
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="page_login" class="content">
+	<div class="form_box">
+		<h2>Login</h2>
+		<form onsubmit="submit_login()">
+			<label for="password">Password</label>
+			<input name="password" id="login_password" type="password" required="required" />
+			<input type="submit" name="submit" value="Login" />
+		</form>
+	</div>
+</div>
+
+<div id="page_newpassword" class="content">
+	<div class="form_box">
+		<h2>Set New Password</h2>
+		<form onsubmit="submit_newpassword()">
+			<label for="password">Password</label>
+			<input name="password" id="new_password" type="password" required="required" />
+			<label for="password2">Repeat Password</label>
+			<input name="password2" id="new_password2" type="password" required="required" />
+			<input type="submit" name="submit" value="Save" />
+		</form>
+	</div>
+</div>
+
+<div id="page_mobile" class="content">
+	<div class="form_box">
+		<h2>Configure 3G Internet</h2>
+		<form onsubmit="submit_mobile()">
+			<label for="apn">APN</label>
+			<input name="apn" id="mobile_apn" type="text" required="required" />
+			<label for="pin">PIN CODE</label>
+			<input name="pin" id="mobile_pin" type="text" />
+			<label for="username">User Name</label>
+			<input name="username" id="mobile_username" type="text" />
+			<label for="password">Password</label>
+			<input name="password" id="mobile_password" type="password" />
+			<input type="submit" name="submit" value="Save" />
+			<br/><br/>
+			<input type="button" name="cancel" value="Back" onclick="back()"/>
+		</form>
+	</div>
+</div>
+
+</div>
+
+<div id="loading"><img src="/qaul/loader.png" alt="loading" id="loader" class=""/></div>
+
+</body>
+</html>

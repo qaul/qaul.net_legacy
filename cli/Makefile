@@ -80,7 +80,13 @@ endif
 
 # linux
 ifeq ($(OS),linux)
-PJSIPTYPE=i686-pc-linux-gnu
+ARCH=$(shell uname -m)
+ifeq ($(ARCH),i686)
+HARDW=pc
+else
+HARDW=unknown
+endif
+PJSIPTYPE=$(ARCH)-$(HARDW)-linux-gnu
 LIBS= \
     -lpjsua-$(PJSIPTYPE) \
     -lpjsip-ua-$(PJSIPTYPE) \
@@ -93,7 +99,6 @@ LIBS= \
     -lpjnath-$(PJSIPTYPE) \
     -lpjlib-util-$(PJSIPTYPE) \
     -lresample-$(PJSIPTYPE) \
-    -lmilenage-$(PJSIPTYPE) \
     -lsrtp-$(PJSIPTYPE) \
     -lgsmcodec-$(PJSIPTYPE) \
     -lspeex-$(PJSIPTYPE) \
@@ -103,17 +108,10 @@ LIBS= \
     -lpj-$(PJSIPTYPE) \
     \
     -L/usr/local/lib \
-    -lavformat \
-    -lavcodec \
-    -lswscale \
-    -lavutil \
     -lasound \
-    -lcrypto \
-    -lssl \
     \
     -lpthread \
     -ldl \
-    -luuid \
     -lm
 endif
 
@@ -225,9 +223,9 @@ ifeq ($(OS),linux)
 	@echo application Makefile - linking qaul
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul $(LFLAGS)
 	@echo copy olsrd executable into this directory
-	@cp ../olsrd_0.6.2/olsrd ./
+	@cp ../olsrd-0.6.6.2/olsrd ./
 	@echo copy olsrd_qaul plugin into this directory
-	@cp ../olsrd_0.6.2/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
+	@cp ../olsrd-0.6.6.2/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
 	@echo copy www folder into this directory
 	@cp -R ../www ./
 endif

@@ -1,0 +1,87 @@
+#!/bin/sh
+
+## json configuration file
+
+# send configuration
+echo "Content-type: text/json"
+echo ""
+echo "{\n"
+
+# check authentication
+qaul_auth=`/qaul/bin/authenticate.sh`
+
+# send info
+if ["$qaul_auth" = "1"]
+then
+	qaul_pw_default=`cat /etc/shadow | grep "root:$1$IxLAgyK8$k9p3I2IDnER48L8H49lPq/:"`
+	
+	if [ "$qaul_pw_default" = ""]
+	then
+		echo "\"auth\":$qaul_auth,\n"
+
+		echo '"internet":'
+		qaul_internet=`uci show olsrd.dyn_gw.ignore`
+		if ["$qaul_internet" = "0"]
+		then
+			echo "1,\n"
+		else
+			echo "0,\n"
+		fi
+
+		qaul_storage=`cat /qaul/config/storage`
+		echo "\"storage\":$qaul_storage,\n"
+
+		qaul_mobile=`cat /qaul/config/mobile`
+		echo "\"mobile\":$qaul_mobile,\n"
+
+		qaul_eth_config=`cat /qaul/config/eth_config`
+		echo "\"eth_config\":\"$qaul_eth_config\",\n"
+
+		qaul_eth=`cat /qaul/config/eth`
+		echo "\"eth\":\"$qaul_eth\",\n"
+		
+		# display ip's
+		echo "\"config\":[\n"
+		comma="0"
+		value=`uci get network.qaulwifi.ipaddr`
+		if ["$value" = "uci: Entry not found"]; then
+		else
+			echo "\"WLAN: $value\""
+			comma="1"
+		fi
+		value=`uci get network.wan.ipaddr`
+		if ["$value" = "uci: Entry not found"]; then
+		else
+			if ["$comma" = "1"]; then
+				echo ","
+			fi
+			echo "\"WAN: $value\""
+			comma="1"
+		fi
+		value=`uci get network.qauleth.ipaddr`
+		if ["$value" = "uci: Entry not found"]; then
+		else
+			if ["$comma" = "1"]; then
+				echo ","
+			fi
+			echo "\"ETH qaul: $value\""
+			comma="1"
+		fi
+		value=`uci get network.lan.ipaddr`
+		if ["$value" = "uci: Entry not found"]; then
+		else
+			if ["$comma" = "1"]; then
+				echo ","
+			fi
+			echo "\"LAN: $value\""
+			comma="1"
+		fi
+		echo "\"config\":]\n"
+	else
+		echo "\"auth\":2\n"
+	fi
+else
+	echo "\"auth\":$qaul_auth\n"
+fi
+
+echo "}"

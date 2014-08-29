@@ -128,7 +128,7 @@ void Qaullib_FilePopulate(void)
 		  error_exec=NULL;
 	  }
 	  else
-		  printf("fat binaries imported\n",stmt);
+		  printf("fat binaries imported\n");
 
 	  fclose(file);
 	}
@@ -204,11 +204,11 @@ int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 		// todo: ipv6
 		if(!inet_pton(AF_INET, myip, &file_item->adv_ip.v4))
 		{
-			sprintf(myip,"");
+			sprintf(myip, "%s", "");
 		}
 	}
 	else
-		sprintf(myip,"");
+		sprintf(myip, "%s", "");
 
 	// protect values for db
 	Qaullib_StringDbProtect(description_dbprotected, file_item->description, sizeof(description_dbprotected));
@@ -231,7 +231,7 @@ int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
-		printf("SQLite error: %s\n",error_exec);
+		printf("SQLite error: %s\n", error_exec);
 		sqlite3_free(error_exec);
 		error_exec=NULL;
 	}
@@ -409,14 +409,14 @@ int Qaullib_FileDelete(struct qaul_file_LL_item *file_item)
 	if(QAUL_DEBUG)
 		printf("Qaullib_FileDelete delete file: %s\n", path);
 	if(remove(path) == -1)
-		printf("Qaullib_FileDelete ERROR file couldn't be deleted\n", path);
+		printf("Qaullib_FileDelete ERROR file couldn't be deleted \n    path: %s", path);
 
 	// delete from DB
 	sprintf(stmt, sql_file_delete_hash, file_item->hashstr);
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		// execution failed
-		printf("SQLite error: %s\n",error_exec);
+		printf("SQLite error: %s\n", error_exec);
 		sqlite3_free(error_exec);
 		error_exec=NULL;
 	}
@@ -690,8 +690,6 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item)
 			// get best seeder
 			if(Qaullib_Filediscovery_LL_GetBestSeeder(file_item, &ip))
 			{
-				printf("Qaullib_FileConnect 1\n", i);
-
 				if(QAUL_DEBUG)
 				{
 					char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];

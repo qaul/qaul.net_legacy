@@ -1,0 +1,25 @@
+config wifi-device  radio0
+        option type     mac80211
+        option channel  11
+        option hwmode   11g
+        option path     'platform/ar933x_wmac'
+        option htmode   HT20
+
+config wifi-iface
+	option device      'radio0'
+	option ifname      'wlan0'
+	option encryption  'none'
+	option network     'qaulwifi'
+	option ssid        'qaul.net'
+	option mode        'adhoc'
+	option bssid       '02:11:87:88:D6:FF'
+
+#config wifi-iface
+#	option device      'radio0'
+#	option ifname      'wlan0'
+#	option network     'lan'
+#	option mode        'ap'
+#	option ssid        'qaul.net_AP'
+#	option encryption  'none'
+##	option encryption  'psk2'
+##	option key         'bU6D5EYV6WWj'
