@@ -87,7 +87,7 @@ function init_start()
 	// message forms
 	chat_form.validate({
 		submitHandler: function(form){
-			send_msg();
+			web_send_msg();
 		}
 	});
 	
@@ -143,14 +143,14 @@ function init_start()
 			if(e.which == 13)
 			{
 				if($("#chat_form").valid())
-					send_msg();
+					web_send_msg();
 				e.preventDefault();
 				return false;
 			}
 		});
 		$("#chat_submit").click(function(){
 			if($("#chat_form").valid())
-				send_msg();
+				web_send_msg();
 			return false;
 		});
 		
@@ -535,6 +535,8 @@ function insert_msg(insert, item, inverse)
 
 function send_msg()
 {
+	alert("send_msg()");
+/*
 	$.post(
 			"sendmsg",
 			{ "t": 11, "m": msg.val(), "n": user_name, "e":1},
@@ -545,7 +547,7 @@ function send_msg()
 		).error(function(){
 			// show alert
 			$.mobile.changePage($("#page_dialog"),{role:"dialog"});
-		});
+*/
 };
 
 function get_msgs()
@@ -902,54 +904,8 @@ function isoDateString(d)
 }
 
 // ======================================================
-// configuration
+// web client functions
 // ------------------------------------------------------
-function web_getcookie()
-{
-/*
-	// check if locale & username have been set
-	$.ajax({
-		url:   'weg_getcookie',
-		cache: false, // needed for IE
-		dataType: "json",
-		success: function(data) {
-			if(data.locale)
-			{
-				// if data is set go directly to chat
-				set_locale(data.locale);
-				user_name = data.name;
-				$.mobile.changePage($("#page_chat"));
-			}
-			else
-			{
-				// otherwise go to language settings
-				$.mobile.changePage($("#page_config_locale"));
-			}
-		} 
-	}).error(function(){
-		// go to language settings
-		$.mobile.changePage($("#page_chat"));
-	});
-*/
-	$.mobile.changePage($("#page_config_locale"));
-}
-
-function web_setcookie()
-{
-	// send locale & username
-	$.post(
-			'web_setcookie',
-			{"n": user_name, "l": qaul_locale, "e":1},
-			function(data){
-				$.mobile.changePage($("#page_chat"));
-	}).error(function(){
-		// go to language settings
-		$.mobile.changePage($("#page_chat"));
-	});
-	
-	return true;
-}
-
 function web_getfiles()
 {
 	var path = "web_getfiles";
@@ -1018,6 +974,21 @@ function web_getmsgs()
 	});
 }
 
+function web_send_msg()
+{
+	$.post(
+			"web_sendmsg",
+			{ "t": 11, "m": msg.val(), "n": user_name, "e":1},
+			function(){
+				insert_msg(chat, {id:0,type:11,name:user_name,msg:msg.val(),time:isoDateString(new Date())});
+				msg.val('');
+			}
+		).error(function(){
+			// show alert
+			$.mobile.changePage($("#page_dialog"),{role:"dialog"});
+		});
+};
+
 function web_file_button_download(hash, suffix, size, description)
 {
 	var button = "";
@@ -1043,6 +1014,9 @@ function web_info_page()
 	
 }
 
+//======================================================
+//configuration
+//------------------------------------------------------
 function set_locale(locale)
 {
 	qaul_locale = locale;
