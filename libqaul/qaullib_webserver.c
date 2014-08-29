@@ -79,6 +79,10 @@ static void Qaullib_WwwPubUsers(struct mg_connection *conn, const struct mg_requ
 static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwPubMsg(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwPubInfo(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwWebGetMsgs(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwWebSendMsg(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwWebGetUsers(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwWebGetFiles(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwExtBinaries(struct mg_connection *conn, const struct mg_request_info *request_info);
 static void Qaullib_WwwLoading(struct mg_connection *conn, const struct mg_request_info *request_info);
 static int  Qaullib_WwwGetMsgsCallback(void *NotUsed, int number_of_lines, char **column_value, char **column_name);
@@ -262,6 +266,24 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 			{
 				Qaullib_WwwPubFilechunk(conn, request_info);
 			}
+			// web interface to test qaul
+			else if (strcmp(request_info->uri, "/web_getmsgs") == 0)
+			{
+				Qaullib_WwwWebGetmsgs(conn, request_info);
+			}
+			else if (strcmp(request_info->uri, "/web_sendmsg") == 0)
+			{
+				Qaullib_WwwWebSendmsg(conn, request_info);
+			}
+			else if (strcmp(request_info->uri, "/web_getusers") == 0)
+			{
+				Qaullib_WwwWebGetusers(conn, request_info);
+			}
+			else if (strcmp(request_info->uri, "/web_getfiles") == 0)
+			{
+				Qaullib_WwwWebGetfiles(conn, request_info);
+			}
+			// no handler found
 			else
 			{
 				// No suitable handler found, mark as not processed. Mongoose will
@@ -1812,6 +1834,353 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 		mg_write(conn, msgbuf.buf, sizeof(struct qaul_filechunk_msg));
 	}
 	printf("Qaullib_WwwPubFilechunk 5\n");
+}
+
+
+// ------------------------------------------------------------
+static void Qaullib_WwwWebGetMsgs(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	sqlite3_stmt *ppStmt;
+	char buffer[10240];
+	char* stmt = buffer;
+	char *error_exec=NULL;
+	char local_type[MAX_INTSTR_LEN +1];
+	char local_id[MAX_INTSTR_LEN +1];
+	char local_tag[MAX_FILENAME_LEN +1];
+	char local_name[MAX_USER_LEN +1];
+	char timestr[MAX_TIME_LEN];
+	int  timestamp, id, type;
+	char *content_length;
+	char *post;
+	int post_set = 0;
+	int length = 0;
+
+	printf("Qaullib_WwwWebGetMsgs\n");
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{\"name\":\"%s\",\"messages\":[", qaul_username);
+
+	// get get variables
+	// message type
+	get_qsvar(request_info, "t", local_type, sizeof(local_type));
+	type = atoi(local_type);
+
+	if(type > 4)
+	{
+		// get id
+		get_qsvar(request_info, "id", local_id, sizeof(local_id));
+		id = atoi(local_id);
+	}
+
+	// prepare statements
+	// user related
+	if(type == 5)
+	{
+		get_qsvar(request_info, "v", local_name, sizeof(local_name));
+
+		// prepare statement
+		if(id == 0)
+			sprintf(stmt, sql_msg_get_user0, local_name, "%", local_name, "%");
+		else
+			sprintf(stmt, sql_msg_get_user, id, local_name, "%", local_name, "%");
+	}
+	// with tag
+	else if(type == 6)
+	{
+		get_qsvar(request_info, "v", local_tag, sizeof(local_tag));
+/*
+		// extract variable v
+		mg_get_var(post, strlen(post == NULL ? "" : post), "v", local_tag, sizeof(local_tag));
+*/
+		// prepare statement
+		if(id == 0)
+			sprintf(stmt, sql_msg_get_tag0, "%", local_tag, "%");
+		else
+			sprintf(stmt, sql_msg_get_tag, id, "%", local_tag, "%");
+	}
+	// get newest
+	else
+	{
+		sprintf(stmt, "%s", sql_msg_get_new);
+	}
+
+	if(type > 4 || qaul_new_msg)
+	{
+		if(type == 1) qaul_new_msg = 0;
+
+		// Select rows from database
+		if( sqlite3_prepare_v2(db, stmt, -1, &ppStmt, NULL) != SQLITE_OK )
+		{
+			printf("SQLite error: %s\n",sqlite3_errmsg(db));
+		}
+
+		// For each row returned
+		int first = 1;
+		int myid;
+		while (sqlite3_step(ppStmt) == SQLITE_ROW)
+		{
+			if(first) first = 0;
+			else mg_printf(conn, "%s", ",");
+			mg_printf(conn, "{");
+
+		  // For each collumn
+		  int jj;
+		  for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
+		  {
+				if(strcmp(sqlite3_column_name(ppStmt,jj), "id") == 0)
+				{
+			    	if(jj>0) mg_printf(conn, ",");
+			    	myid = sqlite3_column_int(ppStmt, jj);
+			    	mg_printf(conn, "\"id\":%i",sqlite3_column_int(ppStmt, jj));
+				}
+				else if(strcmp(sqlite3_column_name(ppStmt,jj), "type") == 0)
+				{
+			    	if(jj>0) mg_printf(conn, ",");
+			    	mg_printf(conn, "\"type\":%i",sqlite3_column_int(ppStmt, jj));
+				}
+				else if(strcmp(sqlite3_column_name(ppStmt,jj), "name") == 0)
+				{
+			    	if(jj>0) mg_printf(conn, ",");
+			    	mg_printf(conn, "\"name\":\"%s\"",sqlite3_column_text(ppStmt, jj));
+				}
+				else if(strcmp(sqlite3_column_name(ppStmt,jj), "msg") == 0)
+				{
+			    	if(jj>0) mg_printf(conn, ",");
+			    	mg_printf(conn, "\"msg\":\"%s\"",sqlite3_column_text(ppStmt, jj));
+				}
+				else if(strcmp(sqlite3_column_name(ppStmt,jj), "ip") == 0)
+				{
+			    	if(jj>0) mg_printf(conn, ",");
+			    	mg_printf(conn, "\"ip\":\"%s\"",sqlite3_column_text(ppStmt, jj));
+				}
+				else if(strcmp(sqlite3_column_name(ppStmt,jj), "time") == 0)
+				{
+			    	if(jj>0) mg_printf(conn, ",");
+
+			    	timestamp = sqlite3_column_int(ppStmt, jj);
+			    	Qaullib_Timestamp2Isostr(timestr, timestamp, MAX_TIME_LEN);
+			    	mg_printf(conn, "\"time\":\"%s\"", timestr);
+				}
+		  }
+			mg_printf(conn, "}");
+
+			if(type == 1)
+			{
+				// update row
+				sprintf(stmt, sql_msg_update_read, myid);
+				//printf("stmt: %s\n",stmt);
+				if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+				{
+					// execution failed
+					printf("SQLite error: %s\n",error_exec);
+					sqlite3_free(error_exec);
+					error_exec=NULL;
+				}
+			}
+		}
+		sqlite3_finalize(ppStmt);
+	}
+	mg_printf(conn, "%s", "]}");
+
+	// free memory
+	if(post_set)
+	{
+		if(QAUL_DEBUG)
+			printf("free(post)\n");
+		free(post);
+	}
+}
+
+
+// ------------------------------------------------------------
+static void Qaullib_WwwWebSendMsg(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	char *content_length;
+	int length;
+	char buffer[1024];
+	char *stmt;
+	char *error_exec;
+	char local_msg[3*MAX_MESSAGE_LEN +1];
+	char local_name[3*MAX_USER_LEN +1];
+	char msg_protected[MAX_MESSAGE_LEN +1];
+	char name_protected[MAX_USER_LEN +1];
+	char msg_dbprotected[2*MAX_MESSAGE_LEN +1];
+	char name_dbprotected[2*MAX_USER_LEN +1];
+
+	char local_type[3];
+	int type;
+	union olsr_message *m;
+	int size;
+	time_t timestamp;
+
+	error_exec = NULL;
+	stmt = buffer;
+	m = (union olsr_message *)buffer;
+
+	printf("Qaullib_WwwWebSendMsg\n");
+
+	// Fetch Message
+	//get_qsvar(request_info, "m", qaul_msg, sizeof(qaul_msg));
+	content_length = (char *)mg_get_header(conn, "Content-Length");
+	length = atoi(content_length);
+	char *post = (char *)malloc(length+length/8+1);
+	mg_read(conn, post, length); //read post data
+	// get type
+	mg_get_var(post, strlen(post == NULL ? "" : post), "t", local_type, sizeof(local_type));
+	type = atoi(local_type);
+	// get msg
+	mg_get_var(post, strlen(post == NULL ? "" : post), "m", local_msg, sizeof(local_msg));
+	Qaullib_StringMsgProtect(msg_protected, local_msg, sizeof(msg_protected));
+	Qaullib_StringDbProtect(msg_dbprotected, msg_protected, sizeof(msg_dbprotected));
+
+	// get name
+	memcpy(&local_name[0], "\0", 1);
+	if(type == 12)
+	{
+		mg_get_var(post, strlen(post == NULL ? "" : post), "n", local_name, sizeof(local_name));
+		Qaullib_StringNameProtect(name_protected, local_name, sizeof(name_protected));
+		Qaullib_StringDbProtect(name_dbprotected, name_protected, sizeof(name_dbprotected));
+	}
+	else
+	{
+		Qaullib_StringDbProtect(name_dbprotected, qaul_username, sizeof(name_dbprotected));
+	}
+
+	time(&timestamp);
+	// todo: ipv6
+  	// save Message to database
+	sprintf(stmt,
+			sql_msg_set_my,
+			type,
+			name_dbprotected,
+			msg_dbprotected,
+			"",
+			4,
+			(int)timestamp
+	);
+
+	if(QAUL_DEBUG)
+		printf("statement: %s\n", stmt);
+
+	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
+	{
+		// execution failed
+		printf("SQLite error: %s\n",error_exec);
+		sqlite3_free(error_exec);
+		error_exec=NULL;
+	}
+
+	// pack chat into olsr message
+	if(type == 11)
+	{
+		// ipv4 only at the moment
+		m->v4.olsr_msgtype = QAUL_CHAT_MESSAGE_TYPE;
+		//m.v4.ttl = MAX_TTL;
+		//m.v4.hopcnt = 0;
+		memcpy(&m->v4.message.chat.name, qaul_username, MAX_USER_LEN);
+		memcpy(&m->v4.message.chat.msg, msg_protected, MAX_MESSAGE_LEN);
+		size = sizeof(struct qaul_chat_msg);
+		size = size + sizeof(struct olsrmsg);
+		m->v4.olsr_msgsize = htons(size);
+
+		// send package
+		Qaullib_IpcSend(m);
+	}
+
+	// todo: check whether sending was successful...
+	// everything went fine
+	//mg_printf(conn, "%s message: %s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n", qaul_msg);
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+
+	// free memory
+	free(post);
+}
+
+
+// ------------------------------------------------------------
+static void Qaullib_WwwWebGetUsers(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	int request_type, first;
+	char request_type_char[MAX_INTSTR_LEN +1];
+	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
+	first = 0;
+
+	printf("Qaullib_WwwWebGetUsers\n");
+
+	// get variable r (0=just updates, 1=all, 2=all and don't update gui_notify)
+	request_type = 0;
+	get_qsvar(request_info, "r", request_type_char, sizeof(request_type_char));
+	request_type = atoi(request_type_char);
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+
+	// print newly
+	mg_printf(conn, "{\"users\":[");
+	// loop through LL
+	first = 0;
+	struct qaul_user_LL_node mynode;
+	Qaullib_User_LL_InitNode(&mynode);
+	while(Qaullib_User_LL_NextNode(&mynode))
+	{
+		// only use named nodes
+		if(mynode.item->type == QAUL_USERTYPE_KNOWN)
+		{
+			// make sure the user name is not empty
+			if(strlen(mynode.item->name) > 0)
+			{
+				if(!first)
+					first = 1;
+				else
+					mg_printf(conn, ",");
+
+				// FIXME: ipv6
+				mg_printf(conn,
+						"{\"name\":\"%s\",\"ip\":\"%s\",\"lq\":%i,\"add\":1}",
+						mynode.item->name,
+						inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
+						Qaullib_UserLinkcost2Img(mynode.item->lq)
+						);
+			}
+		}
+	}
+	mg_printf(conn, "]}");
+}
+
+
+// ------------------------------------------------------------
+static void Qaullib_WwwWebGetFiles(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	int firstitem, request_type;
+	char request_type_char[MAX_INTSTR_LEN +1];
+	struct qaul_file_LL_node mynode;
+	Qaullib_File_LL_InitNode(&mynode);
+
+	printf("Qaullib_WwwWebGetFiles\n");
+
+	// get variable r (0=just updates, 1=all, 2=all and don't update gui_notify)
+	request_type = 0;
+	get_qsvar(request_info, "r", request_type_char, sizeof(request_type_char));
+	request_type = atoi(request_type_char);
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{");
+	mg_printf(conn, "\"files\":[");
+
+	// loop through files
+	firstitem = 1;
+	// select downloaded files
+	while(Qaullib_File_LL_NextNodePub(&mynode))
+	{
+		if(firstitem)
+			firstitem = 0;
+		else
+			mg_printf(conn, ",");
+
+		Qaullib_WwwFile2Json(conn, mynode.item);
+	}
+
+	mg_printf(conn, "]");
+	mg_printf(conn, "}");
 }
 
 
