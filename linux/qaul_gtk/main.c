@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 			printf("qaul copy directory error. source: %s target: %s\n", qaulTmpPath, qaulTmpPath2);
 		// TODO: update data base
 		// remove old data base if it exists
-		sprintf(qaulTmpPath, "%s/qaullib.db", qaulUserPath, QAUL_VERSION);
+		sprintf(qaulTmpPath, "%s/qaullib.db", qaulUserPath);
 		if(g_file_test(qaulTmpPath, G_FILE_TEST_EXISTS))
 			if(g_remove(qaulTmpPath) == -1)
 				printf("qaul.net database %s removal error\n", qaulTmpPath);
