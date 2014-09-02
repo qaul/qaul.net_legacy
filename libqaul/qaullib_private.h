@@ -41,6 +41,8 @@ extern "C" {
 #include "qaullib_appevent_LL.h"
 #include "qaullib_user_LL.h"
 #include "qaullib_user.h"
+#include "qaullib_msg_LL.h"
+#include "qaullib_messaging.h"
 #include "qaullib_threads.h"
 #include "olsrd/mantissa.h"
 #include "mongoose/mongoose.h"
@@ -104,12 +106,12 @@ union olsr_message *qaul_in_msg;
  ***********************************************/
 char qaul_username[MAX_USER_LEN +1];
 int qaul_username_set;
-char qaul_ip_str[MAX_IP_LEN +1];    // string of the IP
-union olsr_ip_addr qaul_ip_addr;	// binary IP address
 // ip
 int qaul_ip_version;                // IP version 4/6
 int qaul_ip_size;
 int qaul_ip_set;
+char qaul_ip_str[MAX_IP_LEN +1];    // string of the IP
+union olsr_ip_addr qaul_ip_addr;	// binary IP address
 // network
 char qaul_net_gateway[MAX_IP_LEN +1]; // string of the gateway IP
 char qaul_net_ibss[255 +1];           // string of the IBSS name

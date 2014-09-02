@@ -106,6 +106,7 @@ void Qaullib_Init(const char* resourcePath)
 
 	// initialize linked lists
 	Qaullib_UserInit();
+	Qaullib_MsgInit();
 	Qaullib_FileInit();
 
 	// initialize exe discovery

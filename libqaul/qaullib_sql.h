@@ -24,25 +24,25 @@ extern "C" {
  * 12: private message sent by me
  * 13: voip outgoing call
  */
-static const char* sql_msg_table = "CREATE TABLE IF NOT EXISTS 'msg' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 'type' INTEGER DEFAULT 1 NOT NULL, 'name' TEXT, 'msg' TEXT, 'ip' TEXT, 'ipv' INTEGER DEFAULT 4, 'ipv4' INTEGER, 'ipv6' CHAR(16), 'time' INTEGER DEFAULT 0, 'hops' INTEGER, 'ttl' INTEGER, 'seqnr' INTEGER, 'olsrtime' INTEGER, 'read' INTEGER DEFAULT 0);";
+static const char* sql_msg_table = "CREATE TABLE IF NOT EXISTS 'msg' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 'type' INTEGER DEFAULT 1 NOT NULL, 'name' TEXT, 'msg' TEXT, 'ip' TEXT, 'ipv' INTEGER DEFAULT 4, 'time' INTEGER DEFAULT 0, 'read' INTEGER DEFAULT 0);";
 
 // set indexes
 static const char* sql_msg_index = "CREATE INDEX IF NOT EXISTS 'myindex' ON 'msg' ('id' DESC); CREATE INDEX IF NOT EXISTS 'msg_read' ON 'msg' ('read' ASC);";
 
 // get messages
-static const char* sql_msg_get_new   = "SELECT * FROM 'msg' WHERE read = 0 ORDER BY id ASC;";
-static const char* sql_msg_get_user0 = "SELECT * FROM 'msg' WHERE name = \"%s\" OR msg LIKE \"%s@%s%s\" ORDER BY id DESC LIMIT 40;";
-static const char* sql_msg_get_user  = "SELECT * FROM 'msg' WHERE id > %i AND ( name = \"%s\" OR  msg LIKE \"%s@%s%s\" ) ORDER BY id ASC;";
-static const char* sql_msg_get_tag0 = "SELECT * FROM 'msg' WHERE msg LIKE \"%s%s%s\" ORDER BY id DESC LIMIT 40;";
-static const char* sql_msg_get_tag  = "SELECT * FROM 'msg' WHERE id > %i AND msg LIKE \"%s%s%s\" ORDER BY id ASC;";
+static const char* sql_msg_get_latest  = "SELECT * FROM 'msg' ORDER BY id ASC LIMIT 40;";
+static const char* sql_msg_get_archive = "SELECT * FROM 'msg' WHERE id > %i ORDER BY id ASC LIMIT 20;";
+static const char* sql_msg_get_new     = "SELECT * FROM 'msg' WHERE read = 0 ORDER BY id ASC;";
+static const char* sql_msg_get_user0   = "SELECT * FROM 'msg' WHERE name = \"%s\" OR msg LIKE \"%s@%s%s\" ORDER BY id DESC LIMIT 40;";
+static const char* sql_msg_get_user    = "SELECT * FROM 'msg' WHERE id > %i AND ( name = \"%s\" OR  msg LIKE \"%s@%s%s\" ) ORDER BY id ASC;";
+static const char* sql_msg_get_tag0    = "SELECT * FROM 'msg' WHERE msg LIKE \"%s%s%s\" ORDER BY id DESC LIMIT 40;";
+static const char* sql_msg_get_tag     = "SELECT * FROM 'msg' WHERE id > %i AND msg LIKE \"%s%s%s\" ORDER BY id ASC;";
 
-// update
+// update message
 static const char* sql_msg_update_read = "UPDATE 'msg' SET read = 1 WHERE id = %i ;";
 
 // insert message
-static const char* sql_msg_set_received = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','time','hops','ttl','seqnr','olsrtime') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,%i,%i,%i,%i,%i);";
-static const char* sql_msg_set_my = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','time','read') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,%i,1);";
-static const char* sql_msg_set_voip = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','time','read') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,%i,0);";
+static const char* sql_msg_set = "INSERT INTO 'msg' ('type','name','msg','ip','ipv','time','read') VALUES (%i,\"%s\",\"%s\",\"%s\",%i,%i,%i);";
 
 
 /**
@@ -101,21 +101,6 @@ static const char* sql_user_delete_ipv4 = "DELETE FROM 'user' WHERE ipv4 = %i;";
 /**
  * file table
  */
-#define QAUL_FILETYPE_FILE           1
-#define QAUL_FILETYPE_PROFILEIMAGE   2
-#define QAUL_FILETYPE_EXECUTABLE     4
-
-#define QAUL_FILESTATUS_DELETED     -2
-#define QAUL_FILESTATUS_ERROR       -1
-#define QAUL_FILESTATUS_NEW          0
-#define QAUL_FILESTATUS_DISCOVERING  1
-#define QAUL_FILESTATUS_DISCOVERED   2
-#define QAUL_FILESTATUS_DOWNLOADING  3
-#define QAUL_FILESTATUS_DOWNLOADED   4
-#define QAUL_FILESTATUS_MYFILE       5
-
-
-
 static const char* sql_file_table = "CREATE TABLE IF NOT EXISTS 'file' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'type' INTEGER NOT NULL DEFAULT 1, 'hash' TEXT, 'suffix' CHAR(5), 'description' TEXT, 'size' INTEGER, 'status' INTEGER DEFAULT 0, 'favorite' INTEGER DEFAULT 0, 'created_at' INTEGER DEFAULT 0, 'adv_name' TEXT DEFAULT '', 'adv_ip' TEXT DEFAULT '', 'geolon' REAL DEFAULT 0, 'geolat' REAL DEFAULT 0, 'requests' INTEGER DEFAULT 0, 'downloaded' FLOAT DEFAULT 0);";
 
 // set indexes

@@ -65,7 +65,38 @@ extern "C" {
 #define MAX_HEADER_LEN       1024
 #define MAX_JSON_LEN         1024
 
+/**
+ * qaul file sharing constants
+ */
 #define QAUL_FILEDISCOVERY_TIMEOUT 60
+
+#define QAUL_FILETYPE_FILE           1
+#define QAUL_FILETYPE_PROFILEIMAGE   2
+#define QAUL_FILETYPE_EXECUTABLE     4
+
+#define QAUL_FILESTATUS_DELETED     -2
+#define QAUL_FILESTATUS_ERROR       -1
+#define QAUL_FILESTATUS_NEW          0
+#define QAUL_FILESTATUS_DISCOVERING  1
+#define QAUL_FILESTATUS_DISCOVERED   2
+#define QAUL_FILESTATUS_DOWNLOADING  3
+#define QAUL_FILESTATUS_DOWNLOADED   4
+#define QAUL_FILESTATUS_MYFILE       5
+
+/**
+ * qaul chat msg constants
+ */
+#define MAX_MSG_COUNT               40
+#define MAX_MSG_FIRST               10
+#define MAX_MSG_COUNT_WEB           10
+#define MAX_MSG_FIRST_WEB            5
+
+#define QAUL_MSGTYPE_PUBLIC_IN       1
+#define QAUL_MSGTYPE_PUBLIC_OUT     11
+#define QAUL_MSGTYPE_PRIVATE_IN      2
+#define QAUL_MSGTYPE_PRIVATE_OUT    12
+#define QAUL_MSGTYPE_VOIP_IN         3
+#define QAUL_MSGTYPE_VOIP_OUT       13
 
 
 struct qaul_userinfo_msg

@@ -42,6 +42,7 @@ SRC= qaullib.c qaullib_ipc.c qaullib_webserver.c qaullib_voip.c \
      qaullib_user.c qaullib_user_LL.c \
      qaullib_topo_LL.c \
      qaullib_appevent_LL.c \
+     qaullib_messaging.c qaullib_msg_LL.c \
      qaullib_filesharing.c qaullib_file_LL.c \
      qaullib_exediscovery.c \
      qaullib_udp_communication.c \

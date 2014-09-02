@@ -8,6 +8,7 @@
 // ------------------------------------------------------
 var chat_form;
 var msg;
+var msg_last_id = 0;
 var user_name = "";
 var starting;
 var chat;
@@ -882,13 +883,15 @@ function send_direct_msg()
 
 function get_msgs()
 {
-	var path = "getmsgs.json?t=1&e=1";
+	var path = "getmsgs.json?t=1&id=" +msg_last_id +"&e=1";
 	$.ajax({
 		url:   path,
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
 			$.each(data.messages, function(i,item){
+				if(item.id > msg_last_id)
+					msg_last_id = item.id;
 				insert_msg(chat, item);
 			})
 		} 
@@ -904,9 +907,11 @@ function get_user_msgs()
 		dataType: "json",
 		success: function(data) {
 			var inverse = false;
-			if(user_last_id == 0) inverse = true;
+			if(user_last_id == 0)
+				inverse = true;
 			$.each(data.messages, function(i,item){
-					if(item.id > user_last_id) user_last_id = item.id;
+					if(item.id > user_last_id)
+						user_last_id = item.id;
 					insert_msg($("#page_user_msgs"), item, inverse);
 			})
 		} 
@@ -922,9 +927,11 @@ function get_tag_msgs()
 		dataType: "json",
 		success: function(data) {
 			var inverse = false;
-			if(tag_last_id == 0) inverse = true;
+			if(tag_last_id == 0)
+				inverse = true;
 			$.each(data.messages, function(i,item){
-					if(item.id > tag_last_id) tag_last_id = item.id;
+					if(item.id > tag_last_id)
+						tag_last_id = item.id;
 					insert_msg($("#page_tag_msgs"), item, inverse);
 			})
 		} 
