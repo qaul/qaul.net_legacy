@@ -842,6 +842,14 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 			sprintf(stmt, sql_msg_get_user, id, local_name, "%", local_name, "%");
 
 		items = Qaullib_MsgDB2LL(&node, stmt);
+		if(items)
+		{
+			// set node to last item
+			while(Qaullib_Msg_LL_NextItem(&node))
+			{
+
+			}
+		}
 	}
 	// with tag
 	else if(type == 6)
@@ -855,6 +863,14 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 			sprintf(stmt, sql_msg_get_tag, id, "%", local_tag, "%");
 
 		items = Qaullib_MsgDB2LL(&node, stmt);
+		if(items)
+		{
+			// set node to last item
+			while(Qaullib_Msg_LL_NextItem(&node))
+			{
+
+			}
+		}
 	}
 	else
 	{
@@ -866,7 +882,7 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 	if(items)
 	{
 		count = 0;
-		while (Qaullib_Msg_LL_PrevItem(&node))
+		do
 		{
 			if(count > 0)
 				mg_printf(conn, "%s", ",");
@@ -889,7 +905,7 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 			mg_printf(conn, "\"time\":\"%s\"", timestr);
 
 			mg_printf(conn, "}");
-		}
+		} while (Qaullib_Msg_LL_PrevItem(&node));
 	}
 	mg_printf(conn, "%s", "]}");
 }

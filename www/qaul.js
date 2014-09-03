@@ -834,6 +834,9 @@ function send_tag_msg()
 			"sendmsg",
 			{"t": 11, "m": $("#tag_chat_msg").val(), "n": user_name, "e":1},
 			function(){
+				var mymsg = $("#tag_chat_msg").val();
+				if(mymsg.indexOf(tag_name)==-1)
+					insert_msg($("#page_tag_msgs"), {id:0,type:11,name:user_name,msg:$("#tag_chat_msg").val(),time:isoDateString(new Date())});
 				$("#tag_chat_msg").val('');
 				get_tag_msgs();
 			}
@@ -869,7 +872,9 @@ function send_direct_msg()
 					'sendmsg',
 					{"t": 12, "m": $("#user_chat_msg").val(), "n": user_name, "e":1},
 					function(){
-			            // clear message input
+						// insert sent message
+						insert_msg($("#page_user_msgs"), {id:0,type:12,name:user_name,to:$("#user_chat_name").val(),msg:$("#user_chat_msg").val(),time:isoDateString(new Date())});
+						// clear message input
 			            $("#user_chat_msg").val('');
 			            // get message from DB
 			            get_user_msgs();
@@ -908,8 +913,6 @@ function get_user_msgs()
 		dataType: "json",
 		success: function(data) {
 			var inverse = false;
-			if(user_last_id == 0)
-				inverse = true;
 			$.each(data.messages, function(i,item){
 					if(item.id > user_last_id)
 						user_last_id = item.id;
@@ -928,8 +931,6 @@ function get_tag_msgs()
 		dataType: "json",
 		success: function(data) {
 			var inverse = false;
-			if(tag_last_id == 0)
-				inverse = true;
 			$.each(data.messages, function(i,item){
 					if(item.id > tag_last_id)
 						tag_last_id = item.id;

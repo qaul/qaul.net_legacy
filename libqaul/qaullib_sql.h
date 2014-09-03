@@ -33,10 +33,10 @@ static const char* sql_msg_index = "CREATE INDEX IF NOT EXISTS 'myindex' ON 'msg
 static const char* sql_msg_get_latest  = "SELECT * FROM 'msg' ORDER BY id DESC LIMIT 40;";
 static const char* sql_msg_get_archive = "SELECT * FROM 'msg' WHERE id > %i ORDER BY id DESC LIMIT 20;";
 static const char* sql_msg_get_new     = "SELECT * FROM 'msg' WHERE read = 0 ORDER BY id ASC;";
-static const char* sql_msg_get_user0   = "SELECT * FROM 'msg' WHERE name = \"%s\" OR msg LIKE \"%s@%s%s\" ORDER BY id DESC LIMIT 40;";
-static const char* sql_msg_get_user    = "SELECT * FROM 'msg' WHERE id > %i AND ( name = \"%s\" OR  msg LIKE \"%s@%s%s\" ) ORDER BY id DESC;";
-static const char* sql_msg_get_tag0    = "SELECT * FROM 'msg' WHERE msg LIKE \"%s%s%s\" ORDER BY id DESC LIMIT 40;";
-static const char* sql_msg_get_tag     = "SELECT * FROM 'msg' WHERE id > %i AND msg LIKE \"%s%s%s\" ORDER BY id DESC;";
+static const char* sql_msg_get_user0   = "SELECT * FROM 'msg' WHERE name = \"%s\" OR msg LIKE \"%s@%s%s\" ORDER BY id DESC LIMIT 20;";
+static const char* sql_msg_get_user    = "SELECT * FROM 'msg' WHERE id > %i AND ( name = \"%s\" OR  msg LIKE \"%s@%s%s\" ) ORDER BY id DESC LIMIT 20;";
+static const char* sql_msg_get_tag0    = "SELECT * FROM 'msg' WHERE msg LIKE \"%s%s%s\" ORDER BY id DESC LIMIT 20;";
+static const char* sql_msg_get_tag     = "SELECT * FROM 'msg' WHERE id > %i AND msg LIKE \"%s%s%s\" ORDER BY id DESC LIMIT 20;";
 
 // update message
 static const char* sql_msg_update_read = "UPDATE 'msg' SET read = 1 WHERE id = %i ;";
