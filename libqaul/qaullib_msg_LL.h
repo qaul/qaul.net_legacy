@@ -59,9 +59,10 @@ void Qaullib_Msg_LL_Init (void);
 void Qaullib_Msg_LL_Add (struct qaul_msg_LL_item *item);
 
 /**
- * Add a new @a item to a temporary list.
+ * Add a new @a item as next item to an existing item linked in @a node.
+ * Set the pointer in @a node to the new item.
  */
-void Qaullib_Msg_LL_AddTmp (struct qaul_msg_LL_item *item, struct qaul_msg_LL_node *node);
+void Qaullib_Msg_LL_AddNext (struct qaul_msg_LL_item *item, struct qaul_msg_LL_node *node);
 
 /**
  * Checks if a message item is available with an id bigger

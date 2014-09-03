@@ -19,22 +19,15 @@ extern "C" {
 void Qaullib_MsgInit(void);
 
 /**
- * Fill most recent Messages from DB into LL.
- * This function is only called once at start up.
- */
-void Qaullib_MsgDB2LL(void);
-
-/**
  * Get Messages from the DB by executing @a stmt.
- * Put the messages in a temporary LL to be delivered
- * to the web front end.
+ * Put the messages in a LL.
  * Set the pointer in the @a node to the start item
  * in the LL.
  *
  * @retval 0 no message available
  * @retval 1 messages are available
  */
-int Qaullib_MsgDB2LLTmp(struct qaul_msg_LL_node *node, char *stmt);
+int Qaullib_MsgDB2LL(struct qaul_msg_LL_node *node, const char *stmt);
 
 /**
  * add a new message to data base and LL

@@ -980,8 +980,9 @@ function web_send_msg()
 			"web_sendmsg",
 			{ "t": 11, "m": msg.val(), "n": user_name, "e":1},
 			function(){
-				insert_msg(chat, {id:0,type:11,name:user_name,msg:msg.val(),time:isoDateString(new Date())});
+				//insert_msg(chat, {id:0,type:11,name:user_name,msg:msg.val(),time:isoDateString(new Date())});
 				msg.val('');
+				get_msgs();
 			}
 		).error(function(){
 			// show alert

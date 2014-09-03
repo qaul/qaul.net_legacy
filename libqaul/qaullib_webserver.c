@@ -332,7 +332,8 @@ static void Qaullib_WwwSetName(struct mg_connection *conn, const struct mg_reque
 		Qaullib_SetUsername(protected_username);
 	}
 
-	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
 
 	free(post);
 }
@@ -354,7 +355,8 @@ static void Qaullib_WwwSetLocale(struct mg_connection *conn, const struct mg_req
 	printf("save locale: %s\n", qaul_locale);
 	Qaullib_SetLocale(qaul_locale);
 
-	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
 
 	free(post);
 }
@@ -815,7 +817,7 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 
 	items = 0;
 
-	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{\"name\":\"%s\",\"messages\":[", qaul_username);
 
 	// get variables
@@ -839,7 +841,7 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 		else
 			sprintf(stmt, sql_msg_get_user, id, local_name, "%", local_name, "%");
 
-		items = Qaullib_MsgDB2LLTmp(&node, stmt);
+		items = Qaullib_MsgDB2LL(&node, stmt);
 	}
 	// with tag
 	else if(type == 6)
@@ -852,7 +854,7 @@ static void Qaullib_WwwGetMsgs(struct mg_connection *conn, const struct mg_reque
 		else
 			sprintf(stmt, sql_msg_get_tag, id, "%", local_tag, "%");
 
-		items = Qaullib_MsgDB2LLTmp(&node, stmt);
+		items = Qaullib_MsgDB2LL(&node, stmt);
 	}
 	else
 	{
@@ -940,7 +942,7 @@ static void Qaullib_WwwSendMsg(struct mg_connection *conn, const struct mg_reque
 		Qaullib_MsgSendPrivate(&msg_item);
 
 	// everything went fine
-	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
 
 	// free memory
@@ -1789,7 +1791,8 @@ static void Qaullib_WwwWebSendMsg(struct mg_connection *conn, const struct mg_re
 	Qaullib_MsgSendPublicWeb(&msg_item);
 
 	// everything went fine
-	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
 
 	// free memory
 	free(post);

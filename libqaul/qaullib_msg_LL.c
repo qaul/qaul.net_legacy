@@ -87,7 +87,7 @@ int Qaullib_Msg_LL_FirstWebItem (struct qaul_msg_LL_node *node, int id)
 // ------------------------------------------------------------
 int Qaullib_Msg_LL_NextItem (struct qaul_msg_LL_node *node)
 {
-	if(node->item->next != 0)
+	if(node->item != 0 && node->item->next != 0)
 	{
 		node->item = node->item->next;
 		return 1;
@@ -98,7 +98,7 @@ int Qaullib_Msg_LL_NextItem (struct qaul_msg_LL_node *node)
 // ------------------------------------------------------------
 int Qaullib_Msg_LL_PrevItem (struct qaul_msg_LL_node *node)
 {
-	if(node->item->prev != qaul_msg_LL_first && node->item->prev != 0)
+	if(node->item != 0 && node->item != qaul_msg_LL_first && node->item->prev != 0)
 	{
 		node->item = node->item->prev;
 		return 1;
@@ -113,7 +113,8 @@ int Qaullib_Msg_LL_PrevWebItem (struct qaul_msg_LL_node *node)
 	tmp_item = node->item;
 
 	while(
-			node->item->prev != qaul_msg_LL_first &&
+			node->item != 0 &&
+			node->item != qaul_msg_LL_first &&
 			node->item->prev != 0
 			)
 	{
@@ -161,21 +162,21 @@ void Qaullib_Msg_LL_Add (struct qaul_msg_LL_item *item)
 		qaul_msg_LL_first->prev = new_item;
 	qaul_msg_LL_first = new_item;
 
-	// delete old messages
-	Qaullib_Msg_LL_DeleteOld();
-
 	// unlock
 	pthread_mutex_unlock( &qaullib_mutex_msgLL );
+
+	// delete old messages
+	Qaullib_Msg_LL_DeleteOld();
 }
 
 // ------------------------------------------------------------
-void Qaullib_Msg_LL_AddTmp (struct qaul_msg_LL_item *item, struct qaul_msg_LL_node *node)
+void Qaullib_Msg_LL_AddNext (struct qaul_msg_LL_item *item, struct qaul_msg_LL_node *node)
 {
 	struct qaul_msg_LL_item *new_item;
 	new_item = (struct qaul_msg_LL_item *)malloc(sizeof(struct qaul_msg_LL_item));
 
 	if(QAUL_DEBUG)
-		printf("Qaullib_Msg_LL_AddTmp\n");
+		printf("Qaullib_Msg_LL_AddNext\n");
 
 	// fill in values
 	new_item->id = item->id;
@@ -189,19 +190,18 @@ void Qaullib_Msg_LL_AddTmp (struct qaul_msg_LL_item *item, struct qaul_msg_LL_no
 	new_item->ipv = item->ipv;
 	strncpy(new_item->ip, item->ip, MAX_IP_LEN);
 	memcpy(&new_item->ip[MAX_IP_LEN], "\0", 1);
+	new_item->prev = 0;
+	new_item->next = 0;
 
 	// set pointers
 	if(node->item == 0)
 	{
-		new_item->prev = 0;
-		new_item->next = 0;
 		node->item = new_item;
 	}
 	else
 	{
-		new_item->prev = 0;
-		new_item->next = node->item;
-		node->item->prev = new_item;
+		new_item->prev = node->item;
+		node->item->next = new_item;
 		node->item = new_item;
 	}
 }
@@ -210,30 +210,20 @@ void Qaullib_Msg_LL_AddTmp (struct qaul_msg_LL_item *item, struct qaul_msg_LL_no
 void Qaullib_Msg_LL_Delete_Item (struct qaul_msg_LL_item *item)
 {
 	if(QAUL_DEBUG)
-		printf("Qaullib_Msg_LL_Delete_Item\n");
-
-	printf("Qaullib_Msg_LL_Delete_Item id: %i\n", item->id);
+		printf("Qaullib_Msg_LL_Delete_Item with id %i\n", item->id);
 
 	// lock
 	pthread_mutex_lock( &qaullib_mutex_msgLL );
-
-	printf("Qaullib_Msg_LL_Delete_Item 1\n");
 
 	if(item->prev != 0)
 		item->prev->next = item->next;
 	if(item->next != 0)
 		item->next->prev = item->prev;
 
-	printf("Qaullib_Msg_LL_Delete_Item 2\n");
-
 	// unlock
 	pthread_mutex_unlock( &qaullib_mutex_msgLL );
 
-	printf("Qaullib_Msg_LL_Delete_Item 3\n");
-
 	free(item);
-
-	printf("Qaullib_Msg_LL_Delete_Item end\n");
 }
 
 // ------------------------------------------------------------
@@ -254,12 +244,8 @@ void Qaullib_Msg_LL_DeleteOld (void)
 	// delete all over MAX_MSG_COUNT
 	while(count > MAX_MSG_COUNT && Qaullib_Msg_LL_PrevItem(&node))
 	{
-		printf("Qaullib_Msg_LL_DeleteOld 1\n");
-
 		Qaullib_Msg_LL_Delete_Item(node.item->next);
 		count--;
-
-		printf("Qaullib_Msg_LL_DeleteOld 2\n");
 	}
 }
 

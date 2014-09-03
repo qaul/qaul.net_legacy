@@ -18,88 +18,22 @@ static int Qaullib_MsgAdd2DB(struct qaul_msg_LL_item *msg_item);
 // ------------------------------------------------------------
 void Qaullib_MsgInit(void)
 {
+	struct qaul_msg_LL_node node;
+
 	if(QAUL_DEBUG)
 		printf("Qaullib_MsgInit\n");
 
+	// initialize LL
 	Qaullib_File_LL_Init();
 
-	// get messages from DB
-	Qaullib_MsgDB2LL();
+	// insert messages from DB to LL
+	node.item = 0;
+	Qaullib_MsgDB2LL(&node, sql_msg_get_latest);
+	qaul_msg_LL_first = node.item;
 }
 
 // ------------------------------------------------------------
-void Qaullib_MsgDB2LL(void)
-{
-	sqlite3_stmt *ppStmt;
-	char *error_exec=NULL;
-	struct qaul_msg_LL_item myitem;
-	int jj;
-
-	if(QAUL_DEBUG)
-		printf("Qaullib_MsgDB2LL\n");
-
-	// Select rows from database
-	if( sqlite3_prepare_v2(db, sql_msg_get_latest, -1, &ppStmt, NULL) != SQLITE_OK )
-	{
-		printf("SQLite error: %s\n", sqlite3_errmsg(db));
-		return;
-	}
-
-	while (sqlite3_step(ppStmt) == SQLITE_ROW)
-	{
-		// For each column
-		for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
-		{
-			if(strcmp(sqlite3_column_name(ppStmt,jj), "id") == 0)
-			{
-		    	myitem.id = sqlite3_column_int(ppStmt, jj);
-			}
-		    else if(strcmp(sqlite3_column_name(ppStmt,jj), "type") == 0)
-			{
-		    	myitem.type = sqlite3_column_int(ppStmt, jj);
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "name") == 0)
-			{
-				sprintf(myitem.name, "%s", sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "msg") == 0)
-			{
-				sprintf(myitem.msg, "%s", sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "ipv") == 0)
-			{
-		    	myitem.ipv = sqlite3_column_int(ppStmt, jj);
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "ip") == 0)
-			{
-				sprintf(myitem.ip, "%s", sqlite3_column_text(ppStmt, jj));
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "time") == 0)
-			{
-		    	myitem.time = sqlite3_column_int(ppStmt, jj);
-			}
-			else if(strcmp(sqlite3_column_name(ppStmt,jj), "read") == 0)
-			{
-		    	myitem.read = sqlite3_column_int(ppStmt, jj);
-			}
-		}
-
-		printf("Qaullib_MsgDB2LL 2; id: %i\n", myitem.id);
-
-		// add it to LL
-		Qaullib_Msg_LL_Add(&myitem);
-
-		printf("Qaullib_MsgDB2LL 3\n");
-	}
-	printf("Qaullib_MsgDB2LL 4\n");
-
-	sqlite3_finalize(ppStmt);
-
-	printf("Qaullib_MsgDB2LL end\n");
-}
-
-// ------------------------------------------------------------
-int Qaullib_MsgDB2LLTmp(struct qaul_msg_LL_node *node, char *stmt)
+int Qaullib_MsgDB2LL(struct qaul_msg_LL_node *node, const char *stmt)
 {
 	sqlite3_stmt *ppStmt;
 	char *error_exec=NULL;
@@ -109,6 +43,9 @@ int Qaullib_MsgDB2LLTmp(struct qaul_msg_LL_node *node, char *stmt)
 
 	if(QAUL_DEBUG)
 		printf("Qaullib_MsgDB2LL\n");
+
+	// init node
+	tmp_node.item = 0;
 
 	// Select rows from database
 	if( sqlite3_prepare_v2(db, stmt, -1, &ppStmt, NULL) != SQLITE_OK )
@@ -159,7 +96,7 @@ int Qaullib_MsgDB2LLTmp(struct qaul_msg_LL_node *node, char *stmt)
 		}
 
 		// add it to LL
-		Qaullib_Msg_LL_AddTmp(&myitem, &tmp_node);
+		Qaullib_Msg_LL_AddNext(&myitem, &tmp_node);
 
 		if(count == 0)
 			node->item = tmp_node.item;
