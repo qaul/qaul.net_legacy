@@ -61,22 +61,6 @@ int Qaullib_MsgSendPublicWeb(struct qaul_msg_LL_item *item);
  */
 int Qaullib_MsgSendPrivate(struct qaul_msg_LL_item *item);
 
-/**
- * receive a public message
- *
- * @retval 0 on error
- * @retval 1 on success
- */
-int Qaullib_MsgReceivePublic(struct qaul_msg_LL_item *item);
-
-/**
- * receive a private message
- *
- * @retval 0 on error
- * @retval 1 on success
- */
-int Qaullib_MsgReceivePrivate(struct qaul_msg_LL_item *item);
-
 
 #ifdef __cplusplus
 }

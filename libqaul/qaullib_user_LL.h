@@ -40,10 +40,12 @@ struct qaul_user_LL_node {
  * this definitions indicate the type and status of a user
  */
 #define QAUL_USERTYPE_UNCHECKED   0 /// this user is unknown yet
+#define QAUL_USERTYPE_WEB_HIDDEN -3 /// potential web user with not yet known user name
 #define QAUL_USERTYPE_HIDDEN     -2 /// user shall not be shown in user discovery
 #define QAUL_USERTYPE_ERROR      -1 /// ERROR downloading, might be infrastructure node
 #define QAUL_USERTYPE_DOWNLOADING 1 /// trying to download the user name from this user
 #define QAUL_USERTYPE_KNOWN       2 /// known user
+#define QAUL_USERTYPE_WEB_KNOWN   3 /// web user with known user name
 
 /**
  * user changed

@@ -141,7 +141,10 @@ int Qaullib_MsgAdd(struct qaul_msg_LL_item *item)
 		qaul_new_msg++;
 
 	// check if user is in data base
-	if(msg_item.type == QAUL_MSGTYPE_PUBLIC_IN && msg_item.type == QAUL_MSGTYPE_PRIVATE_IN)
+	if(
+			msg_item.type == QAUL_MSGTYPE_PUBLIC_IN &&
+			msg_item.type == QAUL_MSGTYPE_PRIVATE_IN
+			)
 	{
 		Qaullib_UserCheckUser(&msg_item.ip_union, msg_item.name);
 	}
@@ -163,6 +166,7 @@ int Qaullib_MsgSendPublic(struct qaul_msg_LL_item *item)
 	m->v4.olsr_msgtype = QAUL_CHAT_MESSAGE_TYPE;
 	memcpy(&m->v4.message.chat.name, item->name, MAX_USER_LEN);
 	memcpy(&m->v4.message.chat.msg, item->msg, MAX_MESSAGE_LEN);
+	memset(&m->v4.originator, 0, sizeof(m->v4.originator));
 	size = sizeof(struct qaul_chat_msg);
 	size = size + sizeof(struct olsrmsg);
 	m->v4.olsr_msgsize = htons(size);
@@ -190,6 +194,7 @@ int Qaullib_MsgSendPublicWeb(struct qaul_msg_LL_item *item)
 	m->v4.olsr_msgtype = QAUL_CHAT_MESSAGE_TYPE;
 	memcpy(&m->v4.message.chat.name, item->name, MAX_USER_LEN);
 	memcpy(&m->v4.message.chat.msg, item->msg, MAX_MESSAGE_LEN);
+	memcpy(&m->v4.originator, &item->ip_union, sizeof(m->v4.originator));
 	size = sizeof(struct qaul_chat_msg);
 	size = size + sizeof(struct olsrmsg);
 	m->v4.olsr_msgsize = htons(size);
@@ -211,19 +216,6 @@ int Qaullib_MsgSendPrivate(struct qaul_msg_LL_item *item)
 
 	return 1;
 }
-
-// ------------------------------------------------------------
-int Qaullib_MsgReceivePublic(struct qaul_msg_LL_item *item)
-{
-
-}
-
-// ------------------------------------------------------------
-int Qaullib_MsgReceivePrivate(struct qaul_msg_LL_item *item)
-{
-
-}
-
 
 // ------------------------------------------------------------
 // helper functions

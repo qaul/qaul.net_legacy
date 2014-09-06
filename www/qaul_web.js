@@ -115,6 +115,7 @@ function init_start()
 		submitHandler: function(form){
 			set_username($("#name_name").val());
 			$.mobile.changePage($("#page_chat"));
+			updatetimer();
 		}
 	});
 	
@@ -982,7 +983,7 @@ function web_send_msg()
 			function(){
 				//insert_msg(chat, {id:0,type:11,name:user_name,msg:msg.val(),time:isoDateString(new Date())});
 				msg.val('');
-				get_msgs();
+				web_getmsgs();
 			}
 		).error(function(){
 			// show alert
@@ -1008,6 +1009,11 @@ function web_file_schedule()
 {
 	web_getfiles();
 	$.mobile.changePage($("#page_file"));
+}
+
+function web_getcookie()
+{
+	$.mobile.changePage($("#page_config_locale"));
 }
 
 function web_info_page()

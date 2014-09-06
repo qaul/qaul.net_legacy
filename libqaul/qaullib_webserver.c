@@ -1653,8 +1653,10 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn, const struct mg_
 			// send file size
 			msgbuf.filechunk.filesize = htonl(myfile->size);
 			// send chunk size
-			if(chunkpos + qaul_chunksize > myfile->size) mychunksize = myfile->size - chunkpos;
-			else mychunksize = qaul_chunksize;
+			if(chunkpos + qaul_chunksize > myfile->size)
+				mychunksize = myfile->size - chunkpos;
+			else
+				mychunksize = qaul_chunksize;
 			msgbuf.filechunk.chunksize = htonl(mychunksize);
 
 			printf("chunkpos %i, filesize %i, chunksize %i, BUFSIZ %i, iterations %i\n", chunkpos, myfile->size, mychunksize, BUFSIZ, (int) ceil(mychunksize/BUFSIZ));
