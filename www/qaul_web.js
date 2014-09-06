@@ -485,7 +485,7 @@ function format_msg_voip(item)
 
 function format_msg_userlink(name, ip)
 {
-	return '<span class="user">@' +name +'</a>';
+	return '<span class="user">' +name +'</a>';
 }
 
 function format_msg(item)

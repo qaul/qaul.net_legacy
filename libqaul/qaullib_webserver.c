@@ -1742,7 +1742,10 @@ static void Qaullib_WwwWebGetMsgs(struct mg_connection *conn, const struct mg_re
 
 			mg_printf(conn, "\"id\":%i", node.item->id);
 			mg_printf(conn, ",");
-			mg_printf(conn, "\"type\":%i", node.item->type);
+			if(node.item->type == QAUL_MSGTYPE_PUBLIC_OUT)
+				mg_printf(conn, "\"type\":%i", QAUL_MSGTYPE_PUBLIC_IN);
+			else
+				mg_printf(conn, "\"type\":%i", node.item->type);
 			mg_printf(conn, ",");
 			mg_printf(conn, "\"name\":\"%s\"", node.item->name);
 			mg_printf(conn, ",");
