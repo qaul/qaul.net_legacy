@@ -898,7 +898,8 @@ function get_msgs()
 			$.each(data.messages, function(i,item){
 				if(item.id > msg_last_id)
 					msg_last_id = item.id;
-				insert_msg(chat, item);
+				if($('#msg_' +item.id).length == 0)
+					insert_msg(chat, item);
 			})
 		} 
 	});

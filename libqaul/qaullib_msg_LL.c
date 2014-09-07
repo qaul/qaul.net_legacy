@@ -135,9 +135,6 @@ void Qaullib_Msg_LL_Add (struct qaul_msg_LL_item *item)
 	struct qaul_msg_LL_item *new_item;
 	new_item = (struct qaul_msg_LL_item *)malloc(sizeof(struct qaul_msg_LL_item));
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_Msg_LL_Add\n");
-
 	// fill in values
 	new_item->id = item->id;
 	new_item->type = item->type;
@@ -175,9 +172,6 @@ void Qaullib_Msg_LL_AddNext (struct qaul_msg_LL_item *item, struct qaul_msg_LL_n
 	struct qaul_msg_LL_item *new_item;
 	new_item = (struct qaul_msg_LL_item *)malloc(sizeof(struct qaul_msg_LL_item));
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_Msg_LL_AddNext\n");
-
 	// fill in values
 	new_item->id = item->id;
 	new_item->type = item->type;
@@ -209,9 +203,6 @@ void Qaullib_Msg_LL_AddNext (struct qaul_msg_LL_item *item, struct qaul_msg_LL_n
 // ------------------------------------------------------------
 void Qaullib_Msg_LL_Delete_Item (struct qaul_msg_LL_item *item)
 {
-	if(QAUL_DEBUG)
-		printf("Qaullib_Msg_LL_Delete_Item with id %i\n", item->id);
-
 	// lock
 	pthread_mutex_lock( &qaullib_mutex_msgLL );
 
