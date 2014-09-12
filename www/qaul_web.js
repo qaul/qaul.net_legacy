@@ -25,9 +25,7 @@ var qaul_locale = null;
 
 var qaulfiles = [];
 var qaulusers = [];
-var qauluserevent = 0;
-var qaulmessageevent = 0;
-var qaulinitialized = false;
+var qaul_initialized = false;
 var chat_initialized = false;
 var is_chrome = false;
 var call_page_origin = "page_chat";

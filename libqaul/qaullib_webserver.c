@@ -127,7 +127,7 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 			{
 				Qaullib_WwwSendMsg(conn, request_info);
 			}
-			else if (strcmp(request_info->uri, "/getname") == 0)
+			else if (strcmp(request_info->uri, "/getname.json") == 0)
 			{
 				Qaullib_WwwGetName(conn, request_info);
 			}
@@ -798,8 +798,8 @@ static void Qaullib_WwwGetName(struct mg_connection *conn, const struct mg_reque
 {
   // Fetch user name
   //printf("send username: %s \n", qaul_username);
-  mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
-  mg_printf(conn, "%s", qaul_username);
+  mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+  mg_printf(conn, "%s", "{\"name\":\"%s\"}", qaul_username);
 }
 
 // ------------------------------------------------------------

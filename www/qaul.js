@@ -24,10 +24,9 @@ var user_count = 0;
 
 var qaulfiles = [];
 var qaulusers = [];
-var qauluserevent = 0;
-var qaulmessageevent = 0;
-var qaulinitialized = false;
+var qaul_initialized = false;
 var chat_initialized = false;
+var config_network_profile = {};
 var is_chrome = false;
 var call_page_origin = "page_chat";
 var user_page_origin = "page_users";
@@ -65,7 +64,10 @@ function init_start()
 	$(document).bind("pagechange", onPageChange);
 	$(document).bind("pagebeforechange", onPageBeforeChange);
 	
-	$("#interface_select_auto").change(configInterfaceToggle);
+	$("#interface_select_auto").change(config_interface_toggle);
+	$("#c_internet_share").change(config_internet_toggle);
+	$("#c_network_profile").change(config_network_change);
+	$("#c_files_autodownload_select").change(config_files_auto_toggle);
 	
 	// add custom validation method
 	jQuery.validator.addMethod("nospaces", function(value, element) { 
@@ -116,12 +118,31 @@ function init_start()
 		}
 	});
 	
-	// set interface
+	// configure interface
 	$("#page_config_interface").on("pagebeforeshow",function(event){
 		config_interface_load_data();
 	});
-	$("#interface_submit").click(function(){
-		send_interface();
+	$("#form_config_interface").submit(function(event){
+		config_interface_send();
+		return false;
+	});
+	// configure internet
+	$("#page_config_internet").on("pagebeforeshow",function(event){
+		config_internet_data();
+	});
+	$("#form_config_internet").submit(function(event){
+		config_internet_send();
+		return false;
+	});
+	// configure network
+	$("#form_config_network").validate({
+		submitHandler: function(form){
+			config_network_send();
+		}
+	});
+	// configure files
+	$("#form_config_files").submit(function(event){
+		config_files_send();
 		return false;
 	});
 	
@@ -198,9 +219,60 @@ function init_start()
 			return false;
 		});
 		
-		// TODO: start/stop internet sharing
-		
-		// TODO: configure custom network
+		// configure interface
+		$("#form_config_interface input").keypress(function(e){
+			if(e.which == 13)
+			{
+				config_interface_send();
+				e.preventDefault();
+				return false;
+			}
+		});
+		$("#c_interface_submit").click(function(){
+			config_interface_send();
+			return false;
+		});
+		// configure internet
+		$("#form_config_interface input").keypress(function(e){
+			if(e.which == 13)
+			{
+				config_internet_send();
+				e.preventDefault();
+				return false;
+			}
+		});
+		$("#name_submit").click(function(){
+			config_internet_send();
+			return false;
+		});
+		// configure network
+		$("#form_config_network input").keypress(function(e){
+			if(e.which == 13)
+			{
+				if($("#form_config_network").valid())
+					config_network_send();
+				e.preventDefault();
+				return false;
+			}
+		});
+		$("#c_network_submit").click(function(){
+			if($("#form_config_network").valid())
+				config_network_send();
+			return false;
+		});
+		// configure file sharing
+		$("#form_config_files input").keypress(function(e){
+			if(e.which == 13)
+			{
+				config_files_send();
+				e.preventDefault();
+				return false;
+			}
+		});
+		$("#c_files_submit").click(function(){
+			config_files_send();
+			return false;
+		});
 	
 		// files
 		$("#file_add_form input").keypress(function(e){
@@ -251,6 +323,8 @@ function qaul_configure(data)
 		$(".c_internet").css("display","block");
 	if(qaul_config.c_network) 
 		$(".c_network").css("display","block");
+	if(qaul_config.c_filesharing) 
+		$(".c_filesharing").css("display","block");
 	
 	if(qaul_config.locale)
 	{
@@ -324,8 +398,14 @@ function init_chat()
 	updatetimer();
 	
 	// set name
-	$.post('getname',function(data){
-		set_username(decodeURIComponent(data));
+	// load configuration
+	$.ajax({
+		url:   "getname.json",
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			set_username(data.name);
+		}
 	});
 
 	// load files
@@ -1425,8 +1505,11 @@ function send_name()
 };
 
 // interface configuration
-function show_config_interface()
+function config_interface_show()
 {
+	// show loading page
+	$.mobile.changePage($("#page_loading"));
+	
 	// request interface configuration
 	$.ajax({
 		url:   "setinterfaceloading",
@@ -1436,10 +1519,9 @@ function show_config_interface()
 			$.mobile.changePage($("#page_loading"));
 			setTimeout(function(){loadingtimer();},500);
 		}
+	}).error(function(){
+		$.mobile.changePage($("#page_pref"));
 	});
-	
-	// show loading page
-	$.mobile.changePage($("#page_loading"));
 	
 	return true;
 }
@@ -1486,7 +1568,7 @@ function config_interface_data_loaded(data)
 }
 
 // show/hide interfaces when toggle flipswitch button
-function configInterfaceToggle()
+function config_interface_toggle()
 {
 	if($("#interface_select_auto").val() == 1)
 		$(".c_interface_manual").show();
@@ -1494,7 +1576,7 @@ function configInterfaceToggle()
 		$(".c_interface_manual").hide();
 }
 
-function send_interface()
+function config_interface_send()
 {
 	// check which interfaces to send
 	var interfaces = "";
@@ -1513,6 +1595,312 @@ function send_interface()
 				$.mobile.changePage($("#page_restart"));
 		});
 };
+
+// show network configuration page
+function config_network_show()
+{
+	$.mobile.changePage($("#page_config_network"));
+	$("#c_network_config").hide();
+	$("#c_network_info").hide();
+	config_network_get();
+	
+	return true;
+}
+
+// get current network configuration
+function config_network_get()
+{
+	// request interface configuration
+	$.ajax({
+		url:   "config_network_get",
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data){
+			config_network_profile.active = data.profile;
+			config_network_profile.data = data;
+			// todo: does this send a refresh event?
+			$("#c_network_profile").val(data.profile).selectmenu("refresh");
+			config_network_template(data);
+		}
+	});
+}
+
+// network community profiles
+function config_network_change()
+{
+	$("#c_network_config").hide();
+	$("#c_network_info").hide();
+	var profile = $("#c_network_profile").val();
+	
+	// check if it is the active profile
+	if(config_network_profile.active == profile)
+		config_network_get();
+	else
+	{
+		// check previously saved values
+		var path = "config_network_profile?p=" +profile +"&e=1";
+		$.ajax({
+			url: path,
+			cache: false, // needed for IE
+			dataType: "json",
+			success: function(data){
+				config_network_profile.data = data;
+				config_network_template();
+			}
+		});
+	}
+}
+
+function config_network_template()
+{
+	$.ajax({
+		url: "community_templates/" + $("#c_network_profile").val(),
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data){
+			config_network_profile.template = data;
+			config_network_data();
+		}
+	});
+}
+
+function config_network_data()
+{
+	var data = config_network_profile.data;
+	var template = config_network_profile.template;
+	
+	if($("#c_network_profile").val() == "qaul")
+		$("#c_network_info").show();
+	
+	// fill in values
+	if(data.available)
+	{
+		$("#c_network_config_ip").val(data.ip);
+		$("#c_network_config_mask").val(data.mask);
+		$("#c_network_config_broadcast").val(data.broadcast);
+		$("#c_network_config_channel").val(data.channel).selectmenu("refresh");
+		$("#c_network_config_ssid").val(data.ssid);
+		$("#c_network_config_bssid").val(data.bssid);
+	}
+	else
+	{
+		// take values from community template
+		if(template.ip.generate == "true")
+			$("#c_network_config_ip").val(config_network_IP(template.ip.pattern));
+		else
+			$("#c_network_config_ip").val(template.ip.value);
+		
+		$("#c_network_config_mask").val(template.mask.value);
+		$("#c_network_config_broadcast").val(template.broadcast.value);
+		$("#c_network_config_channel").val(template.channel.value).selectmenu("refresh");
+		$("#c_network_config_ssid").val(template.ssid.value);
+		$("#c_network_config_bssid").val(template.bssid.value);
+	}
+	
+	// hide, show, readonly
+	config_network_field("c_network_config_ip", template.ip.edit);
+	config_network_field("c_network_config_mask", template.mask.edit);
+	config_network_field("c_network_config_broadcast", template.broadcast.edit);
+	config_network_field("c_network_config_channel", template.channel.edit);
+	config_network_field("c_network_config_ssid", template.ssid.edit);
+	config_network_field("c_network_config_bssid", template.bssid.edit);
+	
+	// add information
+	var info = '<a href="javascript:qaul_openurl(' +template.profile.homepage +')">' +template.profile.homepage +'</a><br/>';
+	info += template.profile.info;
+	$("#c_network_config_info").empty().append(info);
+	
+	// show configuration
+	if($("#c_network_profile").val() != "qaul")
+		$("#c_network_config").show();
+}
+
+// hide, show, readonly fields
+function config_network_field(field, edit)
+{
+	
+	if(edit == "hidden")
+		$("."+field).hide();
+	else
+	{
+		$("."+field).show();
+		if(edit == "readonly")
+			$("#"+field).attr('readonly', 'readonly');
+		else
+			$("#"+field).removeAttr('readonly');
+	}	
+}
+
+// create random IP
+function config_network_IP(pattern)
+{
+	var ip;
+	var pat = pattern.split("/");
+	var ipx = pat[0].split(".");
+	var net = pat[1];
+	
+	if(net == 8)
+	{
+		ip = ipx[0] +"." +ipx[1] +"." +ipx[2] +"." +randomIpv4Part();
+	}
+	else if(net == 16)
+	{
+		ip = ipx[0] +"." +ipx[1] +"." +randomIpv4Part() +"." +randomIpv4Part();
+	}
+	else if(net == 24)
+	{
+		ip = ipx[0] +"." +randomIpv4Part() +"." +randomIpv4Part() +"." +randomIpv4Part();
+	}
+	
+	return ip;
+}
+
+function randomIpv4Part()
+{
+  return Math.floor(Math.random() * (254 - 1)) + 1;
+}
+
+// send form
+function config_network_send()
+{
+	var values = {
+		"profile": $("#c_network_profile").val(), 
+		"ip": $("#c_network_config_ip").val(), 
+		"mask": $("#c_network_config_mask").val(), 
+		"broadcast": $("#c_network_config_broadcast").val(), 
+		"channel": $("#c_network_config_channel").val(), 
+		"ssid": $("#c_network_config_ssid").val(), 
+		"bssid": $("#c_network_config_bssid").val(),
+		"e":1
+		};
+	
+	$.post(
+		'config_files_set',
+		values,
+		function(data){
+			$.mobile.changePage($("#page_pref"));
+	});
+}
+
+// Internet sharing configuration
+function config_internet_show()
+{
+	// show loading page
+	$.mobile.changePage($("#page_loading"));
+	
+	// request interface configuration
+	$.ajax({
+		url:   "config_internet_get",
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			$.mobile.changePage($("#page_loading"));
+			setTimeout(function(){loadingtimer();},500);
+		}
+	}).error(function(){
+		$.mobile.changePage($("#page_pref"));
+	});
+	
+	return true;
+}
+
+function config_internet_data(data)
+{
+	// toggle flipswitch
+	if(data.autodownload == 1)
+	{
+		$("#c_internet_share").val('1').flipswitch('refresh');
+		$("#c_internet_interface").show();
+	}
+	else
+	{
+		$("#c_internet_share").val('0').flipswitch('refresh');
+		$("#c_internet_interface").hide();
+	}
+	
+	// populate interfaces
+	var myhtml = "<fieldset data-role=\"controlgroup\" id=\"interface_selection\">";
+	$.each(data.interfaces, function(i,item)
+	{
+		myhtml += "<input type=\"radio\" name=\"if\" value=\"" +item.name +"\" id=\"if_" +item.name +"\" ";
+		if(item.name == data.selected)
+			myhtml += "checked=\"checked\" ";
+		myhtml += "class=\"interface_select_checkbox\" />";
+		myhtml += "<label for=\"if_" +item.name +"\">" +item.ui_name +"</label>";
+	});
+	myhtml += "</fieldset>";
+	$("#c_internet_interface").empty().append(myhtml).trigger("create");
+}
+
+function config_internet_send()
+{
+	
+}
+
+// show/hide configuration
+function config_internet_toggle()
+{
+	if($("#c_internet_share").val() == 1)
+		$("#c_internet_interface").show();
+	else
+		$("#c_internet_interface").hide();
+}
+
+// file sharing configuration
+function config_files_show()
+{
+	// request interface configuration
+	$.ajax({
+		url: "config_files_get",
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			$.mobile.changePage($("#page_config_files"));
+			config_files_data(data);
+		}
+	});
+	
+	return true;
+}
+
+function config_files_data(data)
+{
+	// toggle flipswitch
+	if(data.autodownload == 1)
+	{
+		$("#c_files_autodownload_select").val('1').flipswitch('refresh');
+		$("#c_files_autodownload").show();
+	}
+	else
+	{
+		$("#c_files_autodownload_select").val('0').flipswitch('refresh');
+		$("#c_files_autodownload").hide();
+	}
+	
+	// set values
+	$("#c_download_space").val(data.space);
+	$("#c_download_filesize").val(data.filesize);
+}
+
+function config_files_send()
+{
+	$.post(
+		'config_files_set',
+		{"download": $("#c_files_autodownload_select").val(), "space": $("#c_download_space").val(), "file": $("#c_download_filesize").val(), "e":1},
+		function(data){
+			$.mobile.changePage($("#page_pref"));
+	});	
+}
+
+// show hide autodownload configuration
+function config_files_auto_toggle()
+{
+	if($("#c_files_autodownload_select").val() == 1)
+		$("#c_files_autodownload").show();
+	else
+		$("#c_files_autodownload").hide();
+}
+
 
 var eventstimer=function()
 {

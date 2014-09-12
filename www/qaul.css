@@ -370,6 +370,18 @@ span.suffix {
 	display:none;
 }
 
+.ui-body {
+	margin-top:10px;
+	margin-bottom:30px;
+}
+
+#c_network_config_info{
+	margin-bottom:20px;
+}
+.c_network_submit {
+	margin-top:30px;
+}
+
 /* --- bugfixing elements --- */
 div#bugfix_footer {
 	z-index:599;
