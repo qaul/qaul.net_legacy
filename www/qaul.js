@@ -31,6 +31,7 @@ var is_chrome = false;
 var call_page_origin = "page_chat";
 var user_page_origin = "page_users";
 
+var QAUL_FILESTATUS_COPYING     = -5;
 var QAUL_FILESTATUS_DELETED     = -2;
 var QAUL_FILESTATUS_ERROR       = -1;
 var QAUL_FILESTATUS_NEW         =  0;
@@ -1303,32 +1304,47 @@ function file_update_check(item)
 		var htmlitem = file_create_html(item);
 		var myitem = $("#page_file_list").prepend(htmlitem);
 		myitem.trigger('create');
-		//htmlitem.slideDown().fadeIn('slow');
+		
+		// downloader bar
 		var percent = 0;
-		if(item.status == QAUL_FILESTATUS_DOWNLOADING) percent = item.downloaded;
+		if(item.status == QAUL_FILESTATUS_DOWNLOADING)
+			percent = item.downloaded;
 		myitem.find("#file_bar_" +item.hash).progressBar(percent,{barImage:'images/progressbg_black.gif'});
 		
 		// deactivate schedule buttons
 		file_button_deactivate(item.hash, item.suffix);
 	}
+	
+	// rotate loader image
+	if(item.status == QAUL_FILESTATUS_COPYING)
+		$("img.loadericon64:visible").addClass("rotate");
 }
 
 function file_create_html(item)
 {
 	var fileclass = "";
-	if(item.status == QAUL_FILESTATUS_MYFILE) fileclass = "file_myfile";
-	else if(item.status < QAUL_FILESTATUS_NEW) fileclass = "file_failed";
+	if(item.status == QAUL_FILESTATUS_MYFILE)
+		fileclass = "file_myfile";
+	if(item.status == QAUL_FILESTATUS_COPYING)
+		fileclass = "file_copying file_myfile";
+	else if(item.status < QAUL_FILESTATUS_NEW)
+		fileclass = "file_failed";
 	var percent = 0;
-	if(item.status == QAUL_FILESTATUS_DOWNLOADING) percent = item.downloaded;
+	if(item.status == QAUL_FILESTATUS_DOWNLOADING)
+		percent = item.downloaded;
 	var file = "<div class=\"file " +fileclass +"\" id=\"file_" +item.hash +"\">";
 	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) 
 		file += "<a href=\"#\" onClick=\"javascript:open_file('" +item.hash +"')\">";
-	if(item.status <= QAUL_FILESTATUS_ERROR) 
+	if(item.status == QAUL_FILESTATUS_COPYING) 
+		file += "<img src=\"images/ajax-loader.png\" class=\"loadericon64\">";
+	else if(item.status <= QAUL_FILESTATUS_ERROR) 
 		file += "<img src=\"images/f_failed_64.png\" class=\"fileicon64\">";
 	else
 		file += file_suffix2icon(item.suffix);
-	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) file += "</a>";
-	file     += "<a href=\"#\" onClick=\"javascript:file_delete('" +item.hash +"')\" class=\"filebutton\"><img src=\"images/b_delete.png\" alt=\"delete\" /></a>";
+	if(item.status >= QAUL_FILESTATUS_DOWNLOADED)
+		file += "</a>";
+	if(item.status != QAUL_FILESTATUS_COPYING)
+		file += "<a href=\"#\" onClick=\"javascript:file_delete('" +item.hash +"')\" class=\"filebutton\"><img src=\"images/b_delete.png\" alt=\"delete\" /></a>";
 	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) 
 		file += "<a href=\"#\" onClick=\"javascript:file_advertise('" +item.hash +"','" +item.suffix +"','" +item.size +"','" +item.description +"')\" class=\"filebutton\"><img src=\"images/b_advertise.png\" alt=\"advertise\" /></a>";
 	file     += "<div class=\"filename\">" +format_msg_txt(item.description) +"</div>";
