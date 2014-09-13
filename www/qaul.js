@@ -128,7 +128,7 @@ function init_start()
 	});
 	// configure internet
 	$("#page_config_internet").on("pagebeforeshow",function(event){
-		config_internet_data();
+		config_internet_load_data();
 	});
 	$("#form_config_internet").submit(function(event){
 		config_internet_send();
@@ -1804,7 +1804,20 @@ function config_internet_show()
 	return true;
 }
 
-function config_internet_data(data)
+function config_internet_load_data()
+{
+	// load configuration
+	$.ajax({
+		url:   "config_internet_get",
+		cache: false, // needed for IE
+		dataType: "json",
+		success: function(data) {
+			config_internet_data_loaded(data);
+		}
+	});
+}
+
+function config_internet_data_loaded(data)
 {
 	// toggle flipswitch
 	if(data.autodownload == 1)
@@ -1825,7 +1838,7 @@ function config_internet_data(data)
 		myhtml += "<input type=\"radio\" name=\"if\" value=\"" +item.name +"\" id=\"if_" +item.name +"\" ";
 		if(item.name == data.selected)
 			myhtml += "checked=\"checked\" ";
-		myhtml += "class=\"interface_select_checkbox\" />";
+		myhtml += "class=\"internet_select_checkbox\" />";
 		myhtml += "<label for=\"if_" +item.name +"\">" +item.ui_name +"</label>";
 	});
 	myhtml += "</fieldset>";
@@ -1834,7 +1847,29 @@ function config_internet_data(data)
 
 function config_internet_send()
 {
+	// find selected interface 
+	var interfaces = "";
+	$.each($(".internet_select_checkbox:checked"), function(i,item){
+		if(interfaces.length > 0)
+			interfaces += " ";
+		interfaces += $(item).val();
+	});
 	
+	// if no interface was selected, take the first one
+	if($("#c_internet_share").val() == 1 && interfaces == "")
+	{
+		$("#c_internet_popup").popup("open");
+	}
+	else
+	{
+		// send form
+		$.post(
+			'config_internet_set',
+			{"share": $("#c_internet_share").val(), "if": interfaces, "e":1},
+			function(data){
+				$.mobile.changePage($("#page_pref"));
+		});
+	}
 }
 
 // show/hide configuration
