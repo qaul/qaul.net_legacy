@@ -398,6 +398,7 @@ void Qaullib_IpcSendCom(int commandId)
 
 	// pack chat into olsr message
 	// ipv4 only at the moment
+	memset(&msg->v4.originator, 0, sizeof(msg->v4.originator));
     msg->v4.olsr_msgtype = QAUL_IPCCOM_MESSAGE_TYPE;
     msg->v4.message.ipc.type = commandId;
     size = sizeof( struct qaul_ipc_msg);
@@ -434,6 +435,7 @@ void Qaullib_IpcSendUserhello(void)
 
 	// send user hello message
 	// todo: ipv6
+	memset(&m->v4.originator, 0, sizeof(m->v4.originator));
 	m->v4.olsr_msgtype = QAUL_USERHELLO_MESSAGE_TYPE;
 	memcpy(&m->v4.message.userhello.name, qaul_username, MAX_USER_LEN);
 	//memcpy(&m->v4.message.userhello.icon, "\0", 1);

@@ -301,6 +301,7 @@ int Qaullib_MsgSendPublic(struct qaul_msg_LL_item *item)
 
 	// pack chat into olsr message
 	// TODO: ipv6
+	memset(&m->v4.originator, 0, sizeof(m->v4.originator));
 	m->v4.olsr_msgtype = QAUL_CHAT_MESSAGE_TYPE;
 	memcpy(&m->v4.message.chat.name, item->name, MAX_USER_LEN);
 	memcpy(&m->v4.message.chat.msg, item->msg, MAX_MESSAGE_LEN);
@@ -329,6 +330,7 @@ int Qaullib_MsgSendPublicWeb(struct qaul_msg_LL_item *item)
 
 	// pack chat into olsr message
 	// TODO: ipv6
+	memset(&m->v4.originator, 0, sizeof(m->v4.originator));
 	m->v4.olsr_msgtype = QAUL_CHAT_MESSAGE_TYPE;
 	memcpy(&m->v4.message.chat.name, item->name, MAX_USER_LEN);
 	memcpy(&m->v4.message.chat.msg, item->msg, MAX_MESSAGE_LEN);

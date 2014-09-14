@@ -1329,6 +1329,7 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 			printf("send advertise message\n");
 
 			// ipv4 only at the moment
+			memset(&m->v4.originator, 0, sizeof(m->v4.originator));
 			m->v4.olsr_msgtype = QAUL_CHAT_MESSAGE_TYPE;
 			memcpy(&m->v4.message.chat.name, qaul_username, MAX_USER_LEN);
 			// create message

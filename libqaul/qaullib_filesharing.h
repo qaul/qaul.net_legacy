@@ -11,7 +11,7 @@ extern "C" {
 #endif // __cplusplus
 
 /**
- * shall advertised files automatically be downloaded?
+ * Indicates wheter advertised files shall be downloaded automatically.
  * 0: no
  * 1: yes
  */
