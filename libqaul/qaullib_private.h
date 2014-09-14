@@ -120,6 +120,9 @@ char qaul_net_bssid[17 +1];           // string of the BSSID
 char qaul_net_interface[255 +1];      // string of the interface
 int  qaul_interface_configuring;
 char qaul_interface_json[MAX_JSON_LEN +1]; // json string of the actual interfaces
+// internet sharing
+int  qaul_internet_share;
+char qaul_internet_interface[255 +1]; // string of the interface to share the Internet
 
 // locale i18n
 int qaul_locale_set;

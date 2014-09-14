@@ -32,6 +32,10 @@ static void Qaullib_WwwConfigInterfaceGet(struct mg_connection *conn, const stru
  */
 static void Qaullib_WwwConfigInterfaceSet(struct mg_connection *conn, const struct mg_request_info *request_info);
 
+/**
+ * request interface configuration for internet sharing
+ */
+static void Qaullib_WwwConfigInternetLoading(struct mg_connection *conn, const struct mg_request_info *request_info);
 
 /**
  * load Internet configuration
@@ -264,6 +268,10 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 				Qaullib_WwwConfigInterfaceSet(conn, request_info);
 			}
 
+			else if (strcmp(request_info->uri, "/config_internet_loading") == 0)
+			{
+				Qaullib_WwwConfigInternetLoading(conn, request_info);
+			}
 			else if (strcmp(request_info->uri, "/config_internet_get") == 0)
 			{
 				Qaullib_WwwConfigInternetGet(conn, request_info);
@@ -515,15 +523,86 @@ static void Qaullib_WwwConfigInterfaceSet(struct mg_connection *conn, const stru
 }
 
 // ------------------------------------------------------------
+static void Qaullib_WwwConfigInternetLoading(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwConfigInternetLoading\n");
+
+	// request interface json from application
+	if(qaul_interface_configuring == 0)
+	{
+		qaul_interface_configuring = 1;
+		Qaullib_Appevent_LL_Add(QAUL_EVENT_GETINTERFACES);
+	}
+}
+
+// ------------------------------------------------------------
 static void Qaullib_WwwConfigInternetGet(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
+	// send header
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{");
 
+	// configuration method
+	mg_printf(conn, "\"share\":%i,", Qaullib_GetConfInt("internet.share"));
+
+	// interface used by qaul
+	mg_printf(conn, "\"used\":\"%s\",", Qaullib_GetInterface());
+
+	// selected interfaces
+	Qaullib_GetConfString("internet.interface", qaul_internet_interface);
+	mg_printf(conn, "\"selected\":\"%s\",", qaul_internet_interface);
+
+	// interfaces
+	mg_printf(conn, "\"interfaces\":[");
+	mg_printf(conn, "%s", qaul_interface_json);
+	mg_printf(conn, "]");
+
+	mg_printf(conn, "}");
 }
 
 // ------------------------------------------------------------
 static void Qaullib_WwwConfigInternetSet(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
+	char *content_length;
+	int length;
+	char local_share[MAX_INTSTR_LEN +1];
 
+	// read post data into var
+	content_length = (char *)mg_get_header(conn, "Content-Length");
+	length = atoi(content_length);
+	char *post = (char *)malloc(length+length/8+1);
+	mg_read(conn, post, length); //read post data
+
+	// save interface method
+	mg_get_var(post, strlen(post == NULL ? "" : post), "share", local_share, sizeof(local_share));
+	memcpy(&local_share[MAX_INTSTR_LEN], "\0", 1);
+	qaul_internet_share = atoi(local_share);
+	Qaullib_DbSetConfigValueInt("internet.share", qaul_internet_share);
+
+	// if method manual, extract interface
+	if(qaul_internet_share)
+	{
+		mg_get_var(post, strlen(post == NULL ? "" : post), "if", qaul_internet_interface, sizeof(qaul_internet_interface));
+		memcpy(&qaul_internet_interface[255], "\0", 1);
+		Qaullib_DbSetConfigValue("internet.interface", qaul_internet_interface);
+
+		if(QAUL_DEBUG)
+			printf("share Internet via %s\n", qaul_internet_interface);
+	}
+	else
+	{
+		if(QAUL_DEBUG)
+			printf("don't share Internet\n");
+	}
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
+
+	free(post);
 }
 
 // ------------------------------------------------------------

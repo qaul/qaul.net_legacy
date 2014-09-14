@@ -1,4 +1,5 @@
 {"share":0,
+"used":"en1",
 "selected":"en0",
 "interfaces":[
 {"name":"en0","ui_name":"Ethernet","type":0},

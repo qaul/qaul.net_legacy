@@ -1804,7 +1804,7 @@ function config_internet_show()
 	
 	// request interface configuration
 	$.ajax({
-		url:   "config_internet_get",
+		url:   "config_internet_loading",
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
@@ -1814,8 +1814,6 @@ function config_internet_show()
 	}).error(function(){
 		$.mobile.changePage($("#page_pref"));
 	});
-	
-	return true;
 }
 
 function config_internet_load_data()
@@ -1849,11 +1847,14 @@ function config_internet_data_loaded(data)
 	var myhtml = "<fieldset data-role=\"controlgroup\" id=\"interface_selection\">";
 	$.each(data.interfaces, function(i,item)
 	{
-		myhtml += "<input type=\"radio\" name=\"if\" value=\"" +item.name +"\" id=\"if_" +item.name +"\" ";
-		if(item.name == data.selected)
-			myhtml += "checked=\"checked\" ";
-		myhtml += "class=\"internet_select_checkbox\" />";
-		myhtml += "<label for=\"if_" +item.name +"\">" +item.ui_name +"</label>";
+		if(item.name != data.used)
+		{
+			myhtml += "<input type=\"radio\" name=\"if\" value=\"" +item.name +"\" id=\"if_" +item.name +"\" ";
+			if(item.name == data.selected)
+				myhtml += "checked=\"checked\" ";
+			myhtml += "class=\"internet_select_checkbox\" />";
+			myhtml += "<label for=\"if_" +item.name +"\">" +item.ui_name +"</label>";
+		}
 	});
 	myhtml += "</fieldset>";
 	$("#c_internet_interface").empty().append(myhtml).trigger("create");
@@ -1907,6 +1908,8 @@ function config_files_show()
 			$.mobile.changePage($("#page_config_files"));
 			config_files_data(data);
 		}
+	}).error(function(){
+			alert("config_files_get failed");
 	});
 	
 	return true;
