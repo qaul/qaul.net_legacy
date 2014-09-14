@@ -78,6 +78,11 @@ void Qaullib_FileInit(void)
 
 	// get the files from DB
 	Qaullib_FileDB2LL();
+
+	// get auto download configuration from DB
+	qaul_file_autodownload = Qaullib_GetConfInt("files.autodownload");
+	qaul_file_space_max = Qaullib_GetConfInt("files.space.max");
+	qaul_file_size_max = Qaullib_GetConfInt("files.filesize.max");
 }
 
 // ------------------------------------------------------------
@@ -161,7 +166,7 @@ int Qaullib_FileExists(char *path)
 int Qaullib_FileAdd(struct qaul_file_LL_item *file_item)
 {
 	if(QAUL_DEBUG)
-		printf("Qaullib_FileAdd\n");
+		printf("Qaullib_FileAdd: %s.%s size[%i] status[%i]\n", file_item->hashstr, file_item->suffix, file_item->size, file_item->status);
 
 	// check if file already exists
 	if(!Qaullib_File_LL_HashExists(file_item->hash))

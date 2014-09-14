@@ -20,17 +20,56 @@ static void Qaullib_WwwGetName(struct mg_connection *conn, const struct mg_reque
 /**
  * request interface configuration
  */
-static void Qaullib_WwwSetInterfaceLoading(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwConfigInterfaceLoading(struct mg_connection *conn, const struct mg_request_info *request_info);
 
 /**
  * load network interface configuration
  */
-static void Qaullib_WwwGetInterface(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwConfigInterfaceGet(struct mg_connection *conn, const struct mg_request_info *request_info);
 
 /**
  * save network interface configuration
  */
-static void Qaullib_WwwSetInterface(struct mg_connection *conn, const struct mg_request_info *request_info);
+static void Qaullib_WwwConfigInterfaceSet(struct mg_connection *conn, const struct mg_request_info *request_info);
+
+
+/**
+ * load Internet configuration
+ */
+static void Qaullib_WwwConfigInternetGet(struct mg_connection *conn, const struct mg_request_info *request_info);
+
+/**
+ * save Internet configuration
+ */
+static void Qaullib_WwwConfigInternetSet(struct mg_connection *conn, const struct mg_request_info *request_info);
+
+
+/**
+ * load active network configuration
+ */
+static void Qaullib_WwwConfigNetworkGet(struct mg_connection *conn, const struct mg_request_info *request_info);
+
+/**
+ * load profile network configuration
+ */
+static void Qaullib_WwwConfigNetworkGetProfile(struct mg_connection *conn, const struct mg_request_info *request_info);
+
+/**
+ * save network configuration
+ */
+static void Qaullib_WwwConfigNetworkSet(struct mg_connection *conn, const struct mg_request_info *request_info);
+
+
+/**
+ * load file sharing configuration
+ */
+static void Qaullib_WwwConfigFilesGet(struct mg_connection *conn, const struct mg_request_info *request_info);
+
+/**
+ * save file sharing configuration
+ */
+static void Qaullib_WwwConfigFilesSet(struct mg_connection *conn, const struct mg_request_info *request_info);
+
 
 /**
  * load network topology
@@ -211,18 +250,51 @@ void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, 
 			{
 				Qaullib_WwwSetOpenUrl(conn, request_info);
 			}
-			else if (strcmp(request_info->uri, "/setinterfaceloading") == 0)
+
+			else if (strcmp(request_info->uri, "/config_interface_loading") == 0)
 			{
-				Qaullib_WwwSetInterfaceLoading(conn, request_info);
+				Qaullib_WwwConfigInterfaceLoading(conn, request_info);
 			}
-			else if (strcmp(request_info->uri, "/getinterface.json") == 0)
+			else if (strcmp(request_info->uri, "/config_interface_get") == 0)
 			{
-				Qaullib_WwwGetInterface(conn, request_info);
+				Qaullib_WwwConfigInterfaceGet(conn, request_info);
 			}
-			else if (strcmp(request_info->uri, "/setinterface") == 0)
+			else if (strcmp(request_info->uri, "/config_interface_set") == 0)
 			{
-				Qaullib_WwwSetInterface(conn, request_info);
+				Qaullib_WwwConfigInterfaceSet(conn, request_info);
 			}
+
+			else if (strcmp(request_info->uri, "/config_internet_get") == 0)
+			{
+				Qaullib_WwwConfigInternetGet(conn, request_info);
+			}
+			else if (strcmp(request_info->uri, "/config_internet_set") == 0)
+			{
+				Qaullib_WwwConfigInternetSet(conn, request_info);
+			}
+
+			else if (strcmp(request_info->uri, "/config_network_get") == 0)
+			{
+				Qaullib_WwwConfigNetworkGet(conn, request_info);
+			}
+			else if (strcmp(request_info->uri, "/config_network_profile") == 0)
+			{
+				Qaullib_WwwConfigNetworkGetProfile(conn, request_info);
+			}
+			else if (strcmp(request_info->uri, "/config_network_set") == 0)
+			{
+				Qaullib_WwwConfigNetworkSet(conn, request_info);
+			}
+
+			else if (strcmp(request_info->uri, "/config_files_get") == 0)
+			{
+				Qaullib_WwwConfigFilesGet(conn, request_info);
+			}
+			else if (strcmp(request_info->uri, "/config_files_set") == 0)
+			{
+				Qaullib_WwwConfigFilesSet(conn, request_info);
+			}
+
 			else if (strcmp(request_info->uri, "/gettopology.json") == 0)
 			{
 				Qaullib_WwwGetTopology(conn, request_info);
@@ -362,7 +434,7 @@ static void Qaullib_WwwSetLocale(struct mg_connection *conn, const struct mg_req
 }
 
 // ------------------------------------------------------------
-static void Qaullib_WwwSetInterfaceLoading(struct mg_connection *conn, const struct mg_request_info *request_info)
+static void Qaullib_WwwConfigInterfaceLoading(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
 	mg_printf(conn, "{}");
@@ -379,7 +451,7 @@ static void Qaullib_WwwSetInterfaceLoading(struct mg_connection *conn, const str
 }
 
 // ------------------------------------------------------------
-static void Qaullib_WwwGetInterface(struct mg_connection *conn, const struct mg_request_info *request_info)
+static void Qaullib_WwwConfigInterfaceGet(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
 	// send header
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
@@ -400,7 +472,7 @@ static void Qaullib_WwwGetInterface(struct mg_connection *conn, const struct mg_
 }
 
 // ------------------------------------------------------------
-static void Qaullib_WwwSetInterface(struct mg_connection *conn, const struct mg_request_info *request_info)
+static void Qaullib_WwwConfigInterfaceSet(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
 	char *content_length;
 	int length;
@@ -434,6 +506,104 @@ static void Qaullib_WwwSetInterface(struct mg_connection *conn, const struct mg_
 	{
 		if(QAUL_DEBUG)
 			printf("set interface automatically set\n");
+	}
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
+
+	free(post);
+}
+
+// ------------------------------------------------------------
+static void Qaullib_WwwConfigInternetGet(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+
+}
+
+// ------------------------------------------------------------
+static void Qaullib_WwwConfigInternetSet(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+
+}
+
+// ------------------------------------------------------------
+static void Qaullib_WwwConfigNetworkGet(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+
+}
+
+// ------------------------------------------------------------
+static void Qaullib_WwwConfigNetworkGetProfile(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+
+}
+
+// ------------------------------------------------------------
+static void Qaullib_WwwConfigNetworkSet(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+
+}
+
+// ------------------------------------------------------------
+static void Qaullib_WwwConfigFilesGet(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	// send header
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{");
+
+	// configuration auto download of files
+	mg_printf(conn, "\"autodownload\":%i,", Qaullib_GetConfInt("files.autodownload"));
+
+	// configuration auto download of files
+	mg_printf(conn, "\"space\":\"%i\",", Qaullib_GetConfInt("files.space.max"));
+
+	// configuration auto download of files
+	mg_printf(conn, "\"filesize\":\"%i\"", Qaullib_GetConfInt("files.filesize.max"));
+
+	mg_printf(conn, "}");
+}
+
+// ------------------------------------------------------------
+static void Qaullib_WwwConfigFilesSet(struct mg_connection *conn, const struct mg_request_info *request_info)
+{
+	char *content_length;
+	int length;
+	char local_intstr[MAX_INTSTR_LEN +1];
+	int mydownload, myspace, myfilesize;
+
+	// read post data into var
+	content_length = (char *)mg_get_header(conn, "Content-Length");
+	length = atoi(content_length);
+	char *post = (char *)malloc(length+length/8+1);
+	mg_read(conn, post, length); // read post data
+
+	// save download method
+	mg_get_var(post, strlen(post == NULL ? "" : post), "download", local_intstr, sizeof(local_intstr));
+	memcpy(&local_intstr[MAX_INTSTR_LEN], "\0", 1);
+	mydownload = atoi(local_intstr);
+	Qaullib_DbSetConfigValueInt("files.autodownload", mydownload);
+	qaul_file_autodownload = mydownload;
+
+	// if auto download is set, set boundaries
+	if(mydownload)
+	{
+		mg_get_var(post, strlen(post == NULL ? "" : post), "space", local_intstr, sizeof(local_intstr));
+		myspace = atoi(local_intstr);
+		Qaullib_DbSetConfigValueInt("files.space.max", myspace);
+		qaul_file_space_max = myspace;
+
+		mg_get_var(post, strlen(post == NULL ? "" : post), "size", local_intstr, sizeof(local_intstr));
+		myfilesize = atoi(local_intstr);
+		Qaullib_DbSetConfigValueInt("files.filesize.max", myfilesize);
+		qaul_file_size_max = myfilesize;
+
+		if(QAUL_DEBUG)
+			printf("download advertised files automatically, max space %i, max file size %i\n", myspace, myfilesize);
+	}
+	else
+	{
+		if(QAUL_DEBUG)
+			printf("download advertised files manually\n");
 	}
 
 	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
@@ -799,7 +969,7 @@ static void Qaullib_WwwGetName(struct mg_connection *conn, const struct mg_reque
   // Fetch user name
   //printf("send username: %s \n", qaul_username);
   mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
-  mg_printf(conn, "%s", "{\"name\":\"%s\"}", qaul_username);
+  mg_printf(conn, "{\"name\":\"%s\"}", qaul_username);
 }
 
 // ------------------------------------------------------------
@@ -1092,6 +1262,7 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 	char* stmt = buffer;
 	char *error_exec=NULL;
 	int length, advertise, size;
+	time_t timestamp;
 	struct qaul_file_LL_item file_item;
 	struct qaul_file_LL_item *existing_file;
 	char local_advertise[2];
@@ -1118,7 +1289,6 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 
 	// copy file into directory & make hash
 	file_item.size = Qaullib_FileCopyNew(local_path, &file_item);
-	printf("Qaullib_WwwFileAdd size: %i\n", file_item.size);
 
 	if(file_item.size > 0)
 	{
@@ -1132,7 +1302,8 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 		file_item.adv_validip = 0;
 		file_item.downloaded = 0;
 		file_item.downloaded_chunk = 0;
-		time((time_t *)&file_item.created_at);
+		time(&timestamp);
+		file_item.created_at = (int)timestamp;
 
 		// check if file already exists
 		if(Qaullib_File_LL_HashSearch(file_item.hash, &existing_file))
@@ -1147,7 +1318,9 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 			}
 		}
 		else
+		{
 			Qaullib_FileAdd(&file_item);
+		}
 
 		// FIXME: make ipv6 compatible
 		// pack chat into olsr message
@@ -1173,7 +1346,7 @@ static void Qaullib_WwwFileAdd(struct mg_connection *conn, const struct mg_reque
 			size = size + sizeof(struct olsrmsg);
 			m->v4.olsr_msgsize = htons(size);
 
-			printf("olsr message: name: %s, msg: %s, size:%i\n", qaul_username, local_msg, size);
+			printf("olsr message: name: %s, msg: %s, size: %i, status: %i\n", qaul_username, local_msg, size, file_item.status);
 
 			// send package
 			Qaullib_IpcSend(m);
@@ -1350,6 +1523,7 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	char *stmt;
 	char *error_exec;
 	int length;
+	time_t timestamp;
 	struct qaul_file_LL_item file_item;
 	struct qaul_file_LL_item *existing_file;
 	char local_size[MAX_INTSTR_LEN +1];
@@ -1391,7 +1565,8 @@ static void Qaullib_WwwFileSchedule(struct mg_connection *conn, const struct mg_
 	// add file
 	file_item.type = QAUL_FILETYPE_FILE;
 	file_item.status = QAUL_FILESTATUS_NEW;
-	time((time_t *)&file_item.created_at);
+	time(&timestamp);
+	file_item.created_at = timestamp;
 	file_item.downloaded = 0;
 	file_item.downloaded_chunk = 0;
 

@@ -324,8 +324,6 @@ function qaul_configure(data)
 		$(".c_internet").css("display","block");
 	if(qaul_config.c_network) 
 		$(".c_network").css("display","block");
-	if(qaul_config.c_filesharing) 
-		$(".c_filesharing").css("display","block");
 	
 	if(qaul_config.locale)
 	{
@@ -1528,7 +1526,7 @@ function config_interface_show()
 	
 	// request interface configuration
 	$.ajax({
-		url:   "setinterfaceloading",
+		url:   "config_interface_loading",
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
@@ -1546,7 +1544,7 @@ function config_interface_load_data()
 {
 	// load configuration
 	$.ajax({
-		url:   "getinterface.json",
+		url:   "config_interface_get",
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
@@ -1604,7 +1602,7 @@ function config_interface_send()
 	
 	// send configured interface
 	$.post(
-			'setinterface',
+			'config_interface_set',
 			{"m": $("#interface_select_auto").val(), "if": interfaces, "e":1},
 			function(data){
 				// forward to restart page
@@ -1937,7 +1935,7 @@ function config_files_send()
 {
 	$.post(
 		'config_files_set',
-		{"download": $("#c_files_autodownload_select").val(), "space": $("#c_download_space").val(), "file": $("#c_download_filesize").val(), "e":1},
+		{"download": $("#c_files_autodownload_select").val(), "space": $("#c_download_space").val(), "size": $("#c_download_filesize").val(), "e":1},
 		function(data){
 			$.mobile.changePage($("#page_pref"));
 	});	

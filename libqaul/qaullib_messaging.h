@@ -38,6 +38,22 @@ int Qaullib_MsgDB2LL(struct qaul_msg_LL_node *node, const char *stmt);
 int Qaullib_MsgAdd(struct qaul_msg_LL_item *item);
 
 /**
+ * analyze if message advertises a file
+ *
+ * @retval 0 no file advertising message
+ * @retval 1 file advertising message
+ */
+int Qaullib_MsgCheckFile(struct qaul_msg_LL_item *item);
+
+/**
+ * check message for file hash and fill it in file structure
+ *
+ * @retval 0 no file found
+ * @retval 1 file found
+ */
+int Qaullib_MsgCheckFileFindHash(char *msg, struct qaul_file_LL_item *file);
+
+/**
  * send a public message and save it
  *
  * @retval 0 on error

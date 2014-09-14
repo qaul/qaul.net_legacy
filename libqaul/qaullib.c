@@ -727,16 +727,16 @@ int Qaullib_DbGetConfigValueInt(const char* key)
 		// For each row returned
 		while (sqlite3_step(ppStmt) == SQLITE_ROW)
 		{
-		  // For each collumn
-		  int jj;
-		  for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
-		  {
+			// For each collumn
+			int jj;
+			for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
+			{
 				if(strcmp(sqlite3_column_name(ppStmt,jj), "value_int") == 0)
 				{
 					myvalue = sqlite3_column_int(ppStmt, jj);
 					return myvalue;
 				}
-		  }
+			}
 		}
 		sqlite3_finalize(ppStmt);
 	}

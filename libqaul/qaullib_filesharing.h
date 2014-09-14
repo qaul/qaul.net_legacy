@@ -11,6 +11,27 @@ extern "C" {
 #endif // __cplusplus
 
 /**
+ * shall advertised files automatically be downloaded?
+ * 0: no
+ * 1: yes
+ */
+int qaul_file_autodownload;
+
+/**
+ * maximum space available for file sharing
+ * 0: unlimited
+ * 1: 1KB
+ */
+int qaul_file_space_max;
+
+/**
+ * maximum file size that is automatically downloaded
+ * 0: unlimited
+ * 1: 1KB
+ */
+int qaul_file_size_max;
+
+/**
  * defines chunk size of file sharing
  */
 int qaul_chunksize;

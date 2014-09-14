@@ -140,16 +140,154 @@ int Qaullib_MsgAdd(struct qaul_msg_LL_item *item)
 	if(msg_item.type != QAUL_MSGTYPE_VOIP_IN && msg_item.type != QAUL_MSGTYPE_VOIP_OUT)
 		qaul_new_msg++;
 
-	// check if user is in data base
-	if(
-			msg_item.type == QAUL_MSGTYPE_PUBLIC_IN &&
-			msg_item.type == QAUL_MSGTYPE_PRIVATE_IN
-			)
+	if(msg_item.type == QAUL_MSGTYPE_PUBLIC_IN || msg_item.type == QAUL_MSGTYPE_PRIVATE_IN)
 	{
+		// check if user is in data base
 		Qaullib_UserCheckUser(&msg_item.ip_union, msg_item.name);
+
+		// check for file download
+		if(qaul_file_autodownload == 1)
+			Qaullib_MsgCheckFile(&msg_item);
 	}
 
 	return 1;
+}
+
+// ------------------------------------------------------------
+int Qaullib_MsgCheckFile(struct qaul_msg_LL_item *item)
+{
+	struct qaul_file_LL_item file_item;
+	struct qaul_file_LL_item *existing_file;
+	time_t timestamp;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_MsgCheckFile\n");
+
+	// check if message contains file advertising information
+	if(Qaullib_MsgCheckFileFindHash(item->msg, &file_item) == 1)
+	{
+		printf("Qaullib_MsgCheckFile [1] %s.%s size[%i] status[%i]\n", file_item.hashstr, file_item.suffix, file_item.size, file_item.status);
+
+		// set file size to dummy value
+		file_item.size = 1024;
+
+		// set new values
+		file_item.type = QAUL_FILETYPE_FILE;
+		file_item.status = QAUL_FILESTATUS_NEW;
+		time(&timestamp);
+		file_item.created_at = (int)timestamp;
+		file_item.downloaded = 0;
+		file_item.downloaded_chunk = 0;
+		Qaullib_StringToHash(file_item.hashstr, file_item.hash);
+
+		// todo: deprecated, to be removed
+		strncpy(file_item.adv_name, item->name, sizeof(file_item.adv_name));
+		file_item.adv_validip = 0;
+		memcpy(&file_item.adv_ip, &item->ip_union, sizeof(file_item.adv_ip));
+
+		printf("Qaullib_MsgCheckFile [2] %s.%s size[%i] status[%i]\n", file_item.hashstr, file_item.suffix, file_item.size, file_item.status);
+
+		// check if file already exists
+		if(Qaullib_File_LL_HashSearch(file_item.hash, &existing_file))
+		{
+			printf("Qaullib_MsgCheckFile [3] %s.%s size[%i] status[%i]\n", file_item.hashstr, file_item.suffix, file_item.size, file_item.status);
+
+			if(existing_file->status == QAUL_FILESTATUS_DELETED)
+			{
+				// delete from LL
+				Qaullib_File_LL_Delete_Item(existing_file);
+
+				// add the file again
+				Qaullib_FileAdd(&file_item);
+			}
+		}
+		else
+		{
+			printf("Qaullib_MsgCheckFile [4] %s.%s size[%i] status[%i]\n", file_item.hashstr, file_item.suffix, file_item.size, file_item.status);
+
+			Qaullib_FileAdd(&file_item);
+		}
+
+		printf("Qaullib_MsgCheckFile [5] %s.%s size[%i] status[%i]\n", file_item.hashstr, file_item.suffix, file_item.size, file_item.status);
+
+		// check all scheduled files
+		Qaullib_FileCheckScheduled();
+
+		printf("Qaullib_MsgCheckFile [6] %s.%s size[%i] status[%i]\n", file_item.hashstr, file_item.suffix, file_item.size, file_item.status);
+
+		return 1;
+	}
+
+	return 0;
+}
+
+int Qaullib_MsgCheckFileFindHash(char *msg, struct qaul_file_LL_item *file)
+{
+	int msglen, i, pattern_count, desc_count, msg_found;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_MsgCheckFileFindHash msg: %s\n", msg);
+
+	msglen = (int)strlen(msg);
+	pattern_count = 0;
+	desc_count = 0;
+	msg_found = -1;
+
+	for(i=0; i < msglen; i++)
+	{
+		if(pattern_count < MAX_HASHSTR_LEN && Qaullib_ValidateCharASCIILetterOrNumber(&msg[i]) == 1)
+		{
+			memcpy(&file->hashstr[pattern_count], &msg[i], 1);
+			pattern_count++;
+		}
+		else if(pattern_count == MAX_HASHSTR_LEN && memcmp(&msg[i], ".", 1) == 0)
+		{
+			memcpy(&file->hashstr[pattern_count], "\0", 1);
+			pattern_count++;
+		}
+		else if(pattern_count > MAX_HASHSTR_LEN)
+		{
+			if(msg_found >= 0)
+			{
+				if(desc_count <= MAX_DESCRIPTION_LEN)
+					memcpy(&file->description[desc_count], &msg[i], 1);
+
+				msg_found = 1;
+				pattern_count++;
+				desc_count++;
+			}
+			else if(pattern_count <= (MAX_HASHSTR_LEN + 1 + MAX_SUFFIX_LEN) && Qaullib_ValidateCharASCIILetterOrNumber(&msg[i]) == 1)
+			{
+				memcpy(&file->suffix[pattern_count -MAX_HASHSTR_LEN -1], &msg[i], 1);
+				pattern_count++;
+			}
+			else if(memcmp(&msg[i], " ", 1) == 0 || memcmp(&msg[i], "|", 1) == 0)
+			{
+				memcpy(&file->suffix[pattern_count -MAX_HASHSTR_LEN -1], "\0", 1);
+				msg_found = 0;
+			}
+			else
+				pattern_count = 0;
+		}
+		else
+		{
+			pattern_count = 0;
+		}
+	}
+
+	if(msg_found == 1)
+	{
+		printf("Qaullib_MsgCheckFileFindHash %s.%s size[%i] status[%i]\n", file->hashstr, file->suffix, file->size, file->status);
+
+		if(desc_count < MAX_DESCRIPTION_LEN)
+			memcpy(&file->description[desc_count], "\0", 1);
+		else
+			memcpy(&file->description[MAX_DESCRIPTION_LEN], "\0", 1);
+
+		return 1;
+	}
+
+	return 0;
 }
 
 // ------------------------------------------------------------
