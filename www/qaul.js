@@ -1911,8 +1911,6 @@ function config_files_show()
 	}).error(function(){
 			alert("config_files_get failed");
 	});
-	
-	return true;
 }
 
 function config_files_data(data)
