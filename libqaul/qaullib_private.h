@@ -114,8 +114,12 @@ int qaul_ip_set;
 char qaul_ip_str[MAX_IP_LEN +1];    // string of the IP
 union olsr_ip_addr qaul_ip_addr;	// binary IP address
 // network
+char qaul_net_profile[255 +1];      // profile name
+char qaul_net_broadcast[MAX_IP_LEN +1]; // broadcast address
 char qaul_net_gateway[MAX_IP_LEN +1]; // string of the gateway IP
-char qaul_net_ibss[255 +1];           // string of the IBSS name
+char qaul_net_ns1[MAX_IP_LEN +1];     // DNS 1 IP address
+char qaul_net_ns2[MAX_IP_LEN +1];     // DNS 2 IP address
+char qaul_net_ssid[255 +1];           // string of the SSID name
 char qaul_net_bssid[17 +1];           // string of the BSSID
 char qaul_net_interface[255 +1];      // string of the interface
 int  qaul_interface_configuring;

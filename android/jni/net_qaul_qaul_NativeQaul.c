@@ -168,11 +168,11 @@ JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getNetGateway
 	return myJString;
 }
 
-JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getWifiIbss
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getWifiSsid
   (JNIEnv *env, jobject object)
 {
 	jstring myJString;
-	myJString = (*env)->NewStringUTF(env, Qaullib_GetWifiIbss());
+	myJString = (*env)->NewStringUTF(env, Qaullib_GetWifiSsid());
 	return myJString;
 }
 

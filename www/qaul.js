@@ -1789,7 +1789,7 @@ function config_network_send()
 		};
 	
 	$.post(
-		'config_files_set',
+		'config_network_set',
 		values,
 		function(data){
 			$.mobile.changePage($("#page_pref"));

@@ -368,7 +368,7 @@ gboolean qaul_configure(gpointer data)
         	strncpy(network_settings.ipv4_dns1, "178.254.31.11", sizeof(network_settings.ipv4_dns1));
         	strncpy(network_settings.ipv4_dns2, "77.67.33.81", sizeof(network_settings.ipv4_dns2));
         	network_settings.wifi_channel = Qaullib_GetConfInt("wifi.channel");
-        	Qaullib_GetConfString("wifi.ibss", network_settings.wifi_ssid);
+        	Qaullib_GetConfString("wifi.ssid", network_settings.wifi_ssid);
 
         	// add network configuration
         	if(qaul_network_settings_add(network_dbus_connection, &network_settings, &network_device))

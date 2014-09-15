@@ -504,7 +504,6 @@ static void Qaullib_WwwConfigInterfaceSet(struct mg_connection *conn, const stru
 	if(mymanual)
 	{
 		mg_get_var(post, strlen(post == NULL ? "" : post), "if", local_interface, sizeof(local_interface));
-		memcpy(&local_interface[255], "\0", 1);
 		Qaullib_DbSetConfigValue("net.interface.name", local_interface);
 
 		if(QAUL_DEBUG)
@@ -608,19 +607,198 @@ static void Qaullib_WwwConfigInternetSet(struct mg_connection *conn, const struc
 // ------------------------------------------------------------
 static void Qaullib_WwwConfigNetworkGet(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
+	// send header
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{");
 
+	// profile exists
+	mg_printf(conn, "\"available\":1,");
+
+	// network profile
+	mg_printf(conn, "\"profile\":\"%s\",", Qaullib_GetNetProfile());
+
+	mg_printf(conn, "\"ip\":\"%s\",", Qaullib_GetIP());
+	mg_printf(conn, "\"mask\":\"%i\",", Qaullib_GetNetMask());
+	mg_printf(conn, "\"broadcast\":\"%s\",", Qaullib_GetNetBroadcast());
+	mg_printf(conn, "\"gateway\":\"%s\",", Qaullib_GetNetGateway());
+
+	mg_printf(conn, "\"ns1\":\"%s\",", Qaullib_GetNetNs1());
+	mg_printf(conn, "\"ns2\":\"%s\",", Qaullib_GetNetNs2());
+
+	mg_printf(conn, "\"channel\":\"%i\",", Qaullib_GetWifiChannel());
+	mg_printf(conn, "\"ssid\":\"%s\",", Qaullib_GetInterface());
+	mg_printf(conn, "\"bssid\":\"%s\"", Qaullib_GetInterface());
+
+	mg_printf(conn, "}");
 }
 
 // ------------------------------------------------------------
 static void Qaullib_WwwConfigNetworkGetProfile(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
+	char *content_length;
+	int length;
+	char local_profile[MAX_PROFILE_LEN +1];
+	char profile_dbprotected[2*MAX_PROFILE_LEN +1];
+	char key[512];
+	char value[512];
 
+	// read post data into var
+	content_length = (char *)mg_get_header(conn, "Content-Length");
+	length = atoi(content_length);
+	char *post = (char *)malloc(length+length/8+1);
+	mg_read(conn, post, length); //read post data
+
+	// send header
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{");
+
+	// get profile name
+	mg_get_var(post, strlen(post == NULL ? "" : post), "p", local_profile, sizeof(local_profile));
+	Qaullib_StringDbProtect(profile_dbprotected, local_profile, sizeof(profile_dbprotected));
+	sprintf(key, "%s.profile", profile_dbprotected);
+
+	// check if profile exists
+	if(Qaullib_DbGetConfigValueInt(key))
+	{
+		// profile exists
+		mg_printf(conn, "\"available\":1,");
+
+		// network profile
+		mg_printf(conn, "\"profile\":\"%s\",", local_profile);
+
+		sprintf(key, "%s.net.ip", profile_dbprotected);
+		Qaullib_DbGetConfigValue(key, value);
+		mg_printf(conn, "\"ip\":\"%s\",", value);
+
+		sprintf(key, "%s.net.mask", profile_dbprotected);
+		mg_printf(conn, "\"mask\":\"%i\",", Qaullib_DbGetConfigValueInt(key));
+
+		sprintf(key, "%s.net.broadcast", profile_dbprotected);
+		Qaullib_DbGetConfigValue(key, value);
+		mg_printf(conn, "\"broadcast\":\"%s\",", value);
+
+		sprintf(key, "%s.net.gateway", profile_dbprotected);
+		Qaullib_DbGetConfigValue(key, value);
+		mg_printf(conn, "\"gateway\":\"%s\",", value);
+
+		sprintf(key, "%s.net.ns1", profile_dbprotected);
+		Qaullib_DbGetConfigValue(key, value);
+		mg_printf(conn, "\"ns1\":\"%s\",", value);
+
+		sprintf(key, "%s.net.ns2", profile_dbprotected);
+		Qaullib_DbGetConfigValue(key, value);
+		mg_printf(conn, "\"ns2\":\"%s\",", value);
+
+		sprintf(key, "%s.wifi.channel", profile_dbprotected);
+		mg_printf(conn, "\"channel\":\"%i\",", Qaullib_DbGetConfigValueInt(key));
+
+		sprintf(key, "%s.wifi.ssid", profile_dbprotected);
+		Qaullib_DbGetConfigValue(key, value);
+		mg_printf(conn, "\"ssid\":\"%s\",", value);
+
+		sprintf(key, "%s.net.bssid", profile_dbprotected);
+		Qaullib_DbGetConfigValue(key, value);
+		mg_printf(conn, "\"bssid\":\"%s\"", value);
+	}
+	else
+	{
+		// profile does not exist
+		mg_printf(conn, "\"available\":0");
+	}
+
+	mg_printf(conn, "}");
 }
 
 // ------------------------------------------------------------
 static void Qaullib_WwwConfigNetworkSet(struct mg_connection *conn, const struct mg_request_info *request_info)
 {
+	char *content_length;
+	int length, value_int;
+	char local_profile[MAX_PROFILE_LEN +1], profile_dbprotected[2*MAX_PROFILE_LEN +1];
+	char key[512];
+	char value[255 +1], value_dbprotected[2*sizeof(value)];
 
+	// read post data into var
+	content_length = (char *)mg_get_header(conn, "Content-Length");
+	length = atoi(content_length);
+	char *post = (char *)malloc(length+length/8+1);
+	mg_read(conn, post, length); //read post data
+
+	// profile
+	mg_get_var(post, strlen(post == NULL ? "" : post), "profile", local_profile, sizeof(local_profile));
+	Qaullib_StringDbProtect(profile_dbprotected, local_profile, sizeof(profile_dbprotected));
+	sprintf(key, "%s.profile", profile_dbprotected);
+	Qaullib_DbSetConfigValueInt(key, 1);
+	Qaullib_DbSetConfigValue("net.profile", profile_dbprotected);
+
+	// ip
+	mg_get_var(post, strlen(post == NULL ? "" : post), "ip", value, sizeof(MAX_IP_LEN +1));
+	Qaullib_StringDbProtect(value_dbprotected, value, sizeof(value_dbprotected));
+	sprintf(key, "%s.net.ip", profile_dbprotected);
+	Qaullib_DbSetConfigValue(key, value_dbprotected);
+	Qaullib_DbSetConfigValue("ip", value_dbprotected);
+
+	// mask
+	mg_get_var(post, strlen(post == NULL ? "24" : post), "mask", value, sizeof(MAX_INTSTR_LEN +1));
+	value_int = atoi(value);
+	sprintf(key, "%s.net.mask", profile_dbprotected);
+	Qaullib_DbSetConfigValueInt(key, value_int);
+	Qaullib_DbSetConfigValue("net.mask", value_dbprotected);
+
+	// broadcast
+	mg_get_var(post, strlen(post == NULL ? "" : post), "broadcast", value, sizeof(MAX_IP_LEN +1));
+	Qaullib_StringDbProtect(value_dbprotected, value, sizeof(value_dbprotected));
+	sprintf(key, "%s.net.broadcast", profile_dbprotected);
+	Qaullib_DbSetConfigValue(key, value_dbprotected);
+	Qaullib_DbSetConfigValue("net.broadcast", value_dbprotected);
+
+	// gateway
+	mg_get_var(post, strlen(post == NULL ? "0.0.0.0" : post), "gateway", value, sizeof(MAX_IP_LEN +1));
+	Qaullib_StringDbProtect(value_dbprotected, value, sizeof(value_dbprotected));
+	sprintf(key, "%s.net.gateway", profile_dbprotected);
+	Qaullib_DbSetConfigValue(key, value_dbprotected);
+	Qaullib_DbSetConfigValue("net.gateway", value_dbprotected);
+
+	// ns1 DNS server
+	mg_get_var(post, strlen(post == NULL ? "213.136.78.232" : post), "ns1", value, sizeof(MAX_IP_LEN +1));
+	Qaullib_StringDbProtect(value_dbprotected, value, sizeof(value_dbprotected));
+	sprintf(key, "%s.net.ns1", profile_dbprotected);
+	Qaullib_DbSetConfigValue(key, value_dbprotected);
+	Qaullib_DbSetConfigValue("net.ns1", value_dbprotected);
+
+	// ns2 DNS server
+	mg_get_var(post, strlen(post == NULL ? "77.67.33.81" : post), "ns2", value, sizeof(MAX_IP_LEN +1));
+	Qaullib_StringDbProtect(value_dbprotected, value, sizeof(value_dbprotected));
+	sprintf(key, "%s.net.ns2", profile_dbprotected);
+	Qaullib_DbSetConfigValue(key, value_dbprotected);
+	Qaullib_DbSetConfigValue("net.ns2", value_dbprotected);
+
+	// wifi channel
+	mg_get_var(post, strlen(post == NULL ? "11" : post), "channel", value, sizeof(MAX_INTSTR_LEN +1));
+	value_int = atoi(value);
+	sprintf(key, "%s.wifi.channel", profile_dbprotected);
+	Qaullib_DbSetConfigValueInt(key, value_int);
+	Qaullib_DbSetConfigValueInt("wifi.channel", value_int);
+
+	// wifi ssid
+	mg_get_var(post, strlen(post == NULL ? "" : post), "ssid", value, sizeof(MAX_SSID_LEN +1));
+	Qaullib_StringDbProtect(value_dbprotected, value, sizeof(value_dbprotected));
+	sprintf(key, "%s.wifi.ssid", profile_dbprotected);
+	Qaullib_DbSetConfigValue(key, value_dbprotected);
+	Qaullib_DbSetConfigValue("wifi.ssid", value_dbprotected);
+
+	// wifi bssid
+	mg_get_var(post, strlen(post == NULL ? "" : post), "bssid", value, sizeof(MAX_BSSID_LEN +1));
+	Qaullib_StringDbProtect(value_dbprotected, value, sizeof(value_dbprotected));
+	sprintf(key, "%s.wifi.bssid", profile_dbprotected);
+	Qaullib_DbSetConfigValue(key, value_dbprotected);
+	Qaullib_DbSetConfigValue("wifi.bssid", value_dbprotected);
+
+
+	mg_printf(conn, "%s", "HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+	mg_printf(conn, "{}");
+
+	free(post);
 }
 
 // ------------------------------------------------------------
