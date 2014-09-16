@@ -582,7 +582,7 @@ int qaul_network_device_get_by_interface(const char* interface_name, DBusConnect
 	}
 	dbus_message_unref(msg);
 
-	printf("qaul_network_device_get_by_interface no wifi device found\n", current_type);
+	printf("qaul_network_device_get_by_interface no wifi device found\n");
 
 	return 0;
 }
@@ -799,7 +799,7 @@ int qaul_network_find_wifi(DBusConnection* dbus_connection, qaul_dbus_device_pro
 	}
 	dbus_message_unref(msg);
 
-	printf("qaul_network_find_wifi no wifi device found\n", current_type);
+	printf("qaul_network_find_wifi no wifi device found\n");
 
 	return 0;
 }

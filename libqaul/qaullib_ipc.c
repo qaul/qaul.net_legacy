@@ -219,55 +219,39 @@ void Qaullib_IpcEvaluateMessage(union olsr_message *msg)
 // ------------------------------------------------------------
 void Qaullib_IpcEvaluateChat(union olsr_message *msg)
 {
-	char buffer[2048];
-	char* stmt = buffer;
-	char *error_exec = NULL;
 	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
 	char chat_msg[MAX_MESSAGE_LEN +1];
 	char chat_user[MAX_USER_LEN +1];
 	time_t timestamp;
+	struct qaul_msg_LL_item msg_item;
 
-	//printf("IpcEvaluateChat\n");
-	//printf("type: %i, name: %s\n", msg->v4.olsr_msgtype, msg->v4.message.chat.name);
+	// fill in values
+	msg_item.id = 0;
+	msg_item.type = QAUL_MSGTYPE_PUBLIC_IN;
 
-	// get chat & user name
-	memcpy(&chat_user, msg->v4.message.chat.name, MAX_USER_LEN);
-	memcpy(&chat_user[MAX_USER_LEN], "\0", 1);
-	memcpy(&chat_msg, msg->v4.message.chat.msg, MAX_MESSAGE_LEN);
-	memcpy(&chat_msg[MAX_MESSAGE_LEN], "\0", 1);
+	// get msg
+	memcpy(&msg_item.msg, msg->v4.message.chat.msg, MAX_MESSAGE_LEN);
+	memcpy(&msg_item.msg[MAX_MESSAGE_LEN], "\0", 1);
 
-	// TODO: ipv6
+	// get name
+	memcpy(&msg_item.name, msg->v4.message.chat.name, MAX_USER_LEN);
+	memcpy(&msg_item.name[MAX_USER_LEN], "\0", 1);
+
+	// set time
 	time(&timestamp);
-	sprintf(stmt,
-			sql_msg_set_received,
-			1,
-			chat_user,
-			chat_msg,
-			inet_ntop(AF_INET, &msg->v4.originator, (char *)&ipbuf, sizeof(ipbuf)),
-			4,
-			(int)timestamp,
-			(int)msg->v4.hopcnt,
-			(int)msg->v4.ttl,
-			(int)ntohs(msg->v4.seqno),
-			me_to_reltime(msg->v4.olsr_vtime)
-			);
+	msg_item.time = (int)timestamp;
 
-	if(QAUL_DEBUG)
-		printf("statement: %s\n", stmt);
+	// set read
+	msg_item.read = 0;
 
-	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
-	{
-		printf("SQLite error: %s\n", error_exec);
-		sqlite3_free(error_exec);
-		error_exec=NULL;
-	}
+	// set ip
+	// todo: ipv6
+	msg_item.ipv = 4;
+	strncpy(msg_item.ip, inet_ntop(AF_INET, &msg->v4.originator, (char *)&ipbuf, sizeof(ipbuf)), sizeof(msg_item.ip));
+	memcpy(&msg_item.ip_union.v4, &msg->v4.originator, sizeof(msg_item.ip_union.v4));
 
-	// remember username
-	union olsr_ip_addr ip;
-	memcpy(&ip.v4, &msg->v4.originator, sizeof(msg->v4.originator));
-	Qaullib_UserCheckUser(&ip, chat_user);
-
-	qaul_new_msg++;
+  	// save Message
+	Qaullib_MsgAdd(&msg_item);
 }
 
 // ------------------------------------------------------------
@@ -414,6 +398,7 @@ void Qaullib_IpcSendCom(int commandId)
 
 	// pack chat into olsr message
 	// ipv4 only at the moment
+	memset(&msg->v4.originator, 0, sizeof(msg->v4.originator));
     msg->v4.olsr_msgtype = QAUL_IPCCOM_MESSAGE_TYPE;
     msg->v4.message.ipc.type = commandId;
     size = sizeof( struct qaul_ipc_msg);
@@ -450,6 +435,7 @@ void Qaullib_IpcSendUserhello(void)
 
 	// send user hello message
 	// todo: ipv6
+	memset(&m->v4.originator, 0, sizeof(m->v4.originator));
 	m->v4.olsr_msgtype = QAUL_USERHELLO_MESSAGE_TYPE;
 	memcpy(&m->v4.message.userhello.name, qaul_username, MAX_USER_LEN);
 	//memcpy(&m->v4.message.userhello.icon, "\0", 1);

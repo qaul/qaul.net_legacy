@@ -399,7 +399,7 @@
             
             // get bssid and channel
             char config_ibss_c[32 +1];
-            Qaullib_GetConfString("wifi.ibss", config_ibss_c);
+            Qaullib_GetConfString("wifi.ssid", config_ibss_c);
             NSString *myibss = [NSString stringWithFormat:@"%s", config_ibss_c];
             
             success = [qaulConfigWifi connect2network:myibss channel:Qaullib_GetConfInt("wifi.channel") interface:qaulWifiInterface service:qaulServiceId];

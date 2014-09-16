@@ -198,6 +198,13 @@ int Qaullib_IpcConnect(void);
 int Qaullib_ExistsUsername(void);
 
 /**
+ * get network profile name
+ *
+ * @retval string string name, such as "qaul"
+ */
+const char* Qaullib_GetNetProfile(void);
+
+/**
  * get IP protocol version
  *
  * @retval 4 IPv4
@@ -215,6 +222,13 @@ int Qaullib_GetNetProtocol(void);
 int Qaullib_GetNetMask(void);
 
 /**
+ * get network broadcast address
+ *
+ * @retval string of broadcast address such as "10.255.255.255"
+ */
+const char* Qaullib_GetNetBroadcast(void);
+
+/**
  * get network gateway
  *
  * @retval string of gateway e.g. "0.0.0.0"
@@ -222,11 +236,11 @@ int Qaullib_GetNetMask(void);
 const char* Qaullib_GetNetGateway(void);
 
 /**
- * get wifi ibss name
+ * get wifi ssid name
  *
- * @retval string of ibss name e.g. "qaul.net"
+ * @retval string of ssid name e.g. "qaul.net"
  */
-const char* Qaullib_GetWifiIbss(void);
+const char* Qaullib_GetWifiSsid(void);
 
 /**
  * check if the wifi bss id is set
@@ -237,7 +251,7 @@ const char* Qaullib_GetWifiIbss(void);
 int Qaullib_GetWifiBssIdSet(void);
 
 /**
- * get wifi ibss id
+ * get wifi ibss cell id
  *
  * @retval string of bss id e.g. "B6:B5:B3:F5:AB:E4"
  */
@@ -258,6 +272,20 @@ int Qaullib_GetWifiChannel(void);
 const char* Qaullib_GetIP(void);
 
 /**
+ * get NS1 (DNS name server 1)
+ *
+ * @retval string of NS1 e.g. "213.136.78.232"
+ */
+const char* Qaullib_GetNetNs1(void);
+
+/**
+ * get NS2 (DNS name server 2)
+ *
+ * @retval string of NS2 e.g. "77.67.33.81"
+ */
+const char* Qaullib_GetNetNs2(void);
+
+/**
  * check if the interface is set manually
  *
  * @retval 1 interface is set manually
@@ -271,9 +299,9 @@ int Qaullib_GetInterfaceManual(void);
 void Qaullib_SetInterfaceManual(int value);
 
 /**
- * get wifi ibss id
+ * get network interface name
  *
- * @retval string of bss id e.g. "B6:B5:B3:F5:AB:E4"
+ * @retval string of network interface name e.g. "wlan0"
  */
 const char* Qaullib_GetInterface(void);
 

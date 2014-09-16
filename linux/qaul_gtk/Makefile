@@ -88,6 +88,7 @@ SRC= $(DISTBASE)/libqaul/qaullib.c $(DISTBASE)/libqaul/qaullib_ipc.c $(DISTBASE)
      $(DISTBASE)/libqaul/qaullib_user.c $(DISTBASE)/libqaul/qaullib_user_LL.c \
      $(DISTBASE)/libqaul/qaullib_topo_LL.c \
      $(DISTBASE)/libqaul/qaullib_appevent_LL.c \
+     $(DISTBASE)/libqaul/qaullib_messaging.c $(DISTBASE)/libqaul/qaullib_msg_LL.c $(DISTBASE)/libqaul/qaullib_validate.c \
      $(DISTBASE)/libqaul/qaullib_filesharing.c $(DISTBASE)/libqaul/qaullib_file_LL.c \
      $(DISTBASE)/libqaul/qaullib_exediscovery.c \
      $(DISTBASE)/libqaul/qaullib_udp_communication.c \

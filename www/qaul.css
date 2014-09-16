@@ -237,6 +237,10 @@ a.unavailable {
 	float:left;
 	margin:0 5px 0 0;
 }
+.file img.loadericon64 {
+	float:left;
+	margin:15px 19px 15px 15px;
+}
 .file .filename {
 	margin-top:15px;
 }
@@ -313,6 +317,15 @@ span.suffix {
 	text-align:center;
 }
 
+img.rotate {
+    transition: 200s linear;
+    -webkit-transform: rotate(36000deg);	
+	-moz-transform: rotate(36000deg);
+	-ms-transform: rotate(36000deg);
+	-o-transform: rotate(36000deg);
+	transform: rotate(36000deg);
+}
+
 /* -- call -- */
 #page_call_title {
 	margin:0;
@@ -368,6 +381,18 @@ span.suffix {
 }
 .ui-listview li.c_network {
 	display:none;
+}
+
+.ui-body {
+	margin-top:10px;
+	margin-bottom:30px;
+}
+
+#c_network_config_info{
+	margin-bottom:20px;
+}
+.c_network_submit {
+	margin-top:30px;
 }
 
 /* --- bugfixing elements --- */

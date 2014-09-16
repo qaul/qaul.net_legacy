@@ -83,6 +83,9 @@ void Qaullib_UDP_SendFileavailableMsg(struct qaul_fileavailable_msg *msg, union 
 		char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
 		inet_ntop(destAddr.sin_family, &destAddr.sin_addr, (char *)&ipbuf, MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN));
 		printf("Qaullib_UDP_SendFileavailableMsg to: %s\n", ipbuf);
+
+		inet_ntop(AF_INET, &ip->v4, (char *)&ipbuf, MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN));
+		printf("Qaullib_UDP_SendFileavailableMsg 2 to: %s\n", ipbuf);
 	}
 
 	status = sendto(

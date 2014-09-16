@@ -110,6 +110,7 @@ void Qaullib_ExeScheduleDiscovery(void)
 
 			// fill in exe discovery message
 			// todo: ipv6
+			memset(&m->v4.originator, 0, sizeof(m->v4.originator));
 			size  = sizeof(struct qaul_exediscover_msg);
 			size += sizeof(struct olsrmsg);
 			m->v4.olsr_msgsize = htons(size);

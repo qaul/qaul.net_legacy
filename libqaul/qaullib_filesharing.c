@@ -78,6 +78,11 @@ void Qaullib_FileInit(void)
 
 	// get the files from DB
 	Qaullib_FileDB2LL();
+
+	// get auto download configuration from DB
+	qaul_file_autodownload = Qaullib_GetConfInt("files.autodownload");
+	qaul_file_space_max = Qaullib_GetConfInt("files.space.max");
+	qaul_file_size_max = Qaullib_GetConfInt("files.filesize.max");
 }
 
 // ------------------------------------------------------------
@@ -161,7 +166,7 @@ int Qaullib_FileExists(char *path)
 int Qaullib_FileAdd(struct qaul_file_LL_item *file_item)
 {
 	if(QAUL_DEBUG)
-		printf("Qaullib_FileAdd\n");
+		printf("Qaullib_FileAdd: %s.%s size[%i] status[%i]\n", file_item->hashstr, file_item->suffix, file_item->size, file_item->status);
 
 	// check if file already exists
 	if(!Qaullib_File_LL_HashExists(file_item->hash))
@@ -349,9 +354,11 @@ void Qaullib_FileSendDiscoveryMsg(struct qaul_file_LL_item *file_item)
 	file_item->status = QAUL_FILESTATUS_DISCOVERING;
 
 	// todo: ipv6
+	memset(&m->v4.originator, 0, sizeof(m->v4.originator));
 	m->v4.olsr_msgtype = QAUL_FILEDISCOVER_MESSAGE_TYPE;
 	memcpy(&m->v4.message.filediscover.hash, &file_item->hash, MAX_HASH_LEN);
 
+	// calculate message size
 	size  = sizeof(struct qaul_filediscover_msg);
 	size += sizeof(struct olsrmsg);
 	m->v4.olsr_msgsize = htons(size);
@@ -884,11 +891,18 @@ void Qaullib_FileDownloadFailed(struct qaul_file_connection *fileconnection)
 	if(fileconnection->file != NULL)
 		fclose(fileconnection->file);
 
+	printf("Qaullib_FileDownloadFailed 1\n");
+
 	// remove this seeder from list
 	memcpy(&ip.v4, &fileconnection->conn.ip, sizeof(ip.v4));
 	Qaullib_Filediscovery_LL_DeleteSeederIp(fileconnection->fileinfo, &ip);
+
+	printf("Qaullib_FileDownloadFailed 2\n");
+
 	// reschedule file
 	Qaullib_FileUpdateStatus(fileconnection->fileinfo, QAUL_FILESTATUS_DISCOVERED);
+
+	printf("Qaullib_FileDownloadFailed 3\n");
 }
 
 // ------------------------------------------------------------
@@ -897,13 +911,13 @@ int Qaullib_FileCompareFileSize(struct qaul_file_connection *fileconnection, int
 	if(QAUL_DEBUG)
 		printf("Qaullib_FileCompareFileSize\n");
 
-	if(fileconnection->fileinfo->size > 0 && fileconnection->fileinfo->downloaded > 0)
+	if(fileconnection->fileinfo->size > 1024 && fileconnection->fileinfo->downloaded > 0)
 	{
 		// check if file size matches
 		if(fileconnection->fileinfo->size != filesize)
 		{
 			if(QAUL_DEBUG)
-				printf("Qaullib_FileCheckSockets file sizes didn't mach: %i != %i\n", fileconnection->fileinfo->size, filesize);
+				printf("Qaullib_FileCheckSockets file sizes didn't match: %i != %i\n", fileconnection->fileinfo->size, filesize);
 
 			return 0;
 		}

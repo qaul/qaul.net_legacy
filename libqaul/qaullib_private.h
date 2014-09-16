@@ -36,19 +36,22 @@ extern "C" {
 #include "qaullib.h"
 #include "olsrd_types.h"
 #include "qaullib_defines.h"
+#include "qaullib_validate.h"
 #include "qaullib_webclient.h"
 #include "qaullib_topo_LL.h"
 #include "qaullib_appevent_LL.h"
 #include "qaullib_user_LL.h"
 #include "qaullib_user.h"
+#include "qaullib_file_LL.h"
+#include "qaullib_filesharing.h"
+#include "qaullib_msg_LL.h"
+#include "qaullib_messaging.h"
 #include "qaullib_threads.h"
 #include "olsrd/mantissa.h"
 #include "mongoose/mongoose.h"
 #include "qaullib_webserver.h"
 #include "sqlite/sqlite3.h"
 #include "qaullib_sql.h"
-#include "qaullib_file_LL.h"
-#include "qaullib_filesharing.h"
 #include "qaullib_exediscovery.h"
 #include "qaullib_ipc.h"
 #include "qaullib_voip.h"
@@ -104,19 +107,26 @@ union olsr_message *qaul_in_msg;
  ***********************************************/
 char qaul_username[MAX_USER_LEN +1];
 int qaul_username_set;
-char qaul_ip_str[MAX_IP_LEN +1];    // string of the IP
-union olsr_ip_addr qaul_ip_addr;	// binary IP address
 // ip
 int qaul_ip_version;                // IP version 4/6
 int qaul_ip_size;
 int qaul_ip_set;
+char qaul_ip_str[MAX_IP_LEN +1];    // string of the IP
+union olsr_ip_addr qaul_ip_addr;	// binary IP address
 // network
+char qaul_net_profile[255 +1];      // profile name
+char qaul_net_broadcast[MAX_IP_LEN +1]; // broadcast address
 char qaul_net_gateway[MAX_IP_LEN +1]; // string of the gateway IP
-char qaul_net_ibss[255 +1];           // string of the IBSS name
+char qaul_net_ns1[MAX_IP_LEN +1];     // DNS 1 IP address
+char qaul_net_ns2[MAX_IP_LEN +1];     // DNS 2 IP address
+char qaul_net_ssid[255 +1];           // string of the SSID name
 char qaul_net_bssid[17 +1];           // string of the BSSID
 char qaul_net_interface[255 +1];      // string of the interface
 int  qaul_interface_configuring;
 char qaul_interface_json[MAX_JSON_LEN +1]; // json string of the actual interfaces
+// internet sharing
+int  qaul_internet_share;
+char qaul_internet_interface[255 +1]; // string of the interface to share the Internet
 
 // locale i18n
 int qaul_locale_set;

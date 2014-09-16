@@ -88,7 +88,7 @@
 <div data-role="page" id="page_config_interface" data-theme="a">
 	<div data-role="content" >
 		<p>
-			<form action="interface" method="post" id="config_interface_form">
+			<form action="interface" method="post" id="form_config_interface">
 				
 				<div class="ui-field-contain" style="width:100%;">
 					<label for="interface_select_auto" class="i18n" style="with:auto;">Select network interface manually</label>
@@ -101,90 +101,197 @@
 				<div class="c_interface_manual" id="c_interface_manual">
 				</div>
 				
-				<input class="submit i18n" type="submit" value="Save" id="interface_submit"/>
+				<input class="submit i18n" type="submit" value="Save" id="c_interface_submit"/>
 			</form>
 		</p>
 		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
 	</div>
 </div>
 
-<div data-role="page" id="page_config_internet-sharing" data-theme="a">
+<div data-role="page" id="page_config_internet" data-theme="a">
 	<div data-role="content" >
 		<p>
 			<form action="internet" method="post" id="form_config_internet">
-				<div id="c_internet_interface">
-				<fieldset data-role="controlgroup">
-					<legend>Share Internet connection from</legend>
-					
-					<input type="radio" name="if" value="en0" id="interface_en0" />
-					<label for="interface_en0" class="i18n">Ethernet</label>
-			
-					<input type="radio" name="if" value="en1" id="interface_en1" checked="checked" />
-					<label for="interface_en1" class="i18n">Wi-Fi</label>
-			
-					<input type="radio" name="if" value="en10" id="interface_en10" />
-					<label for="interface_en10" class="i18n">Wi-Fi USB Stick</label>
-				</fieldset>
+				
+				<div class="ui-field-contain" style="width:100%;">
+					<label for="c_internet_share" class="i18n" style="with:auto;">Share Your Internet Connection</label>
+					<select name="share" id="c_internet_share" data-role="flipswitch">
+						<option value="0" class="i18n" selected="selected">Off</option>
+						<option value="1" class="i18n">On</option>
+					</select>
 				</div>
-				<input class="submit i18n" type="submit" value="Start Internet Sharing" id="interface_submit"/>
+				
+				<div class="c_internet_interface" id="c_internet_interface">
+				</div>
+				
+				<input class="submit i18n" type="submit" value="Save" id="c_internet_submit"/>
+			</form>
+		</p>
+		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
+	</div>
+	<div data-role="popup" id="c_internet_popup" data-transition="popup" class="ui-content">
+		<p class="i18n">Please select a network interface with internet connection.</p>
+	</div>
+</div>
+
+<div data-role="page" id="page_config_network" data-theme="a">
+	<div data-role="content" >
+		<p>
+			<form action="network" method="post" id="form_config_network" class="validate">
+				<div>
+					<label for="c_network_profile">Select Network Profile</label>
+					<select name="profile" id="c_network_profile">
+						<option value="qaul">qaul.net</option>
+						<option value="ff_berlin">Freifunk Berlin</option>
+						<option value="ff_leipzig">Freifunk Leipzig</option>
+						<option value="ff_weimar">Freifunk Weimar</option>
+						<option value="custom" class="i18n">custom</option>
+					</select>
+				</div>
+				
+				<div class="ui-body ui-body-a ui-corner-all" id="c_network_info">
+					qaul.net is completely self configuring.<br/><br/>
+				</div>
+				<div class="ui-body ui-body-a ui-corner-all" id="c_network_config">
+					<div id="c_network_config_info">
+					</div>
+					<div class="c_network_config_ip">
+						<label for="c_network_config_ip" class="i18n">IP Address</label>
+						<input type="text" name="ip" id="c_network_config_ip" class="required nospaces ipv4"/>
+					</div>
+					<div class="c_network_config_mask">
+						<label for="c_network_config_mask" class="i18n">Network Mask</label>
+						<input type="text" name="mask" id="c_network_config_mask" class="required nospaces"/>
+					</div>
+					<div class="c_network_config_broadcast">
+						<label for="c_network_config_broadcast" class="i18n">Broadcast Address</label>
+						<input type="text" name="broadcast" id="c_network_config_broadcast" class="required nospaces ipv4"/>
+					</div>
+					<div class="c_network_config_channel">
+						<label for="c_network_config_channel" class="i18n">Wifi Channel</label>
+						<select name="channel" id="c_network_config_channel">
+							<optgroup label="2.4 GHz">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+							</optgroup>
+							<optgroup label="5 GHz">
+								<option value="34">34</option>
+								<option value="36">36</option>
+								<option value="38">38</option>
+								<option value="40">40</option>
+								<option value="42">42</option>
+								<option value="44">44</option>
+								<option value="46">46</option>
+								<option value="48">48</option>
+								<option value="52">52</option>
+								<option value="56">56</option>
+								<option value="60">60</option>
+								<option value="64">64</option>
+								<option value="100">100</option>
+								<option value="104">104</option>
+								<option value="108">108</option>
+								<option value="112">112</option>
+								<option value="116">116</option>
+								<option value="120">120</option>
+								<option value="124">124</option>
+								<option value="128">128</option>
+								<option value="132">132</option>
+								<option value="136">136</option>
+								<option value="140">140</option>
+								<option value="149">149</option>
+								<option value="153">153</option>
+								<option value="157">157</option>
+								<option value="161">161</option>
+								<option value="165">165</option>
+								<option value="183">183</option>
+								<option value="184">184</option>
+								<option value="185">185</option>
+								<option value="187">187</option>
+								<option value="188">188</option>
+								<option value="189">189</option>
+								<option value="192">192</option>
+								<option value="196">196</option>
+							</optgroup>
+						</select>
+					</div>
+					<div class="c_network_config_ssid">
+						<label for="c_network_config_ssid" class="i18n">SSID (Network Name)</label>
+						<input type="text" name="ssid" id="c_network_config_ssid" class="required nospaces"/>
+					</div>
+					<div class="c_network_config_bssid">
+						<label for="c_network_config_bssid" class="i18n">BSSID (Cell-ID)</label>
+						<input type="text" name="bssid" id="c_network_config_bssid" class="nospaces"/>
+					</div>
+				</div>
+				
+				<div class="c_network_submit">
+					<input class="submit i18n" type="submit" value="Save" id="c_network_submit"/>
+				</div>
 			</form>
 		</p>
 		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
 	</div>
 </div>
 
-<div data-role="page" id="page_config_custom-network" data-theme="a">
+<div data-role="page" id="page_config_files" data-theme="a">
 	<div data-role="content" >
 		<p>
-			<form action="custom-network" method="post" id="form_config_custom-network">
-				<div class="ui-field-contain">
-					<label for="custom-network_profile">Select Network Profile</label>
-					<select name="profile" id="custom-network_profile">
-						<option value="qaul">qaul.net</option>
-						<option value="ff_berlin">Freifunk Berlin</option>
-						<option value="custom">custom</option>
+			<form action="filesharing" method="post" id="form_config_files">
+				
+				<div class="ui-field-contain" style="width:100%;">
+					<label for="c_files_autodownload_select" class="i18n" style="with:auto;">Automatically Download Advertised Files</label>
+					<select name="ad" id="c_files_autodownload_select" data-role="flipswitch">
+						<option value="0" class="i18n" selected="selected">Off</option>
+						<option value="1" class="i18n">On</option>
 					</select>
 				</div>
 				
-				<div id="custom-network_config-info">
-					qaul.net is completly self configuring.<br/><br/>
-				</div>
-				<div id="custom-network_config">
-					<label for="custom-network_config_ip" class="i18n">IP Address</label>
-					<input type="text" name="ip" id="custom-network_config_ip" class="nospaces ipv4"/>
-					
-					<label for="network_config_mask" class="i18n">Network Mask</label>
-					<input type="text" name="mask" id="network_config_mask" class="nospaces ipv4"/>
-					
-					<label for="network_config_broadcast" class="i18n">Broadcast Address</label>
-					<input type="text" name="broadcast" id="network_config_broadcast" class="nospaces ipv4"/>
-
-					<label for="network_config_channel" class="i18n">Wifi Channel</label>
-					<select name="channel" id="network_config_channel">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="7">7</option>
-						<option value="8">8</option>
-						<option value="9">9</option>
-						<option value="10">10</option>
-						<option value="11">11</option>
-						<option value="12">12</option>
-						<option value="13">13</option>
-						<option value="14">14</option>
+				<!--<div class="ui-body ui-body-a ui-corner-all" id="c_files_autodownload">-->
+				<div style="display:none;">
+					<label for="c_download_space" class="i18n">Max Download Space</label>
+					<select name="space" id="c_download_space">
+						<option value="0" selected="selected" class="i18n">unlimited</option>
+						<option value="5000" class="i18n"   >500MB</option>
+						<option value="10000" class="i18n"    >1GB</option>
+						<option value="20000" class="i18n"    >2GB</option>
+						<option value="60000" class="i18n"    >6GB</option>
+						<option value="140000" class="i18n"  >14GB</option>
+						<option value="300000" class="i18n"  >30GB</option>
+						<option value="600000" class="i18n"  >60GB</option>
+						<option value="1200000" class="i18n">120GB</option>
+						<option value="2400000" class="i18n">240GB</option>
+						<option value="4800000" class="i18n">480GB</option>
+					</select>	
+					<label for="c_download_filesize" class="i18n">Only Download Files Smaller Than</label>
+					<select name="size" id="c_download_filesize">
+						<option value="0" selected="selected">unlimited</option>
+						<option value="1"     class="i18n">100KB</option>
+						<option value="5"     class="i18n">500KB</option>
+						<option value="10"    class="i18n">1MB</option>
+						<option value="50"    class="i18n">5MB</option>
+						<option value="150"   class="i18n">15MB</option>
+						<option value="500"   class="i18n">50MB</option>
+						<option value="1000"  class="i18n">100MB</option>
+						<option value="2500"  class="i18n">250MB</option>
+						<option value="5000"  class="i18n">500MB</option>
+						<option value="10000" class="i18n">1GB</option>
+						<option value="20000" class="i18n">2GB</option>
+						<option value="50000" class="i18n">5GB</option>
 					</select>
-
-					<label for="network_config_ssid" class="i18n">SSID (Network Name)</label>
-					<input type="text" name="ssid" id="network_config_ssid" class="nospaces"/>
-
-					<label for="network_config_bssid" class="i18n">BSSID (Cell-ID)</label>
-					<input type="text" name="bssid" id="network_config_bssid" class="nospaces"/>
 				</div>
-				
-				<input class="submit i18n" type="submit" value="Save" id="interface_submit"/>
+				<input class="submit i18n" type="submit" value="Save" id="c_files_submit"/>
 			</form>
 		</p>
 		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
@@ -253,9 +360,10 @@
 			<li data-role="list-divider" class="i18n">Configuration</li>
 			<li><a href="#page_config_locale" data-transition="none" class="i18n">Change Language</a></li>
 			<li><a href="#page_config_name" data-transition="none" class="i18n">Change User Name</a></li>
-			<li class="c_internet"><a href="#page_config_internet-sharing" data-transition="none" class="i18n">Share Internet Connection</a></li>
-			<li class="c_network"><a href="#page_config_custom-network" data-transition="none" class="i18n">Configure Custom Network</a></li>
-			<li class="c_interface"><a href="#" onclick="show_config_interface()" data-transition="none" class="i18n">Change Network Interface</a></li>
+			<li class="c_internet"><a href="javascript:config_internet_show()" data-transition="none" class="i18n">Share Internet Connection</a></li>
+			<li class="c_network"><a href="javascript:config_network_show()" data-transition="none" class="i18n">Configure Custom Network</a></li>
+			<li class="c_filesharing"><a href="javascript:config_files_show()" data-transition="none" class="i18n">Configure File Sharing</a></li>
+			<li class="c_interface"><a href="javascript:config_interface_show()" data-transition="none" class="i18n">Change Network Interface</a></li>
 		</ul>
 		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider" class="i18n">Information</li>

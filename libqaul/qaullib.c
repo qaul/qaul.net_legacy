@@ -106,6 +106,7 @@ void Qaullib_Init(const char* resourcePath)
 
 	// initialize linked lists
 	Qaullib_UserInit();
+	Qaullib_MsgInit();
 	Qaullib_FileInit();
 
 	// initialize exe discovery
@@ -726,16 +727,16 @@ int Qaullib_DbGetConfigValueInt(const char* key)
 		// For each row returned
 		while (sqlite3_step(ppStmt) == SQLITE_ROW)
 		{
-		  // For each collumn
-		  int jj;
-		  for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
-		  {
+			// For each collumn
+			int jj;
+			for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
+			{
 				if(strcmp(sqlite3_column_name(ppStmt,jj), "value_int") == 0)
 				{
 					myvalue = sqlite3_column_int(ppStmt, jj);
 					return myvalue;
 				}
-		  }
+			}
 		}
 		sqlite3_finalize(ppStmt);
 	}
@@ -900,6 +901,15 @@ void Qaullib_SetConfInt(const char *key, int value)
 }
 
 // ------------------------------------------------------------
+const char* Qaullib_GetNetProfile(void)
+{
+	if (Qaullib_GetConfString("net.profile", qaul_net_profile))
+	{
+		return qaul_net_profile;
+	}
+	return "custom";
+}
+
 int Qaullib_GetNetProtocol(void)
 {
 	int protocol = Qaullib_DbGetConfigValueInt("net.protocol");
@@ -915,6 +925,15 @@ int Qaullib_GetNetMask(void)
 	return Qaullib_DbGetConfigValueInt("net.mask");
 }
 
+const char* Qaullib_GetNetBroadcast(void)
+{
+	if (Qaullib_DbGetConfigValue("wifi.ssid", qaul_net_broadcast))
+	{
+		return qaul_net_ssid;
+	}
+	return "";
+}
+
 const char* Qaullib_GetNetGateway(void)
 {
 	if (Qaullib_DbGetConfigValue("net.gateway", qaul_net_gateway))
@@ -924,11 +943,29 @@ const char* Qaullib_GetNetGateway(void)
 	return "0.0.0.0";
 }
 
-const char* Qaullib_GetWifiIbss(void)
+const char* Qaullib_GetNetNs1(void)
 {
-	if (Qaullib_DbGetConfigValue("wifi.ibss", qaul_net_ibss))
+	if (Qaullib_DbGetConfigValue("net.ns1", qaul_net_ns1))
 	{
-		return qaul_net_ibss;
+		return qaul_net_ns1;
+	}
+	return "77.67.33.81";
+}
+
+const char* Qaullib_GetNetNs2(void)
+{
+	if (Qaullib_DbGetConfigValue("net.ns2", qaul_net_ns2))
+	{
+		return qaul_net_ns2;
+	}
+	return "77.67.33.81";
+}
+
+const char* Qaullib_GetWifiSsid(void)
+{
+	if (Qaullib_DbGetConfigValue("wifi.ssid", qaul_net_ssid))
+	{
+		return qaul_net_ssid;
 	}
 	return "";
 }

@@ -181,6 +181,7 @@ SRC= ../libqaul/qaullib.c ../libqaul/qaullib_ipc.c ../libqaul/qaullib_webserver.
      ../libqaul/qaullib_user.c ../libqaul/qaullib_user_LL.c \
      ../libqaul/qaullib_topo_LL.c \
      ../libqaul/qaullib_appevent_LL.c \
+     ../libqaul/qaullib_messaging.c ../libqaul/qaullib_msg_LL.c ../libqaul/qaullib_validate.c \
      ../libqaul/qaullib_filesharing.c ../libqaul/qaullib_file_LL.c \
      ../libqaul/qaullib_exediscovery.c \
      ../libqaul/qaullib_udp_communication.c \
