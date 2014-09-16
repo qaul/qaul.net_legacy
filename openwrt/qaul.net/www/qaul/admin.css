@@ -22,7 +22,6 @@ img {
 
 .header {
 	background-color: #f3f3f3;
-	border-bottom: 1px solid #ccc;
 	margin:0 0 30px 0;
 	padding:10px;
 	text-align:left;
@@ -30,7 +29,17 @@ img {
 }
 .header button {
 	float:right;
+	color:#bbb;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	border-radius: 15px;
+	padding:5px 10px;
 }
+.header button:hover {
+	border-color: #000;
+	color: #000;
+}
+
 .content {
 	max-width:450px;
 	margin:0 auto;
@@ -39,15 +48,16 @@ img {
 	margin: 30px 0;
 }
 .choice {
-	background-color: #ffffff;
-	background: linear-gradient(to bottom, #ffffff, #eaeaea);
 	border: 1px solid #cccccc;
-	padding:10px;
+	padding: 10px;
+	text-align: left;
 }
 .choice:hover {
-	background-color: #eaeaea;
-	background: linear-gradient(to bottom, #ffffff, #dadada);
-	color:#436fa1;
+	border: 1px solid #000;
+	color:#000;
+}
+.checkbox {
+	
 }
 
 .switch {
@@ -65,7 +75,7 @@ img {
 }
 
 .button, .toggle, .switch {
-	box-shadow: 0 1px 0 #a7aaad;
+	
 }
 
 .choice.button, .choice.toggle, .switch, .switch .choice:only-child {
@@ -74,16 +84,21 @@ img {
 }
 
 .choice.selected {
-	background-color: #6399cc;
-	background: linear-gradient(to bottom, #c9eeff, #6399cc);
+	color:#50b7ff;
+	border-color: #50b7ff;
+	border-width: 1px;
+}
+.choice.selected:hover {
 	color:#000;
-} 
+	border-color: #000;
+}
 
 #page_login, 
 #page_newpassword, 
-#page_mobile, 
-#page_main,
-#eth_config {
+#page_storage,
+#page_mobile,
+#page_eth,
+#page_main {
 	display:none;
 }
 
@@ -117,10 +132,9 @@ img.rotate {
 	text-align:left;
     border: 1px solid #e1e3e3;
     border-bottom-color:#e5e5e6;
-    box-shadow: 0 -1px 0 #a7aaad;
     border-radius:10px;
     background-color:rgba(255,255,255,0.8);
-    padding:10px;
+    padding:0 10px;
     margin:50px 5px 5px 5px;
 }
 .form_box h2 {
@@ -132,8 +146,6 @@ input {
     padding:0.3em 0.1em;
     text-indent:5px;
     border: 1px solid #e1e3e3;
-    border-bottom-color:#e5e5e6;
-    box-shadow: 0 -1px 0 #a7aaad;
     border-radius:3px;
     font-size:16px;
     font-family:inherit;
@@ -141,5 +153,10 @@ input {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box; 
     margin:0.5em 0em 1.0em 0em;
+}
+input.checkbox {
+	display:inline;
+	width:0%;
+	margin:0 0.5em 0 0;
 }
 

@@ -12,32 +12,24 @@
 <div id="page_main">
 	<div class="header">
 		<button onclick="config('logout')">logout</button>
+		<div id="header_ifconfig"></div>
 	</div>
 	<div class="content">
 		<div class="section">
-			<div onclick="config('internet_on')" id="internet" class="choice toggle">
-				Share Internet
+			<div class="button choice" id="internet_button" onclick="config('internet_on')">
+				<input type="checkbox" name="internet_checkbox" value="internet" onclick="config('internet_on')" id="internet_checkbox" class="checkbox" />
+				<label for="internet_checkbox">Share Internet</label>
 			</div>
 		</div>
-		<div class="section">
-			<div onclick="config('storage')" id="storage" class="choice button">
-				USB storage
+		<div class="section switch">
+			<div onclick="config_storage()" id="storage" class="choice">
+				Configure USB Storage
 			</div>
-		</div>
-		<div class="section">
-			<div onclick="config_mobile()" id="mobile" class="choice button">
-				Mobile Internet Stick
+			<div onclick="config_mobile()" id="mobile" class="choice">
+				Configure Mobile Internet Stick
 			</div>
-		</div>
-		<div id="eth_config">
-			<h2>Configure Ethernet</h2>
-			<div class="section switch">
-				<div onclick="config('eth_wan')" id="eth_wan" class="choice selected">
-					<strong>WAN</strong> connect to Internet
-				</div>
-				<div onclick="config('eth_qaul')" id="eth_qaul" class="choice">
-					<strong>qaul</strong> connect to other Antenna
-				</div>
+			<div onclick="config_eth()" id="network_eth" class="choice">
+				Configure Ethernet Network
 			</div>
 		</div>
 	</div>
@@ -67,6 +59,20 @@
 	</div>
 </div>
 
+<div id="page_storage" class="content">
+	<div class="form_box">
+		<h2>Configure USB Storage</h2>
+		<p>You need to have a USB stick plugged into your Router</p>
+		<p>This will delete all the content on your USB stick!</p>
+		<p>After configuration, the router will boot automatically from the USB stick.</p>
+		<form onsubmit="submit_storage()">
+			<input type="submit" name="submit" value="Configure USB Storage" />
+		</form>
+		<br/><br/>
+		<input type="button" name="cancel" value="Back" onclick="back()"/>
+	</div>
+</div>
+
 <div id="page_mobile" class="content">
 	<div class="form_box">
 		<h2>Configure 3G Internet</h2>
@@ -86,6 +92,20 @@
 	</div>
 </div>
 
+<div id="page_eth" class="content">
+	<div class="form_box">
+		<h2>Configure Ethernet Network</h2>
+		<div class="section switch">
+			<div onclick="config('eth_wan')" id="eth_wan" class="choice selected">
+				<strong>WAN</strong> connect to Internet
+			</div>
+			<div onclick="config('eth_qaul')" id="eth_qaul" class="choice">
+				<strong>qaul</strong> connect to other Antenna
+			</div>
+		</div>
+		<br/><br/>
+		<input type="button" name="cancel" value="Back" onclick="back()"/>
+	</div>
 </div>
 
 <div id="loading"><img src="/qaul/loader.png" alt="loading" id="loader" class=""/></div>

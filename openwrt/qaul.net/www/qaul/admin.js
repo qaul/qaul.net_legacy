@@ -18,19 +18,33 @@ function load_config()
 		}
 		else if(data.auth == 1)
 		{
-			hide_all("#page_main");
-			$("#page_main").show();
+			if($("#page_eth").is(':visible'))
+			{
+				hide_all("#page_eth");
+				$("#page_eth").show();
+			}
+			else
+			{
+				hide_all("#page_main");
+				$("#page_main").show();
+			}
 			
 			if(data.internet)
 			{
-				$('#internet').addClass('selected')
+				$('#internet_button').addClass('selected')
 					.removeAttr('onclick')
+					.attr('onclick',"config('internet_off')");
+				$('#internet_checkbox').prop('checked', true);
+				$('#internet_checkbox').removeAttr('onclick')
 					.attr('onclick',"config('internet_off')");
 			}
 			else
 			{
-				$('#internet').removeClass('selected')
+				$('#internet_button').removeClass('selected')
 					.removeAttr('onclick')
+					.attr('onclick',"config('internet_on')");
+				$('#internet_checkbox').prop('checked', false);
+				$('#internet_checkbox').removeAttr('onclick')
 					.attr('onclick',"config('internet_on')");
 			}
 				
@@ -46,7 +60,7 @@ function load_config()
 				
 			if(data.eth_config)
 			{
-				$("#eth_config").show();
+				$("#network_eth").show();
 				
 				if(data.eth == 'qaul')
 				{
@@ -62,8 +76,9 @@ function load_config()
 			
 			if(data.config)
 			{
+				$("#header_ifconfig").empty();
 				data.config.forEach(function(item){
-					$("div.header").append(item +"<br/>");
+					$("#header_ifconfig").append(item +"<br/>");
 				});
 			}
 		}
@@ -93,12 +108,26 @@ function config(target)
 	}).error(function(){
 		alert('configuration error');
 	});
+	
+	return false;
+}
+
+function config_storage()
+{
+	hide_all("#page_storage");
+	$("#page_storage").show();
 }
 
 function config_mobile()
 {
 	hide_all("#page_mobile");
 	$("#page_mobile").show();
+}
+
+function config_eth()
+{
+	hide_all("#page_eth");
+	$("#page_eth").show();
 }
 
 function hide_all(exept)
@@ -109,8 +138,12 @@ function hide_all(exept)
 		$("#page_login").hide();
 	if(exept != "#page_newpassword")
 		$("#page_newpassword").hide();
+	if(exept != "#page_storage")
+		$("#page_storage").hide();
 	if(exept != "#page_mobile")
 		$("#page_mobile").hide();
+	if(exept != "#page_eth")
+		$("#page_eth").hide();
 }
 
 function back()
