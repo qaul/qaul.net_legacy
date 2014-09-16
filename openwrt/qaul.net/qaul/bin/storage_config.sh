@@ -6,8 +6,13 @@
 
 # check if stick is mounted
 
+# unmount if mounted
+umount /dev/sda1
+
 # create ext4 file system on stick
 mkfs.ext4 /dev/sda1
+## use busybox mkfs_ext2 ???
+##mkfs_ext2 /dev/sda1
 /sbin/block mount
 
 # copy file system 

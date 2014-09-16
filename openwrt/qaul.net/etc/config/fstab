@@ -7,17 +7,17 @@ config 'global'
 #	option	delay_root	'0'
 	option	check_fs	'0'
 
-config 'mount'
+config mount 'share'
 	option 'device' '/dev/sda1'
 	option 'options' 'rw,sync'
 	option 'enabled_fsck' '0'
 	option 'enabled' '1'
 	option 'target' '/mnt/share'
 
-#config mount
-#	option target	/overlay
-#	option device	/dev/sda1
-#	option fstype	ext4
-#	option options	rw,sync
-#	option enabled	1
-#	option enabled_fsck 0
+config mount 'overlay'
+	option target	/overlay
+	option device	/dev/sda1
+	option fstype	ext4
+	option options	rw,sync
+	option enabled	0
+	option enabled_fsck 0
