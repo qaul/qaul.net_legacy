@@ -6,21 +6,27 @@
 IFS="&="
 set -- $HTTP_COOKIE
 MD5STRING=$2
+AUTHFILE=/qaul/auth/$MD5STRING
 
-iptest=`cat /qaul/auth/$MD5STRING`
-
-if ["$iptest" = "$REMOTE_ADDR"]
+if [ "$MD5STRING" != "" ]
 then
-	# check how old
-	current=`date +%s`
-	last_modified=`stat -c "%Y" $file`
-	
-	if [ $(($current-$last_modified)) -gt 600 ]; then 
-		rm /qaul/auth/$MD5STRING
+	iptest=`cat $AUTHFILE`
+	if [ "$iptest" = "$REMOTE_ADDR" ]
+	then
+		# check how old
+		current=`date +%s`
+		last_modified=`stat -c "%Y" $AUTHFILE`
+		
+		if [ $(($current-$last_modified)) -gt 600 ]
+		then 
+			rm $AUTHFILE 
+			echo "0"
+		else 
+			touch $AUTHFILE
+			echo "1"
+		fi
+	else
 		echo "0"
-	else 
-		touch /qaul/auth/$MD5STRING
-		echo "1"
 	fi
 else
 	echo "0"

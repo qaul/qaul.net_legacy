@@ -1,12 +1,12 @@
 #!/bin/sh
 
-echo "Content-type: text/json"
+echo "Content-type: application/json"
 echo ""
 
 # authenticate
 qaul_auth=`/qaul/bin/authenticate.sh`
 
-if ["$qaul_auth" = "1"]
+if [ "$qaul_auth" = "1" ]
 then
 	# logout
 	/qaul/bin/logout.sh

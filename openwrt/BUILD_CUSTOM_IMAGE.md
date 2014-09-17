@@ -39,7 +39,23 @@ Preparations
     # install symlinks
     ./scripts/feeds install -a
     
-    # configure the making (everything was fine on default)
+    # configure the make file
+    # 
+    # select the following programs to be compiled as a module <M>:
+    # Base system
+    #   block-mount
+    #   busybox
+    #     Coreutils
+    #       stat
+    # Network
+    #   tcpdump-mini
+    # LuCI
+    #   1. Collections
+    #     luci
+    #     luci-ssl
+    # Utilities
+    #   coreutils
+    #   coreutils-stat
     make menuconfig
     
     # build firmware 
