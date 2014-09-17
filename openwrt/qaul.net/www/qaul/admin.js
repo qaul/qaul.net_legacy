@@ -1,6 +1,11 @@
 $(document).ready(function(){
 	loading_show();
 	load_config();
+	
+	$("#form_login").submit(function(e){submit_login(e);});
+	$("#form_newpassword").submit(function(e){submit_newpassword(e);});
+	$("#form_storage").submit(function(e){submit_storage(e);});
+	$("#form_mobile").submit(function(e){submit_mobile(e);});
 });
 
 function load_config()
@@ -152,52 +157,46 @@ function back()
 	$("#page_main").show();
 }
 
-function submit_login()
+function submit_login(e)
 {
-	if(event.preventDefault)
-		event.preventDefault();
+	if(e.preventDefault)
+		e.preventDefault();
     else
-        event.returnValue = false;
+        e.returnValue = false;
 
 	loading_show();
 	var formdata = {pw:$("#login_password").val()};
-	$.ajax({
-		url: "/cgi-bin/qaul/login",
-		type: "POST",
-		data: formdata,
-		cache: false,
-		dataType: "json",
-		success: function(data){
+	$.post(
+		"/cgi-bin/qaul/login",
+		formdata,
+		function(data){
 			load_config();
 		}
-	}).error(function(){
+	).error(function(){
 		alert('login error');
 	});	
 	load_config();
 	return false;
 }
 
-function submit_newpassword()
+function submit_newpassword(e)
 {
-	if(event.preventDefault)
-		event.preventDefault();
+	if(e.preventDefault)
+		e.preventDefault();
     else
-        event.returnValue = false;
+        e.returnValue = false;
         
 	if($("#new_password").val() == $("#new_password2").val())
 	{
 		loading_show();
 		var formdata = {pw:$("#new_password").val(),pin:$("#mobile_pin").val(),un:$("#mobile_un").val(),pw:$("#mobile_pw").val()};
-		$.ajax({
-			url: "/cgi-bin/qaul/newpassword",
-			type: "POST",
-			data: formdata,
-			cache: false,
-			dataType: "json",
-			success: function(data){
+		$.post(
+			"/cgi-bin/qaul/newpassword",
+			formdata,
+			function(data){
 				load_config();
 			}
-		}).error(function(){
+		).error(function(){
 			alert('new password error');
 		});
 	}
@@ -207,26 +206,45 @@ function submit_newpassword()
 	return false;
 }
 
-function submit_mobile()
+function submit_mobile(e)
 {
-	if(event.preventDefault)
-		event.preventDefault();
+	if(e.preventDefault)
+		e.preventDefault();
     else
-        event.returnValue = false;
+        e.returnValue = false;
         
 	loading_show();	
 	var formdata = {apn:$("#mobile_apn").val(),pin:$("#mobile_pin").val(),un:$("#mobile_un").val(),pw:$("#mobile_pw").val()};
-	$.ajax({
-		url: "/cgi-bin/qaul/mobile",
-		type: "POST",
-		data: formdata,
-		cache: false,
-		dataType: "json",
-		success: function(data){
+	$.post(
+		"/cgi-bin/qaul/mobile",
+		formdata,
+		function(data){
 			load_config();
 		}
-	}).error(function(){
+	).error(function(){
 		alert('mobile configuration error');
 	});
+	return false;
+}
+
+function submit_storage(e)
+{
+	if(e.preventDefault)
+		e.preventDefault();
+    else
+        e.returnValue = false;
+
+	loading_show();
+	var formdata = {"s":1};
+	$.post(
+		"/cgi-bin/qaul/storage",
+		formdata,
+		function(data){
+			load_config();
+		}
+	).error(function(){
+		alert('storage configuration error');
+	});	
+	load_config();
 	return false;
 }

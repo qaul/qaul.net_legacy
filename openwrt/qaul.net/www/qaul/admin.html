@@ -38,7 +38,7 @@
 <div id="page_login" class="content">
 	<div class="form_box">
 		<h2>Login</h2>
-		<form onsubmit="submit_login()">
+		<form action="login" method="post" id="form_login">
 			<label for="password">Password</label>
 			<input name="password" id="login_password" type="password" required="required" />
 			<input type="submit" name="submit" value="Login" />
@@ -49,7 +49,7 @@
 <div id="page_newpassword" class="content">
 	<div class="form_box">
 		<h2>Set New Password</h2>
-		<form onsubmit="submit_newpassword()">
+		<form action="newpassword" method="post" id="form_newpassword">
 			<label for="password">Password</label>
 			<input name="password" id="new_password" type="password" required="required" />
 			<label for="password2">Repeat Password</label>
@@ -65,7 +65,7 @@
 		<p>You need to have a USB stick plugged into your Router</p>
 		<p>This will delete all the content on your USB stick!</p>
 		<p>After configuration, the router will boot automatically from the USB stick.</p>
-		<form onsubmit="submit_storage()">
+		<form action="storage" method="post" id="form_storage">
 			<input type="submit" name="submit" value="Configure USB Storage" />
 		</form>
 		<br/><br/>
@@ -76,7 +76,7 @@
 <div id="page_mobile" class="content">
 	<div class="form_box">
 		<h2>Configure 3G Internet</h2>
-		<form onsubmit="submit_mobile()">
+		<form action="mobile" method="post" id="form_mobile">
 			<label for="apn">APN</label>
 			<input name="apn" id="mobile_apn" type="text" required="required" />
 			<label for="pin">PIN CODE</label>
