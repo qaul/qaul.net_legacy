@@ -68,7 +68,7 @@ then
 		echo "\"auth\":2"
 	fi
 else
-	echo "\"auth\":$qaul_auth"
+	echo "\"auth\":0"
 fi
 
 echo "}"
