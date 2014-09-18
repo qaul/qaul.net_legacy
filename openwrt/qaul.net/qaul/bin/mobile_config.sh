@@ -24,4 +24,7 @@ uci commit
 
 echo "1" > "/qaul/config/mobile"
 
+# start 3G connection
+ifup wan3g
+
 exit 0
