@@ -62,9 +62,15 @@
 <div id="page_storage" class="content">
 	<div class="form_box">
 		<h2>Configure USB Storage</h2>
-		<p>You need to have a USB stick plugged into your Router</p>
-		<p>This will delete all the content on your USB stick!</p>
-		<p>After configuration, the router will boot automatically from the USB stick.</p>
+		<p>
+		<span id="storage_total">Current disk space: <b><span></span></b></span><br/>
+		<span id="storage_free">Free disk space: <b><span></span></b></span><br/>
+		<span id="storage_on" class="selected">USB storage stick <b>successfully configured</b>!</span>
+		<span id="storage_off">USB storage stick is <b>not yet configured</b>.</span>
+		</p>
+		<p>You need to have an USB memory stick plugged into your router.</p>
+		<p>This will delete all content on your USB stick!</p>
+		<p>After configuration, the router will boot automatically from the USB stick. The USB stick will be used as its hard drive.</p>
 		<form action="storage" method="post" id="form_storage">
 			<input type="submit" name="submit" value="Configure USB Storage" />
 		</form>
@@ -76,6 +82,7 @@
 <div id="page_mobile" class="content">
 	<div class="form_box">
 		<h2>Configure 3G Internet</h2>
+		<p>When connected, the mobile Internet stick will connect automatically with this configuration.</p>
 		<form action="mobile" method="post" id="form_mobile">
 			<label for="apn">APN</label>
 			<input name="apn" id="mobile_apn" type="text" required="required" />

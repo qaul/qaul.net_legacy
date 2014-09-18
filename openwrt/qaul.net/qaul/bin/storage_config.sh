@@ -10,9 +10,9 @@
 umount /dev/sda1
 
 # create ext4 file system on stick
-mkfs.ext4 /dev/sda1
-## use busybox mkfs_ext2 ???
-##mkfs_ext2 /dev/sda1
+##mkfs.ext4 /dev/sda1
+# use busybox mkfs.ext2 to save disk space
+mkfs.ext2 /dev/sda1
 /sbin/block mount
 
 # copy file system 
@@ -25,6 +25,6 @@ uci set fstab.overlay.enabled=1
 uci commit
 
 # restart device
-#reboot
+reboot
 
 exit 0

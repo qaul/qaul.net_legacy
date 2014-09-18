@@ -19,17 +19,17 @@ then
 	then
 		echo "\"auth\":$qaul_auth,"
 
-		echo '"internet":'
-		qaul_internet=`uci show olsrd.dyn_gw.ignore`
-		if [ "$qaul_internet" = "0" ]
-		then
-			echo "1,"
-		else
-			echo "0,"
-		fi
+		qaul_internet=`cat /qaul/config/internet`
+		echo "\"internet\":$qaul_internet,"
 
 		qaul_storage=`cat /qaul/config/storage`
 		echo "\"storage\":$qaul_storage,"
+
+		qaul_storage=`df -h | grep rootfs | sed -E 's/^[a-zA-Z0-9]+[ ]+([a-zA-Z0-9.%]+)[ ]+.*$/\1/'`
+		echo "\"storage_total\":\"$qaul_storage\","
+
+		qaul_storage=`df -h | grep rootfs | sed -E 's/^[a-zA-Z0-9]+[ ]+[a-zA-Z0-9.%]+[ ]+[a-zA-Z0-9.%]+[ ]+([a-zA-Z0-9.%]+)[ ]+.*$/\1/'`
+		echo "\"storage_free\":\"$qaul_storage\","
 
 		qaul_mobile=`cat /qaul/config/mobile`
 		echo "\"mobile\":$qaul_mobile,"

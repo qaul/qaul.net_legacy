@@ -59,9 +59,19 @@ function load_config()
 				$('#mobile').removeClass('selected');
 				
 			if(data.storage)
+			{
 				$('#storage').addClass('selected');
+				$('#storage_on').show();
+				$('#storage_off').hide();
+			}
 			else
+			{
 				$('#storage').removeClass('selected');
+				$('#storage_on').hide();
+				$('#storage_off').show();
+			}
+			$("#storage_total span").empty().append(data.storage_total);
+			$("#storage_free span").empty().append(data.storage_free);
 				
 			if(data.eth_config)
 			{

@@ -26,6 +26,7 @@ img {
 	padding:10px;
 	text-align:left;
 	font-size:12px;
+	min-height:2.5em;
 }
 .header button {
 	float:right;
@@ -83,8 +84,10 @@ img {
 	margin: 10px;
 }
 
-.choice.selected {
+.selected {
 	color:#50b7ff;
+}
+.choice.selected {
 	border-color: #50b7ff;
 	border-width: 1px;
 }

@@ -47,6 +47,8 @@ Preparations
     #   busybox
     #     Coreutils
     #       stat
+    #     Linux System Utilities
+    #       mkfs_ext2
     # Network
     #   tcpdump-mini
     # LuCI
@@ -121,9 +123,27 @@ can therefore store an image with all convenient packages.
 Flash Router
 ------------
 
+### Via original Vendor Web Interface ##
+
 * Connect to your router and login in to the administration web interface.
 * Navigate to 'System Tools' > 'Firmware upgrade'
 * Upload the created binary that ends on 'squashfs-factory.bin'.
+
+
+### Via OpenWRT Shell ##
+
+The IP 192.168.0.192 is only used as an example. You have to replace it
+with the IP of your router. Also the image 
+openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-factory.bin is only used 
+as an example.
+
+    # upload image to router via scp
+    scp openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-factory.bin root@192.168.0.192:/tmp/
+    # connect to router
+    ssh root@192.168.0.192
+    # flash image
+    cd /tmp
+    mtd -r write openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-factory.bin firmware
 
 
 Configure Router
