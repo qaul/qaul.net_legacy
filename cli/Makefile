@@ -157,14 +157,15 @@ ifeq ($(OS),raspberry)
 			-lavutil \
 			-lasound \
 			-lcrypto \
-			-lssl
+			-lssl \
+			\
+			-luuid
 	endif
 	
 	LIBS= \
 		$(LIBS_VOIP) \
 	    -lpthread \
 	    -ldl \
-	    -luuid \
 	    -lm
 endif
 

@@ -12,7 +12,7 @@ Compile olsrd
 
     # install required package
     sudo apt-get install bison flex
-    cd olsrd_0.6.6.2
+    cd olsrd-0.6.6.2
     
     # compile olsrd
     make
@@ -22,7 +22,7 @@ Compile olsrd
 
 Compile olsrd_qaul plugin
 
-    cd olsrd_0.6.6.2/lib/olsrd_qaul
+    cd olsrd-0.6.6.2/lib/olsrd_qaul
     make
     # install the shared library
     sudo make install
@@ -30,7 +30,7 @@ Compile olsrd_qaul plugin
 
 Compile dynamic gateway plugin
 
-    cd olsrd_0.6.6.2/lib/dyn_gw
+    cd olsrd-0.6.6.2/lib/dyn_gw
     make
     # install the shared library
     sudo make install
