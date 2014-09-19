@@ -15,7 +15,7 @@ then
 	then
 		# check how old
 		current=`date +%s`
-		last_modified=`stat -c "%Y" $AUTHFILE`
+		last_modified=`stat -t $AUTHFILE | sed -E 's/^[^ ]+ [^ ]+ [^ ]+ [^ ]+ [^ ]+ [^ ]+ [^ ]+ [^ ]+ [^ ]+ [^ ]+ [^ ]+ ([0-9]+) .*$/\1/'`
 		
 		if [ $(($current-$last_modified)) -gt 600 ]
 		then 

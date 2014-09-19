@@ -1,4 +1,3 @@
-/openwrt/qaul/qaul
 # file system
 .DS_Store
 [Tt]humbs.db
@@ -161,10 +160,12 @@ binary_release/mof/
 binary_release/*.tar.gz
 
 # openwrt
+/openwrt/qaul/qaul
 openwrt/OpenWrt*
 openwrt/Attitude-Adjustment*
 openwrt/*.tar.bz2
 openwrt/*.bin
 *.test
 *.bak
-tmp_qaul.net
+image_files_tmp
+
