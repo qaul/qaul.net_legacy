@@ -42,6 +42,18 @@ Build the CLI client
     # for Raspberry Pi
     make OS=raspberry
 
+Build the CLI client without pjsip (VoIP)
+
+    cd cli
+    # for Linux
+    make OS=linux VoIP=no
+    # for Windows (compile with MinGW)
+    make OS=win VoIP=no
+    # for OSX
+    make OS=osx VoIP=no
+    # for Raspberry Pi
+    make OS=raspberry VoIP=no
+
 
 Run CLI
 -------

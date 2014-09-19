@@ -76,7 +76,7 @@ int Qaullib_VoipStart(void);
 /**
  * stop VoIP and free memory
  */
-int Qaullib_VoipStop(void);
+void Qaullib_VoipStop(void);
 
 /**
  * invoke a call to @a ip

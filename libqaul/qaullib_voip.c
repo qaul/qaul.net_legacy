@@ -361,7 +361,7 @@ int Qaullib_VoipStart(void)
     return 1;
 }
 
-int Qaullib_VoipStop(void)
+void Qaullib_VoipStop(void)
 {
 	// Destroy pjsua
 	pjsua_destroy();
