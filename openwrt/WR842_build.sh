@@ -5,9 +5,9 @@
 
 
 # prepare files to include
-rm -R tmp_qaul.net
-cp -R qaul.net tmp_qaul.net
-cp -R WR842/* tmp_qaul.net/
+rm -R image_files_tmp
+cp -R image_files image_files_tmp
+cp -R WR842/* image_files_tmp/
 
 # change into build directory
 cd OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64
@@ -29,7 +29,7 @@ cd OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64
 # kmod-usb-net    # for tethering and rndis support (new 4G dongles)
 # kmod-usb-serial # for dongles with serial support (most common)
 # 
-make image PROFILE=TLWR842 FILES=../tmp_qaul.net \
+make image PROFILE=TLWR842 FILES=../image_files_tmp \
     PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip ip \
     tcpdump olsrd-mod-txtinfo \
     uhttpd empty \

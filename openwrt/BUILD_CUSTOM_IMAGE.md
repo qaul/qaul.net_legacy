@@ -112,7 +112,7 @@ can therefore store an image with all convenient packages.
     # 
     # for TL-WR842ND
     make image PROFILE=TLWR842 \
-    FILES=../WR84X_qaul.net \
+    FILES=../image_files \
     PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip ip \
     uhttpd lua liblua \
     tinc \
