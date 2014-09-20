@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	loading_show();
+	loading_show("");
 	load_config();
 	
 	$("#form_login").submit(function(e){submit_login(e);});
@@ -104,20 +104,31 @@ function load_config()
 	});
 }
 
-function loading_show()
+function loading_show(info)
 {
+	$("#loading_info").empty().append(info);
 	$("#loading").fadeIn();
-	$("img#loader").addClass("rotate");	
+	if(!$("img#loader").hasClass("rotate"))
+	{
+		$("img#loader").addClass("rotate");
+	}
 }
 function loading_hide()
 {
 	$("#loading").fadeOut();
 	$("img#loader").removeClass("rotate");
+	$("#loading_info").empty();
+}
+
+function rebooting()
+{
+	loading_show("rebooting ...");
+	setTimeout(function(){load_config();},30000);
 }
 
 function config(target)
 {
-	loading_show();
+	loading_show("");
 	$.getJSON("/cgi-bin/qaul/" +target, function(data){
 		load_config();
 	}).error(function(){
@@ -174,7 +185,7 @@ function submit_login(e)
     else
         e.returnValue = false;
 
-	loading_show();
+	loading_show("");
 	var formdata = {pw:$("#login_password").val()};
 	$.post(
 		"/cgi-bin/qaul/login",
@@ -198,7 +209,7 @@ function submit_newpassword(e)
         
 	if($("#new_password").val() == $("#new_password2").val())
 	{
-		loading_show();
+		loading_show("");
 		var formdata = {pw:$("#new_password").val(),pin:$("#mobile_pin").val(),un:$("#mobile_un").val(),pw:$("#mobile_pw").val()};
 		$.post(
 			"/cgi-bin/qaul/newpassword",
@@ -223,7 +234,7 @@ function submit_mobile(e)
     else
         e.returnValue = false;
         
-	loading_show();	
+	loading_show("");	
 	var formdata = {apn:$("#mobile_apn").val(),pin:$("#mobile_pin").val(),un:$("#mobile_un").val(),pw:$("#mobile_pw").val()};
 	$.post(
 		"/cgi-bin/qaul/mobile",
@@ -244,17 +255,16 @@ function submit_storage(e)
     else
         e.returnValue = false;
 
-	loading_show();
+	loading_show("configuring ...");
 	var formdata = {"s":1};
 	$.post(
 		"/cgi-bin/qaul/storage",
 		formdata,
 		function(data){
-			load_config();
+			rebooting();
 		}
 	).error(function(){
-		alert('storage configuration error');
-	});	
-	load_config();
+		rebooting();
+	});
 	return false;
 }

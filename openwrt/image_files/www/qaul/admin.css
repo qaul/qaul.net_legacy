@@ -117,6 +117,15 @@ img {
 	top:0;
 	left:0;
 }
+#loading_info {
+	position:absolute;
+	top:50%;
+	padding-top:50px;
+	padding-left:18px;
+	width:100%;
+	text-align:center;
+	color:#eee;
+}
 img#loader {
 	position:absolute;
 	left:50% -18px;
