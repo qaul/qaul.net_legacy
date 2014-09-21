@@ -1,5 +1,5 @@
-Raspberry Pi Startup
-====================
+Raspberry Pi server via Wifi
+============================
 
 Copy all startup scripts to your preferred script location:
 
