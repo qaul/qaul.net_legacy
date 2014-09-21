@@ -2,7 +2,35 @@ Raspberry Pi Instructions
 =========================
 
 qaul.net runs as CLI client on Raspberry Pi.
-It was tested on Raspberrys Debian Wheezy.
+It was tested on Raspbian (Raspberrys Debian Wheezy).
+
+
+Szenarios
+---------
+
+### qaul.net via Ethernet
+
+Connect the Raspberry Pi via Ethernet with other clients, 
+e.g. some wifi routers running openWRT.
+
+Compile the binaries according to the instructions below.
+Then configure the Raspberry as described in README_ETH.md
+
+
+### qaul.net via USB wifi (not recommended)
+
+Warning: The USB wifi drivers for Ad-hoc (IBSS) wifi are all
+very bad up to unusable. Atheros USB wifi drivers can only
+handle up to 7 participants in the IBSS network, afterwards
+the drivers will crash, leading to a crash of the Raspberry Pi. 
+Realtek and Ralink spontanously change IBSS cell ID leading
+to multiple non-merging IBSS networks, that are not able to 
+communicate with each other anymore.
+
+Connect the Raspberry Pi via USB wifi with other qaul.net clients.
+
+Compile the binaries according to the instructions below.
+Then configure the Raspberry as described in README_WIFI.md
 
 
 Installation and Compile Instructions
@@ -40,10 +68,16 @@ Compile qaul CLI
 
     cd cli
     make OS=raspberry VoIP=no
+    mkdir -p /home/pi/bin
+    cp qaul /home/pi/bin
     cd ../
 
 
 ### Compile with VoIP
+
+qaul.net CLI binary can also be compiled with VoIP library included.
+This does not make much sense, if there isn't anyone to pick up 
+the incoming calls on the Rasberry. 
 
 Compile olsrd, olsrd_qaul and the dynamic gateway plugin following 
 the instructions above. Then follow this instructions here.
@@ -73,6 +107,7 @@ Compile qaul CLI
 
     cd cli
     make OS=raspberry
+    mkdir -p /home/pi/bin
+    cp qaul /home/pi/bin
     cd ../
-
 

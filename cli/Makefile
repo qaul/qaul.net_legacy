@@ -266,8 +266,11 @@ endif
 ifeq ($(OS),raspberry)
 	@echo application Makefile - linking qaul
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul $(LFLAGS)
-	@echo copy www folder into this directory
-	@cp -R ../www ./
+	@echo copy everything to /home/pi/bin
+	@mkdir -p /home/pi/bin
+	@cp ./qaul /home/pi/bin
+	@cp -R ../www /home/pi/bin
+	@cp ../raspberry/start_scripts/* /home/pi/bin
 endif
 ifeq ($(OS),win)
 	@echo application Makefile - linking qaul.exe

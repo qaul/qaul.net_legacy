@@ -3,19 +3,21 @@ Raspberry Pi Startup
 
 Copy all startup scripts to your preferred script location:
 
-	mkdir /home/pi/bin
-	cp * /home/pi/bin/
+	mkdir -p /home/pi/bin
+	cd raspberry
+	cp start_scripts/* /home/pi/bin/
+	cd ../
 
 
 Edit one of the startup scripts according to your needs:
 
-* start_internet-gateway.sh 
+* start_wifi_internet-gateway.sh 
   Raspberry is an Internet gateway.
-* start_qaul_internet-gateway.sh 
+* start_wifi_qaul_internet-gateway.sh 
   Raspberry is a qaul user and an Internet gateway.
-* start_qaul.sh 
+* start_wifi_qaul.sh 
   Raspberry is a qaul user.
-* start_relais.sh 
+* start_wifi_relais.sh 
   Raspberry is an olsr infrastructure relais node.
 
 Edit olsrd.conf to load all the needed plugins.
