@@ -170,7 +170,7 @@ Configure Router
 
 ### Via Web Interface
 
-* Open the IP address of your router in a web bowser.
+* Open the IP address of your router in a web browser.
 * Click on login. 
   Username: root 
   Password: qaul.net
