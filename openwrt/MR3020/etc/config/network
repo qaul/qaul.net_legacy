@@ -8,12 +8,12 @@ config interface 'wan'
 	option ifname 'eth0'
 	option proto 'dhcp'
 
-#config interface 'lan'
+#config interface 'laneth'
 #	option ifname    'eth0'
 #	option proto     'static'            
-#	option ipaddr    '192.168.40.1'     
+#	option ipaddr    '192.168.10.1'     
 #	option netmask   '255.255.255.0' 
-#	option broadcast '192.168.40.255'
+#	option broadcast '192.168.10.255'
 
 #config interface 'qauleth'
 #	option ifname    'eth0'
@@ -28,6 +28,12 @@ config interface 'qaulwifi'
 	option ipaddr '10.30.20.40'
 	option netmask '255.0.0.0'
 	option broadcast '10.255.255.255'
+
+config interface 'lanwifi'
+	option proto     'static'            
+	option ipaddr    '192.168.10.1'     
+	option netmask   '255.255.255.0' 
+	option broadcast '192.168.10.255'
 
 #config interface 'qaulvpn'
 #	option ifname	qaulvpn

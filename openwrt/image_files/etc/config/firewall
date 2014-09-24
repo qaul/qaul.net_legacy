@@ -31,6 +31,10 @@ config zone
 	option masq     1
 	option mtu_fix  1
 
+config forwarding                               
+	option src      lan             
+	option dest     qaul
+
 # allow tinc VPN connection to device via wan       
 config rule                              
 	option name             Allow-VPN

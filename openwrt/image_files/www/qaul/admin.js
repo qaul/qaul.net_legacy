@@ -77,7 +77,7 @@ function load_config()
 			{
 				$("#network_eth").show();
 				
-				if(data.eth == 'qaul')
+				if(data.eth == 'qauleth')
 				{
 					$('#eth_qaul').addClass('selected');
 					$('#eth_wan').removeClass('selected');

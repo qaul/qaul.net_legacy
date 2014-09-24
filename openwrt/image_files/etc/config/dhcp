@@ -16,11 +16,17 @@ config dnsmasq
 	option resolvfile	'/tmp/resolv.conf.auto'
 	list notinterface	lo
 
-config dhcp lan
-	option interface	lan
-	option start 		100
-	option limit		150
-	option leasetime     	1h
+config dhcp lanwifi
+	option interfac lanwifi
+	option start 		 50
+	option limit		200
+	option leasetime    20m
+
+config dhcp laneth
+	option interface laneth
+	option start 		 10
+	option limit		 40
+	option leasetime     1h
 
 config dhcp wan
 	option interface	wan

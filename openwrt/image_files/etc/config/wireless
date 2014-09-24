@@ -18,7 +18,6 @@ config wifi-device  radio0
 
 config wifi-iface
 	option device      'radio0'
-	option ifname      'wlan0'
 	option encryption  'none'
 	option network     'qaulwifi'
 	option ssid        'qaul.net'
@@ -27,8 +26,7 @@ config wifi-iface
 
 #config wifi-iface
 #	option device      'radio0'
-#	option ifname      'wlan0'
-#	option network     'lan'
+#	option network     'lanwifi'
 #	option mode        'ap'
 #	option ssid        'qaul.net_AP'
 #	option encryption  'none'
