@@ -9,7 +9,7 @@ qaul_auth=`/qaul/bin/authenticate.sh`
 if [ "$qaul_auth" = "1" ]
 then
 	# configure eth interface
-	/qaul/bin/eth_lan.sh
+	/qaul/bin/eth_lan.sh &
 
 	echo "{\"s\":1}"
 else

@@ -120,10 +120,22 @@ function loading_hide()
 	$("#loading_info").empty();
 }
 
-function rebooting()
+function config_reboot()
 {
 	loading_show("rebooting ...");
 	setTimeout(function(){load_config();},30000);
+}
+
+function config_network(target)
+{
+	loading_show("configuring network ...");
+	$.getJSON("/cgi-bin/qaul/" +target, function(data){
+		setTimeout(function(){load_config();},5000);
+	}).error(function(){
+		alert('network configuration error');
+	});
+	
+	return false;
 }
 
 function config(target)
@@ -156,6 +168,12 @@ function config_eth()
 	$("#page_eth").show();
 }
 
+function config_wifi()
+{
+	hide_all("#page_wifi");
+	$("#page_wifi").show();
+}
+
 function hide_all(exept)
 {
 	if(exept != "#page_main")
@@ -170,6 +188,8 @@ function hide_all(exept)
 		$("#page_mobile").hide();
 	if(exept != "#page_eth")
 		$("#page_eth").hide();
+	if(exept != "#page_wifi")
+		$("#page_wifi").hide();
 }
 
 function back()
@@ -261,10 +281,10 @@ function submit_storage(e)
 		"/cgi-bin/qaul/storage",
 		formdata,
 		function(data){
-			rebooting();
+			config_reboot();
 		}
 	).error(function(){
-		rebooting();
+		config_reboot();
 	});
 	return false;
 }

@@ -31,6 +31,9 @@
 			<div onclick="config_eth()" id="network_eth" class="choice">
 				Configure Ethernet Network
 			</div>
+			<div onclick="config_wifi()" id="network_wifi" class="choice">
+				Configure Wifi Network
+			</div>
 		</div>
 	</div>
 </div>
@@ -103,12 +106,23 @@
 	<div class="form_box">
 		<h2>Configure Ethernet Network</h2>
 		<div class="section switch">
-			<div onclick="config('eth_wan')" id="eth_wan" class="choice selected">
+			<div onclick="config_network('eth_wan')" id="eth_wan" class="choice selected">
 				<strong>WAN</strong> connect to Internet
 			</div>
-			<div onclick="config('eth_qaul')" id="eth_qaul" class="choice">
+			<div onclick="config_network('eth_qaul')" id="eth_qaul" class="choice">
 				<strong>qaul</strong> connect to other qaul.net device
 			</div>
+		</div>
+		<br/><br/>
+		<input type="button" name="cancel" value="Back" onclick="back()"/>
+	</div>
+</div>
+
+<div id="page_wifi" class="content">
+	<div class="form_box">
+		<h2>Configure Wifi Network</h2>
+		<div class="section switch">
+			<!-- select qaulwifi and/or lanwifi -->
 		</div>
 		<br/><br/>
 		<input type="button" name="cancel" value="Back" onclick="back()"/>
