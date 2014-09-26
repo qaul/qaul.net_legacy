@@ -175,4 +175,17 @@ input.checkbox {
 	width:0%;
 	margin:0 0.5em 0 0;
 }
-
+select {
+    padding:0.3em 0.5em;
+	margin: 10px 0;
+	display:block;
+	width:100%;
+	font-size:16px; 
+	color:#999;
+	background-color: #ffffff;
+	border: 1px solid #999;
+	border-radius: 15px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box; 
+}

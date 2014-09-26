@@ -6,6 +6,7 @@ $(document).ready(function(){
 	$("#form_newpassword").submit(function(e){submit_newpassword(e);});
 	$("#form_storage").submit(function(e){submit_storage(e);});
 	$("#form_mobile").submit(function(e){submit_mobile(e);});
+	$("#form_wifi").submit(function(e){submit_wifi(e);});
 });
 
 function load_config()
@@ -89,6 +90,29 @@ function load_config()
 				}
 			}
 			
+			if(data.wifi.qaulwifi == 1)
+			{
+				$('#wifi_qaul_checkbox').prop('checked', true);
+			}
+			else
+			{
+				$('#wifi_qaul_checkbox').prop('checked', false);
+			}
+			if(data.wifi.lanwifi == 1)
+			{
+				$('#wifi_lan_checkbox').prop('checked', true);
+			}
+			else
+			{
+				$('#wifi_lan_checkbox').prop('checked', false);
+			}
+			if(data.wifi.distance)
+			{
+				$('#wifi_distance option').prop('selected', false)
+                   .filter('[value="' +data.wifi.distance +'"]')
+                   .prop('selected', true);
+			}
+
 			if(data.config)
 			{
 				$("#header_ifconfig").empty();
@@ -123,14 +147,14 @@ function loading_hide()
 function config_reboot()
 {
 	loading_show("rebooting ...");
-	setTimeout(function(){load_config();},30000);
+	setTimeout(function(){load_config();},50000);
 }
 
 function config_network(target)
 {
 	loading_show("configuring network ...");
 	$.getJSON("/cgi-bin/qaul/" +target, function(data){
-		setTimeout(function(){load_config();},5000);
+		setTimeout(function(){load_config();},25000);
 	}).error(function(){
 		alert('network configuration error');
 	});
@@ -285,6 +309,35 @@ function submit_storage(e)
 		}
 	).error(function(){
 		config_reboot();
+	});
+	return false;
+}
+
+function submit_wifi(e)
+{
+	if(e.preventDefault)
+		e.preventDefault();
+    else
+        e.returnValue = false;
+
+	loading_show("configuring wifi ...");
+	if($("#wifi_qaul_checkbox").is(":checked"))
+		qaulwifi = 1;
+	else
+		qaulwifi = 0;
+	if($("#wifi_lan_checkbox").is(":checked"))
+		lanwifi = 1;
+	else
+		lanwifi = 0;
+	var formdata = {"qaulwifi":qaulwifi,"lanwifi":lanwifi,"dist":$("#wifi_distance").val()};
+	$.post(
+		"/cgi-bin/qaul/wifi",
+		formdata,
+		function(data){
+			setTimeout(function(){load_config();},25000);
+		}
+	).error(function(){
+		alert('wifi configuration error');
 	});
 	return false;
 }

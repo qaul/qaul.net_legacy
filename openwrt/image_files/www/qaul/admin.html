@@ -110,7 +110,7 @@
 				<strong>WAN</strong> connect to Internet
 			</div>
 			<div onclick="config_network('eth_qaul')" id="eth_qaul" class="choice">
-				<strong>qaul</strong> connect to other qaul.net device
+				<strong>qaul.net</strong> connect to other qaul.net device
 			</div>
 		</div>
 		<br/><br/>
@@ -121,9 +121,35 @@
 <div id="page_wifi" class="content">
 	<div class="form_box">
 		<h2>Configure Wifi Network</h2>
-		<div class="section switch">
-			<!-- select qaulwifi and/or lanwifi -->
-		</div>
+		<form action="wifi" method="post" id="form_wifi">
+			<div class="section switch">
+				<div class="choice" id="wifi_qaul_button">
+					<input type="checkbox" name="wifi_qaul_checkbox" value="wifi_qaul" id="wifi_qaul_checkbox" class="checkbox" />
+					<label for="wifi_qaul_checkbox"><strong>qaul.net</strong> Mesh Network</label>
+				</div>
+				<div class="choice" id="wifi_lan_button">
+					<input type="checkbox" name="wifi_lan_checkbox" value="wifi_lan" id="wifi_lan_checkbox" class="checkbox" />
+					<label for="wifi_lan_checkbox"><strong>LAN</strong> Wifi Access Point</label>
+				</div>
+			</div>
+			<div class="section">
+				<label for="wifi_distance">Distance Between Antennas</label>
+				<select name="wifi_distance" id="wifi_distance">
+					<option value="300" selected="selected">300m</option>
+					<option value="600">600m</option>
+					<option value="1200">1.2km</option>
+					<option value="2500">2.5km</option>
+					<option value="5000">5km</option>
+					<option value="10000">10km</option>
+					<option value="15000">15km</option>
+					<option value="20000">20km</option>
+					<option value="30000">30km</option>
+					<option value="50000">50km</option>
+					<option value="100000">100km</option>
+				</select>
+			</div>
+			<input type="submit" name="submit" value="Save" />
+		</form>
 		<br/><br/>
 		<input type="button" name="cancel" value="Back" onclick="back()"/>
 	</div>

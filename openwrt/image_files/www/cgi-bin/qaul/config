@@ -33,12 +33,38 @@ then
 
 		qaul_mobile=`cat /qaul/config/mobile`
 		echo "\"mobile\":$qaul_mobile,"
-
+		
+		
+		# ethernet configuration
 		qaul_eth_config=`cat /qaul/config/eth_config`
 		echo "\"eth_config\":\"$qaul_eth_config\","
 
 		qaul_eth=`cat /qaul/config/eth`
 		echo "\"eth\":\"$qaul_eth\","
+		
+		
+		# wifi configuration
+		echo "\"wifi\":{"
+		value=`uci get wireless.qaulwifi.disabled 2>&1`
+		if [ "$value" == "0" ]; then
+			echo "\"qaulwifi\":1,"
+		else
+			echo "\"qaulwifi\":0,"
+		fi
+		value=`uci get wireless.lanwifi.disabled 2>&1`
+		if [ "$value" == "0" ]; then
+			echo "\"lanwifi\":1,"
+		else
+			echo "\"lanwifi\":0,"
+		fi
+		value=`uci get wireless.radio0.distance 2>&1`
+		if [ "$value" != "uci: Entry not found" ]; then
+			echo "\"distance\":$value"
+		else
+			echo "\"distance\":300"
+		fi
+		echo "},"
+		
 		
 		# display ip's
 		echo "\"config\":["
