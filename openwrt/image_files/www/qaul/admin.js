@@ -176,6 +176,16 @@ function config_network(target)
 	return false;
 }
 
+function config_storage()
+{
+	loading_show("configuring ...");
+	$.getJSON("/qaul/storage_config", function(data){
+		setTimeout(function(){config_storage();},3000);
+	}).error(function(){
+		config_reboot();
+	});
+}
+
 function config(target)
 {
 	loading_show("");
@@ -319,7 +329,7 @@ function submit_storage(e)
 		"/cgi-bin/qaul/storage",
 		formdata,
 		function(data){
-			config_reboot();
+			config_storage();
 		}
 	).error(function(){
 		config_reboot();

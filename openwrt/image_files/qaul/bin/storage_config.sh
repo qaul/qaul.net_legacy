@@ -2,6 +2,9 @@
 
 ## configure USB storage
 
+# set flag
+echo "{\"state\":1}" > "/www/qaul/storage_config"
+
 # check if USB stick is connected
 
 # check if stick is mounted
@@ -23,6 +26,9 @@ echo "1" > "/mnt/share/qaul/config/storage"
 uci set fstab.share.enabled=0
 uci set fstab.overlay.enabled=1
 uci commit
+
+# remove flag
+rm "/www/qaul/storage_config"
 
 # restart device
 reboot
