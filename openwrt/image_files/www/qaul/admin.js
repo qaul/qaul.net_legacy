@@ -54,10 +54,24 @@ function load_config()
 					.attr('onclick',"config('internet_on')");
 			}
 				
-			if(data.mobile)
+			if(data.mobile.configured)
+			{
 				$('#mobile').addClass('selected');
+				
+				$('#mobile_apn').val(data.mobile.apn);
+				$('#mobile_pin').val(data.mobile.pin);
+				$('#mobile_username').val(data.mobile.user);
+				$('#mobile_password').val(data.mobile.password);
+			}
 			else
+			{
 				$('#mobile').removeClass('selected');
+				
+				$('#mobile_apn').val("");
+				$('#mobile_pin').val("");
+				$('#mobile_username').val("");
+				$('#mobile_password').val("");
+			}
 				
 			if(data.storage)
 			{

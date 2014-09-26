@@ -31,8 +31,24 @@ then
 		qaul_storage=`df -h | grep rootfs | sed -E 's/^[a-zA-Z0-9]+[ ]+[a-zA-Z0-9.%]+[ ]+[a-zA-Z0-9.%]+[ ]+([a-zA-Z0-9.%]+)[ ]+.*$/\1/'`
 		echo "\"storage_free\":\"$qaul_storage\","
 
+
+		# mobile
 		qaul_mobile=`cat /qaul/config/mobile`
-		echo "\"mobile\":$qaul_mobile,"
+		echo "\"mobile\":{\"configured\":$qaul_mobile"
+		if [ $qaul_mobile == 1 ]; then
+			value=`uci get network.wan3g.apn`
+			echo ",\"apn\":\"$value\""
+			
+			value=`uci get network.wan3g.pincode`
+			echo ",\"pin\":\"$value\""
+
+			value=`uci get network.wan3g.username`
+			echo ",\"user\":\"$value\""
+			
+			value=`uci get network.wan3g.username`
+			echo ",\"password\":\"$value\""
+		fi
+		echo "},"
 		
 		
 		# ethernet configuration
