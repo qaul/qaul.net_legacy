@@ -39,9 +39,14 @@ Preparations
     # install symlinks
     ./scripts/feeds install -a
     
-    # configure the make file
+    # Configure the make file
     # 
-    # select the following programs to be compiled as a module <M>:
+    # * Build the OpenWrt Image Builder
+    # * Build the based Toolchain
+    # 
+    # Select the following programs to be compiled as a module <M>.
+    # Optional modules are in square brackets [optional]:
+    # 
     # Base system
     #   block-mount
     #   busybox
@@ -49,15 +54,53 @@ Preparations
     #       stat
     #     Linux System Utilities
     #       mkfs_ext2
+    # Kernel modules
+    #   Filesystems
+    #     kmod-fs-ext4
+    #   Network Support
+    #     kmod-ipip
+    #   USB Support
+    #     kmod-usb-acm
+    #     kmod-usb-net
+    #     kmod-usb-serial
+    #     kmod-usb-serial-option
+    #     kmod-usb-serial-wwan
+    #     kmod-usb-storage
     # Network
+    #   Captive Portals
+    #     [nodogsplash]
+    #   Routing and Redirection
+    #     [ip]
+    #     olsrd
+    #       olsrd-mod-dyn-gw
+    #       [olsrd-mod-txtinfo]
+    #   SSH
+    #     [openssh-sftp-server]
+    #   VPN
+    #     [openvpn]
+    #     [tinc]
+    #   Web Servers/Proxies
+    #     uhttpd
+    #     [uhttpd-mod-tls]
+    #   wireless
+    #     [horst]
     #   tcpdump-mini
     # LuCI
     #   1. Collections
-    #     luci
-    #     luci-ssl
+    #     [luci]
+    #     [luci-ssl]
+    # Utilities
+    #   comgt
+    #   usb-modeswitch
+    # 
+    # 
+    # If busybox can not be recompiled, the following packages
+    # are needed:
+    # 
     # Utilities
     #   coreutils
-    #   coreutils-stat
+    #     [coreutils-stat]
+    # 
     make menuconfig
     
     # build firmware 
@@ -84,6 +127,8 @@ model.
     # execute the build script according to your router model
     # TP-Link TL-WR842ND & TP-Link TL-WR842N
     ./WR842_build.sh
+    # TP-Link TL-MR3020
+    ./MR3020_build.sh
 
 
 ### Manually
@@ -113,11 +158,12 @@ can therefore store an image with all convenient packages.
     # for TL-WR842ND
     make image PROFILE=TLWR842 \
     FILES=../image_files \
-    PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip ip \
-    uhttpd lua liblua \
+    PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip \
+    uhttpd \
     tinc \
     kmod-usb-storage block-mount kmod-fs-ext4 \
-    openssh-sftp-server horst" 
+    comgt kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm kmod-usb-net usb-modeswitch \
+    " 
 
 
 Flash Router

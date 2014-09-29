@@ -29,12 +29,14 @@ cd OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64
 # kmod-usb-net    # for tethering and rndis support (new 4G dongles)
 # kmod-usb-serial # for dongles with serial support (most common)
 # 
+# authentication:
+# empty           # interactive pseudo shell
+# pam 
 make image PROFILE=TLWR842 FILES=../image_files_tmp \
     PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip ip \
-    tcpdump olsrd-mod-txtinfo \
-    uhttpd empty \
-	libubus-lua liblua lua libuci-lua \
-    luci-ssl libpolarssl px5g \
+    tcpdump-mini olsrd-mod-txtinfo \
+    uhttpd \
+    luci-ssl \
     tinc \
     kmod-usb-storage block-mount kmod-fs-ext4 \
     comgt kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm kmod-usb-net usb-modeswitch \
