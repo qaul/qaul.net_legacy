@@ -6,7 +6,7 @@
 #
 
 TOP:=$(dir $(lastword $(MAKEFILE_LIST)))
-PJBASE=$(TOP)../pjproject-2.2.1
+PJBASE=$(TOP)../pjproject-2.3
 
 CC=gcc
 LIBDEST=./

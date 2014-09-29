@@ -7,7 +7,7 @@
 
 TOP:=$(dir $(lastword $(MAKEFILE_LIST)))
 DISTBASE=$(TOP)../..
-PJBASE=$(DISTBASE)/pjproject-2.2.1
+PJBASE=$(DISTBASE)/pjproject-2.3
 
 CC=gcc
 LIBDEST=./
