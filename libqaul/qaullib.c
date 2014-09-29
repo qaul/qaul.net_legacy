@@ -241,6 +241,9 @@ void Qaullib_TimedSocketReceive(void)
 
 	// check UDP sockets
 	Qaullib_UDP_CheckSocket();
+
+	// check web server
+	//mg_poll_server(qaul_webserver_instance, 1024);
 }
 
 int Qaullib_TimedCheckAppEvent(void)
@@ -277,18 +280,16 @@ const char* Qaullib_GetAppEventOpenURL(void)
 // ------------------------------------------------------------
 int Qaullib_WebserverStart(void)
 {
-	static const char *options[] = {
-	  "document_root", webPath,
-	  "listening_ports", CHAT_PORT,
-	  "num_threads", "60",
-	  NULL
-	};
-	ctx = mg_start(&Qaullib_WwwEvent_handler, options);
-	if( ctx == NULL )
-	{
-		fprintf(stderr, "Can't open web server\n");
-		return 0;
-	}
+	if(QAUL_DEBUG)
+		printf("Qaullib_WebserverStart \n");
+
+	//qaul_webserver_instance = mg_create_server(options, (mg_handler_t) Qaullib_WwwEvent_handler);
+	qaul_webserver_instance = mg_create_server(NULL, (mg_handler_t) Qaullib_WwwEvent_handler);
+	mg_set_option(qaul_webserver_instance, "listening_port", CHAT_PORT);
+	mg_set_option(qaul_webserver_instance, "document_root", webPath);
+	//mg_set_option(qaul_webserver_instance, "num_threads", "60");
+
+	mg_start_thread(Qaullib_Www_Server, qaul_webserver_instance);
 
 	return 1;
 }

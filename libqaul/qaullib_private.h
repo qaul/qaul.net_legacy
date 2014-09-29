@@ -70,7 +70,7 @@ extern "C" {
 /**
  * global variables and structures
  */
-struct mg_context *ctx;
+struct mg_server *qaul_webserver_instance;
 sqlite3 *db;
 char dbPath[MAX_PATH_LEN +1];
 char webPath[MAX_PATH_LEN +1];

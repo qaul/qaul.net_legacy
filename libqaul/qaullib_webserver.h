@@ -14,7 +14,12 @@ extern "C" {
 /**
  * call back function for web server
  */
-void *Qaullib_WwwEvent_handler(enum mg_event event, struct mg_connection *conn, const struct mg_request_info *request_info);
+int Qaullib_WwwEvent_handler(struct mg_connection *conn, enum mg_event event);
+
+/**
+ * run server polling in separate thread
+ */
+void *Qaullib_Www_Server(void *qaul_webserver_instance);
 
 
 #ifdef __cplusplus
