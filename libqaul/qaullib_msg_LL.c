@@ -98,7 +98,11 @@ int Qaullib_Msg_LL_NextItem (struct qaul_msg_LL_node *node)
 // ------------------------------------------------------------
 int Qaullib_Msg_LL_PrevItem (struct qaul_msg_LL_node *node)
 {
-	if(node->item != 0 && node->item != qaul_msg_LL_first && node->item->prev != 0)
+	if(
+			node->item != 0 &&
+			node->item != qaul_msg_LL_first &&
+			node->item->prev != 0
+			)
 	{
 		node->item = node->item->prev;
 		return 1;
@@ -113,9 +117,9 @@ int Qaullib_Msg_LL_PrevWebItem (struct qaul_msg_LL_node *node)
 	tmp_item = node->item;
 
 	while(
-			node->item != 0 &&
-			node->item != qaul_msg_LL_first &&
-			node->item->prev != 0
+			tmp_item != 0 &&
+			tmp_item != qaul_msg_LL_first &&
+			tmp_item->prev != 0
 			)
 	{
 		tmp_item = tmp_item->prev;
