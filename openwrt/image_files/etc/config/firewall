@@ -8,7 +8,7 @@ config defaults
 
 config zone
 	option name      lan
-	option network  'lan'
+	option network  'lan laneth lanwifi lanbr'
 	option input    ACCEPT
 	option output   ACCEPT
 	option forward  REJECT
