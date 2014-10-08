@@ -14,14 +14,14 @@ CC=mips-openwrt-linux-uclibc-gcc
 
 APPNAME=qauladmin
 SRC=main.c
-LIBS= -L$(STAGING_DIR)/include -lpam -lpam_misc
+LIBS= -L$(STAGING_DIR)/include -lcrypt
 
 OBJS=$(SRC:.c=.o)
 
 all: $(OBJS)
 	@echo application Makefile - linking $(APPNAME)
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o $(APPNAME) $(LFLAGS)
-	@cp $(APPNAME) ../qaul.net/qaul/
+	@cp $(APPNAME) ../image_files/qaul/
 
 $(EXE): $(OBJS)
 	@echo application Makefile - linking $<
