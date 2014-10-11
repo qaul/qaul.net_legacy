@@ -5,12 +5,13 @@
 
 IFS="&="
 set -- $HTTP_COOKIE
-MD5STRING=$2
-AUTHFILE=/qaul/auth/$MD5STRING
+MD5STRING=`echo "$2" | sed -E "s/^([^ ;\|\/\$\"]*)|(.*)$/\1/"`
 
 if [ "$MD5STRING" != "" ]
 then
+	AUTHFILE=/qaul/auth/$MD5STRING
 	iptest=`cat $AUTHFILE`
+	
 	if [ "$iptest" = "$REMOTE_ADDR" ]
 	then
 		# check how old

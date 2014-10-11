@@ -57,6 +57,10 @@ int main (int argc, const char * argv[])
         {
             login(argc, argv);
         }
+        else if(strncmp(argv[1], "newpasswd", 5) == 0)
+        {
+            newpasswd(argc, argv);
+        }
         else
         {
         	printf("unknown argument \n");
@@ -79,8 +83,8 @@ void print_help ()
 	printf("usage:\n");
 	printf("  qauladmin login <password> <shadowhash>\n");
 	printf("  qauladmin login mypassword \\$1\\$IxLAgyK8\\$k9p3I2IDnER48L8H49lPq/\n");
-	printf("  qauladmin login <newpassword> <salt>\n");
-	printf("  qauladmin login mynewpassword \\$1\\$IxLAgyK8\n");
+	printf("  qauladmin newpasswd <newpassword> <salt>\n");
+	printf("  qauladmin newpasswd mynewpassword \\$1\\$IxLAgyK8\n");
 	printf("\n");
 }
 
@@ -97,11 +101,9 @@ void login (int argc, const char * argv[])
 		crypt_hash = crypt(password, hash);
 		
 		if(strncmp(crypt_hash, hash, strlen(hash)) == 0)
-			printf("success\n");
+			printf("success");
 		else
-			printf("error\n");
-		
-		printf("%s\n", crypt_hash);
+			printf("error");
 	}
     else
         printf("missing argument\n");
@@ -111,7 +113,6 @@ void newpasswd (int argc, const char * argv[])
 {
 	char *crypt_hash;
 	const char *password, *salt;
-	//const char hash[12];
 	
     if(argc >= 3)
     {
@@ -120,7 +121,7 @@ void newpasswd (int argc, const char * argv[])
 		
 		crypt_hash = crypt(password, salt);
 		
-		printf("%s\n", crypt_hash);
+		printf("%s", crypt_hash);
 	}
     else
         printf("missing argument\n");

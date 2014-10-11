@@ -13,7 +13,7 @@ qaul_auth=`/qaul/bin/authenticate.sh`
 # send info
 if [ "$qaul_auth" = "1" ]
 then
-	qaul_pw_default=`cat /etc/shadow | grep "root:$1$IxLAgyK8$k9p3I2IDnER48L8H49lPq/:"`
+	qaul_pw_default=`cat /etc/shadow | grep "^root:" | sed -E "s/^(root:.1.IxLAgyK8.k9p3I2IDnER48L8H49lPq.:.*)|(.*)/\1/"`
 	
 	if [ "$qaul_pw_default" = "" ]
 	then

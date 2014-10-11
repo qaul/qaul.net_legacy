@@ -278,7 +278,7 @@ function submit_newpassword(e)
 	if($("#new_password").val() == $("#new_password2").val())
 	{
 		loading_show("");
-		var formdata = {pw:$("#new_password").val(),pin:$("#mobile_pin").val(),un:$("#mobile_un").val(),pw:$("#mobile_pw").val()};
+		var formdata = {pw:$("#new_password").val()};
 		$.post(
 			"/cgi-bin/qaul/newpassword",
 			formdata,
