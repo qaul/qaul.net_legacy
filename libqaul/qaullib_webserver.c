@@ -2318,7 +2318,7 @@ static void Qaullib_WwwWebGetUsers(struct mg_connection *conn)
 		if(mynode.item->type == QAUL_USERTYPE_KNOWN)
 		{
 			// make sure the user name is not empty
-			if(strlen(mynode.item->name) > 0)
+			if(strlen(mynode.item->name) > 0 && mynode.item->changed <= QAUL_USERCHANGED_MODIFIED)
 			{
 				if(!first)
 					first = 1;
