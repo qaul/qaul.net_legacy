@@ -2053,18 +2053,22 @@ function user_append(name, ip, conn)
 		}
 		else
 		{
+			if(name.indexOf("[WEB]") > -1)
+				webuser = ' onclick="javascript:return false;" class="webuser"';
+			else
+				webuser = '';
+			
 			$("<li></li>")
 				.prop('id',id)
 				.data('connection', conn)
 				.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
-					+'\')">' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
+					+'\')"' +webuser +'>' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					//+'<span class="ui-li-count msg_in">↑4 ↓3</span>' 
 					+'</a>'
 					+'<a href="javascript:favorite_add(\'' +name +'\',\'' +ip +'\');" data-icon="plus">add</a>'
 					)
-				//.text(item.name)
 				.insertAfter($("#users_divider"));
-				//.prependTo(users);
+				
 			users.listview("refresh");
 		}
     }
@@ -2138,14 +2142,22 @@ function favorites_append(data)
 
 function favorite_append(name, ip, conn, online)
 {
-	var attr = ' onclick="javascript:return false;" class="offline fav"';
-	if(online) 
-		attr = ' class="fav"';
+	var href = ' href="javascript:show_user(\'' +name +'\',\'' +ip +'\')" ';
+	var attr = ' class="fav"';
+	
+	if(!online) 
+		attr = ' onclick="javascript:return false;" class="offline fav"';
+	else if(name.indexOf("[WEB]") > -1)
+	{
+		href = ' href="javascript: return false;"';
+		attr = ' onclick="javascript:return false;" class="webuser fav"';
+	}
+	
 	$("<li></li>")
 		.prop('id',ip2id(ip))
 		.data('connection', conn)
-		.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
-					+'\')" ' +attr +'>' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
+		.html('<a ' +href +attr +'>' 
+					+'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					//+'<span class="ui-li-count msg_in">↑4 ↓3</span>' 
 					+'</a>'
 					+'<a href="javascript:favorite_del(\'' +name +'\',\'' +ip 

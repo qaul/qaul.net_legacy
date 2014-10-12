@@ -25,7 +25,9 @@ var qaul_locale = null;
 
 var qaulfiles = [];
 var qaulusers = [];
-var qaul_initialized = false;
+var qauluserevent = 0;
+var qaulmessageevent = 0;
+var qaulinitialized = false;
 var chat_initialized = false;
 var is_chrome = false;
 var call_page_origin = "page_chat";
@@ -1135,18 +1137,22 @@ function user_append(name, ip, conn)
 			
 			// todo: update incoming and queued messages
 		}
-		else
+		else if(name != user_name)
 		{
+			if(name.indexOf("[WEB]") > -1)
+				webuser = ' onclick="javascript:return false;" class="webuser"';
+			else
+				webuser = '';
+			
 			$("<li></li>")
 				.prop('id',id)
 				.data('connection', conn)
-				.html('<a href="#popup_users" data-rel="popup">' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
+				.html('<a href="#popup_users" data-rel="popup"' +webuser +'>' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					+'</a>'
 					+'<a href="javascript:favorite_add(\'' +name +'\',\'' +ip +'\');" data-icon="plus">add</a>'
 					)
-				//.text(item.name)
 				.insertAfter($("#users_divider"));
-				//.prependTo(users);
+			
 			users.listview("refresh");
 		}
     }
@@ -1220,13 +1226,16 @@ function favorites_append(data)
 
 function favorite_append(name, ip, conn, online)
 {
-	var attr = ' onclick="javascript:return false;" class="offline fav"';
-	if(online) 
-		attr = ' class="fav"';
+	var attr = ' class="fav"';
+	if(!online) 
+		attr = ' onclick="javascript:return false;" class="offline fav"';
+	else if(name.indexOf("[WEB]") > -1)
+		attr = ' onclick="javascript:return false;" class="webuser fav"';
+	
 	$("<li></li>")
 		.prop('id',ip2id(ip))
 		.data('connection', conn)
-		.html('<a href="#popup_users" data-rel="popup">' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
+		.html('<a href="#popup_users" data-rel="popup"' +attr +'>' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					+'</a>'
 					+'<a href="javascript:favorite_del(\'' +name +'\',\'' +ip 
 					+'\');" data-icon="minus">remove</a>'

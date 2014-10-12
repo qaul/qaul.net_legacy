@@ -69,6 +69,9 @@ input {
 .offline {
 	color:#ddd !important;
 }
+.webuser {
+	color:#aaa !important;
+}
 
 abbr.timeago {
 	color:#999999;
