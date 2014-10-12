@@ -21,7 +21,7 @@ OBJS=$(SRC:.c=.o)
 all: $(OBJS)
 	@echo application Makefile - linking $(APPNAME)
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o $(APPNAME) $(LFLAGS)
-	@cp $(APPNAME) ../image_files/qaul/
+	@cp $(APPNAME) ../image_files/qaul/bin/
 
 $(EXE): $(OBJS)
 	@echo application Makefile - linking $<
