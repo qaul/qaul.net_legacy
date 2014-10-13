@@ -1323,28 +1323,35 @@ function file_create_html(item)
 	var fileclass = "";
 	if(item.status == QAUL_FILESTATUS_MYFILE)
 		fileclass = "file_myfile";
-	if(item.status == QAUL_FILESTATUS_COPYING)
+	else if(item.status == QAUL_FILESTATUS_COPYING)
 		fileclass = "file_copying file_myfile";
 	else if(item.status < QAUL_FILESTATUS_NEW)
 		fileclass = "file_failed";
+	
 	var percent = 0;
 	if(item.status == QAUL_FILESTATUS_DOWNLOADING)
 		percent = item.downloaded;
+	
 	var file = "<div class=\"file " +fileclass +"\" id=\"file_" +item.hash +"\">";
 	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) 
 		file += "<a href=\"#\" onClick=\"javascript:open_file('" +item.hash +"')\">";
+	
 	if(item.status == QAUL_FILESTATUS_COPYING) 
 		file += "<img src=\"images/ajax-loader.png\" class=\"loadericon64\">";
 	else if(item.status <= QAUL_FILESTATUS_ERROR) 
 		file += "<img src=\"images/f_failed_64.png\" class=\"fileicon64\">";
 	else
 		file += file_suffix2icon(item.suffix);
+	
 	if(item.status >= QAUL_FILESTATUS_DOWNLOADED)
 		file += "</a>";
+	
 	if(item.status != QAUL_FILESTATUS_COPYING)
 		file += "<a href=\"#\" onClick=\"javascript:file_delete('" +item.hash +"')\" class=\"filebutton\"><img src=\"images/b_delete.png\" alt=\"delete\" /></a>";
+	
 	if(item.status >= QAUL_FILESTATUS_DOWNLOADED) 
 		file += "<a href=\"#\" onClick=\"javascript:file_advertise('" +item.hash +"','" +item.suffix +"','" +item.size +"','" +item.description +"')\" class=\"filebutton\"><img src=\"images/b_advertise.png\" alt=\"advertise\" /></a>";
+	
 	file     += "<div class=\"filename\">" +format_msg_txt(item.description) +"</div>";
 	if(item.status >= QAUL_FILESTATUS_NEW && item.status <= QAUL_FILESTATUS_DOWNLOADING)
 		file += "<div class=\"fileprogress\"><span class=\"progressBar\" id=\"file_bar_" +item.hash +"\">" +percent +"%</span></div>";
