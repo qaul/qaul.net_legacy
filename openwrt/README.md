@@ -9,4 +9,4 @@ For ease of use and because many routers don't have enough flash memory
 we created a preconfigured OpenWRT image.
 
 To build a custom preconfigured OpenWRT image for your router follow the 
-instructions in the file BUILD_CUSTOM_IMAGE.md
+instructions in the file README_BUILD-CUSTOM-IMAGE.md

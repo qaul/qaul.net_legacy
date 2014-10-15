@@ -1,3 +1,4 @@
+/openwrt/image_files/qaul/bin/qauladmin
 /openwrt/qauladmin/qauladmin
 # file system
 .DS_Store
