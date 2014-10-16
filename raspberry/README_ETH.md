@@ -27,6 +27,8 @@ set the correct IP address.
     sqlite3 /home/pi/bin/qaullib.db
     # show currently configured IP
     SELECT value FROM 'config' WHERE key = "ip";
+    # delete old IP
+    DELETE FROM 'config' WHERE key = "ip";
     # set your IP
     INSERT INTO 'config' ('key','type','value') VALUES ("ip",1,"10.11.12.13");
     .exit
