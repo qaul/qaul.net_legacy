@@ -45,4 +45,4 @@ make image PROFILE=TLWR842 FILES=../image_files_tmp \
 cd ../
 
 # copy the image into the top directory
-cp ./OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64/bin/ar71xx/openwrt-ar71xx-generic-tl-wr842n-v2-squashfs-factory.bin ./
+cp ./OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64/bin/ar71xx/openwrt-ar71xx-generic-tl-wr842n-*squashfs-factory.bin ./
