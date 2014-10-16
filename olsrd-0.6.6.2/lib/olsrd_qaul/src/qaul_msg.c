@@ -83,11 +83,7 @@ void qaul_qaulmsg_send_all(union olsr_message *mymsg)
 		// IPv4
 		message->v4.olsr_msgtype = mymsg->v4.olsr_msgtype;
 		message->v4.olsr_vtime = reltime_to_me(my_timeout * MSEC_PER_SEC);
-		memset(&message->v4.originator, 0, sizeof(message->v4.originator));
-		if(memcmp(&message->v4.originator, &mymsg->v4.originator, sizeof(message->v4.originator)) == 0)
-			memcpy(&message->v4.originator, &olsr_cnf->main_addr, olsr_cnf->ipsize);
-		else
-			memcpy(&message->v4.originator, &mymsg->v4.originator, olsr_cnf->ipsize);
+		memcpy(&message->v4.originator, &olsr_cnf->main_addr, olsr_cnf->ipsize);
 		message->v4.ttl = MAX_TTL;
 		message->v4.hopcnt = 0;
 		message->v4.seqno = htons(get_msg_seqno());
@@ -100,11 +96,7 @@ void qaul_qaulmsg_send_all(union olsr_message *mymsg)
 		// IPv6
 		message->v6.olsr_msgtype = mymsg->v6.olsr_msgtype;
 		message->v6.olsr_vtime = reltime_to_me(my_timeout * MSEC_PER_SEC);
-		memset(&message->v6.originator, 0, sizeof(message->v6.originator));
-		if(memcmp(&message->v6.originator, &mymsg->v6.originator, sizeof(message->v6.originator)) == 0)
-			memcpy(&message->v6.originator, &olsr_cnf->main_addr, olsr_cnf->ipsize);
-		else
-			memcpy(&message->v6.originator, &mymsg->v6.originator, olsr_cnf->ipsize);
+		memcpy(&message->v6.originator, &olsr_cnf->main_addr, olsr_cnf->ipsize);
 		message->v6.ttl = MAX_TTL;
 		message->v6.hopcnt = 0;
 		message->v6.seqno = htons(get_msg_seqno());
