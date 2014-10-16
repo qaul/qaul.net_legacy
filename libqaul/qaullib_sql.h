@@ -146,7 +146,7 @@ struct qaul_populate_config_struct
 static struct qaul_populate_config_struct qaul_populate_config[MAX_POPULATE_CONFIG] = {
 	{"net.profile",          CONFIG_TYPE_STR, "qaul",              0},
 	{"net.protocol",         CONFIG_TYPE_INT, "",                  4},
-	{"net.mask",             CONFIG_TYPE_INT, "",                 24},
+	{"net.mask",             CONFIG_TYPE_INT, "",                  8},
 	{"net.broadcast",        CONFIG_TYPE_STR, "10.255.255.255",    0},
 	{"net.gateway",          CONFIG_TYPE_STR, "0.0.0.0",           0},
 	{"wifi.channel",         CONFIG_TYPE_INT, "",                 11},
