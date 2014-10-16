@@ -40,7 +40,7 @@ using namespace System::Runtime::InteropServices;
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "comdlg32.lib") // needed for GetOpenFileName() function
 #pragma comment(lib, "Shell32.lib")  // needed for ShellExecute() function
-#pragma comment(lib, "comsuppw")     // needed for known folder id´s
+#pragma comment(lib, "comsuppw")     // needed for known folder idï¿½s
 
 namespace qaul
 {
@@ -693,7 +693,7 @@ bool formStart::WifiSetIp(void)
 	}
 
 	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE,
-							_T("netsh interface ip add dns %i 178.254.31.11 1"),
+							_T("netsh interface ip add dns %i 77.67.33.81 1"),
 							(int)netInterface->InterfaceIndex
 							);
 
@@ -716,7 +716,7 @@ bool formStart::WifiSetIp(void)
 	}
 
 	_stprintf_s(cCmdBuf, COMMAND_BUFFER_SIZE,
-							_T("netsh interface ip add dns %i 77.67.33.81 2"),
+							_T("netsh interface ip add dns %i 213.136.78.232 2"),
 							(int)netInterface->InterfaceIndex
 							);
 
