@@ -76,6 +76,7 @@ else
 	
 	# configure vpn
 	RANDIP
+	uci set network.qaulvpn.ipaddr=$MYIP
 	echo "$MYIP" > "/qaul/config/qaulvpn"
 	
 	# commit and restart

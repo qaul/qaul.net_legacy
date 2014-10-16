@@ -39,6 +39,13 @@ config interface 'qaulwifi'
 	option netmask '255.0.0.0'
 	option broadcast '10.255.255.255'
 
+config interface 'qaulvpn'
+	option ifname 'qaulvpn'
+	option proto 'static'
+	option ipaddr '10.10.10.12'
+	option netmask '255.0.0.0'
+	option broadcast '10.255.255.255'
+
 config interface 'lanwifi'
 	option proto     'static'            
 	option ipaddr    '192.168.10.1'     
