@@ -141,9 +141,6 @@ void Qaullib_User_LL_Clean (void)
 	struct qaul_user_LL_node mynode;
 	Qaullib_User_LL_InitNode(&mynode);
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_User_LL_Clean\n");
-
 	while(Qaullib_User_LL_NextNode(&mynode))
 	{
 		if(mynode.item->time +300 < time(NULL))
@@ -161,6 +158,10 @@ void Qaullib_User_LL_Clean (void)
 			{
 				mynode.item->changed = QAUL_USERCHANGED_DELETED;
 			}
+		}
+		else if(mynode.item->type == QAUL_USERTYPE_WEB_KNOWN)
+		{
+			// leave the web users online for 5 minutes
 		}
 		else if(mynode.item->time +10 < time(NULL))
 		{
@@ -223,9 +224,6 @@ void Qaullib_User_LL_IpTouch (union olsr_ip_addr *ip, float linkcost)
 	struct qaul_user_LL_item *new_item;
 	Qaullib_User_LL_InitNodeWithIP(&mynode, ip);
 	int ip_exists;
-
-	if(QAUL_DEBUG)
-		printf("Qaullib_User_LL_IpTouch\n");
 
 	ip_exists = 0;
 

@@ -1458,7 +1458,7 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn)
 	{
 		// check if node was changed
 		if(
-				mynode.item->type == QAUL_USERTYPE_KNOWN &&
+				(mynode.item->type == QAUL_USERTYPE_KNOWN || mynode.item->type == QAUL_USERTYPE_WEB_KNOWN) &&
 				(mynode.item->changed == QAUL_USERCHANGED_MODIFIED ||
 				mynode.item->changed == QAUL_USERCHANGED_DELETED ||
 				request_type > 0)
@@ -2195,9 +2195,6 @@ static void Qaullib_WwwWebGetMsgs(struct mg_connection *conn)
 	int  id, count, items;
 	struct qaul_msg_LL_node node;
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_WwwWebGetMsgs\n");
-
 	items = 0;
 
 	// send header
@@ -2301,9 +2298,6 @@ static void Qaullib_WwwWebSendMsg(struct mg_connection *conn)
 
 	// send and save message
 	Qaullib_MsgSendPublicWeb(&msg_item);
-
-	// check if web user is in user LL
-	Qaullib_UserCheckUser(&qaul_ip_addr, msg_item.name);
 
 	// everything went fine
 	// send header

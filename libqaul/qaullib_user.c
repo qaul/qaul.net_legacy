@@ -49,7 +49,7 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 	// check if user is web user
 	if(Qaullib_UserCheckWebUserName(name))
 	{
-		if(Qaullib_User_LL_IdSearch (ip, id, &user))
+		if(Qaullib_User_LL_IdSearch (ip, id, &user) == 1)
 		{
 			// if user exists: update lastseen_at
 			if(user->changed >= QAUL_USERCHANGED_DELETED)
@@ -145,9 +145,6 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 // ------------------------------------------------------------
 void Qaullib_UserTouchIp(union olsr_ip_addr *ip, float linkcost)
 {
-	if(QAUL_DEBUG)
-		printf("Qaullib_UserTouchIp\n");
-
 	Qaullib_User_LL_IpTouch (ip, linkcost);
 }
 
