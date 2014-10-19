@@ -50,8 +50,6 @@ var QAUL_FILESTATUS_MYFILE      =  5;
 
 function init_start()
 {
-	$.mobile.changePage('#page_loading');
-	
 	// bugfix check if browser is chrome
 	is_chrome = /chrome/.test(navigator.userAgent.toLowerCase());
 	
