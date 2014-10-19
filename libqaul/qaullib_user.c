@@ -423,7 +423,7 @@ void Qaullib_UserFavoriteAdd(char *name, char *ipstr, char *uidstr)
 	Qaullib_StringToHash(uidstr, myid);
 
 	// change it at user LL
-	if( Qaullib_User_LL_IdSearch (&myip, myid, &myitem) )
+	if( Qaullib_User_LL_IdSearch (&myip, myid, &myitem) == 1 )
 		myitem->favorite = 0;
 
 	// add it to DB
@@ -459,7 +459,7 @@ void Qaullib_UserFavoriteRemove(char *ipstr, char *uidstr)
 	Qaullib_StringToHash(uidstr, myid);
 
 	// change it at user LL
-	if( Qaullib_User_LL_IdSearch (&myip, myid, &myitem) )
+	if( Qaullib_User_LL_IdSearch (&myip, myid, &myitem) == 1 )
 		myitem->favorite = 0;
 
 	// remove it from DB
