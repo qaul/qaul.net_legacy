@@ -1624,8 +1624,6 @@ function config_network_show()
 	$("#c_network_config").hide();
 	$("#c_network_info").hide();
 	config_network_get();
-	
-	return true;
 }
 
 // get current network configuration
