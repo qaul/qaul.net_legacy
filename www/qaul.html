@@ -130,7 +130,7 @@
 		<p class="c_init"><a href="#page_pref" data-role="button" data-icon="arrow-l" data-direction="reverse" class="i18n">Back</a></p>
 	</div>
 	<div data-role="popup" id="c_internet_popup" data-transition="popup" class="ui-content">
-		<p class="i18n">Please select a network interface with internet connection.</p>
+		<p class="i18n">Select a network interface with Internet connection.</p>
 	</div>
 </div>
 
@@ -139,7 +139,7 @@
 		<p>
 			<form action="network" method="post" id="form_config_network" class="validate">
 				<div>
-					<label for="c_network_profile">Select Network Profile</label>
+					<label for="c_network_profile" class="i18n">Select Network Profile</label>
 					<select name="profile" id="c_network_profile">
 						<option value="qaul">qaul.net</option>
 						<option value="ff_berlin">Freifunk Berlin</option>
@@ -149,9 +149,7 @@
 					</select>
 				</div>
 				
-				<div class="ui-body ui-body-a ui-corner-all" id="c_network_info">
-					qaul.net is completely self configuring.<br/><br/>
-				</div>
+				<div class="ui-body ui-body-a ui-corner-all" id="c_network_info" class="i18n">qaul.net is completely self configuring.</div>
 				<div class="ui-body ui-body-a ui-corner-all" id="c_network_config">
 					<div id="c_network_config_info">
 					</div>
