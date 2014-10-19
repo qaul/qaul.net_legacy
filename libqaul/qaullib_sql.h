@@ -71,7 +71,7 @@ static const char* sql_config_delete = "DELETE FROM 'config' WHERE key = \"%s\";
  * user table
  * used to save and remember favorites
  */
-static const char* sql_user_table = "CREATE TABLE IF NOT EXISTS 'user' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL, 'name' TEXT, 'ipv' INTEGER DEFAULT 4, 'ipv4' INTEGER, 'ipv6' CHAR(16), 'icon' VARCHAR(255), 'created_at' INTEGER DEFAULT CURRENT_TIMESTAMP);";
+static const char* sql_user_table = "CREATE TABLE IF NOT EXISTS 'user' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL, 'name' TEXT, 'ipv' INTEGER DEFAULT 4, 'ipv4' INTEGER, 'ipv6' CHAR(16), 'uid' VARCHAR(255), 'icon' VARCHAR(255), 'created_at' INTEGER DEFAULT CURRENT_TIMESTAMP);";
 
 // set indexes
 static const char* sql_user_index = "CREATE INDEX IF NOT EXISTS 'user_name' ON 'user' ('name' ASC); CREATE INDEX IF NOT EXISTS 'user_ip' ON 'user' ('ipv4' ASC);";
@@ -89,12 +89,13 @@ static const char* sql_user_update_nameicon = "UPDATE 'user' SET  lastseen_at = 
 static const char* sql_user_update_name = "UPDATE 'user' SET lastseen_at = DATETIME('now', 'localtime'), name = \"%s\", online = %i WHERE id = %i ;";
 
 // insert user
-static const char* sql_user_set_ip = "INSERT INTO 'user' ('name','icon','ipv','ipv4','ipv6') VALUES (\"%s\",\"%s\",%i,%i,\"%s\");";
-static const char* sql_user_set_ipv4 = "INSERT INTO 'user' ('name','icon','ipv','ipv4') VALUES (\"%s\",\"%s\",4,%i);";
-static const char* sql_user_set_ipv6 = "INSERT INTO 'user' ('name','icon','ipv','ipv6') VALUES (\"%s\",\"%s\",6,\"%s\");";
+static const char* sql_user_set_ip = "INSERT INTO 'user' ('name','icon','ipv','ipv4','ipv6','uid') VALUES (\"%s\",\"%s\",%i,%i,\"%s\",\"%s\");";
+static const char* sql_user_set_ipv4 = "INSERT INTO 'user' ('name','icon','ipv','ipv4','uid') VALUES (\"%s\",\"%s\",4,%i,\"%s\");";
+static const char* sql_user_set_ipv6 = "INSERT INTO 'user' ('name','icon','ipv','ipv6','uid') VALUES (\"%s\",\"%s\",6,\"%s\",\"%s\");";
 
 // delete users
 static const char* sql_user_delete_id = "DELETE FROM 'user' WHERE id = %i;";
+static const char* sql_user_delete_uid = "DELETE FROM 'user' WHERE uid = \"%s\";";
 static const char* sql_user_delete_ipv4 = "DELETE FROM 'user' WHERE ipv4 = %i;";
 
 

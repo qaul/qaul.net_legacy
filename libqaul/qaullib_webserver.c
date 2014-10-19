@@ -1134,9 +1134,10 @@ static void Qaullib_WwwFavoriteGet(struct mg_connection *conn)
 				mg_printf_data(conn, ",");
 			// FIXME: ipv6
 			mg_printf_data(conn,
-					"{\"name\":\"%s\",\"ip\":\"%s\"}",
+					"{\"name\":\"%s\",\"ip\":\"%s\",\"id\":\"%s\"}",
 					mynode.item->name,
-					inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf))
+					inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
+					mynode.item->idstr
 					);
 		}
 	}
@@ -1147,13 +1148,15 @@ static void Qaullib_WwwFavoriteAdd(struct mg_connection *conn)
 {
 	char myname[3*MAX_USER_LEN +1];
 	char myipstr[MAX_IP_LEN +1];
+	char myidstr[MAX_HASHSTR_LEN +1];
 
 	// extract variable
 	mg_get_var(conn, "ip", myipstr, sizeof(myipstr));
 	mg_get_var(conn, "name", myname, sizeof(myname));
+	mg_get_var(conn, "id", myidstr, sizeof(myidstr));
 
 	printf("add favorite %s \n", myname);
-	Qaullib_UserFavoriteAdd(myname, myipstr);
+	Qaullib_UserFavoriteAdd(myname, myipstr, myidstr);
 
 	// send header
 	mg_send_status(conn, 200);
@@ -1165,12 +1168,14 @@ static void Qaullib_WwwFavoriteAdd(struct mg_connection *conn)
 static void Qaullib_WwwFavoriteDelete(struct mg_connection *conn)
 {
 	char myipstr[MAX_IP_LEN +1];
+	char myidstr[MAX_HASHSTR_LEN +1];
 
 	// extract variable
 	mg_get_var(conn, "ip", myipstr, sizeof(myipstr));
+	mg_get_var(conn, "id", myidstr, sizeof(myidstr));
 
 	printf("delete favorite %s \n", myipstr);
-	Qaullib_UserFavoriteRemove(myipstr);
+	Qaullib_UserFavoriteRemove(myipstr, myidstr);
 
 	// send header
 	mg_send_status(conn, 200);
@@ -1469,9 +1474,10 @@ static void Qaullib_WwwGetUsers(struct mg_connection *conn)
 
 				// FIXME: ipv6
 				mg_printf_data(conn,
-						"{\"name\":\"%s\",\"ip\":\"%s\",\"lq\":%i,\"add\":%i}",
+						"{\"name\":\"%s\",\"ip\":\"%s\",\"id\":\"%s\",\"lq\":%i,\"add\":%i}",
 						mynode.item->name,
 						inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
+						mynode.item->idstr,
 						Qaullib_UserLinkcost2Img(mynode.item->lq),
 						mynode.item->changed
 						);
@@ -2189,6 +2195,9 @@ static void Qaullib_WwwWebGetMsgs(struct mg_connection *conn)
 	int  id, count, items;
 	struct qaul_msg_LL_node node;
 
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwWebGetMsgs\n");
+
 	items = 0;
 
 	// send header
@@ -2249,6 +2258,11 @@ static void Qaullib_WwwWebSendMsg(struct mg_connection *conn)
 	char local_type[7];
 	time_t timestamp;
 	struct qaul_msg_LL_item msg_item;
+	struct qaul_user_LL_item *user_item;
+	unsigned char userid[MAX_HASH_LEN];
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwWebSendMsg\n");
 
 	// fill in data
 	msg_item.id = 0;
@@ -2262,6 +2276,15 @@ static void Qaullib_WwwWebSendMsg(struct mg_connection *conn)
 	mg_get_var(conn, "n", local_name, sizeof(local_name));
 	Qaullib_StringNameProtect(msg_item.name, local_name, sizeof(msg_item.name));
 
+	// check if name is web name, add [WEB] otherwise
+	if(Qaullib_UserCheckWebUserName(msg_item.name) == 0)
+	{
+		if(strlen(msg_item.name) +5 > MAX_USER_LEN)
+			strcpy(msg_item.name +MAX_USER_LEN -5, "[WEB]");
+		else
+			strcat(msg_item.name,"[WEB]");
+	}
+
 	// set time
 	time(&timestamp);
 	msg_item.time = (int)timestamp;
@@ -2270,13 +2293,17 @@ static void Qaullib_WwwWebSendMsg(struct mg_connection *conn)
 	// todo: ipv6
 	msg_item.ipv = 4;
 	strncpy(msg_item.ip, conn->remote_ip, sizeof(msg_item.ip));
-	inet_pton(AF_INET, conn->remote_ip, &msg_item.ip_union.v4);
+	//inet_pton(AF_INET, conn->remote_ip, &msg_item.ip_union.v4);
+	memcpy((char *)&msg_item.ip_union, (char *)&qaul_ip_addr, sizeof(msg_item.ip_union));
 
 	// set read
 	msg_item.read = 0;
 
 	// send and save message
 	Qaullib_MsgSendPublicWeb(&msg_item);
+
+	// check if web user is in user LL
+	Qaullib_UserCheckUser(&qaul_ip_addr, msg_item.name);
 
 	// everything went fine
 	// send header
@@ -2295,7 +2322,8 @@ static void Qaullib_WwwWebGetUsers(struct mg_connection *conn)
 	char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
 	first = 0;
 
-	printf("Qaullib_WwwWebGetUsers\n");
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwWebGetUsers\n");
 
 	// get variable r (0=just updates, 1=all, 2=all and don't update gui_notify)
 	request_type = 0;
@@ -2315,7 +2343,7 @@ static void Qaullib_WwwWebGetUsers(struct mg_connection *conn)
 	while(Qaullib_User_LL_NextNode(&mynode))
 	{
 		// only use named nodes
-		if(mynode.item->type == QAUL_USERTYPE_KNOWN)
+		if(mynode.item->type == QAUL_USERTYPE_KNOWN || mynode.item->type == QAUL_USERTYPE_WEB_KNOWN )
 		{
 			// make sure the user name is not empty
 			if(strlen(mynode.item->name) > 0 && mynode.item->changed <= QAUL_USERCHANGED_MODIFIED)
@@ -2327,14 +2355,28 @@ static void Qaullib_WwwWebGetUsers(struct mg_connection *conn)
 
 				// FIXME: ipv6
 				mg_printf_data(conn,
-						"{\"name\":\"%s\",\"ip\":\"%s\",\"lq\":%i,\"add\":1}",
+						"{\"name\":\"%s\",\"ip\":\"%s\",\"id\":\"%s\",\"lq\":%i,\"add\":1}",
 						mynode.item->name,
 						inet_ntop(AF_INET, &mynode.item->ip.v4.s_addr, (char *)&ipbuf, sizeof(ipbuf)),
+						mynode.item->idstr,
 						Qaullib_UserLinkcost2Img(mynode.item->lq)
 						);
 			}
 		}
 	}
+
+	// add host user
+	if(first)
+		mg_printf_data(conn, ",");
+
+	mg_printf_data(conn,
+							"{\"name\":\"%s\",\"ip\":\"%s\",\"id\":\"%s\",\"lq\":%i,\"add\":1}",
+							qaul_username,
+							qaul_ip_str,
+							"yourhostuserxxxxxxxxxxxxxxx",
+							4
+							);
+
 	mg_printf_data(conn, "]}");
 }
 

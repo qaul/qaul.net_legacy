@@ -222,6 +222,7 @@ else
 	    ../libqaul/qaullib_messaging.c ../libqaul/qaullib_msg_LL.c ../libqaul/qaullib_validate.c \
 	    ../libqaul/qaullib_filesharing.c ../libqaul/qaullib_file_LL.c \
 	    ../libqaul/qaullib_exediscovery.c \
+	    ../libqaul/qaullib_crypto.c \
 	    ../libqaul/qaullib_udp_communication.c \
 	    ../libqaul/captive/qaullib_captive.c ../libqaul/captive/qaullib_captive_dhcp.c ../libqaul/captive/qaullib_captive_dns.c \
 	    ../libqaul/mongoose/mongoose.c ../libqaul/sqlite/sqlite3.c \

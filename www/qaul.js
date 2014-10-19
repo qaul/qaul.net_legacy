@@ -454,7 +454,7 @@ function set_wifiset()
 // change views
 // ------------------------------------------------------
 
-function show_user(name, ip)
+function show_user(name, ip, id)
 {
 	user_last_id = 0;
 
@@ -481,10 +481,10 @@ function show_user(name, ip)
 	// load messages
 	get_user_msgs();
     // get info from remote user
-    load_remote_userinfo(name, ip);
+    load_remote_userinfo(name, ip, id);
 }
 
-function load_remote_userinfo(name, ip)
+function load_remote_userinfo(name, ip, id)
 {
 	$("#page_user_files").empty().append("<p class=\"user-file_loading\"><img src=\"images/i_loading_15.gif\"/></p>");
 	var path = "http://" +ip +":8081/pub_info.json";
@@ -839,9 +839,9 @@ function format_msg_voip(item)
 	return {"msg":msg,"button":button};
 }
 
-function format_msg_userlink(name, ip)
+function format_msg_userlink(name, ip, id)
 {
-	return '<a href="#page_user" onClick="javascript:show_user(\'' +name +'\',\'' +ip 
+	return '<a href="#page_user" onClick="javascript:show_user(\'' +name +'\',\'' +ip +'\',\'' +id 
 					+'\');">' +name +'</a>';
 }
 
@@ -2023,16 +2023,15 @@ function users_append(data)
 	var items = [];
 	$.each(data.users, function(i,item){
 		if(item.add == 1) 
-			user_append(item.name, item.ip, item.lq);
+			user_append(item.name, item.ip, item.id, item.lq);
 		else if(item.add >= 2)
-			user_remove(item.name, item.ip, item.lq);
+			user_remove(item.name, item.ip, item.id, item.lq);
 	});
 	$("#users").listview("refresh"); // This line now updates the listview
 }
 
-function user_append(name, ip, conn)
+function user_append(name, ip, id, conn)
 {
-	var id = ip2id(ip);
 	// check if it is a favorite
 	var usr = $("#favorites #" +id);
 	if(usr.length)
@@ -2068,11 +2067,11 @@ function user_append(name, ip, conn)
 			$("<li></li>")
 				.prop('id',id)
 				.data('connection', conn)
-				.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip 
+				.html('<a href="javascript:show_user(\'' +name +'\',\'' +ip +'\',\'' +id 
 					+'\')"' +webuser +'>' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					//+'<span class="ui-li-count msg_in">↑4 ↓3</span>' 
 					+'</a>'
-					+'<a href="javascript:favorite_add(\'' +name +'\',\'' +ip +'\');" data-icon="plus">add</a>'
+					+'<a href="javascript:favorite_add(\'' +name +'\',\'' +ip +'\',\'' +id +'\');" data-icon="plus">add</a>'
 					)
 				.insertAfter($("#users_divider"));
 				
@@ -2081,9 +2080,8 @@ function user_append(name, ip, conn)
     }
 }
 
-function user_remove(name, ip, conn)
+function user_remove(name, ip, id, conn)
 {
-	var id = ip2id(ip);
 	// check if favorite
 	if($("#favorites #" +id).length)
 	{
@@ -2139,7 +2137,7 @@ function favorites_append(data)
 {
 	var items = [];
 	$.each(data.favorites, function(i,item){
-		favorite_append(item.name, item.ip, 0, false);
+		favorite_append(item.name, item.ip, item.id, 0, false);
 	});
 	if ($("#favorites").hasClass('ui-listview')) 
    		$("#favorites").listview('refresh'); // list view as initialized and gets refreshed
@@ -2147,9 +2145,9 @@ function favorites_append(data)
 	    $("#favorites").trigger('create');
 }
 
-function favorite_append(name, ip, conn, online)
+function favorite_append(name, ip, id, conn, online)
 {
-	var href = ' href="javascript:show_user(\'' +name +'\',\'' +ip +'\')" ';
+	var href = ' href="javascript:show_user(\'' +name +'\',\'' +ip +'\',\'' +id +'\')" ';
 	var attr = ' class="fav"';
 	
 	if(!online) 
@@ -2161,21 +2159,21 @@ function favorite_append(name, ip, conn, online)
 	}
 	
 	$("<li></li>")
-		.prop('id',ip2id(ip))
+		.prop('id',id)
 		.data('connection', conn)
 		.html('<a ' +href +attr +'>' 
 					+'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					//+'<span class="ui-li-count msg_in">↑4 ↓3</span>' 
 					+'</a>'
-					+'<a href="javascript:favorite_del(\'' +name +'\',\'' +ip 
+					+'<a href="javascript:favorite_del(\'' +name +'\',\'' +ip +'\',\'' +id 
 					+'\');" data-icon="minus">remove</a>'
 					)
 		.appendTo($("#favorites"));
 }
 
-function favorite_add(name, ip)
+function favorite_add(name, ip, id)
 {
-	var usr = $("#users #" +ip2id(ip))
+	var usr = $("#users #" +id)
 	
 	// get connection
 	var conn = usr.data('connection');
@@ -2186,21 +2184,21 @@ function favorite_add(name, ip)
 	$.ajax({
 		type:'POST',
 		url: path,
-		data:{"ip":ip,"name":name,"e":1},
+		data:{"ip":ip,"name":name,"id":id,"e":1},
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
-			favorite_append(name, ip, conn, true);
+			favorite_append(name, ip, id, conn, true);
 			$("#favorites").listview('refresh');
 		} 
 	}).error(function(){
-		user_append(name, ip, conn);
+		user_append(name, ip, id, conn);
 	});
 }
 
-function favorite_del(name, ip)
+function favorite_del(name, ip, id)
 {
-	var fav = $("#favorites #" +ip2id(ip));
+	var fav = $("#favorites #" +id);
 	var conn = fav.data('connection');
 	
 	var online = true;
@@ -2211,24 +2209,17 @@ function favorite_del(name, ip)
 	$.ajax({
 		type:'POST',
 		url: path,
-		data:{"ip":ip,"e":1},
+		data:{"ip":ip,"id":id,"e":1},
 		cache: false, // needed for IE
 		dataType: "json",
 		success: function(data) {
 			if(online)
-				user_append(name, ip, conn);
+				user_append(name, ip, id, conn);
 		} 
 	}).error(function(){
-		favorite_append(name, ip, conn, online);
+		favorite_append(name, ip, id, conn, online);
 		$("#favorites").listview('refresh');
 	});
-}
-
-function ip2id(ip)
-{
-	var myip = ip.replace(/\./g,"_");
-	var myip2 = myip.replace(/:/g,"_");
-	return myip2;
 }
 
 // ======================================================

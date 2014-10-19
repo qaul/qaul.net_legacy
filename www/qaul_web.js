@@ -319,12 +319,12 @@ function set_wifiset()
 // change views
 // ------------------------------------------------------
 
-function show_user(name, ip)
+function show_user(name, ip, id)
 {
 	alert("show_user()");
 }
 
-function load_remote_userinfo(name, ip)
+function load_remote_userinfo(name, ip, id)
 {
 	$("#page_user_files").empty().append("<p class=\"user-file_loading\"><img src=\"images/i_loading_15.gif\"/></p>");
 	var path = "http://" +ip +":8081/pub_info.json";
@@ -483,7 +483,7 @@ function format_msg_voip(item)
 	return {"msg":msg,"button":button};
 }
 
-function format_msg_userlink(name, ip)
+function format_msg_userlink(name, ip, id)
 {
 	return '<span class="user">' +name +'</a>';
 }
@@ -1102,16 +1102,15 @@ function users_append(data)
 	var items = [];
 	$.each(data.users, function(i,item){
 		if(item.add == 1) 
-			user_append(item.name, item.ip, item.lq);
+			user_append(item.name, item.ip, item.id, item.lq);
 		else if(item.add >= 2)
-			user_remove(item.name, item.ip, item.lq);
+			user_remove(item.name, item.ip, item.id, item.lq);
 	});
 	$("#users").listview("refresh"); // This line now updates the listview
 }
 
-function user_append(name, ip, conn)
+function user_append(name, ip, id, conn)
 {
-	var id = ip2id(ip);
 	// check if it is a favorite
 	var usr = $("#favorites #" +id);
 	if(usr.length)
@@ -1149,7 +1148,7 @@ function user_append(name, ip, conn)
 				.data('connection', conn)
 				.html('<a href="#popup_users" data-rel="popup"' +webuser +'>' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					+'</a>'
-					+'<a href="javascript:favorite_add(\'' +name +'\',\'' +ip +'\');" data-icon="plus">add</a>'
+					+'<a href="javascript:favorite_add(\'' +name +'\',\'' +ip +'\',\'' +id +'\');" data-icon="plus">add</a>'
 					)
 				.insertAfter($("#users_divider"));
 			
@@ -1158,9 +1157,8 @@ function user_append(name, ip, conn)
     }
 }
 
-function user_remove(name, ip, conn)
+function user_remove(name, ip, id, conn)
 {
-	var id = ip2id(ip);
 	// check if favorite
 	if($("#favorites #" +id).length)
 	{
@@ -1216,7 +1214,7 @@ function favorites_append(data)
 {
 	var items = [];
 	$.each(data.favorites, function(i,item){
-		favorite_append(item.name, item.ip, 0, false);
+		favorite_append(item.name, item.ip, item.id, 0, false);
 	});
 	if ($("#favorites").hasClass('ui-listview')) 
    		$("#favorites").listview('refresh'); // list view as initialized and gets refreshed
@@ -1224,7 +1222,7 @@ function favorites_append(data)
 	    $("#favorites").trigger('create');
 }
 
-function favorite_append(name, ip, conn, online)
+function favorite_append(name, ip, id, conn, online)
 {
 	var attr = ' class="fav"';
 	if(!online) 
@@ -1233,32 +1231,32 @@ function favorite_append(name, ip, conn, online)
 		attr = ' onclick="javascript:return false;" class="webuser fav"';
 	
 	$("<li></li>")
-		.prop('id',ip2id(ip))
+		.prop('id', id)
 		.data('connection', conn)
 		.html('<a href="#popup_users" data-rel="popup"' +attr +'>' +'<img src="images/i_conn' +conn +'_13.png" class="ui-li-icon ui-corner-none"/>' +name 
 					+'</a>'
-					+'<a href="javascript:favorite_del(\'' +name +'\',\'' +ip 
+					+'<a href="javascript:favorite_del(\'' +name +'\',\'' +ip +'\',\'' +id
 					+'\');" data-icon="minus">remove</a>'
 					)
 		.appendTo($("#favorites"));
 }
 
-function favorite_add(name, ip)
+function favorite_add(name, ip, id)
 {
-	var usr = $("#users #" +ip2id(ip))
+	var usr = $("#users #" +id)
 	
 	// get connection
 	var conn = usr.data('connection');
 	// remove user
 	usr.remove();
 	
-	favorite_append(name, ip, conn, true);
+	favorite_append(name, ip, id, conn, true);
 	$("#favorites").listview('refresh');
 }
 
-function favorite_del(name, ip)
+function favorite_del(name, ip, id)
 {
-	var fav = $("#favorites #" +ip2id(ip));
+	var fav = $("#favorites #" +id);
 	var conn = fav.data('connection');
 	
 	var online = true;
@@ -1267,14 +1265,7 @@ function favorite_del(name, ip)
 	fav.remove();
 	
 	if(online)
-		user_append(name, ip, conn);
-}
-
-function ip2id(ip)
-{
-	var myip = ip.replace(/\./g,"_");
-	var myip2 = myip.replace(/:/g,"_");
-	return myip2;
+		user_append(name, ip, id, conn);
 }
 
 // ======================================================

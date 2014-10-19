@@ -91,6 +91,7 @@ SRC= $(DISTBASE)/libqaul/qaullib.c $(DISTBASE)/libqaul/qaullib_ipc.c $(DISTBASE)
      $(DISTBASE)/libqaul/qaullib_messaging.c $(DISTBASE)/libqaul/qaullib_msg_LL.c $(DISTBASE)/libqaul/qaullib_validate.c \
      $(DISTBASE)/libqaul/qaullib_filesharing.c $(DISTBASE)/libqaul/qaullib_file_LL.c \
      $(DISTBASE)/libqaul/qaullib_exediscovery.c \
+     $(DISTBASE)/libqaul/qaullib_crypto.c \
      $(DISTBASE)/libqaul/qaullib_udp_communication.c \
      $(DISTBASE)/libqaul/captive/qaullib_captive.c $(DISTBASE)/libqaul/captive/qaullib_captive_dhcp.c $(DISTBASE)/libqaul/captive/qaullib_captive_dns.c \
      $(DISTBASE)/libqaul/mongoose/mongoose.c $(DISTBASE)/libqaul/sqlite/sqlite3.c \
