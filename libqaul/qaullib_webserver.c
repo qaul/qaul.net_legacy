@@ -134,11 +134,11 @@ static void Qaullib_WwwFile2Json(struct mg_connection *conn, struct qaul_file_LL
 // ------------------------------------------------------------
 // web server polling thread
 // ------------------------------------------------------------
-void *Qaullib_Www_Server(void *qaul_webserver_instance)
+void *Qaullib_Www_Server(void *webserver_instance)
 {
-	while(qaul_webserver_instance != NULL)
+	while(webserver_instance != NULL)
 	{
-		mg_poll_server((struct mg_server *)qaul_webserver_instance, 100);
+		mg_poll_server((struct mg_server *)webserver_instance, 100);
 	}
 }
 
@@ -1679,8 +1679,6 @@ static void Qaullib_WwwFilePick(struct mg_connection *conn)
 // ------------------------------------------------------------
 static void Qaullib_WwwFilePickCheck(struct mg_connection *conn)
 {
-	printf("Qaullib_WwwFilePickCheck\n");
-
 	// send header
 	mg_send_status(conn, 200);
 	mg_send_header(conn, "Content-Type", "application/json; charset=utf-8");
@@ -2117,14 +2115,12 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn)
 			return;
 		}
 
-		printf("Qaullib_WwwPubFilechunk 1\n");
-
 		// send file chunk
 		Qaullib_FileCreatePath(local_file, local_hash, local_suffix);
 		FILE* sendfile = fopen(local_file, "rb") ;
 		if(sendfile != NULL)
 		{
-			printf("Qaullib_WwwPubFilechunk 2\n");
+			printf("Qaullib_WwwPubFilechunk send chunk\n");
 
 			// send type
 			msgbuf.filechunk.type = htonl(1);
@@ -2169,7 +2165,7 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn)
 		}
 		else
 		{
-			printf("Qaullib_WwwPubFilechunk 3\n");
+			printf("Qaullib_WwwPubFilechunk sendfile == NULL\n");
 
 			msgbuf.filechunk.type = htonl(0);
 			mg_write(conn, msgbuf.buf, sizeof(struct qaul_filechunk_msg));
@@ -2177,13 +2173,12 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn)
 	}
 	else
 	{
-		printf("Qaullib_WwwPubFilechunk 4\n");
+		printf("Qaullib_WwwPubFilechunk send error\n");
 
 		// send error
 		msgbuf.filechunk.type = htonl(0);
 		mg_write(conn, msgbuf.buf, sizeof(struct qaul_filechunk_msg));
 	}
-	printf("Qaullib_WwwPubFilechunk 5\n");
 }
 
 

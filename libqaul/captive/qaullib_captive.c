@@ -26,7 +26,7 @@ int Qaullib_CaptiveStart(void)
 	if(QAUL_DEBUG)
 		printf("Qaullib_CaptiveStart\n");
 
-	if(!qaul_captive_running && qaul_exe_available)
+	if(qaul_captive_running == 0 && qaul_exe_available == 1)
 	{
 		if(QAUL_DEBUG)
 			printf("start captive portal\n");
@@ -40,7 +40,8 @@ int Qaullib_CaptiveStart(void)
 
 		qaul_captive_running = 1;
 	}
-	return 1;
+
+	return qaul_captive_running;
 }
 
 // ---------------------------------------------------------------------

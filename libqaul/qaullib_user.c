@@ -81,7 +81,7 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 		// check if user exists in LL
 		user_exists = Qaullib_User_LL_IdSearch (ip, id, &user);
 
-		if(user_exists)
+		if(user_exists == 1)
 		{
 			// if user exists: update lastseen_at
 			if(user->changed >= QAUL_USERCHANGED_DELETED)
