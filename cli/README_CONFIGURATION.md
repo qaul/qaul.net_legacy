@@ -67,8 +67,10 @@ Open and edit the data base:
     # configure network interface manually
     SELECT value_int FROM 'config' WHERE key = "net.interface.manual";
     SELECT value FROM 'config' WHERE key = "net.interface.name";
-    DELETE FROM 'config' WHERE key = "net.interface.manual";
-    DELETE FROM 'config' WHERE key = "net.interface.name";
-    INSERT INTO 'config' ('key','type','value','value_int') VALUES ("net.interface.manual",0,"",1);
-    INSERT INTO 'config' ('key','type','value') VALUES ("net.interface.name",1,"eth0");
-
+    UPDATE 'config' SET value_int = 1 WHERE key = "net.interface.manual";
+    UPDATE 'config' SET value = 'eth0' WHERE key = "net.interface.name";
+    
+    # download advertised files automatically
+    SELECT value_int FROM 'config' WHERE key = "files.autodownload";
+    DELETE FROM 'config' WHERE key = "files.autodownload";
+    INSERT INTO 'config' ('key','type','value_int') VALUES ("files.autodownload",0,1);
