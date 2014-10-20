@@ -16,7 +16,7 @@ cd $SCRIPT_DIR
 ./olsrd.sh wlan0 wlan1
 
 # start qaul
-./qaul.sh
+sudo -u pi ./qaul.sh
 
 # start captive portal
 ./captive_iptables.sh wlan0 10.111.1.10

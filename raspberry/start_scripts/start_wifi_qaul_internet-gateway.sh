@@ -22,7 +22,7 @@ cd $SCRIPT_DIR
 ./nat.sh eth0
 
 # start qaul
-./qaul.sh
+sudo -u pi ./qaul.sh
 
 # start captive portal
 ./captive_iptables.sh wlan0 10.111.1.10

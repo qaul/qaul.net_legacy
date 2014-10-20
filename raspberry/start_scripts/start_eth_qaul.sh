@@ -28,7 +28,7 @@ cd $SCRIPT_DIR
 sudo olsrd -i eth0 -f $SCRIPT_DIR/olsrd_qaul.conf -d 0
 
 # start qaul
-./qaul.sh
+sudo -u pi ./qaul.sh
 
 # start captive portal
 ./captive_iptables.sh eth0 10.11.12.13
