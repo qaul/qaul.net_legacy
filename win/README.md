@@ -27,7 +27,7 @@ To develop and compile qaullib, pjsip, olsrd and olsrd_qaul plugin you will need
 Compile pjsip library for VoIP with mingw
 (at the end of compilation, pjlib-test will throw an error, ignore that error)
     
-	cd pjproject-2.2.1
+	cd pjproject-2.3
 	./aconfigure --disable-ssl CFLAGS='-m32' LDFLAGS='-m32'
 	
 The building of the samples does not work on Windows for this version and gives Errors.
