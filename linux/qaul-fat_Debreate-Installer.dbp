@@ -1,7 +1,7 @@
 [DEBREATE-0.7.7]
 <<CTRL>>
 Package: qaul.net
-Version: 1.0b3
+Version: 1.0b4
 Section: web
 Maintainer: qaul.net community <contact@qaul.net>
 Homepage: http://qaul.net
@@ -375,6 +375,12 @@ Description: tools for the next revolution
 /usr/share/qaul/portfwd* -> portfwd -> /usr/share/qaul
 /usr/share/qaul/qaul* -> qaul -> /usr/share/qaul
 /usr/share/qaul/app_icon.png -> app_icon.png -> /usr/share/qaul
+/usr/share/qaul/www/files/fat.sql -> fat.sql -> /usr/share/qaul/www/files
+/usr/share/qaul/www/files/c53968b99ec31129ccb7dc5f3f90030e4648dfb1.dmg -> c53968b99ec31129ccb7dc5f3f90030e4648dfb1.dmg -> /usr/share/qaul/www/files
+/usr/share/qaul/www/files/78f6362772319c2a0211a517480e30d6f138d5df.apk -> 78f6362772319c2a0211a517480e30d6f138d5df.apk -> /usr/share/qaul/www/files
+/usr/share/qaul/www/files/68655ebdbc03dda9898a6aa7acfbe0946bef981a.exe -> 68655ebdbc03dda9898a6aa7acfbe0946bef981a.exe -> /usr/share/qaul/www/files
+/usr/share/qaul/www/files/05a91f31a38393b84ebb07f3aa0dd1a98164d950.deb -> 05a91f31a38393b84ebb07f3aa0dd1a98164d950.deb -> /usr/share/qaul/www/files
+/usr/share/qaul/www/files/5c20b5d1aff1e1d8ace1de243bc6c604d6a76c4a.deb -> 5c20b5d1aff1e1d8ace1de243bc6c604d6a76c4a.deb -> /usr/share/qaul/www/files
 <</FILES>>
 <<SCRIPTS>>
 <<PREINST>>
@@ -406,6 +412,15 @@ rm "/usr/bin/qaul"
 <</SCRIPTS>>
 <<CHANGELOG>>
 <<DEST>>DEFAULT<</DEST>>
+qaul.net 1.0 (beta 4) ; urgency=low
+
+  * New web client for users without qaul.net-app
+  * File sharing auto download feature
+  * New GUI, VoIP & OLSRD versions
+  * various bugfixes
+
+ -- qaul.net community <contact@qaul.net>  Mon, 20 Oct 2014 14:15:33 +0100
+
 qaul.net 1.0 (beta 3) ; urgency=low
 
   * GTK client
@@ -451,8 +466,8 @@ That software may have different licenses.
 
 * olsrd written by Andreas Tonnesen & Thomas Lopatic see olsrd_BSD-license.txt
   source & more information: http://www.olsr.org
-* mongoose by Sergey Lyubka see mongoose_license.txt
-  source & more information: http://code.google.com/p/mongoose/
+* mongoose by Cesanta Software Ltd. (GPLv2)
+  source & more information: https://github.com/cesanta/mongoose
 * SQLight disclaims copyright and is in the public domain
   source & more information: http://www.sqlite.org
 * pjsip by Benny Prijono & Teluu Inc. (GPLv2)
@@ -484,7 +499,7 @@ That software may have different licenses.
 <<MENU>>
 1
 Name=qaul.net – قول
-Version=1.0b3
+Version=1.0b4
 Exec=qaul
 Comment=
 Icon=/usr/share/qaul/app_icon.png
