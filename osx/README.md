@@ -43,23 +43,11 @@ Compile qaulhelper
 
 Compile pjsip library for VoIP
 
-    cd pjproject-2.2.1
+    cd pjproject-2.3
     ./aconfigure --disable-ssl --disable-ffmpeg CFLAGS='-Wno-unused-label -m32' LDFLAGS='-m32'
     make dep
     make
     cd ../
-
-Compile static qaullib. 
-You may need to fix the file pjproject-2.0.1/pjlib/include/pj/compat/os_darwinos.h manually.
-Change line 98
-
-    typedef int socklen_t;
-    
-to
-   
-    #ifndef _SYS_SOCKET_H_
-    typedef int socklen_t;
-    #endif
 
 Now you should be able to successfully compile libqaul   
 
