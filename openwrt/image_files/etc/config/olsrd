@@ -5,8 +5,11 @@ config olsrd
 	option IpVersion '4'
 
 config LoadPlugin 'dyn_gw'
-	option library 'olsrd_dyn_gw.so.0.5'
-	option ignore '1'
+	option library  'olsrd_dyn_gw.so.0.5'
+	list   Ping     '213.136.78.232'
+	list   Ping     '77.67.33.81'
+	option Interval '5'
+	option ignore   '1'
 
 config LoadPlugin 'httpinfo'
 	option library 'olsrd_httpinfo.so.0.1'
