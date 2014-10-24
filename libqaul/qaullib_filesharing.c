@@ -710,6 +710,8 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item)
 				// fill in connection info
 				fileconnections[i].conn.received = 0;
 				fileconnections[i].conn.bufpos = 0;
+				// set link to file to NULL
+				fileconnections[i].file = 0;
 
 				// fill in address
 				// todo: ipv6
@@ -768,6 +770,7 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 
 	if(bytes == 0)
 	{
+		printf("Qaullib_FileDownloadProcess bytes == 0\n");
 		// check if file has finished downloading
 		Qaullib_FileDownloadFailed(fileconnection);
 
@@ -801,11 +804,16 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 					fileconnection->conn.bufpos = 0;
 				}
 				else
+				{
+					printf("Qaullib_FileDownloadProcess Qaullib_FileCompareFileSize comparison failed\n");
+
 					Qaullib_FileDownloadFailed(fileconnection);
+				}
 			}
 			else
 			{
 				printf("Qaullib_FileDownloadProcess file download failed: bytes %i msg-type %i %s\n", bytes, type, fileconnection->fileinfo->hashstr);
+
 				// end download
 				Qaullib_FileDownloadFailed(fileconnection);
 				return 0;
@@ -813,6 +821,7 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 		}
 		else if(first)
 		{
+			printf("Qaullib_FileDownloadProcess first\n");
 			//fileconnection->conn.bufpos = bytes;
 			Qaullib_FileDownloadFailed(fileconnection);
 			return 0;
@@ -890,7 +899,11 @@ void Qaullib_FileDownloadFailed(struct qaul_file_connection *fileconnection)
 
 	// close file
 	if(fileconnection->file != NULL)
+	{
+		printf("Qaullib_FileDownloadFailed fileconnection->file != NULL\n");
+
 		fclose(fileconnection->file);
+	}
 
 	printf("Qaullib_FileDownloadFailed 1\n");
 
@@ -1029,7 +1042,7 @@ static int Qaullib_HashCreate(char *filename, unsigned char *hash)
 // ------------------------------------------------------------
 int Qaullib_VerifyDownload(struct qaul_file_LL_item *file_item)
 {
-	char local_hash[MAX_HASH_LEN];
+	unsigned char local_hash[MAX_HASH_LEN];
 	char filepath[MAX_PATH_LEN +1];
 
 	if(QAUL_DEBUG)
@@ -1041,6 +1054,14 @@ int Qaullib_VerifyDownload(struct qaul_file_LL_item *file_item)
 	{
 		if(memcmp(&file_item->hash, local_hash, MAX_HASH_LEN) == 0)
 			return 1;
+		else
+		{
+			Qaullib_HashToString(local_hash, filepath);
+			printf("Qaullib_VerifyDownload hash comparison failed [%s] != [%s] \n", file_item->hashstr, filepath);
+		}
 	}
+	else
+		printf("Qaullib_VerifyDownload hash couldn't be created (%s)\n", filepath);
+
 	return 0;
 }

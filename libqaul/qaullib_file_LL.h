@@ -33,7 +33,7 @@ struct qaul_file_LL_item {
 
     int  id;                                  /// data base ID of the file entry
     int  type;                                /// type of the file, see QAUL_FILETYPE_XXX
-    char hash[MAX_HASH_LEN];                  /// file hash
+    unsigned char hash[MAX_HASH_LEN];                  /// file hash
     char hashstr[MAX_HASHSTR_LEN +1];         /// file hash string
     char suffix[MAX_SUFFIX_LEN +1];           /// file suffix
     char description[MAX_DESCRIPTION_LEN +1]; /// file description
