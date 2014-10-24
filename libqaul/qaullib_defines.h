@@ -30,7 +30,7 @@ extern "C" {
 #define MAX_TIME_LEN         20
 #define MAX_SSID_LEN         32
 #define MAX_BSSID_LEN        17
-#define MAX_PROFILE_LEN      30
+#define QAUL_MAX_PROFILE_LEN      30
 
 #define FLAG_EXE_WIN7      0x01
 #define FLAG_EXE_OSX105    0x02

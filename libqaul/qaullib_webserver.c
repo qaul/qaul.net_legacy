@@ -677,8 +677,8 @@ static void Qaullib_WwwConfigNetworkGet(struct mg_connection *conn)
 // ------------------------------------------------------------
 static void Qaullib_WwwConfigNetworkGetProfile(struct mg_connection *conn)
 {
-	char local_profile[MAX_PROFILE_LEN +1];
-	char profile_dbprotected[2*MAX_PROFILE_LEN +1];
+	char local_profile[QAUL_MAX_PROFILE_LEN +1];
+	char profile_dbprotected[2*QAUL_MAX_PROFILE_LEN +1];
 	char key[512];
 	char value[512];
 
@@ -749,7 +749,7 @@ static void Qaullib_WwwConfigNetworkGetProfile(struct mg_connection *conn)
 static void Qaullib_WwwConfigNetworkSet(struct mg_connection *conn)
 {
 	int value_int;
-	char local_profile[MAX_PROFILE_LEN +1], profile_dbprotected[2*MAX_PROFILE_LEN +1];
+	char local_profile[QAUL_MAX_PROFILE_LEN +1], profile_dbprotected[2*QAUL_MAX_PROFILE_LEN +1];
 	char key[512];
 	char value[255 +1], value_dbprotected[2*sizeof(value)];
 
