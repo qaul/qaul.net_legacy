@@ -283,7 +283,9 @@ void qaul_onquit(void)
 	else
 	{
 		// stop services
+		printf("[quit] qaul_stopPortForwarding\n");
 		qaul_stopPortForwarding();
+		printf("[quit] qaul_olsrdStop\n");
 		qaul_olsrdStop();
 
 		// stop network
