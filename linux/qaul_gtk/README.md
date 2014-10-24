@@ -113,7 +113,7 @@ Create the debian installer:
   file > open > linux/qaul_Debreate-Installer.dbp
 * Navigate to the "Control" page and select the correct processor 
   "Architecture".
-* Navigation to the "Build" page and click the gree build button to
+* Navigation to the "Build" page and click the green build button to
   build the installer.
 
 

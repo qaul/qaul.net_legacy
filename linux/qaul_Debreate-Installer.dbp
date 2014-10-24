@@ -1,7 +1,7 @@
 [DEBREATE-0.7.7]
 <<CTRL>>
 Package: qaul.net
-Version: 1.0b3
+Version: 1.0b4
 Section: web
 Maintainer: qaul.net community <contact@qaul.net>
 Homepage: http://qaul.net
@@ -27,7 +27,6 @@ Description: tools for the next revolution
 /usr/share/qaul/www/info/jquery.jsonp_MIT-license.txt -> jquery.jsonp_MIT-license.txt -> /usr/share/qaul/www/info
 /usr/share/qaul/www/info/SQLite_license.txt -> SQLite_license.txt -> /usr/share/qaul/www/info
 /usr/share/qaul/www/info/olsrd_BSD-license.txt -> olsrd_BSD-license.txt -> /usr/share/qaul/www/info
-/usr/share/qaul/www/info/mongoose_license.txt -> mongoose_license.txt -> /usr/share/qaul/www/info
 /usr/share/qaul/www/info/howto.html -> howto.html -> /usr/share/qaul/www/info
 /usr/share/qaul/www/info/license.html -> license.html -> /usr/share/qaul/www/info
 /usr/share/qaul/www/info/GPLv2.txt -> GPLv2.txt -> /usr/share/qaul/www/info
@@ -407,6 +406,15 @@ rm "/usr/bin/qaul"
 <</SCRIPTS>>
 <<CHANGELOG>>
 <<DEST>>DEFAULT<</DEST>>
+qaul.net 1.0 (beta 4) ; urgency=low
+
+  * New web client for users without qaul.net-app
+  * File sharing auto download feature
+  * New GUI, VoIP & OLSRD versions
+  * various bugfixes
+
+ -- qaul.net community <contact@qaul.net>  Mon, 20 Oct 2014 14:15:33 +0100
+
 qaul.net 1.0 (beta 3) ; urgency=low
 
   * GTK client
@@ -452,8 +460,8 @@ That software may have different licenses.
 
 * olsrd written by Andreas Tonnesen & Thomas Lopatic see olsrd_BSD-license.txt
   source & more information: http://www.olsr.org
-* mongoose by Sergey Lyubka see mongoose_license.txt
-  source & more information: http://code.google.com/p/mongoose/
+* mongoose by Cesanta Software Ltd. (GPLv2)
+  source & more information: https://github.com/cesanta/mongoose
 * SQLight disclaims copyright and is in the public domain
   source & more information: http://www.sqlite.org
 * pjsip by Benny Prijono & Teluu Inc. (GPLv2)
@@ -485,7 +493,7 @@ That software may have different licenses.
 <<MENU>>
 1
 Name=qaul.net – قول
-Version=1.0b3
+Version=1.0b4
 Exec=qaul
 Comment=
 Icon=/usr/share/qaul/app_icon.png
