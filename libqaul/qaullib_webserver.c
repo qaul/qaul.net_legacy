@@ -2153,6 +2153,11 @@ static void Qaullib_WwwPubFilechunk(struct mg_connection *conn)
 	        	}
 	        	len = fread( buffer, 1, mybuf, sendfile);
 	        	mg_write(conn, buffer, len);
+
+#ifdef WIN32
+	        	// sleep on windows
+	        	Sleep(100);
+#endif
 	        }
 			/*
 	        while( (len = fread( buffer, 1, BUFSIZ, sendfile)) > 0 )
