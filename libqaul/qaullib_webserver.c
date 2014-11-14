@@ -433,6 +433,29 @@ int Qaullib_WwwEvent_handler(struct mg_connection *conn, enum mg_event event)
 	{
 		processed = 1;
 	}
+	else if (event == MG_HTTP_ERROR)
+	{
+		if(qaul_web_localip_set == 1 &&
+			strncmp(qaul_web_localip, conn->remote_ip, sizeof(qaul_web_localip))
+			)
+		{
+			// do nothing
+		}
+		else
+		{
+			// redirect to splash page
+			mg_send_status(conn, 301);
+			mg_send_header(conn, "Location", "http://start.qaul/");
+			mg_send_header(conn, "Content-Type", "text/html");
+
+			mg_printf_data(conn, "<html>");
+			mg_printf_data(conn, "<head><title>Open Start Page</title></head>");
+			mg_printf_data(conn, "<body><h1>Open <a href="http://start.qaul/">Start Page</a></h1></body>");
+			mg_printf_data(conn, "</html>");
+
+			processed = 1;
+		}
+	}
 	else
 	{
 		processed = 0;
