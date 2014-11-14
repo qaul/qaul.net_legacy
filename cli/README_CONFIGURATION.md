@@ -74,3 +74,6 @@ Open and edit the data base:
     SELECT value_int FROM 'config' WHERE key = "files.autodownload";
     DELETE FROM 'config' WHERE key = "files.autodownload";
     INSERT INTO 'config' ('key','type','value_int') VALUES ("files.autodownload",0,1);
+    
+    # insert files from SQL file
+    .read www/file.sql
