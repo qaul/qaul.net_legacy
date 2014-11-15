@@ -77,3 +77,16 @@ Open and edit the data base:
     
     # insert files from SQL file
     .read www/file.sql
+
+
+Administrate Shared Files via CLI 
+---------------------------------
+
+Get File hashes and Delete files
+
+	# show all available files with hashes
+	wget http://localhost:8081/file_list.json
+	cat file_list.json
+	
+	# delete file with hash FILEHASH
+	wget http://localhost:8081/file_delete.json?hash=FILEHASH
