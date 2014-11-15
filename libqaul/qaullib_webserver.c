@@ -449,7 +449,7 @@ int Qaullib_WwwEvent_handler(struct mg_connection *conn, enum mg_event event)
 			mg_send_header(conn, "Content-Type", "text/html");
 
 			mg_printf_data(conn, "<html>");
-			mg_printf_data(conn, "<head><title>Open Start Page</title></head>");
+			mg_printf_data(conn, "<head><title>Open Can You Hear Me Start Page</title></head>");
 			mg_printf_data(conn, "<body><h1>Open <a href=\"http://canyouhearme.qaul/\">Can You Hear Me Start Page</a></h1></body>");
 			mg_printf_data(conn, "</html>");
 
