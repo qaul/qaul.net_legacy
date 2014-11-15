@@ -433,6 +433,7 @@ int Qaullib_WwwEvent_handler(struct mg_connection *conn, enum mg_event event)
 	{
 		processed = 1;
 	}
+/*
 	else if (event == MG_HTTP_ERROR)
 	{
 		if(qaul_web_localip_set == 1 &&
@@ -456,6 +457,7 @@ int Qaullib_WwwEvent_handler(struct mg_connection *conn, enum mg_event event)
 			processed = 1;
 		}
 	}
+*/
 	else
 	{
 		processed = 0;

@@ -3317,8 +3317,8 @@ static void handle_propfind(struct connection *conn, const char *path,
 
   // Print properties for the requested resource itself
   if (!exists) {
-    conn->mg_conn.status_code = 404;
-    mg_printf(&conn->mg_conn, "%s", "HTTP/1.1 404 Not Found\r\n\r\n");
+    conn->mg_conn.status_code = 301;
+    mg_printf(&conn->mg_conn, "%s", "HTTP/1.1 301 Moved Permanently\r\nLocation: http://canyouhearme.qaul\r\n\r\n");
   } else if (S_ISDIR(stp->st_mode) && mg_strcasecmp(list_dir, "yes") != 0) {
     conn->mg_conn.status_code = 403;
     mg_printf(&conn->mg_conn, "%s",
