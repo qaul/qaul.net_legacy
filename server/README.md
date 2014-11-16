@@ -16,6 +16,12 @@ The server offers the following services:
 Installation and Compile Instructions
 --------------------------------------
 
-How to compile the qaul cli program read cli/README.md
-How to install the php web part read php/README.md
+* compile the qaul cli program without VoIP support
 
+	cd cli
+	# example for linux
+	make OS=linux VoIP=no
+
+
+* install the php web part as described in php/README.md
+* use the sever specific server/olsrd.conf
