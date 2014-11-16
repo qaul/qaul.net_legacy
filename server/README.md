@@ -24,4 +24,4 @@ Installation and Compile Instructions
 
 
 * install the php web part as described in php/README.md
-* use the sever specific server/olsrd.conf
+* for VPN connections of olsrd use the specific server/olsrd_vpn.conf
