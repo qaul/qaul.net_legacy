@@ -1,0 +1,116 @@
+#!/bin/sh
+
+## json configuration file
+
+# send configuration
+echo "Content-type: application/json"
+echo ""
+echo "{"
+
+# check authentication
+qaul_auth=`/qaul/bin/authenticate.sh`
+
+# send info
+if [ "$qaul_auth" = "1" ]
+then
+	qaul_pw_default=`cat /etc/shadow | grep "^root:" | sed -E "s/^(root:.1.IxLAgyK8.k9p3I2IDnER48L8H49lPq.:.*)|(.*)/\1/"`
+	
+	if [ "$qaul_pw_default" = "" ]
+	then
+		echo "\"auth\":$qaul_auth,"
+
+		qaul_internet=`cat /qaul/config/internet`
+		echo "\"internet\":$qaul_internet,"
+
+		qaul_storage=`cat /qaul/config/storage`
+		echo "\"storage\":$qaul_storage,"
+
+		qaul_storage=`df -h | grep rootfs | sed -E 's/^[a-zA-Z0-9]+[ ]+([a-zA-Z0-9.%]+)[ ]+.*$/\1/'`
+		echo "\"storage_total\":\"$qaul_storage\","
+
+		qaul_storage=`df -h | grep rootfs | sed -E 's/^[a-zA-Z0-9]+[ ]+[a-zA-Z0-9.%]+[ ]+[a-zA-Z0-9.%]+[ ]+([a-zA-Z0-9.%]+)[ ]+.*$/\1/'`
+		echo "\"storage_free\":\"$qaul_storage\","
+
+
+		# mobile
+		qaul_mobile=`cat /qaul/config/mobile`
+		echo "\"mobile\":{\"configured\":$qaul_mobile"
+		if [ $qaul_mobile == 1 ]; then
+			value=`uci get network.wan3g.apn`
+			echo ",\"apn\":\"$value\""
+			
+			value=`uci get network.wan3g.pincode`
+			echo ",\"pin\":\"$value\""
+
+			value=`uci get network.wan3g.username`
+			echo ",\"user\":\"$value\""
+			
+			value=`uci get network.wan3g.username`
+			echo ",\"password\":\"$value\""
+		fi
+		echo "},"
+		
+		
+		# ethernet configuration
+		qaul_eth_config=`cat /qaul/config/eth_config`
+		echo "\"eth_config\":\"$qaul_eth_config\","
+
+		qaul_eth=`cat /qaul/config/eth`
+		echo "\"eth\":\"$qaul_eth\","
+		
+		
+		# wifi configuration
+		echo "\"wifi\":{"
+		value=`uci get wireless.qaulwifi.disabled 2>&1`
+		if [ "$value" == "0" ]; then
+			echo "\"qaulwifi\":1,"
+		else
+			echo "\"qaulwifi\":0,"
+		fi
+		value=`uci get wireless.lanwifi.disabled 2>&1`
+		if [ "$value" == "0" ]; then
+			echo "\"lanwifi\":1,"
+		else
+			echo "\"lanwifi\":0,"
+		fi
+		value=`uci get wireless.radio0.distance 2>&1`
+		if [ "$value" != "uci: Entry not found" ]; then
+			echo "\"distance\":$value"
+		else
+			echo "\"distance\":300"
+		fi
+		echo "},"
+		
+		
+		# display ip's
+		echo "\"config\":["
+		comma=""
+		value=`uci get network.qaulwifi.ipaddr 2>&1`
+		if [ "$value" != "uci: Entry not found" ]; then
+			echo "\"WLAN: $value\""
+			comma=","
+		fi
+		value=`uci get network.wan.ipaddr 2>&1`
+		if [ "$value" != "uci: Entry not found" ]; then
+			echo "$comma\"WAN: $value\""
+			comma=","
+		fi
+		value=`uci get network.qauleth.ipaddr 2>&1`
+		if [ "$value" != "uci: Entry not found" ]; then
+			echo "$comma\"ETH qaul: $value\""
+			comma=","
+		fi
+		value=`uci get network.lan.ipaddr 2>&1`
+		if [ "$value" != "uci: Entry not found" ]; then
+			echo "$comma\"LAN: $value\""
+			comma=","
+		fi
+		echo "]"
+	else
+		echo "\"auth\":2"
+	fi
+else
+	echo "\"auth\":0"
+fi
+
+echo "}"

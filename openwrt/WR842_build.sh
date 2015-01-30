@@ -5,9 +5,9 @@
 
 
 # prepare files to include
-rm -R tmp_qaul.net
-cp -R qaul.net tmp_qaul.net
-cp -R WR842/* tmp_qaul.net/
+rm -R image_files_tmp
+cp -R image_files image_files_tmp
+cp -R WR842/* image_files_tmp/
 
 # change into build directory
 cd OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64
@@ -29,18 +29,26 @@ cd OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64
 # kmod-usb-net    # for tethering and rndis support (new 4G dongles)
 # kmod-usb-serial # for dongles with serial support (most common)
 # 
-make image PROFILE=TLWR842 FILES=../tmp_qaul.net \
+# authentication:
+# empty           # interactive pseudo shell
+# pam 
+make image PROFILE=TLWR842 FILES=../image_files_tmp \
     PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip ip \
-    tcpdump olsrd-mod-txtinfo \
-    uhttpd empty \
-	libubus-lua liblua lua libuci-lua \
-    luci-ssl libpolarssl px5g \
+    tcpdump-mini olsrd-mod-txtinfo \
+    uhttpd \
+    luci-ssl \
     tinc \
+	openvpn-openssl \
     kmod-usb-storage block-mount kmod-fs-ext4 \
     comgt kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm kmod-usb-net usb-modeswitch \
-    openssh-sftp-server horst"
+    kmod-usb-net kmod-usb-net-rndis kmod-usb-net-cdc-ether usbutils udev \
+    kmod-usb-net-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-mbim kmod-usb-net-cdc-subset \
+    uqmi kmod-usb-net-qmi-wwan \
+ 	openssh-sftp-server horst \
+ 	nodogsplash \
+	"
 
 cd ../
 
 # copy the image into the top directory
-cp ./OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64/bin/ar71xx/openwrt-ar71xx-generic-tl-wr842n-v2-squashfs-factory.bin ./
+cp ./OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64/bin/ar71xx/openwrt-ar71xx-generic-tl-wr842n-*squashfs-factory.bin ./

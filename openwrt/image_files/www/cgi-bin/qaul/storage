@@ -1,0 +1,17 @@
+#!/bin/sh
+
+echo "Content-type: application/json"
+echo ""
+
+# authenticate
+qaul_auth=`/qaul/bin/authenticate.sh`
+
+if [ "$qaul_auth" = "1" ]
+then
+	# switch internet on
+	/qaul/bin/storage_config.sh &
+
+	echo "{\"s\":1}"
+else
+	echo "{\"s\":0}"
+fi

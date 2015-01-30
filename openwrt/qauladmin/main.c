@@ -11,15 +11,18 @@
  *   /qaul/bin/qauladmin
  * 
  * usage:
- *   qauladmin login <username>
- *
+ *   qauladmin login <password> <shadowhash>
+ *   qauladmin login mypassword \$1\$IxLAgyK8\$k9p3I2IDnER48L8H49lPq/
+ *   qauladmin newpasswd <password> <salt>
+ *   qauladmin newpasswd newpassword \$1\$IxLAgyK8
  */
 
+#define _XOPEN_SOURCE
 
-#include <security/pam_appl.h>
-#include <security/pam_misc.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
+#include <crypt.h>
 
 
 /**
@@ -32,9 +35,18 @@ void print_help ();
  * login
  * 
  * checks authentication for root user.
- * The function prints 1 on success and 0 on failure to stdout.
+ * The function prints "success" or "error" to stdout.
  */
 void login (int argc, const char * argv[]);
+
+/**
+ * encrypt new password
+ * 
+ * Function new password with salt.
+ * The function prints the encrypted password string for the 
+ * shadow file to standard out.
+ */
+void newpasswd (int argc, const char * argv[]);
 
 
 int main (int argc, const char * argv[])
@@ -44,6 +56,10 @@ int main (int argc, const char * argv[])
         if(strncmp(argv[1], "login", 5) == 0)
         {
             login(argc, argv);
+        }
+        else if(strncmp(argv[1], "newpasswd", 5) == 0)
+        {
+            newpasswd(argc, argv);
         }
         else
         {
@@ -65,35 +81,48 @@ void print_help ()
 	printf("\n");
 	printf("qauladmin executes qaul.net web admin tasks\n\n");
 	printf("usage:\n");
-	printf("  qauladmin login <username>\n");
+	printf("  qauladmin login <password> <shadowhash>\n");
+	printf("  qauladmin login mypassword \\$1\\$IxLAgyK8\\$k9p3I2IDnER48L8H49lPq/\n");
+	printf("  qauladmin newpasswd <newpassword> <salt>\n");
+	printf("  qauladmin newpasswd mynewpassword \\$1\\$IxLAgyK8\n");
 	printf("\n");
 }
 
-
 void login (int argc, const char * argv[])
 {
-    if(argc >= 2)
+	char *crypt_hash;
+	const char *password, *hash;
+	
+    if(argc >= 3)
     {
-		const char*            user = argv[2];
-		static struct pam_conv pam_conversation = { misc_conv, NULL };
-		pam_handle_t*          pamh;
-
-		int res = pam_start(argv[0], user, &pam_conversation, &pamh);
+		password = argv[2];
+		hash = argv[3];
 		
-		if (res == PAM_SUCCESS)
-		  res = pam_authenticate(pamh, 0);
-
-		if (res == PAM_SUCCESS)
-		  res = pam_acct_mgmt(pamh, 0);
-
-		if (res == PAM_SUCCESS)
-		  fprintf(stdout, "success");
+		crypt_hash = crypt(password, hash);
+		
+		if(strncmp(crypt_hash, hash, strlen(hash)) == 0)
+			printf("success");
 		else
-		  fprintf(stdout, "error");
-
-		pam_end(pamh, 0);		
-    }
+			printf("error");
+	}
     else
         printf("missing argument\n");
 }
 
+void newpasswd (int argc, const char * argv[])
+{
+	char *crypt_hash;
+	const char *password, *salt;
+	
+    if(argc >= 3)
+    {
+		password = argv[2];
+		salt = argv[3];
+		
+		crypt_hash = crypt(password, salt);
+		
+		printf("%s", crypt_hash);
+	}
+    else
+        printf("missing argument\n");
+}

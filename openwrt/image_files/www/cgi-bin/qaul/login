@@ -1,0 +1,36 @@
+#!/bin/sh
+
+echo "Content-type: application/json"
+
+# generate random MD5 sum from 
+random=`head -c256 /dev/urandom`
+MD5=`echo -n '$random'  | md5sum | awk '{print $1}'`
+
+# receive POST variables
+if [ "$REQUEST_METHOD" = POST ]; then
+	read -n $CONTENT_LENGTH QUERY_STRING_POST
+fi
+
+# get and analyse user input
+IFS="&="
+set -- $QUERY_STRING_POST
+PASSWORD=`echo "$2" | sed -E "s/^([^ ;\|\/\$\"]*)|(.*)$/\1/"`
+
+# login
+if [ "$PASSWORD" != "" ]
+then
+	qaul_auth=`/qaul/bin/login.sh "$PASSWORD" "$MD5" "$REMOTE_HOST"`
+	
+	if [ "$qaul_auth" = "1" ]
+	then
+		echo "Set-Cookie: s=$MD5"
+		echo ""
+		echo "{\"s\":1}"
+	else
+		echo ""
+		echo "{\"s\":0}"
+	fi
+else
+	echo ""
+	echo "{\"s\":0}"
+fi

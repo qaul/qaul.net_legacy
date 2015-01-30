@@ -1,14 +1,20 @@
 config wifi-device  radio0
 	option type     mac80211
 	option channel  11
-	option hwmode	11g
-	option path	'platform/ar934x_wmac'
-	option htmode	HT20
-	option country  DE
-	option rxldpc	0
-	option ldpc	0
-	option short_gi_20 0
-	option distance '600'
+#	option phy 		phy0
+	option path 'platform/ar934x_wmac'
+#	option hwmode	11ng
+#	option htmode	HT20
+## define distance of farest access point in meters
+	option distance    '600'
+## transmission power
+## txpower 20 =  100mW
+## txpower 23 =  200mW
+## txpower 27 =  500mW
+## txpower 30 = 1000mW
+	option country     'DE'
+#	option txpower     '20'
+	option disabled '0'
 
 config wifi-iface qaulwifi
 	option device      'radio0'
