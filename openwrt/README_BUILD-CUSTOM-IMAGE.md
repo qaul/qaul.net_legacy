@@ -17,7 +17,7 @@ Preparations
   download therefore 
   http://downloads.openwrt.org/barrier_breaker/14.07-rc1/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64.tar.bz2
 * Extract the downloaded archive in the openwrt directory.
-* To add locally build packages edit the file repositories.conf and add
+* To add locally built packages edit the file repositories.conf and add
   the path to your local repository:
 
     # e.g.
@@ -62,10 +62,16 @@ Preparations
     #   USB Support
     #     kmod-usb-acm
     #     kmod-usb-net
+    #     kmod-usb-net-cdc-ncm
+    #     kmod-usb-net-qmi-wwan
     #     kmod-usb-serial
     #     kmod-usb-serial-option
     #     kmod-usb-serial-wwan
     #     kmod-usb-storage
+    # LuCI
+    #   1. Collections
+    #     [luci]
+    #     [luci-ssl]
     # Network
     #   Captive Portals
     #     [nodogsplash]
@@ -76,6 +82,7 @@ Preparations
     #       [olsrd-mod-txtinfo]
     #   SSH
     #     [openssh-sftp-server]
+    #   [uqmi]
     #   VPN
     #     [openvpn]
     #     [tinc]
@@ -85,10 +92,6 @@ Preparations
     #   wireless
     #     [horst]
     #   tcpdump-mini
-    # LuCI
-    #   1. Collections
-    #     [luci]
-    #     [luci-ssl]
     # Utilities
     #   comgt
     #   usb-modeswitch

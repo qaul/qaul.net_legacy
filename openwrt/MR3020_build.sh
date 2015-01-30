@@ -34,6 +34,7 @@ make image PROFILE=TLMR3020 FILES=../image_files_tmp \
     uhttpd \
     kmod-usb-storage block-mount kmod-fs-ext4 \
     comgt kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm kmod-usb-net usb-modeswitch \
+    nodogsplash \
     "
 #    PACKAGES="olsrd olsrd-mod-dyn-gw kmod-ipip ip \
 #    uhttpd \

@@ -38,9 +38,15 @@ make image PROFILE=TLWR842 FILES=../image_files_tmp \
     uhttpd \
     luci-ssl \
     tinc \
+	openvpn-openssl \
     kmod-usb-storage block-mount kmod-fs-ext4 \
     comgt kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm kmod-usb-net usb-modeswitch \
-    openssh-sftp-server horst"
+    kmod-usb-net kmod-usb-net-rndis kmod-usb-net-cdc-ether usbutils udev \
+    kmod-usb-net-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-mbim kmod-usb-net-cdc-subset \
+    uqmi kmod-usb-net-qmi-wwan \
+ 	openssh-sftp-server horst \
+ 	nodogsplash \
+	"
 
 cd ../
 
