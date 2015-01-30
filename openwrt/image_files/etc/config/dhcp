@@ -17,7 +17,7 @@ config dnsmasq
 	list notinterface	lo
 
 config dhcp lanwifi
-	option interfac lanwifi
+	option interface lanwifi
 	option start 		 50
 	option limit		200
 	option leasetime    20m
