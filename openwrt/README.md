@@ -16,4 +16,9 @@ Warning
 -------
 
 The OpenWRT port and the GUI are still work in progress and not yet 
-generic for every device.
+generic for every device. 
+
+Our test devices are:
+
+* TP-Link TL-MR3020
+* TP-Link TL-WR842
