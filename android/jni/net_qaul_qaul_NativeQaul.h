@@ -137,10 +137,10 @@ JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getNetGateway
 
 /*
  * Class:     net_qaul_qaul_NativeQaul
- * Method:    getWifiIbss
+ * Method:    getWifiSsid
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getWifiIbss
+JNIEXPORT jstring JNICALL Java_net_qaul_qaul_NativeQaul_getWifiSsid
   (JNIEnv *, jobject);
 
 /*

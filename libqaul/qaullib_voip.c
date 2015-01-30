@@ -46,11 +46,11 @@ static void Qaullib_VoipSetNameByIp(char *ip)
 	inet_pton(AF_INET, ip, &my_olsrip.v4);
 
 	if(strlen(ip) <= MAX_IP_LEN)
-		strcpy(qaul_voip_call.ip, ip);
+		strncpy(qaul_voip_call.ip, ip, sizeof(qaul_voip_call.ip));
 
 	printf("ip: %s\n", ip);
 
-	if(Qaullib_User_LL_IpSearch(&my_olsrip, &myuseritem) && myuseritem->type == QAUL_USERTYPE_KNOWN)
+	if(Qaullib_User_LL_IpGetFirst(&my_olsrip, &myuseritem) == 1 && myuseritem->type == QAUL_USERTYPE_KNOWN)
 		strcpy(qaul_voip_call.name, myuseritem->name);
 	else
 		strcpy(qaul_voip_call.name, "Unknown");
@@ -61,45 +61,41 @@ static void Qaullib_VoipSetNameByIp(char *ip)
  */
 static void Qaullib_VoipLogCall(void)
 {
-	printf("Qaullib_VoipLogCall()\n");
-
-	char buffer[1024];
-	char* stmt;
-	int mytype;
-	char *error_exec;
 	time_t timestamp;
+	struct qaul_msg_LL_item msg_item;
 
-	stmt = buffer;
-	error_exec = NULL;
+	printf("Qaullib_VoipLogCall()\n");
 
 	if(qaul_voip_call.call_logged == 0)
 	{
 		qaul_voip_call.call_logged = 1;
 
-		if(qaul_voip_call.outgoing)
-			mytype = 13;
-		else
-			mytype = 3;
+		// fill in values
+		msg_item.id = 0;
 
-		time(&timestamp);
-		sprintf(stmt,
-				sql_msg_set_voip,
-				mytype,
-				qaul_voip_call.name,
-				"{}",
-				qaul_voip_call.ip,
-				4,
-				(int)timestamp
-				);
-		if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
-		{
-			// execution failed
-			printf("SQLite error: %s\n",error_exec);
-			sqlite3_free(error_exec);
-			error_exec=NULL;
-		}
+		if(qaul_voip_call.outgoing)
+			msg_item.type = 13;
 		else
-			qaul_new_msg++;
+			msg_item.type = 3;
+
+		strncpy(msg_item.msg, "{}", sizeof(msg_item.msg));
+		strncpy(msg_item.name, qaul_voip_call.name, sizeof(msg_item.name));
+
+		// set time
+		time(&timestamp);
+		msg_item.time = (int)timestamp;
+
+		// set read
+		msg_item.read = 0;
+
+		// set ip
+		// todo: ipv6
+		msg_item.ipv = 4;
+		strncpy(msg_item.ip, qaul_voip_call.ip, sizeof(msg_item.ip));
+		inet_aton(qaul_voip_call.ip, &msg_item.ip_union.v4);
+
+	  	// save message
+		Qaullib_MsgAdd(&msg_item);
 	}
 }
 
@@ -365,7 +361,7 @@ int Qaullib_VoipStart(void)
     return 1;
 }
 
-int Qaullib_VoipStop(void)
+void Qaullib_VoipStop(void)
 {
 	// Destroy pjsua
 	pjsua_destroy();

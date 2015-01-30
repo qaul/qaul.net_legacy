@@ -7,6 +7,8 @@
 "Delete":"Löschen",
 "Back":"Zurück",
 "Next":"Weiter",
+"On":"Ja",
+"Off":"Nein",
 
 "Favorites / Friends":"Favoriten / Freunde",
 "Other Users":"Andere Benutzer",
@@ -32,12 +34,31 @@
 "Configuration":"Konfiguration",
 "Change Language":"Sprache ändern",
 "Change User Name":"Benutzername ändern",
-"Change Network Interface":"Netzwerk Interface ändern",
+"Share Internet Connection":"Internetverbindung teilen",
+"Configure Custom Network":"Community-Netzwerk konfigurieren",
+"Configure File Sharing":"File-Sharing konfigurieren",
+"Change Network Interface":"Netzwerk-Interface ändern",
 "Show Network":"Netzwerktopologie anzeigen",
 
+"Share Your Internet Connection":"Teile deine Internetverbindung",
+"Select a network interface with Internet connection.":"Wähle ein Netzwerk-Interface welches über eine Internetverbindung verfügt",
+
+"Select Network Profile":"Wähle ein Netzwerkprofil",
+"custom":"Benutzerdefiniert",
+"qaul.net is completely self configuring.":"qaul.net ist komplett selbst konfigurierend.",
+"IP Address":"IP Adresse",
+"Network Mask":"Netzwerkmaske",
+"Broadcast Address":"Broadcast-Adresse",
+"Wifi Channel":"Wifi-Kanal",
+"SSID (Network Name)":"SSID (Netzwerkname)",
+"BSSID (Cell-ID)":"BSSID (Zellen ID)",
+
+"Automatically Download Advertised Files":"Dateien automatisch herunterladen",
+"Max Download Space":"Maximaler Speicherplatz für Downloads",
+"Only Download Files Smaller Than":"Nur Dateien herunterladen, die kleiner sind als",
+"unlimited":"Keine Begrenzung",
+
 "Select network interface manually":"Netzwerk Interface manuell wählen",
-"On":"Ja",
-"Off":"Nein",
 
 "Connecting":"Verbinden",
 "Ringing":"Klingeln",
@@ -69,5 +90,9 @@
 "Goodbye":"Auf Wiedersehen",
 
 "Your configuration has been saved":"Die Konfiguration wurde gespeichert",
-"You need to restart qaul.net to activate it":"Das Programm muss neu gestartet werden um die Änderungen zu aktivieren"
+"You need to restart qaul.net to activate it":"Das Programm muss neu gestartet werden um die Änderungen zu aktivieren",
+
+"This qaul.net web client has only limited functionality.":"Dieses qaul.net web Interface hat nur eine limitierte Funktionalität.",
+"To send private messages, make voice calls, and share files, please download and install the qaul.net app for your operating system.":"Bitte downloade und installiere die qaul.net-App um private Mitteilungen zu senden, Anrufe zu tätigen und File-Sharing zu betreiben.",
+"Download qaul.net app":"Die qaul.net-App downloaden."
 }

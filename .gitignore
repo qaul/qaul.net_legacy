@@ -1,3 +1,5 @@
+/openwrt/image_files/qaul/bin/qauladmin
+/openwrt/qauladmin/qauladmin
 # file system
 .DS_Store
 [Tt]humbs.db
@@ -158,4 +160,14 @@ server/php/qaulhub/test*
 binary_release/qaul.net/
 binary_release/mof/
 binary_release/*.tar.gz
+
+# openwrt
+/openwrt/qaul/qaul
+openwrt/OpenWrt*
+openwrt/Attitude-Adjustment*
+openwrt/*.tar.bz2
+openwrt/*.bin
+*.test
+*.bak
+image_files_tmp
 

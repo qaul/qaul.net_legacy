@@ -7,7 +7,7 @@
 
 TOP:=$(dir $(lastword $(MAKEFILE_LIST)))
 DISTBASE=$(TOP)../..
-PJBASE=$(DISTBASE)/pjproject-2.2.1
+PJBASE=$(DISTBASE)/pjproject-2.3
 
 CC=gcc
 LIBDEST=./
@@ -15,9 +15,10 @@ LIBDEST=./
 
 # linux
 ARCH=$(shell uname -m)
-HARDW=$(shell uname -i)
 ifeq ($(ARCH),i686)
 HARDW=pc
+else
+HARDW=unknown
 endif
 PJSIPTYPE=$(ARCH)-$(HARDW)-linux-gnu
 LIBS= \
@@ -87,8 +88,10 @@ SRC= $(DISTBASE)/libqaul/qaullib.c $(DISTBASE)/libqaul/qaullib_ipc.c $(DISTBASE)
      $(DISTBASE)/libqaul/qaullib_user.c $(DISTBASE)/libqaul/qaullib_user_LL.c \
      $(DISTBASE)/libqaul/qaullib_topo_LL.c \
      $(DISTBASE)/libqaul/qaullib_appevent_LL.c \
+     $(DISTBASE)/libqaul/qaullib_messaging.c $(DISTBASE)/libqaul/qaullib_msg_LL.c $(DISTBASE)/libqaul/qaullib_validate.c \
      $(DISTBASE)/libqaul/qaullib_filesharing.c $(DISTBASE)/libqaul/qaullib_file_LL.c \
      $(DISTBASE)/libqaul/qaullib_exediscovery.c \
+     $(DISTBASE)/libqaul/qaullib_crypto.c \
      $(DISTBASE)/libqaul/qaullib_udp_communication.c \
      $(DISTBASE)/libqaul/captive/qaullib_captive.c $(DISTBASE)/libqaul/captive/qaullib_captive_dhcp.c $(DISTBASE)/libqaul/captive/qaullib_captive_dns.c \
      $(DISTBASE)/libqaul/mongoose/mongoose.c $(DISTBASE)/libqaul/sqlite/sqlite3.c \

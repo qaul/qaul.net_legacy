@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 			printf("qaul copy directory error. source: %s target: %s\n", qaulTmpPath, qaulTmpPath2);
 		// TODO: update data base
 		// remove old data base if it exists
-		sprintf(qaulTmpPath, "%s/qaullib.db", qaulUserPath, QAUL_VERSION);
+		sprintf(qaulTmpPath, "%s/qaullib.db", qaulUserPath);
 		if(g_file_test(qaulTmpPath, G_FILE_TEST_EXISTS))
 			if(g_remove(qaulTmpPath) == -1)
 				printf("qaul.net database %s removal error\n", qaulTmpPath);
@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
     gtk_container_add(GTK_CONTAINER(qaulMainWindow), scrolledWindow);
 
     // Load a web page into the browser instance
-    webkit_web_view_load_uri(webView, "http://127.0.0.1:8081/jqm_qaul.html");
+    webkit_web_view_load_uri(webView, "http://127.0.0.1:8081/qaul.html");
 
     // Make sure that when the browser area becomes visible, it will get mouse
     // and keyboard events
@@ -283,7 +283,9 @@ void qaul_onquit(void)
 	else
 	{
 		// stop services
+		printf("[quit] qaul_stopPortForwarding\n");
 		qaul_stopPortForwarding();
+		printf("[quit] qaul_olsrdStop\n");
 		qaul_olsrdStop();
 
 		// stop network
@@ -365,10 +367,10 @@ gboolean qaul_configure(gpointer data)
         	strncpy(network_settings.ipv4_address, Qaullib_GetIP(), sizeof(network_settings.ipv4_address));
         	Qaullib_GetConfString("net.gateway", network_settings.ipv4_gateway);
         	network_settings.ipv4_netmask = Qaullib_GetConfInt("net.mask");
-        	strncpy(network_settings.ipv4_dns1, "178.254.31.11", sizeof(network_settings.ipv4_dns1));
-        	strncpy(network_settings.ipv4_dns2, "77.67.33.81", sizeof(network_settings.ipv4_dns2));
+        	strncpy(network_settings.ipv4_dns1, "77.67.33.81", sizeof(network_settings.ipv4_dns1));
+        	strncpy(network_settings.ipv4_dns2, "213.136.78.232", sizeof(network_settings.ipv4_dns2));
         	network_settings.wifi_channel = Qaullib_GetConfInt("wifi.channel");
-        	Qaullib_GetConfString("wifi.ibss", network_settings.wifi_ssid);
+        	Qaullib_GetConfString("wifi.ssid", network_settings.wifi_ssid);
 
         	// add network configuration
         	if(qaul_network_settings_add(network_dbus_connection, &network_settings, &network_device))

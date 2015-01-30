@@ -870,7 +870,7 @@ int set_dns (int argc, const char * argv[])
         if (pid1 < 0)
             printf("fork for pid1 failed\n");
         else if(pid1 == 0)
-            execl("/usr/sbin/networksetup", "networksetup", "-setdnsservers", argv[2], "178.254.31.11", "77.67.33.81", (char*)0);
+            execl("/usr/sbin/networksetup", "networksetup", "-setdnsservers", argv[2], "77.67.33.81", "213.136.78.232", (char*)0);
         else
             waitpid(pid1, &status, 0);
         

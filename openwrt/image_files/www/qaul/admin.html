@@ -1,0 +1,164 @@
+<html>
+<head>
+	<meta http-equiv="content-type" content="text-html; charset=utf-8"/>
+	<link rel="shortcut icon" href="/qaul/favicon.ico" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+	<script type="text/javascript" src="/qaul/jquery.min.js"></script>
+	<script type="text/javascript" src="/qaul/admin.js"></script>
+	<link rel="stylesheet" type="text/css" href="/qaul/admin.css" />
+	<title>qaul.net – قول</title>
+</head>
+<body>
+<div id="page_main">
+	<div class="header">
+		<button onclick="config('logout')">logout</button>
+		<div id="header_ifconfig"></div>
+	</div>
+	<div class="content">
+		<div class="section">
+			<div class="button choice" id="internet_button" onclick="config('internet_on')">
+				<input type="checkbox" name="internet_checkbox" value="internet" onclick="config('internet_on')" id="internet_checkbox" class="checkbox" />
+				<label for="internet_checkbox">Share Internet</label>
+			</div>
+		</div>
+		<div class="section switch">
+			<div onclick="config_storage()" id="storage" class="choice">
+				Configure USB Storage
+			</div>
+			<div onclick="config_mobile()" id="mobile" class="choice">
+				Configure Mobile Internet Stick
+			</div>
+			<div onclick="config_eth()" id="network_eth" class="choice">
+				Configure Ethernet Network
+			</div>
+			<div onclick="config_wifi()" id="network_wifi" class="choice">
+				Configure Wifi Network
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="page_login" class="content">
+	<div class="form_box">
+		<h2>Login</h2>
+		<form action="login" method="post" id="form_login">
+			<label for="password">Password</label>
+			<input name="password" id="login_password" type="password" required="required" />
+			<input type="submit" name="submit" value="Login" />
+		</form>
+	</div>
+</div>
+
+<div id="page_newpassword" class="content">
+	<div class="form_box">
+		<h2>Set New Password</h2>
+		<form action="newpassword" method="post" id="form_newpassword">
+			<label for="password">New Password</label>
+			<input name="password" id="new_password" type="password" required="required" />
+			<label for="password2">Repeat New Password</label>
+			<input name="password2" id="new_password2" type="password" required="required" />
+			<input type="submit" name="submit" value="Save" />
+		</form>
+	</div>
+</div>
+
+<div id="page_storage" class="content">
+	<div class="form_box">
+		<h2>Configure USB Storage</h2>
+		<p>
+		<span id="storage_total">Current disk space: <b><span></span></b></span><br/>
+		<span id="storage_free">Free disk space: <b><span></span></b></span><br/>
+		<span id="storage_on" class="selected">USB storage stick <b>successfully configured</b>!</span>
+		<span id="storage_off">USB storage stick is <b>not yet configured</b>.</span>
+		</p>
+		<p>You need to have an USB memory stick plugged into your router.</p>
+		<p>This will delete all content on your USB stick!</p>
+		<p>After configuration, the router will boot automatically from the USB stick. The USB stick will be used as its hard drive.</p>
+		<form action="storage" method="post" id="form_storage">
+			<input type="submit" name="submit" value="Configure USB Storage" />
+		</form>
+		<br/><br/>
+		<input type="button" name="cancel" value="Back" onclick="back()"/>
+	</div>
+</div>
+
+<div id="page_mobile" class="content">
+	<div class="form_box">
+		<h2>Configure 3G Internet</h2>
+		<p>When connected, the mobile Internet stick will connect automatically with this configuration.</p>
+		<form action="mobile" method="post" id="form_mobile">
+			<label for="apn">APN</label>
+			<input name="apn" id="mobile_apn" type="text" required="required" />
+			<label for="pin">PIN CODE</label>
+			<input name="pin" id="mobile_pin" type="text" />
+			<label for="username">User Name</label>
+			<input name="username" id="mobile_username" type="text" />
+			<label for="password">Password</label>
+			<input name="password" id="mobile_password" type="password" />
+			<input type="submit" name="submit" value="Save" />
+			<br/><br/>
+			<input type="button" name="cancel" value="Back" onclick="back()"/>
+		</form>
+	</div>
+</div>
+
+<div id="page_eth" class="content">
+	<div class="form_box">
+		<h2>Configure Ethernet Network</h2>
+		<div class="section switch">
+			<div onclick="config_network('eth_wan')" id="eth_wan" class="choice selected">
+				<strong>WAN</strong> connect to Internet
+			</div>
+			<div onclick="config_network('eth_qaul')" id="eth_qaul" class="choice">
+				<strong>qaul.net</strong> connect to other qaul.net device
+			</div>
+		</div>
+		<br/><br/>
+		<input type="button" name="cancel" value="Back" onclick="back()"/>
+	</div>
+</div>
+
+<div id="page_wifi" class="content">
+	<div class="form_box">
+		<h2>Configure Wifi Network</h2>
+		<form action="wifi" method="post" id="form_wifi">
+			<div class="section switch">
+				<div class="choice" id="wifi_qaul_button">
+					<input type="checkbox" name="wifi_qaul_checkbox" value="wifi_qaul" id="wifi_qaul_checkbox" class="checkbox" />
+					<label for="wifi_qaul_checkbox"><strong>qaul.net</strong> Mesh Network</label>
+				</div>
+				<div class="choice" id="wifi_lan_button">
+					<input type="checkbox" name="wifi_lan_checkbox" value="wifi_lan" id="wifi_lan_checkbox" class="checkbox" />
+					<label for="wifi_lan_checkbox"><strong>LAN</strong> Wifi Access Point</label>
+				</div>
+			</div>
+			<div class="section">
+				<label for="wifi_distance">Distance Between Antennas</label>
+				<select name="wifi_distance" id="wifi_distance">
+					<option value="300" selected="selected">300m</option>
+					<option value="600">600m</option>
+					<option value="1200">1.2km</option>
+					<option value="2500">2.5km</option>
+					<option value="5000">5km</option>
+					<option value="10000">10km</option>
+					<option value="15000">15km</option>
+					<option value="20000">20km</option>
+					<option value="30000">30km</option>
+					<option value="50000">50km</option>
+					<option value="100000">100km</option>
+				</select>
+			</div>
+			<input type="submit" name="submit" value="Save" />
+		</form>
+		<br/><br/>
+		<input type="button" name="cancel" value="Back" onclick="back()"/>
+	</div>
+</div>
+
+<div id="loading">
+		<div id="loading_info"></div>
+		<img src="/qaul/loader.png" alt="loading" id="loader" class=""/>
+</div>
+
+</body>
+</html>

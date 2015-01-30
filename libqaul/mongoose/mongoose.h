@@ -1,215 +1,150 @@
-// Copyright (c) 2004-2010 Sergey Lyubka
+// Copyright (c) 2004-2013 Sergey Lyubka <valenok@gmail.com>
+// Copyright (c) 2013-2014 Cesanta Software Limited
+// All rights reserved
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This library is dual-licensed: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License version 2 as
+// published by the Free Software Foundation. For the terms of this
+// license, see <http://www.gnu.org/licenses/>.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// You are free to use this library under the terms of the GNU General
+// Public License, but WITHOUT ANY WARRANTY; without even the implied
+// warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// Alternatively, you can license this library under a commercial
+// license, as set out in <http://cesanta.com/>.
+//
+// $Date: 2014-09-09 17:07:55 UTC $
 
 #ifndef MONGOOSE_HEADER_INCLUDED
 #define  MONGOOSE_HEADER_INCLUDED
+
+#define MONGOOSE_VERSION "5.5"
+
+#include <stdio.h>      // required for FILE
+#include <stddef.h>     // required for size_t
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-struct mg_context;     // Handle for the HTTP service itself
-struct mg_connection;  // Handle for the individual connection
+// This structure contains information about HTTP request.
+struct mg_connection {
+  const char *request_method; // "GET", "POST", etc
+  const char *uri;            // URL-decoded URI
+  const char *http_version;   // E.g. "1.0", "1.1"
+  const char *query_string;   // URL part after '?', not including '?', or NULL
 
+  char remote_ip[48];         // Max IPv6 string length is 45 characters
+  char local_ip[48];          // Local IP address
+  unsigned short remote_port; // Client's port
+  unsigned short local_port;  // Local port number
 
-// This structure contains information about the HTTP request.
-struct mg_request_info {
-  char *request_method;  // "GET", "POST", etc
-  char *uri;             // URL-decoded URI
-  char *http_version;    // E.g. "1.0", "1.1"
-  char *query_string;    // \0 - terminated
-  char *remote_user;     // Authenticated user
-  char *log_message;     // Mongoose error log message
-  long remote_ip;        // Client's IP address
-  int remote_port;       // Client's port
-  int status_code;       // HTTP reply status code
-  int is_ssl;            // 1 if SSL-ed, 0 if not
-  int num_headers;       // Number of headers
+  int num_headers;            // Number of HTTP headers
   struct mg_header {
-    char *name;          // HTTP header name
-    char *value;         // HTTP header value
-  } http_headers[64];    // Maximum 64 headers
+    const char *name;         // HTTP header name
+    const char *value;        // HTTP header value
+  } http_headers[30];
+
+  char *content;              // POST (or websocket message) data, or NULL
+  size_t content_len;         // Data length
+
+  int is_websocket;           // Connection is a websocket connection
+  int status_code;            // HTTP status code for HTTP error handler
+  int wsbits;                 // First byte of the websocket frame
+  void *server_param;         // Parameter passed to mg_add_uri_handler()
+  void *connection_param;     // Placeholder for connection-specific data
+  void *callback_param;
 };
 
-// Various events on which user-defined function is called by Mongoose.
+struct mg_server; // Opaque structure describing server instance
+enum mg_result { MG_FALSE, MG_TRUE, MG_MORE };
 enum mg_event {
-  MG_NEW_REQUEST,   // New HTTP request has arrived from the client
-  MG_HTTP_ERROR,    // HTTP error must be returned to the client
-  MG_EVENT_LOG,     // Mongoose logs an event, request_info.log_message
-  MG_INIT_SSL,      // Mongoose initializes SSL. Instead of mg_connection *,
-                    // SSL context is passed to the callback function.
+  MG_POLL = 100,  // Callback return value is ignored
+  MG_CONNECT,     // If callback returns MG_FALSE, connect fails
+  MG_AUTH,        // If callback returns MG_FALSE, authentication fails
+  MG_REQUEST,     // If callback returns MG_FALSE, Mongoose continues with req
+  MG_REPLY,       // If callback returns MG_FALSE, Mongoose closes connection
+  MG_RECV,        // Mongoose has received POST data chunk.
+                  // Callback should return a number of bytes to discard from
+                  // the receive buffer, or -1 to close the connection.
+  MG_CLOSE,       // Connection is closed, callback return value is ignored
+  MG_WS_HANDSHAKE,  // New websocket connection, handshake request
+  MG_WS_CONNECT,  // New websocket connection established
+  MG_HTTP_ERROR   // If callback returns MG_FALSE, Mongoose continues with err
+};
+typedef int (*mg_handler_t)(struct mg_connection *, enum mg_event);
+
+// Websocket opcodes, from http://tools.ietf.org/html/rfc6455
+enum {
+  WEBSOCKET_OPCODE_CONTINUATION = 0x0,
+  WEBSOCKET_OPCODE_TEXT = 0x1,
+  WEBSOCKET_OPCODE_BINARY = 0x2,
+  WEBSOCKET_OPCODE_CONNECTION_CLOSE = 0x8,
+  WEBSOCKET_OPCODE_PING = 0x9,
+  WEBSOCKET_OPCODE_PONG = 0xa
 };
 
-// Prototype for the user-defined function. Mongoose calls this function
-// on every event mentioned above.
-//
-// Parameters:
-//   event: which event has been triggered.
-//   conn: opaque connection handler. Could be used to read, write data to the
-//         client, etc. See functions below that accept "mg_connection *".
-//   request_info: Information about HTTP request.
-//
-// Return:
-//   If handler returns non-NULL, that means that handler has processed the
-//   request by sending appropriate HTTP reply to the client. Mongoose treats
-//   the request as served.
-//   If callback returns NULL, that means that callback has not processed
-//   the request. Handler must not send any data to the client in this case.
-//   Mongoose proceeds with request handling as if nothing happened.
-typedef void * (*mg_callback_t)(enum mg_event event,
-                                struct mg_connection *conn,
-                                const struct mg_request_info *request_info);
-  
-
-// Start web server.
-//
-// Parameters:
-//   callback: user defined event handling function or NULL.
-//   options: NULL terminated list of option_name, option_value pairs that
-//            specify Mongoose configuration parameters.
-//
-// Example:
-//   const char *options[] = {
-//     "document_root", "/var/www",
-//     "listening_ports", "80,443s",
-//     NULL
-//   };
-//   struct mg_context *ctx = mg_start(&my_func, options);
-//
-// Please refer to http://code.google.com/p/mongoose/wiki/MongooseManual
-// for the list of valid option and their possible values.
-//
-// Return:
-//   web server context, or NULL on error.
-struct mg_context *mg_start(mg_callback_t callback, const char **options);
-
-
-// Stop the web server.
-//
-// Must be called last, when an application wants to stop the web server and
-// release all associated resources. This function blocks until all Mongoose
-// threads are stopped. Context pointer becomes invalid.
-void mg_stop(struct mg_context *);
-
-
-// Get the value of particular configuration parameter.
-// The value returned is read-only. Mongoose does not allow changing
-// configuration at run time.
-// If given parameter name is not valid, NULL is returned. For valid
-// names, return value is guaranteed to be non-NULL. If parameter is not
-// set, zero-length string is returned.
-const char *mg_get_option(const struct mg_context *ctx, const char *name);
-
-
-// Return array of strings that represent valid configuration options.
-// For each option, a short name, long name, and default value is returned.
-// Array is NULL terminated.
+// Server management functions
+struct mg_server *mg_create_server(void *server_param, mg_handler_t handler);
+void mg_destroy_server(struct mg_server **);
+const char *mg_set_option(struct mg_server *, const char *opt, const char *val);
+int mg_poll_server(struct mg_server *, int milliseconds);
 const char **mg_get_valid_option_names(void);
+const char *mg_get_option(const struct mg_server *server, const char *name);
+void mg_copy_listeners(struct mg_server *from, struct mg_server *to);
+struct mg_connection *mg_next(struct mg_server *, struct mg_connection *);
+void mg_wakeup_server(struct mg_server *);
+void mg_wakeup_server_ex(struct mg_server *, mg_handler_t, const char *, ...);
+struct mg_connection *mg_connect(struct mg_server *, const char *);
 
+// Connection management functions
+void mg_send_status(struct mg_connection *, int status_code);
+void mg_send_header(struct mg_connection *, const char *name, const char *val);
+size_t mg_send_data(struct mg_connection *, const void *data, int data_len);
+size_t mg_printf_data(struct mg_connection *, const char *format, ...);
+size_t mg_write(struct mg_connection *, const void *buf, int len);
+size_t mg_printf(struct mg_connection *conn, const char *fmt, ...);
 
-// Add, edit or delete the entry in the passwords file.
-//
-// This function allows an application to manipulate .htpasswd files on the
-// fly by adding, deleting and changing user records. This is one of the
-// several ways of implementing authentication on the server side. For another,
-// cookie-based way please refer to the examples/chat.c in the source tree.
-//
-// If password is not NULL, entry is added (or modified if already exists).
-// If password is NULL, entry is deleted.
-//
-// Return:
-//   1 on success, 0 on error.
-int mg_modify_passwords_file(struct mg_context *ctx, 
-    const char *passwords_file_name, const char *user, const char *password);
+size_t mg_websocket_write(struct mg_connection *, int opcode,
+                          const char *data, size_t data_len);
+size_t mg_websocket_printf(struct mg_connection* conn, int opcode,
+                           const char *fmt, ...);
 
-// Send data to the client.
-int mg_write(struct mg_connection *, const void *buf, size_t len);
+void mg_send_file(struct mg_connection *, const char *path, const char *);
+void mg_send_file_data(struct mg_connection *, int fd);
 
-
-// Send data to the browser using printf() semantics.
-//
-// Works exactly like mg_write(), but allows to do message formatting.
-// Note that mg_printf() uses internal buffer of size IO_BUF_SIZE
-// (8 Kb by default) as temporary message storage for formatting. Do not
-// print data that is bigger than that, otherwise it will be truncated.
-int mg_printf(struct mg_connection *, const char *fmt, ...);
-
-
-// Read data from the remote end, return number of bytes read.
-int mg_read(struct mg_connection *, void *buf, size_t len);
-
-
-// Get the value of particular HTTP header.
-//
-// This is a helper function. It traverses request_info->http_headers array,
-// and if the header is present in the array, returns its value. If it is
-// not present, NULL is returned.
 const char *mg_get_header(const struct mg_connection *, const char *name);
+const char *mg_get_mime_type(const char *name, const char *default_mime_type);
+int mg_get_var(const struct mg_connection *conn, const char *var_name,
+               char *buf, size_t buf_len);
+int mg_parse_header(const char *hdr, const char *var_name, char *buf, size_t);
+int mg_parse_multipart(const char *buf, int buf_len,
+                       char *var_name, int var_name_len,
+                       char *file_name, int file_name_len,
+                       const char **data, int *data_len);
 
 
-// Get a value of particular form variable.
-//
-// Parameters:
-//   data: pointer to form-uri-encoded buffer. This could be either POST data,
-//         or request_info.query_string.
-//   data_len: length of the encoded data.
-//   var_name: variable name to decode from the buffer
-//   buf: destination buffer for the decoded variable
-//   buf_len: length of the destination buffer
-//
-// Return:
-//   On success, length of the decoded variable.
-//   On error, -1 (variable not found, or destination buffer is too small).
-//
-// Destination buffer is guaranteed to be '\0' - terminated. In case of
-// failure, dst[0] == '\0'.
-int mg_get_var(const char *data, size_t data_len,
-    const char *var_name, char *buf, size_t buf_len);
-
-// Fetch value of certain cookie variable into the destination buffer.
-//
-// Destination buffer is guaranteed to be '\0' - terminated. In case of
-// failure, dst[0] == '\0'. Note that RFC allows many occurrences of the same
-// parameter. This function returns only first occurrence.
-//
-// Return:
-//   On success, value length.
-//   On error, -1 (either "Cookie:" header is not present at all, or the
-//   requested parameter is not found, or destination buffer is too small
-//   to hold the value).
-int mg_get_cookie(const struct mg_connection *,
-    const char *cookie_name, char *buf, size_t buf_len);
+// Utility functions
+void *mg_start_thread(void *(*func)(void *), void *param);
+char *mg_md5(char buf[33], ...);
+int mg_authorize_digest(struct mg_connection *c, FILE *fp);
+int mg_url_encode(const char *src, size_t s_len, char *dst, size_t dst_len);
+int mg_url_decode(const char *src, int src_len, char *dst, int dst_len, int);
+int mg_terminate_ssl(struct mg_connection *c, const char *cert);
+int mg_forward(struct mg_connection *c, const char *addr);
+void *mg_mmap(FILE *fp, size_t size);
+void mg_munmap(void *p, size_t size);
 
 
-// Return Mongoose version.
-const char *mg_version(void);
-
-
-// MD5 hash given strings.
-// Buffer 'buf' must be 33 bytes long. Varargs is a NULL terminated list of
-// asciiz strings. When function returns, buf will contain human-readable
-// MD5 hash. Example:
-//   char buf[33];
-//   mg_md5(buf, "aa", "bb", NULL);
-void mg_md5(char *buf, ...);
-
+// Templates support
+struct mg_expansion {
+  const char *keyword;
+  void (*handler)(struct mg_connection *);
+};
+void mg_template(struct mg_connection *, const char *text,
+                 struct mg_expansion *expansions);
 
 #ifdef __cplusplus
 }

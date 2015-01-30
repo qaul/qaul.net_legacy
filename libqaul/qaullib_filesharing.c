@@ -10,6 +10,7 @@
 #include "qaullib_private.h"
 #include "polarssl/polarssl/config.h"
 #include "polarssl/polarssl/sha1.h"
+#include "qaullib_crypto.h"
 
 /**
  * writes the suffix of the @a filename into @a suffix
@@ -78,6 +79,11 @@ void Qaullib_FileInit(void)
 
 	// get the files from DB
 	Qaullib_FileDB2LL();
+
+	// get auto download configuration from DB
+	qaul_file_autodownload = Qaullib_GetConfInt("files.autodownload");
+	qaul_file_space_max = Qaullib_GetConfInt("files.space.max");
+	qaul_file_size_max = Qaullib_GetConfInt("files.filesize.max");
 }
 
 // ------------------------------------------------------------
@@ -128,7 +134,7 @@ void Qaullib_FilePopulate(void)
 		  error_exec=NULL;
 	  }
 	  else
-		  printf("fat binaries imported\n",stmt);
+		  printf("fat binaries imported\n");
 
 	  fclose(file);
 	}
@@ -161,7 +167,7 @@ int Qaullib_FileExists(char *path)
 int Qaullib_FileAdd(struct qaul_file_LL_item *file_item)
 {
 	if(QAUL_DEBUG)
-		printf("Qaullib_FileAdd\n");
+		printf("Qaullib_FileAdd: %s.%s size[%i] status[%i]\n", file_item->hashstr, file_item->suffix, file_item->size, file_item->status);
 
 	// check if file already exists
 	if(!Qaullib_File_LL_HashExists(file_item->hash))
@@ -204,11 +210,11 @@ int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 		// todo: ipv6
 		if(!inet_pton(AF_INET, myip, &file_item->adv_ip.v4))
 		{
-			sprintf(myip,"");
+			sprintf(myip, "%s", "");
 		}
 	}
 	else
-		sprintf(myip,"");
+		sprintf(myip, "%s", "");
 
 	// protect values for db
 	Qaullib_StringDbProtect(description_dbprotected, file_item->description, sizeof(description_dbprotected));
@@ -231,7 +237,7 @@ int Qaullib_FileAdd2DB(struct qaul_file_LL_item *file_item)
 
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
-		printf("SQLite error: %s\n",error_exec);
+		printf("SQLite error: %s\n", error_exec);
 		sqlite3_free(error_exec);
 		error_exec=NULL;
 	}
@@ -299,9 +305,6 @@ void Qaullib_FileCheckScheduled(void)
 	struct qaul_file_LL_node mynode;
 	Qaullib_File_LL_InitNode(&mynode);
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_FileCheckScheduled\n");
-
 	// loop through files
 	while(Qaullib_File_LL_NextNode(&mynode))
 	{
@@ -352,9 +355,11 @@ void Qaullib_FileSendDiscoveryMsg(struct qaul_file_LL_item *file_item)
 	file_item->status = QAUL_FILESTATUS_DISCOVERING;
 
 	// todo: ipv6
+	memset(&m->v4.originator, 0, sizeof(m->v4.originator));
 	m->v4.olsr_msgtype = QAUL_FILEDISCOVER_MESSAGE_TYPE;
 	memcpy(&m->v4.message.filediscover.hash, &file_item->hash, MAX_HASH_LEN);
 
+	// calculate message size
 	size  = sizeof(struct qaul_filediscover_msg);
 	size += sizeof(struct olsrmsg);
 	m->v4.olsr_msgsize = htons(size);
@@ -412,14 +417,14 @@ int Qaullib_FileDelete(struct qaul_file_LL_item *file_item)
 	if(QAUL_DEBUG)
 		printf("Qaullib_FileDelete delete file: %s\n", path);
 	if(remove(path) == -1)
-		printf("Qaullib_FileDelete ERROR file couldn't be deleted\n", path);
+		printf("Qaullib_FileDelete ERROR file couldn't be deleted \n    path: %s", path);
 
 	// delete from DB
 	sprintf(stmt, sql_file_delete_hash, file_item->hashstr);
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		// execution failed
-		printf("SQLite error: %s\n",error_exec);
+		printf("SQLite error: %s\n", error_exec);
 		sqlite3_free(error_exec);
 		error_exec=NULL;
 	}
@@ -693,8 +698,6 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item)
 			// get best seeder
 			if(Qaullib_Filediscovery_LL_GetBestSeeder(file_item, &ip))
 			{
-				printf("Qaullib_FileConnect 1\n", i);
-
 				if(QAUL_DEBUG)
 				{
 					char ipbuf[MAX(INET6_ADDRSTRLEN, INET_ADDRSTRLEN)];
@@ -707,6 +710,8 @@ void Qaullib_FileConnect(struct qaul_file_LL_item *file_item)
 				// fill in connection info
 				fileconnections[i].conn.received = 0;
 				fileconnections[i].conn.bufpos = 0;
+				// set link to file to NULL
+				fileconnections[i].file = 0;
 
 				// fill in address
 				// todo: ipv6
@@ -765,6 +770,7 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 
 	if(bytes == 0)
 	{
+		printf("Qaullib_FileDownloadProcess bytes == 0\n");
 		// check if file has finished downloading
 		Qaullib_FileDownloadFailed(fileconnection);
 
@@ -798,11 +804,16 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 					fileconnection->conn.bufpos = 0;
 				}
 				else
+				{
+					printf("Qaullib_FileDownloadProcess Qaullib_FileCompareFileSize comparison failed\n");
+
 					Qaullib_FileDownloadFailed(fileconnection);
+				}
 			}
 			else
 			{
 				printf("Qaullib_FileDownloadProcess file download failed: bytes %i msg-type %i %s\n", bytes, type, fileconnection->fileinfo->hashstr);
+
 				// end download
 				Qaullib_FileDownloadFailed(fileconnection);
 				return 0;
@@ -810,6 +821,7 @@ int Qaullib_FileDownloadProcess(struct qaul_file_connection *fileconnection, int
 		}
 		else if(first)
 		{
+			printf("Qaullib_FileDownloadProcess first\n");
 			//fileconnection->conn.bufpos = bytes;
 			Qaullib_FileDownloadFailed(fileconnection);
 			return 0;
@@ -887,13 +899,24 @@ void Qaullib_FileDownloadFailed(struct qaul_file_connection *fileconnection)
 
 	// close file
 	if(fileconnection->file != NULL)
+	{
+		printf("Qaullib_FileDownloadFailed fileconnection->file != NULL\n");
+
 		fclose(fileconnection->file);
+	}
+
+	printf("Qaullib_FileDownloadFailed 1\n");
 
 	// remove this seeder from list
 	memcpy(&ip.v4, &fileconnection->conn.ip, sizeof(ip.v4));
 	Qaullib_Filediscovery_LL_DeleteSeederIp(fileconnection->fileinfo, &ip);
+
+	printf("Qaullib_FileDownloadFailed 2\n");
+
 	// reschedule file
 	Qaullib_FileUpdateStatus(fileconnection->fileinfo, QAUL_FILESTATUS_DISCOVERED);
+
+	printf("Qaullib_FileDownloadFailed 3\n");
 }
 
 // ------------------------------------------------------------
@@ -902,13 +925,13 @@ int Qaullib_FileCompareFileSize(struct qaul_file_connection *fileconnection, int
 	if(QAUL_DEBUG)
 		printf("Qaullib_FileCompareFileSize\n");
 
-	if(fileconnection->fileinfo->size > 0 && fileconnection->fileinfo->downloaded > 0)
+	if(fileconnection->fileinfo->size > 1024 && fileconnection->fileinfo->downloaded > 0)
 	{
 		// check if file size matches
 		if(fileconnection->fileinfo->size != filesize)
 		{
 			if(QAUL_DEBUG)
-				printf("Qaullib_FileCheckSockets file sizes didn't mach: %i != %i\n", fileconnection->fileinfo->size, filesize);
+				printf("Qaullib_FileCheckSockets file sizes didn't match: %i != %i\n", fileconnection->fileinfo->size, filesize);
 
 			return 0;
 		}
@@ -1005,9 +1028,6 @@ static int Qaullib_HashCreate(char *filename, unsigned char *hash)
 {
 	int ret;
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_HashCreate\n");
-
 	ret = polarssl_sha1_file( filename, hash );
 	if(ret == 1)
 		fprintf( stderr, "[qaullib] failed to open: %s\n", filename );
@@ -1020,84 +1040,9 @@ static int Qaullib_HashCreate(char *filename, unsigned char *hash)
 }
 
 // ------------------------------------------------------------
-int Qaullib_HashToString(unsigned char *hash, char *string)
-{
-	int i;
-
-	if(QAUL_DEBUG)
-		printf("Qaullib_HashToString\n");
-
-	// FIXME: big-endian / little-endian
-	for(i=0;i<MAX_HASH_LEN;i++)
-	{
-		sprintf(string+(i*2),"%02x",hash[i]);
-	}
-	return 1;
-}
-
-// ------------------------------------------------------------
-int Qaullib_StringToHash(char *string, unsigned char *hash)
-{
-	int i, j;
-	uint8_t mybyte;
-
-	// fill hash with zeros
-	memset(hash, 0, MAX_HASH_LEN);
-
-	for(i=0;i<MAX_HASH_LEN;i++)
-	{
-		mybyte = 0;
-
-		for(j=0;j<2;j++)
-		{
-			if(strncmp(string+i*2+j,"0",1)==0)
-				mybyte |= 0;
-			else if(strncmp(string+i*2+j,"1",1)==0)
-				mybyte |= 1;
-			else if(strncmp(string+i*2+j,"2",1)==0)
-				mybyte |= 2;
-			else if(strncmp(string+i*2+j,"3",1)==0)
-				mybyte |= 3;
-			else if(strncmp(string+i*2+j,"4",1)==0)
-				mybyte |= 4;
-			else if(strncmp(string+i*2+j,"5",1)==0)
-				mybyte |= 5;
-			else if(strncmp(string+i*2+j,"6",1)==0)
-				mybyte |= 6;
-			else if(strncmp(string+i*2+j,"7",1)==0)
-				mybyte |= 7;
-			else if(strncmp(string+i*2+j,"8",1)==0)
-				mybyte |= 8;
-			else if(strncmp(string+i*2+j,"9",1)==0)
-				mybyte |= 9;
-			else if(strncmp(string+i*2+j,"a",1)==0 || strncmp(string+i*2+j,"A",1)==0)
-				mybyte |= 10;
-			else if(strncmp(string+i*2+j,"b",1)==0 || strncmp(string+i*2+j,"B",1)==0)
-				mybyte |= 11;
-			else if(strncmp(string+i*2+j,"c",1)==0 || strncmp(string+i*2+j,"C",1)==0)
-				mybyte |= 12;
-			else if(strncmp(string+i*2+j,"d",1)==0 || strncmp(string+i*2+j,"D",1)==0)
-				mybyte |= 13;
-			else if(strncmp(string+i*2+j,"e",1)==0 || strncmp(string+i*2+j,"E",1)==0)
-				mybyte |= 14;
-			else if(strncmp(string+i*2+j,"f",1)==0 || strncmp(string+i*2+j,"F",1)==0)
-				mybyte |= 15;
-			else
-				return 0;
-
-			if(j==0)
-				mybyte = mybyte << 4;
-			else
-				memcpy(hash+i, &mybyte, 1);
-		}
-	}
-	return 1;
-}
-
-// ------------------------------------------------------------
 int Qaullib_VerifyDownload(struct qaul_file_LL_item *file_item)
 {
-	char local_hash[MAX_HASH_LEN];
+	unsigned char local_hash[MAX_HASH_LEN];
 	char filepath[MAX_PATH_LEN +1];
 
 	if(QAUL_DEBUG)
@@ -1109,6 +1054,14 @@ int Qaullib_VerifyDownload(struct qaul_file_LL_item *file_item)
 	{
 		if(memcmp(&file_item->hash, local_hash, MAX_HASH_LEN) == 0)
 			return 1;
+		else
+		{
+			Qaullib_HashToString(local_hash, filepath);
+			printf("Qaullib_VerifyDownload hash comparison failed [%s] != [%s] \n", file_item->hashstr, filepath);
+		}
 	}
+	else
+		printf("Qaullib_VerifyDownload hash couldn't be created (%s)\n", filepath);
+
 	return 0;
 }

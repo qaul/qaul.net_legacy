@@ -11,6 +11,27 @@ extern "C" {
 #endif // __cplusplus
 
 /**
+ * Indicates wheter advertised files shall be downloaded automatically.
+ * 0: no
+ * 1: yes
+ */
+int qaul_file_autodownload;
+
+/**
+ * maximum space available for file sharing
+ * 0: unlimited
+ * 1: 1KB
+ */
+int qaul_file_space_max;
+
+/**
+ * maximum file size that is automatically downloaded
+ * 0: unlimited
+ * 1: 1KB
+ */
+int qaul_file_size_max;
+
+/**
  * defines chunk size of file sharing
  */
 int qaul_chunksize;
@@ -164,22 +185,6 @@ int Qaullib_FileDelete(struct qaul_file_LL_item *file_item);
  * fill files from DB into LL
  */
 void Qaullib_FileDB2LL(void);
-
-/**
- * create @a string from @a hash
- *
- * @retval 1 on success
- * @retval 0 on error
- */
-int Qaullib_HashToString(unsigned char *hash, char *string);
-
-/**
- * reconverts a hash string @a string to the @a hash
- *
- * @retval 1 on success
- * @retval 0 on error
- */
-int Qaullib_StringToHash(char *string, unsigned char *hash);
 
 /**
  * compares the hash with the downloaded file of @a file_item

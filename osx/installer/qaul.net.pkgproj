@@ -101,7 +101,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/English.lproj/InfoPlist.strings</string>
+																	<string>/Applications/qaul.app/Contents/Resources/en.lproj/InfoPlist.strings</string>
 																	<key>PATH_TYPE</key>
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>
@@ -117,7 +117,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/English.lproj/MainMenu.nib</string>
+																	<string>/Applications/qaul.app/Contents/Resources/en.lproj/MainMenu.nib</string>
 																	<key>PATH_TYPE</key>
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>
@@ -133,7 +133,7 @@
 															<key>GID</key>
 															<integer>80</integer>
 															<key>PATH</key>
-															<string>/Applications/qaul.app/Contents/Resources/English.lproj</string>
+															<string>/Applications/qaul.app/Contents/Resources/en.lproj</string>
 															<key>PATH_TYPE</key>
 															<integer>0</integer>
 															<key>PERMISSIONS</key>
@@ -180,6 +180,105 @@
 																</dict>
 																<dict>
 																	<key>CHILDREN</key>
+																	<array>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/community_templates/custom</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/community_templates/ff_berlin</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/community_templates/ff_leipzig</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/community_templates/ff_weimar</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																		<dict>
+																			<key>CHILDREN</key>
+																			<array/>
+																			<key>GID</key>
+																			<integer>80</integer>
+																			<key>PATH</key>
+																			<string>/Applications/qaul.app/Contents/Resources/www/community_templates/qaul</string>
+																			<key>PATH_TYPE</key>
+																			<integer>0</integer>
+																			<key>PERMISSIONS</key>
+																			<integer>420</integer>
+																			<key>TYPE</key>
+																			<integer>3</integer>
+																			<key>UID</key>
+																			<integer>0</integer>
+																		</dict>
+																	</array>
+																	<key>EXPANDED</key>
+																	<true/>
+																	<key>GID</key>
+																	<integer>80</integer>
+																	<key>PATH</key>
+																	<string>/Applications/qaul.app/Contents/Resources/www/community_templates</string>
+																	<key>PATH_TYPE</key>
+																	<integer>0</integer>
+																	<key>PERMISSIONS</key>
+																	<integer>493</integer>
+																	<key>TYPE</key>
+																	<integer>3</integer>
+																	<key>UID</key>
+																	<integer>0</integer>
+																</dict>
+																<dict>
+																	<key>CHILDREN</key>
 																	<array/>
 																	<key>GID</key>
 																	<integer>80</integer>
@@ -219,103 +318,7 @@
 																			<key>GID</key>
 																			<integer>80</integer>
 																			<key>PATH</key>
-																			<string>/Applications/qaul.app/Contents/Resources/www/files/68655ebdbc03dda9898a6aa7acfbe0946bef981a.exe</string>
-																			<key>PATH_TYPE</key>
-																			<integer>0</integer>
-																			<key>PERMISSIONS</key>
-																			<integer>420</integer>
-																			<key>TYPE</key>
-																			<integer>3</integer>
-																			<key>UID</key>
-																			<integer>0</integer>
-																		</dict>
-																		<dict>
-																			<key>CHILDREN</key>
-																			<array/>
-																			<key>GID</key>
-																			<integer>80</integer>
-																			<key>PATH</key>
-																			<string>/Applications/qaul.app/Contents/Resources/www/files/73a4c8c8340418e68d47c122b610103d3f05fa6f.deb</string>
-																			<key>PATH_TYPE</key>
-																			<integer>0</integer>
-																			<key>PERMISSIONS</key>
-																			<integer>420</integer>
-																			<key>TYPE</key>
-																			<integer>3</integer>
-																			<key>UID</key>
-																			<integer>0</integer>
-																		</dict>
-																		<dict>
-																			<key>CHILDREN</key>
-																			<array/>
-																			<key>GID</key>
-																			<integer>80</integer>
-																			<key>PATH</key>
-																			<string>/Applications/qaul.app/Contents/Resources/www/files/78f6362772319c2a0211a517480e30d6f138d5df.apk</string>
-																			<key>PATH_TYPE</key>
-																			<integer>0</integer>
-																			<key>PERMISSIONS</key>
-																			<integer>420</integer>
-																			<key>TYPE</key>
-																			<integer>3</integer>
-																			<key>UID</key>
-																			<integer>0</integer>
-																		</dict>
-																		<dict>
-																			<key>CHILDREN</key>
-																			<array/>
-																			<key>GID</key>
-																			<integer>80</integer>
-																			<key>PATH</key>
-																			<string>/Applications/qaul.app/Contents/Resources/www/files/7cf5eb369e28284db960985b17aa1a28a3b8bd30.dmg</string>
-																			<key>PATH_TYPE</key>
-																			<integer>0</integer>
-																			<key>PERMISSIONS</key>
-																			<integer>420</integer>
-																			<key>TYPE</key>
-																			<integer>3</integer>
-																			<key>UID</key>
-																			<integer>0</integer>
-																		</dict>
-																		<dict>
-																			<key>CHILDREN</key>
-																			<array/>
-																			<key>GID</key>
-																			<integer>80</integer>
-																			<key>PATH</key>
-																			<string>/Applications/qaul.app/Contents/Resources/www/files/d1b974b08282d60a9d5a2af3363b1f3821203358.deb</string>
-																			<key>PATH_TYPE</key>
-																			<integer>0</integer>
-																			<key>PERMISSIONS</key>
-																			<integer>420</integer>
-																			<key>TYPE</key>
-																			<integer>3</integer>
-																			<key>UID</key>
-																			<integer>0</integer>
-																		</dict>
-																		<dict>
-																			<key>CHILDREN</key>
-																			<array/>
-																			<key>GID</key>
-																			<integer>80</integer>
-																			<key>PATH</key>
 																			<string>/Applications/qaul.app/Contents/Resources/www/files/fat.example.sql</string>
-																			<key>PATH_TYPE</key>
-																			<integer>0</integer>
-																			<key>PERMISSIONS</key>
-																			<integer>420</integer>
-																			<key>TYPE</key>
-																			<integer>3</integer>
-																			<key>UID</key>
-																			<integer>0</integer>
-																		</dict>
-																		<dict>
-																			<key>CHILDREN</key>
-																			<array/>
-																			<key>GID</key>
-																			<integer>80</integer>
-																			<key>PATH</key>
-																			<string>/Applications/qaul.app/Contents/Resources/www/files/fat.sql</string>
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
@@ -757,7 +760,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -773,7 +776,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -789,7 +792,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -805,7 +808,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -821,7 +824,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -837,7 +840,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -853,7 +856,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -869,7 +872,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -885,7 +888,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -901,7 +904,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -917,7 +920,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -933,7 +936,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -949,7 +952,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -965,7 +968,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -981,7 +984,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -997,7 +1000,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1013,7 +1016,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1029,7 +1032,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1045,7 +1048,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1061,7 +1064,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1077,7 +1080,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1093,7 +1096,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1109,7 +1112,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1125,7 +1128,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1141,7 +1144,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1157,7 +1160,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1173,7 +1176,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1189,7 +1192,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1205,7 +1208,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1221,7 +1224,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1333,7 +1336,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -1349,7 +1352,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -5099,7 +5102,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -5179,7 +5182,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -5195,7 +5198,7 @@
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
 																			<key>PERMISSIONS</key>
-																			<integer>493</integer>
+																			<integer>420</integer>
 																			<key>TYPE</key>
 																			<integer>3</integer>
 																			<key>UID</key>
@@ -5677,22 +5680,6 @@
 																			<key>GID</key>
 																			<integer>80</integer>
 																			<key>PATH</key>
-																			<string>/Applications/qaul.app/Contents/Resources/www/info/mongoose_license.txt</string>
-																			<key>PATH_TYPE</key>
-																			<integer>0</integer>
-																			<key>PERMISSIONS</key>
-																			<integer>420</integer>
-																			<key>TYPE</key>
-																			<integer>3</integer>
-																			<key>UID</key>
-																			<integer>0</integer>
-																		</dict>
-																		<dict>
-																			<key>CHILDREN</key>
-																			<array/>
-																			<key>GID</key>
-																			<integer>80</integer>
-																			<key>PATH</key>
 																			<string>/Applications/qaul.app/Contents/Resources/www/info/olsrd_BSD-license.txt</string>
 																			<key>PATH_TYPE</key>
 																			<integer>0</integer>
@@ -5730,102 +5717,6 @@
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>
 																	<integer>493</integer>
-																	<key>TYPE</key>
-																	<integer>3</integer>
-																	<key>UID</key>
-																	<integer>0</integer>
-																</dict>
-																<dict>
-																	<key>CHILDREN</key>
-																	<array/>
-																	<key>GID</key>
-																	<integer>80</integer>
-																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_presentation.css</string>
-																	<key>PATH_TYPE</key>
-																	<integer>0</integer>
-																	<key>PERMISSIONS</key>
-																	<integer>420</integer>
-																	<key>TYPE</key>
-																	<integer>3</integer>
-																	<key>UID</key>
-																	<integer>0</integer>
-																</dict>
-																<dict>
-																	<key>CHILDREN</key>
-																	<array/>
-																	<key>GID</key>
-																	<integer>80</integer>
-																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_presentation.fr.html</string>
-																	<key>PATH_TYPE</key>
-																	<integer>0</integer>
-																	<key>PERMISSIONS</key>
-																	<integer>420</integer>
-																	<key>TYPE</key>
-																	<integer>3</integer>
-																	<key>UID</key>
-																	<integer>0</integer>
-																</dict>
-																<dict>
-																	<key>CHILDREN</key>
-																	<array/>
-																	<key>GID</key>
-																	<integer>80</integer>
-																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_presentation.html</string>
-																	<key>PATH_TYPE</key>
-																	<integer>0</integer>
-																	<key>PERMISSIONS</key>
-																	<integer>420</integer>
-																	<key>TYPE</key>
-																	<integer>3</integer>
-																	<key>UID</key>
-																	<integer>0</integer>
-																</dict>
-																<dict>
-																	<key>CHILDREN</key>
-																	<array/>
-																	<key>GID</key>
-																	<integer>80</integer>
-																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_qaul.css</string>
-																	<key>PATH_TYPE</key>
-																	<integer>0</integer>
-																	<key>PERMISSIONS</key>
-																	<integer>420</integer>
-																	<key>TYPE</key>
-																	<integer>3</integer>
-																	<key>UID</key>
-																	<integer>0</integer>
-																</dict>
-																<dict>
-																	<key>CHILDREN</key>
-																	<array/>
-																	<key>GID</key>
-																	<integer>80</integer>
-																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_qaul.html</string>
-																	<key>PATH_TYPE</key>
-																	<integer>0</integer>
-																	<key>PERMISSIONS</key>
-																	<integer>420</integer>
-																	<key>TYPE</key>
-																	<integer>3</integer>
-																	<key>UID</key>
-																	<integer>0</integer>
-																</dict>
-																<dict>
-																	<key>CHILDREN</key>
-																	<array/>
-																	<key>GID</key>
-																	<integer>80</integer>
-																	<key>PATH</key>
-																	<string>/Applications/qaul.app/Contents/Resources/www/jqm_qaul.js</string>
-																	<key>PATH_TYPE</key>
-																	<integer>0</integer>
-																	<key>PERMISSIONS</key>
-																	<integer>420</integer>
 																	<key>TYPE</key>
 																	<integer>3</integer>
 																	<key>UID</key>
@@ -5982,6 +5873,150 @@
 																	<integer>80</integer>
 																	<key>PATH</key>
 																	<string>/Applications/qaul.app/Contents/Resources/www/network.js</string>
+																	<key>PATH_TYPE</key>
+																	<integer>0</integer>
+																	<key>PERMISSIONS</key>
+																	<integer>420</integer>
+																	<key>TYPE</key>
+																	<integer>3</integer>
+																	<key>UID</key>
+																	<integer>0</integer>
+																</dict>
+																<dict>
+																	<key>CHILDREN</key>
+																	<array/>
+																	<key>GID</key>
+																	<integer>80</integer>
+																	<key>PATH</key>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul.css</string>
+																	<key>PATH_TYPE</key>
+																	<integer>0</integer>
+																	<key>PERMISSIONS</key>
+																	<integer>420</integer>
+																	<key>TYPE</key>
+																	<integer>3</integer>
+																	<key>UID</key>
+																	<integer>0</integer>
+																</dict>
+																<dict>
+																	<key>CHILDREN</key>
+																	<array/>
+																	<key>GID</key>
+																	<integer>80</integer>
+																	<key>PATH</key>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul.html</string>
+																	<key>PATH_TYPE</key>
+																	<integer>0</integer>
+																	<key>PERMISSIONS</key>
+																	<integer>420</integer>
+																	<key>TYPE</key>
+																	<integer>3</integer>
+																	<key>UID</key>
+																	<integer>0</integer>
+																</dict>
+																<dict>
+																	<key>CHILDREN</key>
+																	<array/>
+																	<key>GID</key>
+																	<integer>80</integer>
+																	<key>PATH</key>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul.js</string>
+																	<key>PATH_TYPE</key>
+																	<integer>0</integer>
+																	<key>PERMISSIONS</key>
+																	<integer>420</integer>
+																	<key>TYPE</key>
+																	<integer>3</integer>
+																	<key>UID</key>
+																	<integer>0</integer>
+																</dict>
+																<dict>
+																	<key>CHILDREN</key>
+																	<array/>
+																	<key>GID</key>
+																	<integer>80</integer>
+																	<key>PATH</key>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul_presentation.css</string>
+																	<key>PATH_TYPE</key>
+																	<integer>0</integer>
+																	<key>PERMISSIONS</key>
+																	<integer>420</integer>
+																	<key>TYPE</key>
+																	<integer>3</integer>
+																	<key>UID</key>
+																	<integer>0</integer>
+																</dict>
+																<dict>
+																	<key>CHILDREN</key>
+																	<array/>
+																	<key>GID</key>
+																	<integer>80</integer>
+																	<key>PATH</key>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul_presentation.fr.html</string>
+																	<key>PATH_TYPE</key>
+																	<integer>0</integer>
+																	<key>PERMISSIONS</key>
+																	<integer>420</integer>
+																	<key>TYPE</key>
+																	<integer>3</integer>
+																	<key>UID</key>
+																	<integer>0</integer>
+																</dict>
+																<dict>
+																	<key>CHILDREN</key>
+																	<array/>
+																	<key>GID</key>
+																	<integer>80</integer>
+																	<key>PATH</key>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul_presentation.html</string>
+																	<key>PATH_TYPE</key>
+																	<integer>0</integer>
+																	<key>PERMISSIONS</key>
+																	<integer>420</integer>
+																	<key>TYPE</key>
+																	<integer>3</integer>
+																	<key>UID</key>
+																	<integer>0</integer>
+																</dict>
+																<dict>
+																	<key>CHILDREN</key>
+																	<array/>
+																	<key>GID</key>
+																	<integer>80</integer>
+																	<key>PATH</key>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul_web.css</string>
+																	<key>PATH_TYPE</key>
+																	<integer>0</integer>
+																	<key>PERMISSIONS</key>
+																	<integer>420</integer>
+																	<key>TYPE</key>
+																	<integer>3</integer>
+																	<key>UID</key>
+																	<integer>0</integer>
+																</dict>
+																<dict>
+																	<key>CHILDREN</key>
+																	<array/>
+																	<key>GID</key>
+																	<integer>80</integer>
+																	<key>PATH</key>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul_web.html</string>
+																	<key>PATH_TYPE</key>
+																	<integer>0</integer>
+																	<key>PERMISSIONS</key>
+																	<integer>420</integer>
+																	<key>TYPE</key>
+																	<integer>3</integer>
+																	<key>UID</key>
+																	<integer>0</integer>
+																</dict>
+																<dict>
+																	<key>CHILDREN</key>
+																	<array/>
+																	<key>GID</key>
+																	<integer>80</integer>
+																	<key>PATH</key>
+																	<string>/Applications/qaul.app/Contents/Resources/www/qaul_web.js</string>
 																	<key>PATH_TYPE</key>
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>
@@ -6666,7 +6701,7 @@
 				<key>OVERWRITE_PERMISSIONS</key>
 				<false/>
 				<key>VERSION</key>
-				<string>1.0 beta3</string>
+				<string>1.0 beta4</string>
 			</dict>
 			<key>UUID</key>
 			<string>6420136E-6E84-4B0D-8B94-29C40456A34E</string>
@@ -6686,9 +6721,9 @@
 			ZW50LVN0eWxlLVR5cGUiIGNvbnRlbnQ9InRleHQvY3NzIj4KPHRp
 			dGxlPjwvdGl0bGU+CjxtZXRhIG5hbWU9IkdlbmVyYXRvciIgY29u
 			dGVudD0iQ29jb2EgSFRNTCBXcml0ZXIiPgo8bWV0YSBuYW1lPSJD
-			b2NvYVZlcnNpb24iIGNvbnRlbnQ9IjExODcuNCI+CjxzdHlsZSB0
-			eXBlPSJ0ZXh0L2NzcyI+Cjwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+
-			CjwvYm9keT4KPC9odG1sPgo=
+			b2NvYVZlcnNpb24iIGNvbnRlbnQ9IjEwMzguMzYiPgo8c3R5bGUg
+			dHlwZT0idGV4dC9jc3MiPgo8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5
+			Pgo8L2JvZHk+CjwvaHRtbD4K
 			</data>
 		</dict>
 		<key>PROJECT_PRESENTATION</key>
@@ -7060,22 +7095,6 @@
 							<integer>0</integer>
 							<key>PATH</key>
 							<string>../../Licenses/jquery.progressbar_BSD-license.txt</string>
-							<key>PATH_TYPE</key>
-							<integer>1</integer>
-							<key>PERMISSIONS</key>
-							<integer>420</integer>
-							<key>TYPE</key>
-							<integer>3</integer>
-							<key>UID</key>
-							<integer>0</integer>
-						</dict>
-						<dict>
-							<key>CHILDREN</key>
-							<array/>
-							<key>GID</key>
-							<integer>0</integer>
-							<key>PATH</key>
-							<string>../../Licenses/mongoose_license.txt</string>
 							<key>PATH_TYPE</key>
 							<integer>1</integer>
 							<key>PERMISSIONS</key>

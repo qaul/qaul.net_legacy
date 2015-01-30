@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 		{
 			username_flag = 1;
 			printf("waiting until user name is set ...\n");
-			printf("open web browser with http://localhost:8081/jqm_qaul.html to set it ...\n");
+			printf("open web browser with http://localhost:8081/qaul.html to set it ...\n");
 		}
 		sleep(1);
 	}

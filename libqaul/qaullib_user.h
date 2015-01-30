@@ -104,12 +104,12 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 /**
  * add a favorite
  */
-void Qaullib_UserFavoriteAdd(char *name, char *ipstr);
+void Qaullib_UserFavoriteAdd(char *name, char *ipstr, char *idstr);
 
 /**
  * delete a favorite
  */
-void Qaullib_UserFavoriteRemove(char *ipstr);
+void Qaullib_UserFavoriteRemove(char *ipstr, char *idstr);
 
 /**
  * fill favorites from DB into LL
@@ -122,6 +122,24 @@ void Qaullib_UserFavoritesDB2LL(void);
  * @retval connection quality image number 0-4
  */
 int Qaullib_UserLinkcost2Img(float linkcost);
+
+/**
+ * creates a user @a id out of @a ip and @a username
+ */
+void Qaullib_UserCreateId(union olsr_ip_addr *ip, char *username, unsigned char *id);
+
+/**
+ * creates a user @a id out of @a ipstr and @a username
+ */
+void Qaullib_UserCreateIdIpStr(char *ipstr, char *username, unsigned char *id);
+
+/**
+ * check if @a username is a web user name
+ *
+ * @retval 1 is web user
+ * @retval 0 is not a web user
+ */
+int Qaullib_UserCheckWebUserName(char *username);
 
 
 #ifdef __cplusplus

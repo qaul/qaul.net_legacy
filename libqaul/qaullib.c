@@ -35,6 +35,7 @@ void Qaullib_Init(const char* resourcePath)
 	qaul_UDP_started = 0;
 	qaul_exe_available = 0;
 	qaul_ipc_topo_request = 0;
+	qaul_ipc_connected = 1;
 	qaul_topo_LL_first = 0;
 	qaul_appevent_LL_first = 0;
 	qaul_appevent_LL_last = 0;
@@ -105,6 +106,7 @@ void Qaullib_Init(const char* resourcePath)
 
 	// initialize linked lists
 	Qaullib_UserInit();
+	Qaullib_MsgInit();
 	Qaullib_FileInit();
 
 	// initialize exe discovery
@@ -239,6 +241,9 @@ void Qaullib_TimedSocketReceive(void)
 
 	// check UDP sockets
 	Qaullib_UDP_CheckSocket();
+
+	// check web server
+	//mg_poll_server(qaul_webserver_instance, 1024);
 }
 
 int Qaullib_TimedCheckAppEvent(void)
@@ -275,18 +280,16 @@ const char* Qaullib_GetAppEventOpenURL(void)
 // ------------------------------------------------------------
 int Qaullib_WebserverStart(void)
 {
-	static const char *options[] = {
-	  "document_root", webPath,
-	  "listening_ports", CHAT_PORT,
-	  "num_threads", "60",
-	  NULL
-	};
-	ctx = mg_start(&Qaullib_WwwEvent_handler, options);
-	if( ctx == NULL )
-	{
-		fprintf(stderr, "Can't open web server\n");
-		return 0;
-	}
+	if(QAUL_DEBUG)
+		printf("Qaullib_WebserverStart \n");
+
+	//qaul_webserver_instance = mg_create_server(options, (mg_handler_t) Qaullib_WwwEvent_handler);
+	qaul_webserver_instance = mg_create_server(NULL, (mg_handler_t) Qaullib_WwwEvent_handler);
+	mg_set_option(qaul_webserver_instance, "listening_port", CHAT_PORT);
+	mg_set_option(qaul_webserver_instance, "document_root", webPath);
+	//mg_set_option(qaul_webserver_instance, "num_threads", "60");
+
+	mg_start_thread(Qaullib_Www_Server, qaul_webserver_instance);
 
 	return 1;
 }
@@ -425,9 +428,6 @@ int Qaullib_StringMsgProtect(char *protected_string, char *unprotected_string, i
 {
 	int i, j;
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_StringMsgControl\n");
-
 	j=0;
 	for(i=0; i<strlen(unprotected_string); i++)
 	{
@@ -539,9 +539,6 @@ int Qaullib_StringDbProtect(char *protected_string, char *unprotected_string, in
 {
 	int i, j;
 
-	if(QAUL_DEBUG)
-		printf("Qaullib_StringDbProtect\n");
-
 	j=0;
 	for(i=0; i<strlen(unprotected_string); i++)
 	{
@@ -575,9 +572,6 @@ int Qaullib_StringDbProtect(char *protected_string, char *unprotected_string, in
 	}
 
 	memcpy(protected_string +j, "\0", 1);
-
-	if(QAUL_DEBUG)
-		printf("Qaullib_StringDbProtect protected string: %s\n", protected_string);
 
 	return j;
 }
@@ -734,16 +728,16 @@ int Qaullib_DbGetConfigValueInt(const char* key)
 		// For each row returned
 		while (sqlite3_step(ppStmt) == SQLITE_ROW)
 		{
-		  // For each collumn
-		  int jj;
-		  for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
-		  {
+			// For each collumn
+			int jj;
+			for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
+			{
 				if(strcmp(sqlite3_column_name(ppStmt,jj), "value_int") == 0)
 				{
 					myvalue = sqlite3_column_int(ppStmt, jj);
 					return myvalue;
 				}
-		  }
+			}
 		}
 		sqlite3_finalize(ppStmt);
 	}
@@ -908,6 +902,15 @@ void Qaullib_SetConfInt(const char *key, int value)
 }
 
 // ------------------------------------------------------------
+const char* Qaullib_GetNetProfile(void)
+{
+	if (Qaullib_GetConfString("net.profile", qaul_net_profile))
+	{
+		return qaul_net_profile;
+	}
+	return "custom";
+}
+
 int Qaullib_GetNetProtocol(void)
 {
 	int protocol = Qaullib_DbGetConfigValueInt("net.protocol");
@@ -923,6 +926,15 @@ int Qaullib_GetNetMask(void)
 	return Qaullib_DbGetConfigValueInt("net.mask");
 }
 
+const char* Qaullib_GetNetBroadcast(void)
+{
+	if (Qaullib_DbGetConfigValue("wifi.ssid", qaul_net_broadcast))
+	{
+		return qaul_net_ssid;
+	}
+	return "";
+}
+
 const char* Qaullib_GetNetGateway(void)
 {
 	if (Qaullib_DbGetConfigValue("net.gateway", qaul_net_gateway))
@@ -932,11 +944,29 @@ const char* Qaullib_GetNetGateway(void)
 	return "0.0.0.0";
 }
 
-const char* Qaullib_GetWifiIbss(void)
+const char* Qaullib_GetNetNs1(void)
 {
-	if (Qaullib_DbGetConfigValue("wifi.ibss", qaul_net_ibss))
+	if (Qaullib_DbGetConfigValue("net.ns1", qaul_net_ns1))
 	{
-		return qaul_net_ibss;
+		return qaul_net_ns1;
+	}
+	return "77.67.33.81";
+}
+
+const char* Qaullib_GetNetNs2(void)
+{
+	if (Qaullib_DbGetConfigValue("net.ns2", qaul_net_ns2))
+	{
+		return qaul_net_ns2;
+	}
+	return "77.67.33.81";
+}
+
+const char* Qaullib_GetWifiSsid(void)
+{
+	if (Qaullib_DbGetConfigValue("wifi.ssid", qaul_net_ssid))
+	{
+		return qaul_net_ssid;
 	}
 	return "";
 }

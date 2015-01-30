@@ -4,6 +4,8 @@
  */
 
 #include "qaullib_private.h"
+#include "qaullib_crypto.h"
+
 
 void Qaullib_UserInit(void)
 {
@@ -33,17 +35,96 @@ void Qaullib_UserInit(void)
 int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 {
 	struct qaul_user_LL_item *user;
-	int user_found = 0;
+	unsigned char id[MAX_HASH_LEN];
+	int user_found, user_exists;
 
-	// check if user exists in LL
-	if(Qaullib_User_LL_IpSearch (ip, &user))
+	if(QAUL_DEBUG)
+		printf("Qaullib_UserCheckUser\n");
+
+	user_found = 0;
+
+	// generate id
+	Qaullib_UserCreateId(ip, name, id);
+
+	// check if user is web user
+	if(Qaullib_UserCheckWebUserName(name))
 	{
-		// if user exists: update lastseen_at
-		if(user->type < QAUL_USERTYPE_KNOWN)
+		if(Qaullib_User_LL_IdSearch (ip, id, &user) == 1)
+		{
+			// if user exists: update lastseen_at
+			if(user->changed >= QAUL_USERCHANGED_DELETED)
+			{
+				if(user->changed == QAUL_USERCHANGED_DELETED)
+					user->changed = QAUL_USERCHANGED_UNCHANGED;
+				else
+					user->changed = QAUL_USERCHANGED_MODIFIED;
+			}
+
+			user->time = time(NULL);
+			user_found = 1;
+		}
+		else
+		{
+			// create user
+			user = Qaullib_User_LL_Add (ip, id);
+
+			// set user name
+			strncpy(user->name, name, MAX_USER_LEN +1);
+
+			// set type
+			user->type = QAUL_USERTYPE_WEB_KNOWN;
+			user->changed = QAUL_USERCHANGED_MODIFIED;
+		}
+	}
+	else
+	{
+		// check if user exists in LL
+		user_exists = Qaullib_User_LL_IdSearch (ip, id, &user);
+
+		if(user_exists == 1)
+		{
+			// if user exists: update lastseen_at
+			if(user->changed >= QAUL_USERCHANGED_DELETED)
+			{
+				if(user->changed == QAUL_USERCHANGED_DELETED)
+					user->changed = QAUL_USERCHANGED_UNCHANGED;
+				else
+					user->changed = QAUL_USERCHANGED_MODIFIED;
+			}
+
+			user->time = time(NULL);
+			user_found = 1;
+		}
+		else if (user_exists == 0)
 		{
 			// set user name
-			strncpy(user->name, name, MAX_USER_LEN);
-			memcpy(&user->name[MAX_USER_LEN], "\0", 1);
+			strncpy(user->name, name, MAX_USER_LEN +1);
+
+			// set id
+			memcpy(user->id, id, sizeof(user->id));
+			Qaullib_HashToString(id, user->idstr);
+
+			// hide empty users
+			if(strlen(user->name) > 0)
+			{
+				user->type = QAUL_USERTYPE_KNOWN;
+				user->changed = QAUL_USERCHANGED_MODIFIED;
+			}
+			else
+			{
+				user->type = QAUL_USERTYPE_HIDDEN;
+			}
+
+			user->time = time(NULL);
+			user_found = 1;
+		}
+		else
+		{
+			// create user
+			user = Qaullib_User_LL_Add (ip, id);
+
+			// set user name
+			strncpy(user->name, name, MAX_USER_LEN +1);
 
 			// hide empty users
 			if(strlen(user->name) > 0)
@@ -56,102 +137,20 @@ int Qaullib_UserCheckUser(union olsr_ip_addr *ip, char *name)
 				user->type = QAUL_USERTYPE_HIDDEN;
 			}
 		}
-		else if(user->changed >= QAUL_USERCHANGED_DELETED)
-		{
-			if(user->changed == QAUL_USERCHANGED_DELETED)
-				user->changed = QAUL_USERCHANGED_UNCHANGED;
-			else
-				user->changed = QAUL_USERCHANGED_MODIFIED;
-		}
-
-		user->time = time(NULL);
-		user_found = 1;
 	}
-	else
-	{
-		// if user does not exist: create user
-		user = Qaullib_User_LL_Add (ip);
-		// set user name
-		strncpy(user->name, name, MAX_USER_LEN);
-		memcpy(&user->name[MAX_USER_LEN], "\0", 1);
 
-		// hide empty users
-		if(strlen(user->name) > 0)
-		{
-			user->type = QAUL_USERTYPE_KNOWN;
-			user->changed = QAUL_USERCHANGED_MODIFIED;
-		}
-		else
-		{
-			user->type = QAUL_USERTYPE_HIDDEN;
-		}
-	}
 	return user_found;
 }
 
 // ------------------------------------------------------------
 void Qaullib_UserTouchIp(union olsr_ip_addr *ip, float linkcost)
 {
-	struct qaul_user_LL_item *user;
-
-	if(QAUL_DEBUG)
-		printf("Qaullib_UserTouchIp \n");
-
-	// check if user exists in LL
-	if(Qaullib_User_LL_IpSearch (ip, &user))
-	{
-		if(QAUL_DEBUG)
-			printf("user exists \n");
-
-		// if user exists: update lastseen_at
-		if(user->changed >= QAUL_USERCHANGED_DELETED)
-		{
-			if(user->type == QAUL_USERTYPE_KNOWN)
-				user->changed = QAUL_USERCHANGED_MODIFIED;
-			else
-				user->changed = QAUL_USERCHANGED_UNCHANGED;
-		}
-
-		// set link cost
-		if(linkcost > 20.0)
-		{
-			// delete this user
-			if(user->changed < QAUL_USERCHANGED_DELETED)
-				user->changed = QAUL_USERCHANGED_DELETED;
-		}
-		else
-		{
-			if( user->changed >= QAUL_USERCHANGED_DELETED &&
-				linkcost <= 10.0)
-			{
-				user->changed = QAUL_USERCHANGED_MODIFIED;
-			}
-			else if(Qaullib_UserLinkcost2Img(user->lq) != Qaullib_UserLinkcost2Img(linkcost))
-			{
-				user->changed = QAUL_USERCHANGED_MODIFIED;
-			}
-		}
-		user->lq = linkcost;
-
-		// set last seen time stamp
-		user->time = time(NULL);
-	}
-	else
-	{
-		if(QAUL_DEBUG)
-			printf("user does not exist, create it \n");
-
-		// if user does not exist: create user
-		user = Qaullib_User_LL_Add (ip);
-		user->lq = linkcost;
-	}
+	Qaullib_User_LL_IpTouch (ip, linkcost);
 }
 
 // ------------------------------------------------------------
 void Qaullib_UserCheckNonames(void)
 {
-	//printf("[LL next] Qaullib_UserCheckNonames\n");
-
 	struct qaul_user_LL_node mynode;
 	Qaullib_User_LL_InitNode(&mynode);
 	while(Qaullib_User_LL_NextNode(&mynode))
@@ -210,12 +209,9 @@ int Qaullib_UserDownloadProcess(struct qaul_user_connection *userconnection, int
 
 	if(bytes >= sizeof(struct qaul_userinfo_msg))
 	{
-		printf("Qaullib_UserDownloadProcess received\n");
 		// check for first info (usually requested user)
 		if(memcmp(&userconnection->user->ip, &userconnection->conn.buf.userinfo.ip, sizeof(union olsr_ip_addr)) == 0)
 		{
-			printf("Qaullib_UserDownloadProcess first is asked client\n");
-
 			strncpy(userconnection->user->name, userconnection->conn.buf.userinfo.name, MAX_USER_LEN);
 			memcpy(&userconnection->user->name[MAX_USER_LEN], "\0", 1);
 
@@ -240,9 +236,6 @@ int Qaullib_UserDownloadProcess(struct qaul_user_connection *userconnection, int
 		bufpos = sizeof(struct qaul_userinfo_msg);
 		while(bytes -bufpos >= sizeof(struct qaul_userinfo_msg))
 		{
-			if(QAUL_DEBUG)
-				printf("Qaullib_UserDownloadProcess further user info\n");
-
 			// process information
 			Qaullib_UserAddInfo((struct qaul_userinfo_msg *)&userconnection->conn.buf.buf[bufpos]);
 			// set new bufpos
@@ -356,43 +349,49 @@ void Qaullib_UserAddInfo(struct qaul_userinfo_msg *userinfo)
 void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *suffix)
 {
 	struct qaul_user_LL_item *myuseritem;
+	unsigned char id[MAX_HASH_LEN];
+	int user_isweb, user_exists;
 
-	printf("Qaullib_UserAdd\n");
+	// generate id
+	Qaullib_UserCreateId(ip, name, id);
 
-	// search for user
-	if(Qaullib_User_LL_IpSearch (ip, &myuseritem))
+	// check if user is web user
+	user_isweb = Qaullib_UserCheckWebUserName(name);
+
+	// check if user exists
+	user_exists = Qaullib_User_LL_IdSearch(ip, id, &myuseritem);
+
+
+	if (user_exists == 1)
 	{
-		printf("Qaullib_UserAddInfo user found in LL\n");
+		myuseritem->time = time(NULL);
+		return;
+	}
+	else if(user_exists == 0 && user_isweb == 0)
+	{
+		myuseritem->time = time(NULL);
 
-		// check if it is already known
-		if(myuseritem->type < QAUL_USERTYPE_KNOWN)
-		{
-			printf("Qaullib_UserAddInfo name not known yet\n");
-			// set type
-			myuseritem->type = QAUL_USERTYPE_KNOWN;
-			if(myuseritem->changed == QAUL_USERCHANGED_UNCHANGED)
-				myuseritem->changed = QAUL_USERCHANGED_MODIFIED;
-		}
-		else
-			return;
+		if(myuseritem->changed == QAUL_USERCHANGED_UNCHANGED)
+			myuseritem->changed = QAUL_USERCHANGED_MODIFIED;
 	}
 	else
 	{
-		printf("Qaullib_UserAddInfo user not found in LL: create it\n");
 		// create the user if it doesn't exist
-		myuseritem = Qaullib_User_LL_Add (ip);
-		// set user to cache
+		myuseritem = Qaullib_User_LL_Add (ip, id);
+		// set user to cached
 		myuseritem->changed = QAUL_USERCHANGED_CACHED;
 	}
 
-	// fill in name
-	strncpy(myuseritem->name, name, MAX_USER_LEN);
-	memcpy(&myuseritem->name[MAX_USER_LEN], "\0", 1);
-	// todo: add icon info
-	memcpy(&myuseritem->icon[0], "\0", 1);
-	printf("Qaullib_User survived\n");
+	// set name
+	strncpy(myuseritem->name, name, MAX_USER_LEN +1);
 
-	if(strlen(myuseritem->name) > 0)
+	// set id
+	memcpy(myuseritem->id, id, sizeof(myuseritem->id));
+	Qaullib_HashToString(id, myuseritem->idstr);
+
+	if(user_isweb)
+		myuseritem->type = QAUL_USERTYPE_WEB_KNOWN;
+	else if(strlen(myuseritem->name) > 0)
 		myuseritem->type = QAUL_USERTYPE_KNOWN;
 	else
 		myuseritem->type = QAUL_USERTYPE_HIDDEN;
@@ -402,7 +401,7 @@ void Qaullib_UserAdd(union olsr_ip_addr *ip, char *name, char *iconhash, char *s
 }
 
 // ------------------------------------------------------------
-void Qaullib_UserFavoriteAdd(char *name, char *ipstr)
+void Qaullib_UserFavoriteAdd(char *name, char *ipstr, char *uidstr)
 {
 	char buffer[1024];
 	char name_dbprotected[MAX_USER_LEN*2 +1];
@@ -410,6 +409,7 @@ void Qaullib_UserFavoriteAdd(char *name, char *ipstr)
 	char *error_exec=NULL;
 	union olsr_ip_addr myip;
 	struct qaul_user_LL_item *myitem;
+	unsigned char myid[MAX_HASH_LEN];
 	int myipint;
 
 	// create ip
@@ -419,14 +419,17 @@ void Qaullib_UserFavoriteAdd(char *name, char *ipstr)
 		return;
 	}
 
+	// create id hash
+	Qaullib_StringToHash(uidstr, myid);
+
 	// change it at user LL
-	if( Qaullib_User_LL_IpSearch (&myip, &myitem) )
+	if( Qaullib_User_LL_IdSearch (&myip, myid, &myitem) == 1 )
 		myitem->favorite = 0;
 
 	// add it to DB
 	memcpy(&myipint, &myip.v4, sizeof(int));
 	Qaullib_StringDbProtect(name_dbprotected, name, sizeof(name_dbprotected));
-	sprintf(stmt, sql_user_set_ipv4, name_dbprotected, "", myipint);
+	sprintf(stmt, sql_user_set_ipv4, name_dbprotected, "", myipint, uidstr);
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		printf("SQLite error: %s\n",error_exec);
@@ -436,14 +439,14 @@ void Qaullib_UserFavoriteAdd(char *name, char *ipstr)
 }
 
 // ------------------------------------------------------------
-void Qaullib_UserFavoriteRemove(char *ipstr)
+void Qaullib_UserFavoriteRemove(char *ipstr, char *uidstr)
 {
 	char buffer[1024];
 	char *stmt = buffer;
 	char *error_exec=NULL;
 	union olsr_ip_addr myip;
 	struct qaul_user_LL_item *myitem;
-	int myipint;
+	unsigned char myid[MAX_HASH_LEN];
 
 	// create ip
 	if ( inet_pton(AF_INET, ipstr, &myip.v4) == 0 )
@@ -452,13 +455,15 @@ void Qaullib_UserFavoriteRemove(char *ipstr)
 		return;
 	}
 
+	// create id hash
+	Qaullib_StringToHash(uidstr, myid);
+
 	// change it at user LL
-	if( Qaullib_User_LL_IpSearch (&myip, &myitem) )
+	if( Qaullib_User_LL_IdSearch (&myip, myid, &myitem) == 1 )
 		myitem->favorite = 0;
 
 	// remove it from DB
-	memcpy(&myipint, &myip.v4, sizeof(int));
-	sprintf(stmt, sql_user_delete_ipv4, myipint);
+	sprintf(stmt, sql_user_delete_uid, uidstr);
 	if(sqlite3_exec(db, stmt, NULL, NULL, &error_exec) != SQLITE_OK)
 	{
 		printf("SQLite error: %s\n",error_exec);
@@ -473,7 +478,13 @@ void Qaullib_UserFavoritesDB2LL(void)
 	sqlite3_stmt *ppStmt;
 	union olsr_ip_addr myip;
 	struct qaul_user_LL_item *myitem;
-	int myipint;
+	char myidstr[MAX_HASHSTR_LEN +1];
+	unsigned char myid[MAX_HASH_LEN];
+	char myname[MAX_USER_LEN +1];
+	int myipint, name_isweb;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_WwwWebGetMsgs\n");
 
 	// Select rows from database
 	if( sqlite3_prepare_v2(db, sql_user_get_all, -1, &ppStmt, NULL) != SQLITE_OK )
@@ -485,33 +496,44 @@ void Qaullib_UserFavoritesDB2LL(void)
 	// For each row returned
 	while (sqlite3_step(ppStmt) == SQLITE_ROW)
 	{
-	  // For each column
-	  int jj;
-	  // search for ip
-	  for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
-	  {
+		// For each column
+		int jj;
+		// search for ip
+		for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
+		{
 			if(strcmp(sqlite3_column_name(ppStmt,jj), "ipv4") == 0)
 			{
 				myipint = sqlite3_column_int(ppStmt, jj);
 				memcpy(&myip.v4, &myipint, sizeof(struct sockaddr_in));
-				break;
 			}
-	  }
-
-	  myitem = Qaullib_User_LL_Add(&myip);
-	  myitem->type = QAUL_USERTYPE_KNOWN;
-	  myitem->favorite = 1;
-	  myitem->changed = QAUL_USERCHANGED_CACHED;
-
-	  // fill in rest
-	  for(jj=0; jj < sqlite3_column_count(ppStmt); jj++)
-	  {
-			if(strcmp(sqlite3_column_name(ppStmt,jj), "name") == 0)
+			else if(strcmp(sqlite3_column_name(ppStmt,jj), "name") == 0)
 			{
-				sprintf(myitem->name,"%s",sqlite3_column_text(ppStmt, jj));
-				break;
+				sprintf(myname,"%s",sqlite3_column_text(ppStmt, jj));
 			}
-	  }
+			else if(strcmp(sqlite3_column_name(ppStmt,jj), "uid") == 0)
+			{
+				sprintf(myidstr,"%s",sqlite3_column_text(ppStmt, jj));
+			}
+		}
+
+		// string to id
+		Qaullib_StringToHash(myidstr, myid);
+
+		// add item
+		myitem = Qaullib_User_LL_Add(&myip, myid);
+
+		// set user name
+		strncpy(myitem->name, myname, MAX_USER_LEN +1);
+
+		// check if it is a web name
+		name_isweb = Qaullib_UserCheckWebUserName(myname);
+		if(name_isweb)
+			myitem->type = QAUL_USERTYPE_WEB_KNOWN;
+		else
+			myitem->type = QAUL_USERTYPE_KNOWN;
+
+		myitem->favorite = 1;
+		myitem->changed = QAUL_USERCHANGED_CACHED;
 	}
 	sqlite3_finalize(ppStmt);
 }
@@ -531,4 +553,50 @@ int Qaullib_UserLinkcost2Img(float linkcost)
 		return 0;
 }
 
+// ------------------------------------------------------------
+void Qaullib_UserCreateId(union olsr_ip_addr *ip, char *username, unsigned char *id)
+{
+	char ipstr[MAX_IP_LEN +1];
 
+	if(QAUL_DEBUG)
+		printf("Qaullib_UserCreateId\n");
+
+	// create ip string
+	if(!inet_pton(AF_INET, ipstr, &ip->v4))
+		sprintf(ipstr, "%s", "");
+
+	Qaullib_UserCreateIdIpStr(ipstr, username, id);
+}
+
+void Qaullib_UserCreateIdIpStr(char *ipstr, char *username, unsigned char *id)
+{
+	unsigned char inputstr[MAX_USER_LEN +MAX_IP_LEN +1];
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_UserCreateIdIpStr\n");
+
+	// set buffer to 0
+	memset(&inputstr,0,sizeof(inputstr));
+	// copy strings together
+	snprintf(inputstr, sizeof(inputstr), "%s%s", ipstr, username);
+
+	polarssl_sha1(inputstr, sizeof(inputstr), id);
+}
+
+// ------------------------------------------------------------
+Qaullib_UserCheckWebUserName(char *username)
+{
+	int namelen;
+
+	if(QAUL_DEBUG)
+		printf("Qaullib_UserCheckWebUserName\n");
+
+	namelen = strlen(username);
+	if(namelen >= 5)
+	{
+		if(strncmp(username +namelen -5, "[WEB]", 5) == 0)
+			return 1;
+	}
+
+	return 0;
+}

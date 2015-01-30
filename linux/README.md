@@ -18,5 +18,6 @@ Compile & Install
 -----------------
 
 * Full featured GTK GUI version see ./qaul_gtk/README.md
-* Deprecated QT GUI version see ./qaul_qt/README.md
+* Deprecated QT GUI version (deleted) see tag BETA2 in git repository 
+  for sources
 * CLI version see ../cli/README.md

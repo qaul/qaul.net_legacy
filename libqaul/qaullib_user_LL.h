@@ -28,6 +28,8 @@ struct qaul_user_LL_item {
 	int                type;                  /// type of user: see user types
 	int                changed;               /// changes for GUI notifications: see user changed
 	int				   favorite;			  /// user is favorite (don't delete it)
+    unsigned char      id[MAX_HASH_LEN];      /// user id (hash of IP & name)
+    char               idstr[MAX_HASHSTR_LEN +1]; /// user id as string
 };
 
 struct qaul_user_LL_node {
@@ -40,10 +42,12 @@ struct qaul_user_LL_node {
  * this definitions indicate the type and status of a user
  */
 #define QAUL_USERTYPE_UNCHECKED   0 /// this user is unknown yet
+#define QAUL_USERTYPE_WEB_HIDDEN -3 /// potential web user with not yet known user name
 #define QAUL_USERTYPE_HIDDEN     -2 /// user shall not be shown in user discovery
 #define QAUL_USERTYPE_ERROR      -1 /// ERROR downloading, might be infrastructure node
 #define QAUL_USERTYPE_DOWNLOADING 1 /// trying to download the user name from this user
 #define QAUL_USERTYPE_KNOWN       2 /// known user
+#define QAUL_USERTYPE_WEB_KNOWN   3 /// web user with known user name
 
 /**
  * user changed
@@ -64,7 +68,7 @@ void Qaullib_User_LL_Init (void);
  *
  * @retval pointer to the item
  */
-struct qaul_user_LL_item* Qaullib_User_LL_Add (union olsr_ip_addr *ip);
+struct qaul_user_LL_item* Qaullib_User_LL_Add (union olsr_ip_addr *ip, unsigned char *id);
 
 /**
  * delete @a item from list
@@ -74,6 +78,7 @@ void Qaullib_User_LL_Delete_Item (struct qaul_user_LL_item *item);
 /**
  * loops through the list and deletes all expired entries
  * mark all clients older than 30 seconds as deleted
+ * mark all web clients older than 2 minutes as deleted
  * remove all clients which are older than 5 minutes
  */
 void Qaullib_User_LL_Clean (void);
@@ -87,13 +92,32 @@ void Qaullib_User_LL_Clean (void);
 int  Qaullib_User_LL_IpExists (union olsr_ip_addr *ip);
 
 /**
- * loops through the list and checks if @a ip exists.
- * If it exists, @a item will contain the pointer to it.
+ * loops through the list and checks if @a ip entry of a real user
+ * (not web user) exists.
+ * If it exists, @a item will contain the pointer to the first IP entry of it.
  *
  * @retval 1 entry exists
  * @retval 0 entry does not exist
  */
-int  Qaullib_User_LL_IpSearch (union olsr_ip_addr *ip, struct qaul_user_LL_item **item);
+int  Qaullib_User_LL_IpGetFirst (union olsr_ip_addr *ip, struct qaul_user_LL_item **item);
+
+/**
+ * Update LL according to olsrd topology list.
+ * Loop through LL and update all nodes with this @a ip.
+ * If no real user for @a ip exists, a new one is created.
+ */
+void Qaullib_User_LL_IpTouch (union olsr_ip_addr *ip, float linkcost);
+
+/**
+ * Loops through the list and checks if @a id exists. If it can't
+ * find an entry for that @a id it checks if a real user without id set
+ * exists for that @a ip.
+ *
+ * @retval  1  id found
+ * @retval  0  id not found, but a real user without id found for this ip
+ * @retval -1  id not found
+ */
+int  Qaullib_User_LL_IdSearch (union olsr_ip_addr *ip, unsigned char *id, struct qaul_user_LL_item **item);
 
 /**
  * initializes a @a node with the first entry of the user table

@@ -1,0 +1,48 @@
+config interface 'loopback'
+	option ifname 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config interface 'wan'
+	option ifname 'eth0'
+	option proto 'dhcp'
+
+config switch
+	option name 'switch0'
+	option reset '1'
+	option enable_vlan '1'
+
+config switch_vlan
+	option device 'switch0'
+	option vlan '1'
+	option ports '0 1 2 3 4'
+
+config interface 'qauleth'
+	option ifname 'eth1'
+	option proto 'static'
+	option netmask '255.0.0.0'
+	option broadcast '10.255.255.255'
+	option ipaddr '10.222.120.237'
+
+config interface 'qaulwifi'
+	option ifname 'wlan0'
+	option proto 'static'
+	option netmask '255.0.0.0'
+	option broadcast '10.255.255.255'
+	option ipaddr '10.219.134.147'
+
+config interface 'lanwifi'
+	option proto     'static'            
+	option ipaddr    '192.168.10.1'     
+	option netmask   '255.255.255.0' 
+	option broadcast '192.168.10.255'
+
+config interface 'qaulvpn'
+	option ifname 'qaulvpn'
+	option proto 'static'
+	option ipaddr '10.10.10.12'
+	option netmask '255.0.0.0'
+	option broadcast '10.255.255.255'
+
+	

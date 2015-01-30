@@ -482,16 +482,24 @@ static int networkmanager_device_properties(DBusConnection* dbus_connection, qau
 	}
 	dbus_message_unref(msg);
 
-	// retrieve Hardware address property
+	// store dbus path
+	printf("networkmanager_device_properties device_property.dbus_path\n");
 	device_property.dbus_path = device->dbus_device_path;
-	device_property.dbus_property_name = "PermHwAddress";
-	device_property.value_string = device->mac;
-	device_property.value_string_len = sizeof(device->mac);
 
+	printf("networkmanager_device_properties device_property.dbus_interface\n");
 	if(device->type == 2)
 		device_property.dbus_interface = "org.freedesktop.NetworkManager.Device.Wireless";
 	else if(device->type == 1)
 		device_property.dbus_interface = "org.freedesktop.NetworkManager.Device.Wired";
+
+	// retrieve Hardware address property only for known device types
+	if(device->type == 1 || device->type == 2)
+	{
+		printf("networkmanager_device_properties device->mac\n");
+		device_property.dbus_property_name = "PermHwAddress";
+		device_property.value_string = device->mac;
+		device_property.value_string_len = sizeof(device->mac);
+	}
 
 	if(strlen(device_property.dbus_interface)>0)
 	{
@@ -574,7 +582,7 @@ int qaul_network_device_get_by_interface(const char* interface_name, DBusConnect
 	}
 	dbus_message_unref(msg);
 
-	printf("qaul_network_device_get_by_interface no wifi device found\n", current_type);
+	printf("qaul_network_device_get_by_interface no wifi device found\n");
 
 	return 0;
 }
@@ -791,7 +799,7 @@ int qaul_network_find_wifi(DBusConnection* dbus_connection, qaul_dbus_device_pro
 	}
 	dbus_message_unref(msg);
 
-	printf("qaul_network_find_wifi no wifi device found\n", current_type);
+	printf("qaul_network_find_wifi no wifi device found\n");
 
 	return 0;
 }

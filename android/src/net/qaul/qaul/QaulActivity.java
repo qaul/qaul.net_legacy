@@ -33,7 +33,7 @@ public class QaulActivity extends Activity {
         
         WebView mainWebView = (WebView) findViewById(R.id.mainWebView);
         mainWebView.getSettings().setJavaScriptEnabled(true);
-        mainWebView.loadUrl("http://localhost:8081/jqm_qaul.html");
+        mainWebView.loadUrl("http://localhost:8081/qaul.html");
 
         Log.i("QaulActivity", "after webview");
     }

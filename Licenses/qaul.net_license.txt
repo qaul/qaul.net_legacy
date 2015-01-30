@@ -19,8 +19,8 @@ That software may have different licenses.
 
 * olsrd written by Andreas Tonnesen & Thomas Lopatic see olsrd_BSD-license.txt
   source & more information: http://www.olsr.org
-* mongoose by Sergey Lyubka see mongoose_license.txt
-  source & more information: http://code.google.com/p/mongoose/
+* mongoose by Cesanta Software Ltd. (GPLv2)
+  source & more information: https://github.com/cesanta/mongoose
 * SQLight disclaims copyright and is in the public domain
   source & more information: http://www.sqlite.org
 * pjsip by Benny Prijono & Teluu Inc. (GPLv2)

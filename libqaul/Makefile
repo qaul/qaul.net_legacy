@@ -2,7 +2,7 @@
 # File:  Makefile (for library)
 #
 TOP:=$(dir $(lastword $(MAKEFILE_LIST)))
-PJBASE=$(TOP)/../pjproject-2.2.1
+PJBASE=$(TOP)/../pjproject-2.3
 
 CC=gcc
 LIBDEST=.
@@ -42,8 +42,10 @@ SRC= qaullib.c qaullib_ipc.c qaullib_webserver.c qaullib_voip.c \
      qaullib_user.c qaullib_user_LL.c \
      qaullib_topo_LL.c \
      qaullib_appevent_LL.c \
+     qaullib_messaging.c qaullib_msg_LL.c qaullib_validate.c \
      qaullib_filesharing.c qaullib_file_LL.c \
      qaullib_exediscovery.c \
+     qaullib_crypto.c \
      qaullib_udp_communication.c \
      captive/qaullib_captive.c captive/qaullib_captive_dhcp.c captive/qaullib_captive_dns.c \
      mongoose/mongoose.c sqlite/sqlite3.c \

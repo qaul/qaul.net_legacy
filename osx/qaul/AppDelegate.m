@@ -179,9 +179,9 @@
 	{
 		// change to chat view
 		// BUG: does not work anymore if URL is:
-        //      http://127.0.0.1:8081/jqm_qaul.html
+        //      http://127.0.0.1:8081/qaul.html
         //      it has to be "localhost"
-        NSString *myUrl = @"http://localhost:8081/jqm_qaul.html";
+        NSString *myUrl = @"http://localhost:8081/qaul.html";
         NSLog(@"set URL %@", myUrl);
 		//[qaulWebView setMainFrameURL:myUrl];
         [[qaulWebView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:myUrl]]];
@@ -399,7 +399,7 @@
             
             // get bssid and channel
             char config_ibss_c[32 +1];
-            Qaullib_GetConfString("wifi.ibss", config_ibss_c);
+            Qaullib_GetConfString("wifi.ssid", config_ibss_c);
             NSString *myibss = [NSString stringWithFormat:@"%s", config_ibss_c];
             
             success = [qaulConfigWifi connect2network:myibss channel:Qaullib_GetConfInt("wifi.channel") interface:qaulWifiInterface service:qaulServiceId];
