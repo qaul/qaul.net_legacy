@@ -444,9 +444,10 @@ int Qaullib_WwwEvent_handler(struct mg_connection *conn, enum mg_event event)
 		else
 		{
 			// redirect to splash page
-			conn->status_code = 301;
-		    mg_printf(conn, "HTTP/1.1 301 Moved Permanently\r\n"
-		              "Location: %s/\r\n\r\n", "http://start.qaul");
+			conn->status_code = 303;
+		    mg_printf(conn, "HTTP/1.1 303 See Other\r\n"
+		              "Location: %s\r\n\r\n", "http://start.qaul/");
+		    mg_printf(conn, "<a href=\"%s\">qaul.net &gt;&gt;</a>", "http://start.qaul/");
 
 			processed = 1;
 		}
