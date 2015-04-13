@@ -5,7 +5,7 @@ qaul.net runs as CLI client on Raspberry Pi.
 It was tested on Raspbian (Raspberrys Debian Wheezy).
 
 
-Szenarios
+Scenarios
 ---------
 
 ### qaul.net via Ethernet
