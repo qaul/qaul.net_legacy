@@ -1,7 +1,7 @@
 Binary Releases
 ===============
 
-Download the lasted beta binaries from http://qaul.net/download/
+Download the latest beta binaries from http://qaul.net/download/
 
 qaul.net can spread itself. New users can download the installer for their OS directly 
 from the qaul.net network. Every qaul.net device needs to contain therefore the qaul.net
