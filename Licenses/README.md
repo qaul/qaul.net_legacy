@@ -3,7 +3,7 @@
 qaul.net was written by and is part of the Art project qaul.net: 
 http://www.qaul.net 
 
-qaul.net is free software, licensed under the GPL license (Version 3).
+qaul.net is free software, licensed under the [GNU GPL license (Version 3)](http://www.gnu.org/licenses/gpl-3.0.html).
 You can download it from the Internet: http://www.qaul.net
 
 
