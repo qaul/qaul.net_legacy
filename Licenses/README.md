@@ -13,7 +13,7 @@ Credits
 The project qaul.net was initiated by Christoph Wachter & Mathias Jud 
 http://www.wachter-jud.net
 
-qaul.net includes and makes use of other great open-source software.
+qaul.net includes and makes use of other great [Open-Source Software]() and [Free Software]().
 That software may have different licenses.
 
 * olsrd written by Andreas Tonnesen & Thomas Lopatic see olsrd_BSD-license.txt
