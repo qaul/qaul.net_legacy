@@ -1,20 +1,19 @@
-qaul.net license
------------------
+# qaul.net license
 
 qaul.net was written by and is part of the Art project qaul.net: 
 http://www.qaul.net 
 
-qaul.net is free software, licensed under the GPL license (Version 3).
+qaul.net is free software, licensed under the [GNU GPL license (Version 3)](http://www.gnu.org/licenses/gpl-3.0.html).
 You can download it from the Internet: http://www.qaul.net
 
 
-CREDITS
+Credits
 -------
 
 The project qaul.net was initiated by Christoph Wachter & Mathias Jud 
 http://www.wachter-jud.net
 
-qaul.net includes and makes use of other great open-source software.
+qaul.net includes and makes use of other great [Open-Source Software](http://opensource.org/osd) and [Free Software](http://www.gnu.org/philosophy/free-sw.html).
 That software may have different licenses.
 
 * olsrd written by Andreas Tonnesen & Thomas Lopatic see olsrd_BSD-license.txt
