@@ -11,7 +11,7 @@ Scenarios
 ### qaul.net via Ethernet
 
 Connect the Raspberry Pi via Ethernet with other clients, 
-e.g. some wifi routers running openWRT.
+e.g. some wifi routers running OpenWRT.
 
 Compile the binaries according to the instructions below.
 Then configure the Raspberry as described in [README_ETH.md](https://github.com/WachterJud/qaul.net/blob/master/raspberry/README_ETH.md)
