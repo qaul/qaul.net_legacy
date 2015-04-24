@@ -14,7 +14,7 @@ Connect the Raspberry Pi via Ethernet with other clients,
 e.g. some wifi routers running openWRT.
 
 Compile the binaries according to the instructions below.
-Then configure the Raspberry as described in README_ETH.md
+Then configure the Raspberry as described in [README_ETH.md](https://github.com/WachterJud/qaul.net/blob/master/raspberry/README_ETH.md)
 
 
 ### qaul.net via USB wifi (not recommended)
@@ -30,7 +30,7 @@ communicate with each other anymore.
 Connect the Raspberry Pi via USB wifi with other qaul.net clients.
 
 Compile the binaries according to the instructions below.
-Then configure the Raspberry as described in README_WIFI.md
+Then configure the Raspberry as described in [README_WIFI.md](https://github.com/WachterJud/qaul.net/blob/master/raspberry/README_WIFI.md)
 
 
 Installation and Compile Instructions
@@ -75,7 +75,7 @@ Compile qaul CLI
 
 ### Compile with VoIP
 
-qaul.net CLI binary can also be compiled with VoIP library included.
+The qaul.net CLI binary can also be compiled with VoIP library included.
 This does not make much sense, if there isn't anyone to pick up 
 the incoming calls on the Rasberry. 
 
