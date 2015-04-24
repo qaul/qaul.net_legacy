@@ -8,7 +8,7 @@ from the qaul.net network. Every qaul.net device needs to contain therefore the 
 installers for all provided operating systems. 
 
 There are two kind of binaries:
-* slim binaries: Is the name for those installers that do not contain all other 
+* **slim binaries**: Is the name for those installers that do not contain all other 
   installers to share them directly after the first qaul.net start up. Slim binaries are 
   the ones downloadable from within the qaul.net network. After the first startup, the
   qaul.net application starts searching for all the missing installers from one of the 
@@ -18,7 +18,7 @@ There are two kind of binaries:
   Once all necessary installers have been successfully downloaded by a client it starts 
   providing them for download to new qaul.net users via the captive portal after the next 
   start up of the application.
-* fat binaries: Fat binaries can be downloaded from the qaul.net web site from the 
+* **fat binaries**: Fat binaries can be downloaded from the qaul.net web site from the 
   Internet. Those installers already contain all the installers for the other operating
   systems. After the first start up of the qaul.net application they can directly provide 
   the qaul.net installers as downloads to new users via captive portal and share the 
