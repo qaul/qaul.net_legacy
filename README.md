@@ -27,6 +27,6 @@ qaul.net works on following operating systems (new ports are very welcome)
 
 * [ Windows ] (https://github.com/WachterJud/qaul.net/blob/master/win/README.md)
 * [ OSX ]     (https://github.com/WachterJud/qaul.net/blob/master/osx/README.md)
-* [ Linux ]   (https://github.com/WachterJud/qaul.net/blob/master/linux/README.md)
+* [ GNU/Linux ]   (https://github.com/WachterJud/qaul.net/blob/master/linux/README.md)
 * [ Android ] (https://github.com/WachterJud/qaul.net/blob/master/android/README.md)
 * [ iOS ]     (https://github.com/WachterJud/qaul.net/blob/master/ios/README.md)
