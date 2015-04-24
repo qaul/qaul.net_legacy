@@ -1,9 +1,10 @@
-CLI (Command Line Interface Client) Instructions
+CLI (Command Line Interface) Client Instructions
 ================================================
 
 The CLI client is for server and testing purposes.
 
-builds and runs on the following platforms:
+Builds and runs on the following platforms:
+
 * Linux
 * OSX
 * Windows 7, Windows 8
