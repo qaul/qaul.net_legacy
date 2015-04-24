@@ -23,5 +23,5 @@ Installation and Compile Instructions
 	make OS=linux VoIP=no
 
 
-* install the php web part as described in php/README.md
-* for VPN connections of olsrd use the specific server/olsrd_vpn.conf
+* install the php web part as described in [php/README.md](https://github.com/WachterJud/qaul.net/tree/master/server/php)
+* for VPN connections of olsrd use the specific [server/olsrd_vpn.conf](https://github.com/WachterJud/qaul.net/blob/master/server/olsrd_vpn.conf)
