@@ -1,6 +1,6 @@
 #!/bin/sh
 
-## build openwrt image for the following routers:
+## build OpenWRT image for the following routers:
 ## TL-WR842ND, TL-WR842N
 
 
