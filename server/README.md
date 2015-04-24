@@ -18,9 +18,13 @@ Installation and Compile Instructions
 
 * compile the qaul cli program without VoIP support
 
+	````bash
 	cd cli
+	````
 	# example for linux
+	````bash
 	make OS=linux VoIP=no
+	````
 
 
 * install the php web part as described in php/README.md
