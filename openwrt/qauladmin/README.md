@@ -2,7 +2,7 @@ qaul.net admin helper
 =====================
 
 qaul.net admin executes administrative tasks such as checking the 
-user authentication or the scripted web interface on the openwrt 
+user authentication or the scripted web interface on the OpenWRT 
 platform.
 
 
