@@ -1,7 +1,7 @@
 Linux Instructions
 ==================
 
-qaul.net linux directory:
+qaul.net Linux directory:
 
 * qaul_gtk       GTK client of qaul.net
 * qaulhelper     SUID enabled configuration binary
