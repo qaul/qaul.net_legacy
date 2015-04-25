@@ -19,7 +19,7 @@ Then configure the Raspberry as described in [README_ETH.md](https://github.com/
 
 ### qaul.net via USB wifi (not recommended)
 
-Warning: The USB wifi drivers for Ad-hoc (IBSS) wifi are all
+**Warning:** The USB wifi drivers for Ad-hoc (IBSS) wifi are all
 very bad up to unusable. Atheros USB wifi drivers can only
 handle up to 7 participants in the IBSS network, afterwards
 the drivers will crash, leading to a crash of the Raspberry Pi. 
