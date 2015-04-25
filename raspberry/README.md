@@ -39,30 +39,42 @@ Installation and Compile Instructions
 Compile olsrd
 
     # install required package
-    `sudo apt-get install bison flex`
-    `cd olsrd-0.6.6.2`
+    ````
+    sudo apt-get install bison flex`
+    cd olsrd-0.6.6.2
+    ````
     
     # compile olsrd
     `make`
     # install olsrd
-    `sudo make install`
-    `cd ../`
+    ````
+    sudo make install
+    cd ../
+    ````
 
 Compile olsrd_qaul plugin
 
-    `cd olsrd-0.6.6.2/lib/olsrd_qaul`
-    `make`
+    ````
+    cd olsrd-0.6.6.2/lib/olsrd_qaul`
+    make
+    ````
     # install the shared library
-    `sudo make install`
-    `cd ../../../`
+    ````
+    sudo make install
+    cd ../../../
+    ````
 
 Compile dynamic gateway plugin
 
+    ````
     cd olsrd-0.6.6.2/lib/dyn_gw
-    `make`
+    make
+    ````
     # install the shared library
-    `sudo make install`
-    `cd ../../../`
+    ````
+    sudo make install
+    cd ../../../
+    ````
 
 Compile qaul CLI
 
