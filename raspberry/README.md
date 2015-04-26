@@ -14,7 +14,7 @@ Connect the Raspberry Pi via Ethernet with other clients,
 e.g. some wifi routers running OpenWRT.
 
 Compile the binaries according to the instructions below.
-Then configure the Raspberry as described in [README_ETH.md](https://github.com/WachterJud/qaul.net/blob/master/raspberry/README_ETH.md)
+Then configure the Raspberry Pi as described in [README_ETH.md](https://github.com/WachterJud/qaul.net/blob/master/raspberry/README_ETH.md)
 
 
 ### qaul.net via USB wifi (not recommended)
@@ -30,7 +30,7 @@ communicate with each other anymore.
 Connect the Raspberry Pi via USB wifi with other qaul.net clients.
 
 Compile the binaries according to the instructions below.
-Then configure the Raspberry as described in [README_WIFI.md](https://github.com/WachterJud/qaul.net/blob/master/raspberry/README_WIFI.md)
+Then configure the Raspberry Pi as described in [README_WIFI.md](https://github.com/WachterJud/qaul.net/blob/master/raspberry/README_WIFI.md)
 
 
 Installation and Compile Instructions
@@ -39,38 +39,52 @@ Installation and Compile Instructions
 Compile olsrd
 
     # install required package
-    sudo apt-get install bison flex
+    ````
+    sudo apt-get install bison flex`
     cd olsrd-0.6.6.2
+    ````
     
     # compile olsrd
-    make
+    `make`
     # install olsrd
+    ````
     sudo make install
     cd ../
+    ````
 
 Compile olsrd_qaul plugin
 
-    cd olsrd-0.6.6.2/lib/olsrd_qaul
+    ````
+    cd olsrd-0.6.6.2/lib/olsrd_qaul`
     make
+    ````
     # install the shared library
+    ````
     sudo make install
     cd ../../../
+    ````
 
 Compile dynamic gateway plugin
 
+    ````
     cd olsrd-0.6.6.2/lib/dyn_gw
     make
+    ````
     # install the shared library
+    ````
     sudo make install
     cd ../../../
+    ````
 
 Compile qaul CLI
 
+    ````
     cd cli
     make OS=raspberry VoIP=no
     mkdir -p /home/pi/bin
     cp qaul /home/pi/bin
     cd ../
+    ````
 
 
 ### Compile with VoIP
@@ -86,11 +100,15 @@ the instructions above. Then follow this instructions here.
 Compile pjsip library for VoIP
 
     # install required libraries
+    ````
     sudo apt-get install build-essential automake autoconf libtool libasound2-dev libpulse-dev libssl-dev libsamplerate0-dev libcommoncpp2-dev libccrtp-dev libzrtpcpp-dev libdbus-1-dev libdbus-c++-dev libyaml-dev libpcre3-dev libgsm1-dev libspeex-dev libspeexdsp-dev libcelt-dev  libavformat-dev libavutil-dev libavcodec-dev libswscale-dev uuid-dev
+    ````
 
     # compile pjsip
+    ````
     cd pjproject-2.2.1
     ./configure
+    ````
 
 open the file pjlib/include/pj/config_site.h and enter
 
@@ -99,15 +117,19 @@ open the file pjlib/include/pj/config_site.h and enter
 
 compile pjsip
 
+    ````
     make dep
     make
     cd ../
+    ````
 
 Compile qaul CLI
 
+    ````
     cd cli
     make OS=raspberry
     mkdir -p /home/pi/bin
     cp qaul /home/pi/bin
     cd ../
+    ````
 
