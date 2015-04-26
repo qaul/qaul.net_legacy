@@ -18,6 +18,7 @@ Compile Instructions
 
 Before building the CLI client executable you have to build the following 
 libraries and executables:
+
 * olsrd
 * olsrd_qaul plugin 
   (you need to install the plugin to be found by the program)
@@ -33,27 +34,27 @@ Check the build instructions for your platform
 
 Build the CLI client
 
-    cd cli
+    `cd cli`
     # for Linux
-    make OS=linux
+    `make OS=linux`
     # for Windows (compile with MinGW)
-    make OS=win
+    `make OS=win`
     # for OSX
-    make OS=osx
+    `make OS=osx`
     # for Raspberry Pi
-    make OS=raspberry
+    `make OS=raspberry`
 
 Build the CLI client without pjsip (VoIP)
 
-    cd cli
+    `cd cli`
     # for Linux
-    make OS=linux VoIP=no
+    `make OS=linux VoIP=no`
     # for Windows (compile with MinGW)
-    make OS=win VoIP=no
+    `make OS=win VoIP=no`
     # for OSX
-    make OS=osx VoIP=no
+    `make OS=osx VoIP=no`
     # for Raspberry Pi
-    make OS=raspberry VoIP=no
+    `make OS=raspberry VoIP=no`
 
 
 Run CLI
@@ -72,15 +73,15 @@ The following steps are needed to successfully run the CLI client
 * Start olsrd manually
 
     # linux
-    sudo ./olsrd -i wlan0 -f ./olsrd.conf -d 1
+    `sudo ./olsrd -i wlan0 -f ./olsrd.conf -d 1`
     # osx
-    sudo ./olsrd -i en1 -f ./olsrd.conf -d 1
+    `sudo ./olsrd -i en1 -f ./olsrd.conf -d 1`
     # windows 
     # run shell as administrator
 
 * Run CLI client
 
-    ./qaul
+    `./qaul`
 
 * Open the GUI in a web browser 
   http://localhost:8081/qaul.html
