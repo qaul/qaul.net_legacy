@@ -11,7 +11,9 @@ http://www.qaul.net
 Test Binaries
 --------------
 
-Download the latest beta binaries from http://qaul.net/download/
+Download the latest beta binaries from http://qaul.net/download/.
+
+**Or** read more about [binary releases](https://github.com/WachterJud/qaul.net/tree/master/binary_release).
 
 
 Documentation
