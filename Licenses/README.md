@@ -1,4 +1,4 @@
-# License
+# Licenses
 
 This directory contains a list of all the licenses of code used in this project. These licenses and links to them are listed below:
 
