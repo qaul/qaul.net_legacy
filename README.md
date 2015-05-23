@@ -22,7 +22,7 @@ Documentation
 * [Check the wiki for documentation] (https://github.com/WachterJud/qaul.net/wiki)
 
 
-System Specific Instructions
+Build Instructions
 -----------------------------
 
 qaul.net works on following operating systems (new ports are very welcome)
