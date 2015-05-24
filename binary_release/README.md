@@ -1,11 +1,11 @@
 Binary Releases
 ===============
 
-Download the latest beta binaries from http://qaul.net/download/
+Download the latest beta binaries from http://qaul.net/download/.
 
-qaul.net can spread itself. New users can download the installer for their OS directly 
-from the qaul.net network. Every qaul.net device needs to contain therefore the qaul.net
-installers for all provided operating systems. 
+qaul.net can spread itself. New users can download the installer for their operating system directly 
+from the qaul.net network, for this to work every qaul.net device needs to contain the qaul.net
+installers for all provided operating systems, hence ensuring that everybody will get an installer for their specefic operating system. 
 
 There are two kind of binaries:
 * **slim binaries**: Is the name for those installers that do not contain all other 
