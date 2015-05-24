@@ -1,5 +1,4 @@
-![](http://www.qaul.net/img/qaul-net.png)
-
+![http://qaul.net/](http://qaul.net/img/qaul-net.png)
 
 qaul.net - tools for the next revolution
 ========================================
