@@ -7,7 +7,7 @@ Builds and runs on the following platforms:
 
 * Linux
 * OSX
-* Windows 7, Windows 8
+* Windows 7/8
 * Raspberry Pi
 
 Feel free to port it to other platforms.
