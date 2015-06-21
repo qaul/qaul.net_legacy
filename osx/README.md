@@ -25,8 +25,6 @@ Copy helper binaries, libraries & configuration files to needed locations
     sudo cp olsrd_osx_gw.conf /Library/qaul.net/
     sudo cp socat /Library/qaul.net/
     cd ../
-    # copy HTML5 GUI
-    sudo cp -R www /Library/qaul.net/
 
 
 Compile qaulhelper
