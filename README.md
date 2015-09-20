@@ -3,7 +3,7 @@
 qaul.net - tools for the next revolution
 ========================================
 
-**qaul.net** implements a redundant, open communication principle, in which wireless-enabled computers and mobile devices can directly form a spontaneous network. Chat functions, file sharing and voice chat is possible independent of internet and cellular networks. Because qaul.net creates an instant ad-hoc mesh network, you can do anything you want over it, and is not hindered by the feature set of the qaul.net client interface.
+**qaul.net** implements a redundant, open communication principle, in which wireless-enabled computers and mobile devices can directly form a spontaneous network. Chat functions, file sharing and voice chat is possible independent of internet and cellular networks. Because qaul.net creates an instant ad-hoc mesh network, you can do anything you want over it, and is not hindered by the feature set of the qaul.net user interface.
 
 http://www.qaul.net
 
