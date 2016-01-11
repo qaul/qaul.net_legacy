@@ -278,7 +278,7 @@ ifeq ($(OS),win)
 	@cp ../libqaul/libqaul.dll ./
 	@$(CC) $^ $(LIBDIR) $(LIBS) -o qaul.exe $(CFLAGS) $(LIBDEST_WIN)
 	@echo copy olsrd executable into this directory
-	@cp ../olsrd-0.6.0/olsrd.exe ./
+	@cp ../olsrd-0.6.6.2/olsrd.exe ./
 # todo: copy these files (set correct paths & suffixes)
 #	@echo copy olsrd_qaul plugin into this directory
 #	@cp ../olsrd-0.6.0/lib/olsrd_qaul/olsrd_qaul.so.0.1 ./
