@@ -1,7 +1,10 @@
-![http://qaul.net/](http://qaul.net/img/qaul-net.png)
+qaul.net Legacy repository
+==========================
 
-qaul.net - tools for the next revolution
-========================================
+**This repository contains the old and outdated version of qaul.net. The 
+current development is happening in the  
+[ repository qaul.net ](https://github.com/WachterJud/qaul.net)**
+
 
 **qaul.net** implements a redundant, open communication principle, in which wireless-enabled computers and mobile devices can directly form a spontaneous network. Chat functions, file sharing and voice chat is possible independent of internet and cellular networks. Because qaul.net creates an instant ad-hoc mesh network, you can do anything you want over it, and is not hindered by the feature set of the qaul.net client interface.
 
@@ -27,8 +30,8 @@ Build Instructions
 
 qaul.net works on following operating systems (new ports are very welcome)
 
-* [ Windows ] (https://github.com/WachterJud/qaul.net/blob/master/win/README.md)
-* [ OSX ]     (https://github.com/WachterJud/qaul.net/blob/master/osx/README.md)
-* [ Linux ]   (https://github.com/WachterJud/qaul.net/blob/master/linux/README.md)
-* [ Android ] (https://github.com/WachterJud/qaul.net/blob/master/android/README.md)
-* [ iOS ]     (https://github.com/WachterJud/qaul.net/blob/master/ios/README.md)
+* [ Windows ] (win/README.md)
+* [ OSX ]     (osx/README.md)
+* [ Linux ]   (linux/README.md)
+* [ Android ] (android/README.md)
+* [ iOS ]     (ios/README.md)
