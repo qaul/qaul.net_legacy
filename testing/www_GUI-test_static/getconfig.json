@@ -7,6 +7,5 @@
 "c_debug":true,
 "c_interface":true,
 "c_internet":true,
-"c_network":true,
-"c_filesharing":true
+"c_network":true
 }
