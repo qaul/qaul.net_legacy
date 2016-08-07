@@ -25,10 +25,10 @@ libraries and executables:
 * qaullib
 
 Check the build instructions for your platform 
-* [ Windows ] (https://github.com/WachterJud/qaul.net/blob/master/win/README.md)
-* [ OSX ]     (https://github.com/WachterJud/qaul.net/blob/master/osx/README.md)
-* [ Linux ]   (https://github.com/WachterJud/qaul.net/blob/master/linux/README.md)
-* [ Raspberry Pi ]   (https://github.com/WachterJud/qaul.net/blob/master/raspberry/README.md)
+* [ Windows ] (https://github.com/WachterJud/qaul.net_legacy/blob/master/win/README.md)
+* [ OSX ]     (https://github.com/WachterJud/qaul.net_legacy/blob/master/osx/README.md)
+* [ Linux ]   (https://github.com/WachterJud/qaul.net_legacy/blob/master/linux/README.md)
+* [ Raspberry Pi ]   (https://github.com/WachterJud/qaul.net_legacy/blob/master/raspberry/README.md)
 
 
 Build the CLI client
